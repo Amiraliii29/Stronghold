@@ -50,7 +50,7 @@ assignees: Arman17Babaei
 
   **نام و نام خانوادگی: امیرعلی شیخی**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>game menu uml</summary>
 
   <div dir="ltr" align='right'>
 
@@ -59,10 +59,31 @@ assignees: Arman17Babaei
   3. [ ] تمام شده
   </div>
 </details>
+  <details>
+  <summary> map menu uml</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+  <details>
+  <summary>data base uml</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+  
 
 ## تسک‌های نفر دوم
 
-  **نام و نام خانوادگی:**
+  **نام و نام خانوادگی: کیارش کیانی فریز**
 <details>
   <summary>تسک مربوطه</summary>
 
@@ -76,7 +97,7 @@ assignees: Arman17Babaei
 
 ## تسک‌های نفر سوم
 
-  **نام و نام خانوادگی:**
+  **نام و نام خانوادگی: سروش وکیل زاده هاتفی**
 <details>
   <summary>تسک مربوطه</summary>
 
