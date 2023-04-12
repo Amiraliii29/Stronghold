@@ -85,7 +85,39 @@ assignees: Arman17Babaei
 
   **نام و نام خانوادگی: کیارش کیانی فریز**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>Map</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+  <summary>Land</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+  <summary>Resource</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+  <summary>Building</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+  <summary>TradeMenu</summary>
 
   <div dir="ltr" align='right'>
 
