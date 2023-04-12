@@ -93,6 +93,8 @@ assignees: Arman17Babaei
   2. [ ] در حال انجام
   3. [ ] تمام شده
   </div>
+</details>
+<details>
   <summary>Land</summary>
 
   <div dir="ltr" align='right'>
@@ -101,6 +103,8 @@ assignees: Arman17Babaei
   2. [ ] در حال انجام
   3. [ ] تمام شده
   </div>
+</details> 
+<details>  
   <summary>Resource</summary>
 
   <div dir="ltr" align='right'>
@@ -108,7 +112,9 @@ assignees: Arman17Babaei
   1. [ ] شروع نشده
   2. [ ] در حال انجام
   3. [ ] تمام شده
-  </div>
+  </div>  
+</details>
+<details>  
   <summary>Building</summary>
 
   <div dir="ltr" align='right'>
@@ -117,6 +123,8 @@ assignees: Arman17Babaei
   2. [ ] در حال انجام
   3. [ ] تمام شده
   </div>
+</details>
+<details>  
   <summary>TradeMenu</summary>
 
   <div dir="ltr" align='right'>
