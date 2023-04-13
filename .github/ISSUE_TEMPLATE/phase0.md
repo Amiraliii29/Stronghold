@@ -50,7 +50,7 @@ assignees: Arman17Babaei
 
   **نام و نام خانوادگی: امیرعلی شیخی**
 <details>
-  <summary>game menu uml</summary>
+  <summary>Game Menu</summary>
 
   <div dir="ltr" align='right'>
 
@@ -60,7 +60,7 @@ assignees: Arman17Babaei
   </div>
 </details>
   <details>
-  <summary> map menu uml</summary>
+  <summary> Map Menu</summary>
 
   <div dir="ltr" align='right'>
 
@@ -70,7 +70,27 @@ assignees: Arman17Babaei
   </div>
 </details>
   <details>
-  <summary>data base uml</summary>
+  <summary>data base </summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+  <details>
+  <summary>Login Menu</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+  <details>
+  <summary>SignUp Menu</summary>
 
   <div dir="ltr" align='right'>
 
