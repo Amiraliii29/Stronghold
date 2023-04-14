@@ -11,6 +11,8 @@ public class TradeMenu {
     private static void trade(Matcher matcher) {
 
     }
+    private static void acceptTrade(Matcher matcher){
+    }
 
     private static void tradeList() {
 
