@@ -1,9 +1,18 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Resource {
     private String name;
     private int price;
     private int usingRate;
+    private static ArrayList<Resource> weapons;
+    private static ArrayList<Resource> foods;
+
+    static {
+        weapons = new ArrayList<>();
+        foods = new ArrayList<>();
+    }
 
     public Resource(String name, int price, int usingRate) {
         this.name = name;
@@ -26,5 +35,22 @@ public class Resource {
 
     public int getUsingRate() {
         return usingRate;
+    }
+
+    public static ArrayList<Resource> getWeapons() {
+        return weapons;
+        asdgjhasd;gha
+    }
+
+    public static void addWeapon(Resource weapon) {
+        Resource.weapon = weapon;
+    }
+
+    public static ArrayList<Resource> getFood() {
+        return food;
+    }
+
+    public static void setFood(ArrayList<Resource> food) {
+        Resource.food = food;
     }
 }
