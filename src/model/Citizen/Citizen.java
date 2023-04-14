@@ -1,6 +1,8 @@
 package Citizen;
 
-import model.*;
+import model.User;
+import model.weapon;
+import model.Resource;
 
 public class Citizen{
 

@@ -22,8 +22,8 @@ public class Worker extends Character{
         setBasicWorkerFightingStats();
     }
 
-    private void setBasicWorkerFightingStats(){
-        //ToDo
-    }
+    private void setBasicWorkerFightingStats();
+
+    public static Worker makeWorkerForBuildingByName(String buildingName);
 
 }
