@@ -22,14 +22,26 @@ public class ShopMenuController {
         fillShopItems();
     }
 
-    private static void fillShopItems();
+    private static void fillShopItems(){
 
-    private static void setNewPrices();
+    };
+
+    private static void setNewPrices(){
+
+    };
 
 
-    public static void buyItemByName(String name, int amount);
+    public static void showShopInfo(){
 
-    public static void sellItemByName(String name, int amount);
+    };
+
+    public static void buyItemByName(String name, int amount){
+
+    };
+
+    public static void sellItemByName(String name, int amount){
+        
+    };
 
     public static void setTargetUser(User user){
         ShopMenuController.targetUser=user;
