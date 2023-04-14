@@ -10,7 +10,7 @@ public class DataBase {
     private static User currentUser;
     private static Map selectedMap;
     private static Building selectedBuilding;
-    private static Unit selectedUnit;
+    private static ArrayList<Troop> selectedUnit = new ArrayList<>();
 
     public static void setCurrentUser(User currentUser) {
         DataBase.currentUser = currentUser;
@@ -33,12 +33,12 @@ public class DataBase {
         DataBase.selectedBuilding = selectedBuilding;
     }
 
-    public static Unit getSelectedUnit() {
+    public static ArrayList<Troop> getSelectedUnit() {
         return selectedUnit;
     }
 
-    public static void setSelectedUnit(Unit selectedUnit) {
-        DataBase.selectedUnit = selectedUnit;
+    public static void addSelectedUnit(Troop selectedUnit) {
+        selectedUnit.add(selectedUnit);
     }
     public static  void addMap(Map map){
         maps.add(map);
