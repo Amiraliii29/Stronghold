@@ -3,15 +3,14 @@ package Model;
 import Model.Buildings.Building;
 
 import java.util.ArrayList;
-
 public class DataBase {
-    private static final ArrayList<User> users = new ArrayList<>();
-    private static final ArrayList<Map> maps = new ArrayList<>();
-    private static ArrayList<User> playersInGame = new ArrayList<>();
+    private static final ArrayList<User> users = new ArrayList<User>();
+    private static final ArrayList<Map> maps = new ArrayList<Map>();
+    private static final ArrayList<String> defaultSlogans = new ArrayList<>();
     private static User currentUser;
     private static Map selectedMap;
     private static Building selectedBuilding;
-    private static ArrayList<Troop> selectedUnit = new ArrayList<>();
+    private static Unit selectedUnit;
 
     public static void setCurrentUser(User currentUser) {
         DataBase.currentUser = currentUser;
@@ -20,11 +19,9 @@ public class DataBase {
     public static User getCurrentUser() {
         return currentUser;
     }
-
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(String userName){
     }
-
-    public void addUser(User user) {
+    public void addUser(User user){
         users.add(user);
     }
 
@@ -36,20 +33,17 @@ public class DataBase {
         DataBase.selectedBuilding = selectedBuilding;
     }
 
-
-    public static ArrayList<Troop> getSelectedUnit() {
+    public static Unit getSelectedUnit() {
         return selectedUnit;
     }
 
-    public static void addSelectedUnit(Troop troop) {
-        selectedUnit.add(troop);
+    public static void setSelectedUnit(Unit selectedUnit) {
+        DataBase.selectedUnit = selectedUnit;
     }
-
-    public static void addMap(Map map) {
+    public static  void addMap(Map map){
         maps.add(map);
     }
-
-    public static Map getMapByName(String name) {
+    public static Map getMapByName(String name){
     }
 
     public static Map getSelectedMap() {
@@ -59,12 +53,10 @@ public class DataBase {
     public static void setSelectedMap(Map selectedMap) {
         DataBase.selectedMap = selectedMap;
     }
-
-    public static ArrayList<User> getPlayersInGame() {
-        return playersInGame;
+    public static String getRandomSlogan(){
     }
-
-    public static void addPlayersInGame(User playerInGame) {
-        playersInGame.add(playerInGame);
+    public static String getRandomPassWord(){
+    }
+    public static String getCaptcha(){
     }
 }
