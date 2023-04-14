@@ -6,7 +6,8 @@ import Model.User;
 public class Citizen {
     private int walkingSpeed;
     private String name;
-
+    private User owner;
+    
     public Citizen(String name, User owner) {
         this.name = name;
         this.owner= owner;
