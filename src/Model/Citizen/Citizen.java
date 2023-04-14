@@ -4,7 +4,6 @@ package Model.Citizen;
 import Model.User;
 
 public class Citizen {
-    private User owner;
     private int walkingSpeed;
     private String name;
 
