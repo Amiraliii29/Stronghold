@@ -39,18 +39,17 @@ public class Resource {
 
     public static ArrayList<Resource> getWeapons() {
         return weapons;
-        asdgjhasd;gha
     }
 
     public static void addWeapon(Resource weapon) {
-        Resource.weapon = weapon;
+        weapons.add(weapon);
     }
 
-    public static ArrayList<Resource> getFood() {
-        return food;
+    public static ArrayList<Resource> getFoods() {
+        return foods;
     }
 
-    public static void setFood(ArrayList<Resource> food) {
-        Resource.food = food;
+    public static void addFood(Resource food) {
+        foods.add(food);
     }
 }
