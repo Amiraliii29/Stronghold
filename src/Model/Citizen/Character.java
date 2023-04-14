@@ -5,9 +5,9 @@ import Model.User;
 public abstract class Character extends Citizen {
     private int hitPoint;
     private int damage;
+    private User owner;
 
-    public Character(String name, User owningPlayer) {
-
+    public Character(String name, User owner) {
     }
 
     public int getHitPoint() {
