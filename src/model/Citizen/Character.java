@@ -1,9 +1,13 @@
-package Citizen;
+package Model.Citizen;
 
-public abstract class Character extends Citizen{
+import Model.User;
 
-    private  int hitPoint;
-    private  int damage;
+public abstract class Character extends Citizen {
+    private int hitPoint;
+    private int damage;
+
+    public Character(String name, User owner) {
+    }
 
     public int getHitPoint() {
         return hitPoint;
@@ -17,11 +21,7 @@ public abstract class Character extends Citizen{
         this.hitPoint = hitPoint;
     }
 
-    public void takeDamage(int damageTaken){
-        this.hitPoint-=damageTaken;
-    }
-
-    public Character( String name,User owningPlayer) {
-
+    public void takeDamage(int damageTaken) {
+        this.hitPoint -= damageTaken;
     }
 }

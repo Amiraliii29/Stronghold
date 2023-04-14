@@ -1,6 +1,9 @@
-package Citizen;
+package Model.Citizen;
 
-public class Worker extends Character{
+import Model.Buildings.Building;
+import Model.User;
+
+public class Worker extends Character {
 
     private Building workingPlace;
 
@@ -12,18 +15,21 @@ public class Worker extends Character{
         this.workingPlace = workingPlace;
     }
 
-    public double getEfficiency(){
+    public double getEfficiency() {
         //regarding popularity and fear
     }
 
-    public Worker(int walkingSpeed, String name,User owningPlayer, Building workingPlace){
-        super( name, owningPlayer);
-        this.workingPlace=workingPlace;
+    public Worker(int walkingSpeed, String name, User owningPlayer, Building workingPlace) {
+        super(name, owningPlayer);
+        this.workingPlace = workingPlace;
         setBasicWorkerFightingStats();
     }
 
-    private void setBasicWorkerFightingStats();
+    private void setBasicWorkerFightingStats() {
 
-    public static Worker makeWorkerForBuildingByName(String buildingName);
+    }
 
+    public static Worker makeWorkerForBuildingByName(String buildingName) {
+
+    }
 }

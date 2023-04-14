@@ -1,8 +1,8 @@
 package Model;
 
 import Model.Buildings.Building;
-
 import java.util.ArrayList;
+
 public class DataBase {
     private static final ArrayList<User> users = new ArrayList<User>();
     private static final ArrayList<Map> maps = new ArrayList<Map>();

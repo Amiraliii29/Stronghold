@@ -1,20 +1,21 @@
-package Citizen;
+package Model.Citizen;
+
+import Model.User;
 
 public class Specialist extends Troop {
-    
-
-
-    public Specialist( String name,User owningPlayer){
+    public Specialist(String name, User owningPlayer) {
         super(name, owningPlayer);
     }
 
-    public void createMachineByType(String type){
+    public void createMachineByType(String type) {
         //if is engineer
     }
 
-    public static Specialist makeSpecialistByName(String name);
+    public static Specialist makeSpecialistByName(String name) {
 
-    private static setSpecialistStatsByType(Specialist specialist);
+    }
 
-    
+    private static setSpecialistStatsByType(Specialist specialist) {
+
+    }
 }

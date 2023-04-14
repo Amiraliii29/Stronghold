@@ -1,14 +1,19 @@
-package view;
+package View;
 
 import java.util.Scanner;
-
-import model.User;
+import Model.User;
 
 public class ProfileMenu {
-    
-    public static void run(Scanner scanner);
+
+    public static void run(Scanner scanner) {
+
+    }
+
+    private static void setProfileMenuControllerUser(User user) {
+
+    }
+
+    private static void getNewPasswordAfterConfirmation() {
+
+    }
 }
-
-public static void setProfileMenuControllerUser(User user);
-
-public static void getNewPasswordAfterConfirmation();

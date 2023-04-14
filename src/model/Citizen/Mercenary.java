@@ -1,16 +1,18 @@
-package Citizen;
+package Model.Citizen;
+
+import Model.User;
 
 public class Mercenary extends Troop {
-    
-    public Mercenary(String name,User owningPlayer){
+
+    public Mercenary(String name, User owningPlayer) {
     }
 
 
-    public static Mercenary makeMercenaryByName(String name){
+    public static Mercenary makeMercenaryByName(String name) {
 
     }
 
-    private static setMercenaryStatsByType(Mercenary mercenary){
+    private static void setMercenaryStatsByType(Mercenary mercenary) {
 
     }
 }

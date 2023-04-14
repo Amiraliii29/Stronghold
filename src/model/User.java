@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 import Citizen.*;
 import java.util.ArrayList;

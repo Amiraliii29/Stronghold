@@ -1,4 +1,6 @@
-package Citizen;
+package Model.Citizen;
+
+import Model.User;
 
 import java.util.HashMap;
 
@@ -7,28 +9,34 @@ public class Siege extends Troop {
     private int engineersInControl;
     private boolean canMove;
 
-    private HashMap <String ,Integer> ammo;
-    
-    public Siege(String name,User owningPlayer);
+    private HashMap<String, Integer> ammo;
 
-    public int getEngineersNeeded(){
+    public Siege(String name, User owningPlayer) {
+
+    }
+
+    public int getEngineersNeeded() {
         return engineersNeeded;
     }
 
-    public void changeEngineersInControl(int shift);
+    public void changeEngineersInControl(int shift) {
 
-    public int getEngineersInControl(){
+    }
+
+    public int getEngineersInControl() {
         return engineersInControl;
     }
 
-    public void setEngineersNeeded(int engineersNeeded){
-        this.engineersNeeded=engineersNeeded;
+    public void setEngineersNeeded(int engineersNeeded) {
+        this.engineersNeeded = engineersNeeded;
     }
 
 
-    public static Siege makeSiegeByType(String type);
-    
-    public static void setSiegeStatsByType(Siege siege);
-    
+    public static Siege makeSiegeByType(String type) {
 
+    }
+
+    public static void setSiegeStatsByType(Siege siege) {
+
+    }
 }
