@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 public class Worker extends Character{
 

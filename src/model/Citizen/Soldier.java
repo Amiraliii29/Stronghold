@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 import java.util.HashMap;
 
@@ -18,13 +18,11 @@ public class Soldier extends Troop {
         return weaponsNeeded;
     }
 
-    private static setSoldiersStatsByName(){
+    private static setSoldiersStatsByType(Soldier soldier);
 
-    }
-
-    public static Soldier makeSoldierByName(String name){
-        //ToDo: list of soldiers
+    public static Soldier makeSoldierByName(String name);
+  
     
-    }
-
 }
+
+

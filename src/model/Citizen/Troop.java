@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 public abstract class Troop extends Character{
 
@@ -13,6 +13,7 @@ public abstract class Troop extends Character{
     private boolean canUseFlame;
     //note: new beshe
     private int[] coordinations;
+    private String stance;
     
 
     public Troop( String name,User owningPlayer){
@@ -57,7 +58,18 @@ public abstract class Troop extends Character{
         return coordinations;
     }
     
-    public void setCoordinations(int x, int y);
+    public void setCoordinations(int x, int y){
+        coordinations[0]=x;
+        coordinations[1]=y;
+    }
+
+    public void setStance(String stance){
+        this.stance=stance;
+    }
+    
+    public String getStance(){
+        return stance;
+    }
 
 
 }

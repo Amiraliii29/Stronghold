@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 public class Mercenary extends Troop {
     
@@ -10,7 +10,7 @@ public class Mercenary extends Troop {
 
     }
 
-    private static setMercenaryStatsByName(String name){
+    private static setMercenaryStatsByType(Mercenary mercenary){
 
     }
 }

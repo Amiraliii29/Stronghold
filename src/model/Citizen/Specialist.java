@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 public class Specialist extends Troop {
     
@@ -12,11 +12,9 @@ public class Specialist extends Troop {
         //if is engineer
     }
 
-    public static Specialist makeSpecialistByName(String name){
-        
-    }
+    public static Specialist makeSpecialistByName(String name);
 
-    private static setSpecialistStatsByName(String name){
+    private static setSpecialistStatsByType(Specialist specialist);
 
-    }
+    
 }

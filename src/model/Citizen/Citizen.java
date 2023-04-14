@@ -1,4 +1,6 @@
-package model;
+package Citizen;
+
+import model.*;
 
 public class Citizen{
 

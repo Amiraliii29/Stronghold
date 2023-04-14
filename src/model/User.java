@@ -1,5 +1,6 @@
 package model;
 
+import Citizen.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,7 +80,21 @@ public class User {
         this.slogan=slogan;
     }
 
+    public void setRank(int rank){
+        this.rank=rank;
+    }
 
+    public void setHighscore(int highscore){
+        this.highscore=highscore;
+    }
+
+    public int getRank(){
+        return rank;
+    }
+
+    public int getHighscore(){
+        return highscore;
+    }
 
 
 }

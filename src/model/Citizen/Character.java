@@ -1,4 +1,4 @@
-package model;
+package Citizen;
 
 public abstract class Character extends Citizen{
 

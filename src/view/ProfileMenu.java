@@ -11,4 +11,4 @@ public class ProfileMenu {
 
 public static void setProfileMenuControllerUser(User user);
 
-public static void getNewPassword();
+public static void getNewPasswordAfterConfirmation();
