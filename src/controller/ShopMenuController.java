@@ -31,7 +31,7 @@ public class ShopMenuController {
     };
 
 
-    public static void showShopInfo(){
+    public static String showShopInfo(){
 
     };
 
@@ -40,7 +40,7 @@ public class ShopMenuController {
     };
 
     public static void sellItemByName(String name, int amount){
-        
+
     };
 
     public static void setTargetUser(User user){
