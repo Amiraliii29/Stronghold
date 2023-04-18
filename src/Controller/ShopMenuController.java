@@ -29,6 +29,10 @@ public class ShopMenuController {
     private static void setNewPrices() {
 
     }
+    
+    private static void showItems(){
+    
+    }
 
 
     public static void buyItemByName(String name, int amount) {
