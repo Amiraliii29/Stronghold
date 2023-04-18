@@ -1,6 +1,7 @@
 package Controller;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,7 @@ import java.security.SecureRandom;
 
 public class Orders {
 
-
+    private static Scanner scanner=new Scanner(System.in);
  
 
 
@@ -56,4 +57,15 @@ public class Orders {
         //      chize cherto pert vared karde va error bayad begire
     }
 
+    public static String trimEndAndStartOfString(String input){
+        String output="";
+        for (int i = 1; i < input.length()-1; i++) {
+            output=output.concat(""+input.charAt(i));
+        }
+        return output;
+    }
+
+    public static String getNextlineInput(){
+        return scanner.nextLine();
+    }
 }
