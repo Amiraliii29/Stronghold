@@ -42,6 +42,11 @@
             <version>2.0.9</version>
             <classifier>natives-all</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+        </dependency>
 
 
     </dependencies>
