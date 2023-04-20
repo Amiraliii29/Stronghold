@@ -4,6 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum SignUpMenuCommands {
+
+    SIGNUP("\\s*user\\s+create\\s+(?<signupComponents>.+)"),
+
+
     ;
     private String regex;
 

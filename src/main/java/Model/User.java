@@ -1,6 +1,8 @@
 package Model;
 
-import Citizen.*;
+import Model.Buildings.*;
+import Model.Citizen.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,8 +19,8 @@ public class User {
 
 
     private ArrayList<Building> Buildings;
-    private HashMap <String , Integer> Resources;
-    private ArrayList <Troop> Army;
+    private HashMap<String, Integer> Resources;
+    private ArrayList<Troop> Army;
     private Government Government;
     private int gold;
     private int availablePopulation;
@@ -73,28 +75,26 @@ public class User {
         this.securityQuestion = securityQuestion;
     }
 
-    public User( String username, String password,String email ,String slogan ){
-        this.username=username;
-        this.password=password;
-        this.email=email;
-        this.slogan=slogan;
+    public User(String username, String password, String email, String slogan) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.slogan = slogan;
     }
 
-    public void setRank(int rank){
-        this.rank=rank;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
-    public void setHighscore(int highscore){
-        this.highscore=highscore;
+    public void setHighscore(int highscore) {
+        this.highscore = highscore;
     }
 
-    public int getRank(){
+    public int getRank() {
         return rank;
     }
 
-    public int getHighscore(){
+    public int getHighscore() {
         return highscore;
     }
-
-
 }

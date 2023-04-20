@@ -1,16 +1,19 @@
 package Model;
 
 import Model.Buildings.Building;
+
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataBase {
     private static final ArrayList<User> users = new ArrayList<User>();
     private static final ArrayList<Map> maps = new ArrayList<Map>();
-    private static final ArrayList<String> defaultSlogans = new ArrayList<>();
     private static User currentUser;
     private static Map selectedMap;
     private static Building selectedBuilding;
-    private static ArrayList<Troop> selectedUnit = new ArrayList<>();
+    private static ArrayList<Troop> selectedUnit = new ArrayList<Troop>();
+
 
     public static void setCurrentUser(User currentUser) {
         DataBase.currentUser = currentUser;
@@ -19,9 +22,25 @@ public class DataBase {
     public static User getCurrentUser() {
         return currentUser;
     }
-    public User getUserByUserName(String userName){
+
+    public static User getUserByUserName(String userName) {
+        for (User user : users)
+            if (user.getUsername().equals(userName))
+                return user;
+
+        return null;
     }
-    public void addUser(User user){
+
+    public static User getUserByEmail(String email) {
+        for (User user : users)
+            if (user.getEmail().equals(email))
+                return user;
+
+        return null;
+    }
+
+
+    public static void addUser(User user) {
         users.add(user);
     }
 
@@ -38,12 +57,14 @@ public class DataBase {
     }
 
     public static void addSelectedUnit(Troop selectedUnit) {
-        selectedUnit.add(selectedUnit);
+        DataBase.selectedUnit.add(selectedUnit);
     }
-    public static  void addMap(Map map){
+
+    public static void addMap(Map map) {
         maps.add(map);
     }
-    public static Map getMapByName(String name){
+
+    public static Map getMapByName(String name) {
     }
 
     public static Map getSelectedMap() {
@@ -53,10 +74,7 @@ public class DataBase {
     public static void setSelectedMap(Map selectedMap) {
         DataBase.selectedMap = selectedMap;
     }
-    public static String getRandomSlogan(){
-    }
-    public static String getRandomPassWord(){
-    }
-    public static String getCaptcha(){
+
+    public static String getCaptcha() {
     }
 }
