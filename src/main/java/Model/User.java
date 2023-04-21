@@ -17,15 +17,12 @@ public class User {
     private int highscore;
     private int rank;
 
-
-    private ArrayList<Building> Buildings;
-    private HashMap<String, Integer> Resources;
-    private ArrayList<Troop> Army;
-    private Government Government;
-    private int gold;
-    private int availablePopulation;
-    private int totalPopulation;
-
+    public User(String username, String password, String email, String slogan) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.slogan = slogan;
+    }
 
     public String getUsername() {
         return username;
@@ -73,13 +70,6 @@ public class User {
 
     public void setSecurityQuestion(String securityQuestion) {
         this.securityQuestion = securityQuestion;
-    }
-
-    public User(String username, String password, String email, String slogan) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.slogan = slogan;
     }
 
     public void setRank(int rank) {
