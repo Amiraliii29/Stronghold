@@ -4,10 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum SignUpMenuCommands {
-
+    
     SIGNUP("\\s*user\\s+create\\s+(?<signupComponents>.+)"),
+    
+    SECURITY("\\s*question\\s+pick\\s+(?<securityComponents>.+)"),
 
-
+    FORGOT_PASSWORD("\\s*forgot\\s+my\\s+password"),
     ;
     private String regex;
 

@@ -1,7 +1,8 @@
 package Model.Buildings;
 
-import Model.Resource.Resource;
+import Model.Resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Stockpile extends Building{

@@ -1,7 +1,7 @@
-package controller;
+package Controller;
 
-import model.User;
-import view.TradeMenuMessages;
+import Model.User;
+import View.Enums.Messages.TradeMenuMessages;
 
 import java.util.HashMap;
 

@@ -1,6 +1,6 @@
 package Model.Buildings;
 
-import Model.Resource.Resource;
+import Model.Resource;
 
 public class Generator extends Building{
     private int rate;
