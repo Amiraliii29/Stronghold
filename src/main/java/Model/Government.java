@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Buildings.Stockpile;
 import Model.Resource.Resource;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Government {
     private ArrayList<Resource> resources;
     private static ArrayList<Resource> foods;
     private static ArrayList<Resource> weapons;
+    private ArrayList<Stockpile> stockpiles;
 
     public Government(User owner, double money) {
         this.owner = owner;

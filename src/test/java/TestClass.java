@@ -10,5 +10,6 @@ public class TestClass {
     public void testGovernment() {
         User user = new User("kiarash", "123", "dahga", "lakh;g;");
         Government government = new Government(user,0);
+        Assert.
     }
 }
