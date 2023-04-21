@@ -1,6 +1,6 @@
 package Model.Buildings;
 
-import Model.Resource;
+import Model.Resource.Resource;
 
 public class Trap extends Building{
     private int damage;

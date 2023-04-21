@@ -1,6 +1,6 @@
 package Model.Buildings;
 
-import Model.Resource;
+import Model.Resource.Resource;
 import Model.Troop;
 
 import java.util.ArrayList;

@@ -1,27 +1,7 @@
 package Model.Citizen;
+import org.json.simple.JSONObject;
 
-import Model.User;
 
-public abstract class Character extends Citizen {
-    private int hitPoint;
-    private int damage;
+public abstract class Character {
 
-    public Character(String name, User owner) {
-    }
-
-    public int getHitPoint() {
-        return hitPoint;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public void setHitPoint(int hitPoint) {
-        this.hitPoint = hitPoint;
-    }
-
-    public void takeDamage(int damageTaken) {
-        this.hitPoint -= damageTaken;
-    }
 }
