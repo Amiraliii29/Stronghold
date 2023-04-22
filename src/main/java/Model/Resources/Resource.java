@@ -1,6 +1,7 @@
 package Model.Resources;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Resource {
     private String name;
@@ -106,5 +107,13 @@ public class Resource {
 
     public static ArrayList<Resource> getWeapons() {
         return weapons;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resource resource = (Resource) o;
+        return price == resource.price && Double.compare(resource.count, count) == 0 && Objects.equals(name, resource.name) && Objects.equals(storage, resource.storage);
     }
 }
