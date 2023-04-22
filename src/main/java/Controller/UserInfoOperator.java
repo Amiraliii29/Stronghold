@@ -25,6 +25,8 @@ public class UserInfoOperator {
         setSecurityQuestions();
     }
 
+
+    
         
     public static String getRandomSlogan(){
         int randomNumBound=defaultSlogans.size();
@@ -37,7 +39,6 @@ public class UserInfoOperator {
         if(indexFromOne>securityQuestions.size()) return null;
         return securityQuestions.get(indexFromOne-1);
     }
-
 
     public static void storeUserDataInJson(User user,String dirFromSrc) throws NoSuchAlgorithmException{
         String username=user.getUsername();

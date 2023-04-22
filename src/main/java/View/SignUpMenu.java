@@ -166,7 +166,6 @@ public class SignUpMenu {
 
         Orders.printLine("sign up was succesful! now please answer a security question of your choice to finish:");
         displaySecurityQuestions();
-
         // HANDLING USER RESPONSE:
         while (true) {
             String input=Orders.getNextlineInput();
@@ -177,10 +176,8 @@ public class SignUpMenu {
                 continue;
             }
                 
-                
             String inputComponents=matcher.group("securityComponents");
             SignUpMenuMessages response=SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
-
 
             if(response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))
                 return;
