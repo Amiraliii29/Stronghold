@@ -20,13 +20,13 @@ public class SignUpMenuController {
                             String nickName, String passWordConfirmation ,String email , String slogan) throws NoSuchAlgorithmException{
         email=email.toLowerCase();
 
-        if(DataBase.getUserByUserName(userName) != null)
+        if(User.getUserByUserName(userName) != null)
          return SignUpMenuMessages.DUPLICATE_USERNAME_SIGNUP_ERROR;
 
         if(!isUsernameFormatValid(userName))
          return SignUpMenuMessages.INVALID_USERNAME_SIGNUP_ERROR;
 
-        if(DataBase.getUserByEmail(email) != null)
+        if(User.getUserByEmail(email) != null)
          return SignUpMenuMessages.DUPLICATE_EMAIL_SIGNUP_ERROR;
 
         if(!isPasswordStrong(passWord)) 
@@ -46,7 +46,7 @@ public class SignUpMenuController {
         SignUpMenu.chooseSecurityQuestionForUser(newUser);
 
         UserInfoOperator.storeUserDataInJson(newUser, "src/main/java/jsonData/Users.json");
-        DataBase.addUser(newUser);
+        User.addUser(newUser);
         return SignUpMenuMessages.SUCCESFUL_SIGNUP_STEP; 
     }
 
@@ -55,7 +55,7 @@ public class SignUpMenuController {
          return SignUpMenuMessages.LOGIN_EMPTY_FIELDS_ERROR;
         
         passWord=UserInfoOperator.encodeStringToSha256(passWord);
-        User targetUser=DataBase.getUserByUserName(userName);
+        User targetUser=User.getUserByUserName(userName);
         
         if(targetUser==null) 
          return SignUpMenuMessages.LOGIN_INVALID_USERNAME_ERROR;
@@ -69,12 +69,12 @@ public class SignUpMenuController {
             UserInfoOperator.storeUserDataInJson(targetUser,"src/main/java/jsonData/Users.json" );
         }
 
-        DataBase.setCurrentUser(targetUser);
+        User.setCurrentUser(targetUser);
         return SignUpMenuMessages.SUCCESFUL_LOGIN;
     }
 
     public static SignUpMenuMessages forgotMyPassWordController(String email, String securityAnswer) throws NoSuchAlgorithmException{
-        User targetUser=DataBase.getUserByEmail(email);
+        User targetUser=User.getUserByEmail(email);
         if(targetUser==null)
           return SignUpMenuMessages.INVALID_EMAIL_FORGET_PASSWORD_ERROR;
         

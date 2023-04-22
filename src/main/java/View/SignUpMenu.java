@@ -4,7 +4,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
-import Model.DataBase;
 import Model.User;
 import Controller.Orders;
 import View.Enums.Commands.SignUpMenuCommands;
@@ -15,14 +14,14 @@ public class SignUpMenu {
     public static void run() throws NoSuchAlgorithmException {
         String input;
 
-        while (true) {
+        while (User.getCurrentUser()==null) {
             Matcher matcher;
             input = Input_Output.getInput();
 
             if (input.equals("exit")) break;
 
             if (SignUpMenuController.getPenalty() > 0)
-                Orders.printLine("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
+               Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
 
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) != null)
                 createUser(matcher);
@@ -33,7 +32,7 @@ public class SignUpMenu {
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.LOGIN)) != null)
                 userLogin(matcher);
 
-            else System.out.println("error: invalid command!");
+            else Input_Output.outPut("error: invalid command!");
         }
         handleLoginProcess();
         LoginMenu.run();
@@ -47,35 +46,35 @@ public class SignUpMenu {
         switch (message) {
 
             case EMPTY_FIELDS_SIGNUP_ERROR:
-                System.out.println("error: you have left some nessecary fields empty!");
+            Input_Output.outPut("error: you have left some nessecary fields empty!");
                 break;
 
             case INVALID_EMAIL_SIGNUP_ERROR:
-                System.out.println("error: invalid email!");
+                Input_Output.outPut("error: invalid email!");
                 break;
 
             case DUPLICATE_EMAIL_SIGNUP_ERROR:
-                System.out.println("error: email already in use!");
+                Input_Output.outPut("error: email already in use!");
                 break;
 
             case DUPLICATE_USERNAME_SIGNUP_ERROR:
-                Orders.printLine("error: your username was already in use!");
+                Input_Output.outPut("error: your username was already in use!");
                 break;
 
             case INVALID_USERNAME_SIGNUP_ERROR:
-                System.out.println("error: invalid username!");
+                Input_Output.outPut("error: invalid username!");
                 break;
 
             case WEAK_PASSWORD_ERROR:
-                System.out.println("error: your password is weak!");
+                Input_Output.outPut("error: your password is weak!");
                 break;
 
             case WRONG_PASSWORD_REPEAT_SIGNUP_ERROR:
-                System.out.println("error: password was not repeated correctly!");
+                Input_Output.outPut("error: password was not repeated correctly!");
                 break;
 
             case SUCCESFUL_SIGNUP_STEP:
-                System.out.println("Congratulations! you succesfully signed in.");
+                Input_Output.outPut("Congratulations! you succesfully signed in.");
                 break;
 
             default:
@@ -93,19 +92,19 @@ public class SignUpMenu {
         SignUpMenuMessages result = SignUpMenuController.userLoginController(username, password, stayLoggidInFlag);
         switch (result) {
             case LOGIN_EMPTY_FIELDS_ERROR:
-                Orders.printLine("error: empty username or password field!");
+                Input_Output.outPut("error: empty username or password field!");
                 break;
             case LOGIN_INCORRECT_PASSWORD_ERROR:
-                Orders.printLine("error: incorrect password!");
+                Input_Output.outPut("error: incorrect password!");
                 break;
             case LOGIN_INVALID_USERNAME_ERROR:
-                Orders.printLine("error: invalid username!");
+                Input_Output.outPut("error: invalid username!");
                 break;
             case SUCCESFUL_LOGIN:
-                Orders.printLine("login succesful!");
+                Input_Output.outPut("login succesful!");
                 break;
             default:
-                Orders.printLine("error logging in!");
+                Input_Output.outPut("error logging in!");
                 break;
         }
 
@@ -115,44 +114,44 @@ public class SignUpMenu {
     }
 
     private static void forgotMyPassWord() throws NoSuchAlgorithmException {
-        Orders.printLine("Please enter your email below:");
-        String userEmail = Orders.getNextlineInput();
+        Input_Output.outPut("Please enter your email below:");
+        String userEmail = Input_Output.getInput();
 
-        Orders.printLine("try to remember the security question you have answered!");
-        Orders.printLine("===the questions where: ");
+        Input_Output.outPut("try to remember the security question you have answered!");
+        Input_Output.outPut("===the questions where: ");
         displaySecurityQuestions();
 
-        Orders.printLine("===please enter your security answer to start recovery: ");
-        String answer = Orders.getNextlineInput();
+        Input_Output.outPut("===please enter your security answer to start recovery: ");
+        String answer = Input_Output.getInput();
 
         SignUpMenuMessages message = SignUpMenuController.forgotMyPassWordController(userEmail, answer);
 
         switch (message) {
             case SUCCESFUL_FORGET_PASSWORD:
-                Orders.printLine("your new password has been saved succesfuly!");
+                Input_Output.outPut("your new password has been saved succesfuly!");
                 break;
 
             case INVALID_EMAIL_FORGET_PASSWORD_ERROR:
-                Orders.printLine("error: there is no user associated with the entered email!");
+                Input_Output.outPut("error: there is no user associated with the entered email!");
                 break;
 
             case INCORRECT_SECURITY_FORGET_PASSWORD_ERROR:
-                Orders.printLine("error: the security answer doesnt match!");
+                Input_Output.outPut("error: the security answer doesnt match!");
                 break;
 
             default:
-                Orders.printLine("error restoring your password!");
+                Input_Output.outPut("error restoring your password!");
                 break;
         }
     }
 
     public static String suggestNewUsername(String username) {
 
-        Orders.printLine("username is already in use!");
+        Input_Output.outPut("username is already in use!");
 
         username = UserInfoOperator.addRandomizationToString(username);
-        Orders.printLine("would you like " + username + " to be your username instead?(yes to proceed)");
-        String userAnswer = Orders.getNextlineInput();
+        Input_Output.outPut("would you like " + username + " to be your username instead?(yes to proceed)");
+        String userAnswer = Input_Output.getInput();
 
         if (userAnswer.equals("yes"))
             return username;
@@ -162,56 +161,48 @@ public class SignUpMenu {
 
     public static void chooseSecurityQuestionForUser(User user) {
 
-        Orders.printLine("sign up was succesful! now please answer a security question of your choice to finish:");
+        Input_Output.outPut("sign up was succesful! now please answer a security question of your choice to finish:");
         displaySecurityQuestions();
         // HANDLING USER RESPONSE:
         while (true) {
-            String input = Orders.getNextlineInput();
+            String input = Input_Output.getInput();
 
             Matcher matcher;
             if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SECURITY)) == null) {
-                Orders.printLine("error: invalid input!");
+                Input_Output.outPut("error: invalid input!");
                 continue;
             }
-<<<<<<< HEAD
+                
                 
             String inputComponents=matcher.group("securityComponents");
             SignUpMenuMessages response=SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
 
-            if(response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))
-=======
-
-
-            String inputComponents = matcher.group("securityComponents");
-            SignUpMenuMessages response = SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
-
 
             if (response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))
->>>>>>> 82f627ea5e364086babebbe89149c8a298101609
                 return;
             else
-                Orders.printLine("error: invalid form of answer or wrong answer repetition!");
+                Input_Output.outPut("error: invalid form of answer or wrong answer repetition!");
         }
 
     }
 
     public static String confirmRandomPassword(String randomChosenPassword) {
-        Orders.printLine("your random password is: " + randomChosenPassword);
-        Orders.printLine("please re-enter the password chosen for you:");
-        return Orders.getNextlineInput();
+        Input_Output.outPut("your random password is: " + randomChosenPassword);
+        Input_Output.outPut("please re-enter the password chosen for you:");
+        return Input_Output.getInput();
     }
 
     public static void displayRandomSlogan(String slogan) {
-        Orders.printLine("your random slogan is: " + slogan);
+        Input_Output.outPut("your random slogan is: " + slogan);
     }
 
     public static String getNewPasswordFromUser() {
-        Orders.printLine("identification was succesful!");
+        Input_Output.outPut("identification was succesful!");
 
         String input;
         while (true) {
-            Orders.printLine("enter and repeat a new password!(-newp <password> <repeat>)");
-            input = Orders.getNextlineInput();
+            Input_Output.outPut("enter and repeat a new password!(-newp <password> <repeat>)");
+            input = Input_Output.getInput();
             String password = Orders.findFlagOption("-newp", input);
             String passwordConfirmation = Orders.findWordAfterFlagSequence("-newp", input);
             SignUpMenuMessages message = SignUpMenuController.handleNewPasswordEntry(password, passwordConfirmation);
@@ -220,10 +211,10 @@ public class SignUpMenu {
                 return password;
 
             else if (message.equals(SignUpMenuMessages.WEAK_PASSWORD_ERROR))
-                Orders.printLine("error: your new password is weak!");
+                Input_Output.outPut("error: your new password is weak!");
 
             else
-                Orders.printLine("error: invalid input or unmatching password repeat!");
+                Input_Output.outPut("error: invalid input or unmatching password repeat!");
 
         }
     }
@@ -234,15 +225,15 @@ public class SignUpMenu {
         while (true) {
             securityQuestion = UserInfoOperator.getSecurityQuestionByIndex(i);
             if (securityQuestion != null)
-                Orders.printLine("" + i + ") " + securityQuestion);
+                Input_Output.outPut("" + i + ") " + securityQuestion);
             else break;
             i++;
         }
     }
 
     private static void handleLoginProcess() {
-        User welcomedUser = DataBase.getCurrentUser();
-        Orders.printLine("welcome: " + welcomedUser.getNickName() + "! ");
+        User welcomedUser = User.getCurrentUser();
+        Input_Output.outPut("welcome: " + welcomedUser.getNickName() + "! ");
     }
 
 }

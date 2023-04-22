@@ -25,7 +25,7 @@ public class UserInfoOperator {
     }
 
 
-    
+
         
     public static String getRandomSlogan(){
         int randomNumBound=defaultSlogans.size();
@@ -55,7 +55,7 @@ public class UserInfoOperator {
     }
 
     public static void updateAllUsersJsonData(String dirFromSrc) throws NoSuchAlgorithmException{
-        for (User user : DataBase.getUsers()) {
+        for (User user : User.getUsers()) {
             storeUserDataInJson(user, dirFromSrc);
         }
     }

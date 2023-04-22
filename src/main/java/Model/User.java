@@ -2,8 +2,12 @@ package Model;
 
 import java.util.ArrayList;
 
+import Controller.JsonConverter;
+
 public class User {
     private static ArrayList<User> users;
+    private static User currentUser;
+
     private String username;
     private String password;
     private String nickName;
@@ -16,6 +20,7 @@ public class User {
 
     static {
         users = new ArrayList<>();
+        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
     }
 
     public User(String username, String password, String nickname,String email, String slogan) {
@@ -119,7 +124,19 @@ public class User {
         return users;
     }
 
-    public boolean isStayLoggedIn() {
+    public boolean isStayedLoggedIn() {
         return stayLoggedIn;
+    }
+
+    public static void addUser(User user){
+        users.add(user);
+    }
+
+    public static User getCurrentUser(){
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user){
+        currentUser=user;
     }
 }

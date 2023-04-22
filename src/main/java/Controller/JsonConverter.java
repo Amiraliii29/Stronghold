@@ -70,9 +70,9 @@ public class JsonConverter {
         for (int i = 0; i < usersJsonArray.size(); i++) {
             User userUnderRestoration=new User(null, null, null, null, null);
             fillUserInfo(userUnderRestoration, i, usersJsonArray);
-            DataBase.addUser(userUnderRestoration);
+            User.addUser(userUnderRestoration);
             if(userUnderRestoration.getStayLoggedIn())
-             DataBase.setCurrentUser(userUnderRestoration);
+             User.setCurrentUser(userUnderRestoration);
         }
 
     }
