@@ -23,19 +23,19 @@ public class SignUpMenuController {
         if(User.getUserByUserName(userName) != null)
          return SignUpMenuMessages.DUPLICATE_USERNAME_SIGNUP_ERROR;
 
-        if(!isUsernameFormatValid(userName))
+        if(!UserInfoOperator.isUsernameFormatValid(userName))
          return SignUpMenuMessages.INVALID_USERNAME_SIGNUP_ERROR;
 
         if(User.getUserByEmail(email) != null)
          return SignUpMenuMessages.DUPLICATE_EMAIL_SIGNUP_ERROR;
 
-        if(!isPasswordStrong(passWord)) 
+        if(!UserInfoOperator.isPasswordStrong(passWord)) 
          return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
         
-        if(!isPasswordRepeatedCorrectly(passWordConfirmation, passWord))
+        if(!UserInfoOperator.isPasswordRepeatedCorrectly(passWordConfirmation, passWord))
          return SignUpMenuMessages.WRONG_PASSWORD_REPEAT_SIGNUP_ERROR;
 
-        if(!isEmailFormatValid(email))
+        if(!UserInfoOperator.isEmailFormatValid(email))
          return SignUpMenuMessages.INVALID_EMAIL_SIGNUP_ERROR;
         
 
@@ -102,62 +102,14 @@ public class SignUpMenuController {
         if( passwordRepeat ==null)
           return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;         
 
-        if(!isPasswordRepeatedCorrectly(password, passwordRepeat))
+        if(!UserInfoOperator.isPasswordRepeatedCorrectly(password, passwordRepeat))
           return SignUpMenuMessages.INCORRECT_REPEAT_FORGET_PASSWORD_ERROR;
 
-        if(!isPasswordStrong(password))
+        if(!UserInfoOperator.isPasswordStrong(password))
           return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
         
 
         return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
-    }
-
-    private static boolean isEmailFormatValid(String inputEmail){
-        String spaceCheckerRegex="\\s";
-        Matcher spaceCheckerMatcher=Orders.createMatcher(spaceCheckerRegex, inputEmail);
-        if(spaceCheckerMatcher.find()) return false;
-
-        String correctFormatRegex="(?<emailBody>[^\\@]+)\\@(?<firstEmailHead>[^\\.]+)\\.(?<secondEmailHead>.+)";
-        Matcher correctFormatMatcher=Orders.createMatcher(correctFormatRegex, inputEmail);
-        if(!correctFormatMatcher.matches()) return false;
-
-        return true;
-    }
-
-    private static boolean isPasswordStrong(String password){
-        if(password.length()<6) return false;
-
-        String bigAlphabetRegex="[A-Z]";
-        Matcher bigAlphabetMatcher=Orders.createMatcher(bigAlphabetRegex, password);
-        if(!bigAlphabetMatcher.find()) return false;
-
-        String smallAlphabetRegex="[a-z]";
-        Matcher smallAlphabetMatcher=Orders.createMatcher(smallAlphabetRegex, password);
-        if(!smallAlphabetMatcher.find()) return false;
-
-        String numberRegex="[0-9]";
-        Matcher numberMatcher=Orders.createMatcher(numberRegex, password);
-        if(!numberMatcher.find()) return false;
-
-        String specialCharRegex="[^a-zA-Z0-9]";
-        Matcher specialCharMatcher=Orders.createMatcher(specialCharRegex, password);
-        if(!specialCharMatcher.find()) return false;
-
-        return true;
-    }
-
-    private static boolean isUsernameFormatValid(String inputUsername){
-        String invalidCharRegex="[^A-Za-z0-9\\_]";
-        Matcher invalidCharMatcher=Orders.createMatcher(invalidCharRegex, inputUsername);
-        if(invalidCharMatcher.find()) return false;
-
-        return true;
-    }
-
-    private static boolean isPasswordRepeatedCorrectly(String password, String passwordRepeat){
-        if(password.equals(passwordRepeat))
-            return true;
-        else return false;
     }
 
     public static void setNewPenalty(){
@@ -185,6 +137,9 @@ public class SignUpMenuController {
         String email=Orders.findFlagOption("--email", signupComponentsInput);
         String slogan=Orders.findFlagOption("-s", signupComponentsInput);
     
+        if(slogan==null)
+            slogan="";
+
         if(username==null || password==null || email==null|| passwordConfirmation==null || nickName==null)
             return SignUpMenuMessages.EMPTY_FIELDS_SIGNUP_ERROR;
         

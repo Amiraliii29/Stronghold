@@ -15,7 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 
-import Model.DataBase;
+
 import Model.User;
 
 public class JsonConverter {
@@ -84,13 +84,18 @@ public class JsonConverter {
         user.setEmail(getJsonKeyValue("email", UserInJson));
         user.setSlogan(getJsonKeyValue("slogan", UserInJson));
         user.setSecurityQuestion(getJsonKeyValue("securityQ", UserInJson));
+
         String hashedPassword=getJsonKeyValue("password", UserInJson);
         user.setPassword(hashedPassword);
 
         String loginStatInString=getJsonKeyValue("stayLoggedIn", UserInJson);
         if(loginStatInString.equals("true"))
-         user.setStayLoggedIn(true);
-        else user.setStayLoggedIn(false);
+            user.setStayLoggedIn(true);
+        else 
+            user.setStayLoggedIn(false);
+
+        user.setRank(Integer.parseInt(getJsonKeyValue("rank", UserInJson)));
+        user.setHighscore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
     }
 
     private static String getJsonKeyValue(String key, JSONObject jsonObject){

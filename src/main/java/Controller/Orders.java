@@ -51,6 +51,12 @@ public class Orders {
         return option;
     }
 
+    public static String trimIfNeeded(String input){
+        if(input.charAt(0)=='\"')
+        return trimEndAndStartOfString(input);
+        else return input;
+    }
+
     public static String findWordAfterFlagSequence(String flag,String input){
         String nextWordRegex="(?<nextWord>(\"[^\"]+\")|([^\\s]+))";
 
