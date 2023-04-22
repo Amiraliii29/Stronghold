@@ -1,14 +1,9 @@
 package Model;
 
-
-import Model.Citizen.*;
-import Model.Buildings.*;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class User {
-
+    private static ArrayList<User> users;
     private String username;
     private String password;
     private String nickName;
@@ -19,12 +14,17 @@ public class User {
     private int highscore;
     private int rank;
 
+    static {
+        users = new ArrayList<>();
+    }
+
     public User(String username, String password, String nickname,String email, String slogan) {
         this.username = username;
         this.password = password;
         this.nickName=nickname;
         this.email = email;
         this.slogan = slogan;
+        users.add(this);
     }
 
     public String getUsername() {
@@ -99,5 +99,19 @@ public class User {
         return stayLoggedIn;
     }
 
+    public static User getUserByUserName(String userName) {
+        for (User user : users)
+            if (user.getUsername().equals(userName))
+                return user;
 
+        return null;
+    }
+
+    public static User getUserByEmail(String email) {
+        for (User user : users)
+            if (user.getEmail().equals(email))
+                return user;
+
+        return null;
+    }
 }

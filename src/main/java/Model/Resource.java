@@ -33,6 +33,10 @@ public class Resource {
         return price;
     }
 
+    public int getBuyingPrice() {
+        return price;//TODO
+    }
+
     public int getUsingRate() {
         return usingRate;
     }

@@ -85,12 +85,4 @@ public class Orders {
         }
         return output;
     }
-
-    public static String getNextlineInput(){
-        return scanner.nextLine();
-    }
-
-    public static void printLine(String output){
-        System.out.println(output);
-    }
 }
