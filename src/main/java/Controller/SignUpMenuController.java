@@ -2,15 +2,18 @@ package Controller;
 
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Timer;
 import java.util.regex.Matcher;
 
 import Model.DataBase;
 import Model.User;
 import View.SignUpMenu;
-import View.Enums.Commands.SignUpMenuCommands;
 import View.Enums.Messages.SignUpMenuMessages;
 
 public class SignUpMenuController {
+
+    private static int failedAttempts;
+    private static int failurePenalty;
 
     //username password email slogan
     public static SignUpMenuMessages createUserController(String userName , String passWord,
@@ -27,7 +30,7 @@ public class SignUpMenuController {
          return SignUpMenuMessages.DUPLICATE_EMAIL_SIGNUP_ERROR;
 
         if(!isPasswordStrong(passWord)) 
-         return SignUpMenuMessages.WEAK_PASSWORD_SIGNUP_ERROR;
+         return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
         
         if(!isPasswordRepeatedCorrectly(passWordConfirmation, passWord))
          return SignUpMenuMessages.WRONG_PASSWORD_REPEAT_SIGNUP_ERROR;
@@ -38,6 +41,7 @@ public class SignUpMenuController {
 
         passWord=UserInfoOperator.encodeStringToSha256(passWord);
         User newUser=new User(userName, passWord, nickName,email, slogan);
+        newUser.setStayLoggedIn(false);
 
         SignUpMenu.chooseSecurityQuestionForUser(newUser);
 
@@ -46,7 +50,27 @@ public class SignUpMenuController {
         return SignUpMenuMessages.SUCCESFUL_SIGNUP_STEP; 
     }
 
-    public static SignUpMenuMessages userLoginController(String userName , String passWord , String option){
+    public static SignUpMenuMessages userLoginController(String userName , String passWord , Boolean stayLoggedInoption) throws NoSuchAlgorithmException{
+        if(userName==null || passWord==null)
+         return SignUpMenuMessages.LOGIN_EMPTY_FIELDS_ERROR;
+        
+        passWord=UserInfoOperator.encodeStringToSha256(passWord);
+        User targetUser=DataBase.getUserByUserName(userName);
+        
+        if(targetUser==null) 
+         return SignUpMenuMessages.LOGIN_INVALID_USERNAME_ERROR;
+        
+        if(!passWord.equals(targetUser.getPassword()))
+          return SignUpMenuMessages.LOGIN_INCORRECT_PASSWORD_ERROR;
+
+
+        if(stayLoggedInoption!= null){
+            targetUser.setStayLoggedIn(true);
+            UserInfoOperator.storeUserDataInJson(targetUser,"src/main/java/jsonData/Users.json" );
+        }
+
+        DataBase.setCurrentUser(targetUser);
+        return SignUpMenuMessages.SUCCESFUL_LOGIN;
     }
 
     public static SignUpMenuMessages forgotMyPassWordController(String email, String securityAnswer) throws NoSuchAlgorithmException{
@@ -54,22 +78,36 @@ public class SignUpMenuController {
         if(targetUser==null)
           return SignUpMenuMessages.INVALID_EMAIL_FORGET_PASSWORD_ERROR;
         
-        if(targetUser.getSecurityQuestion().equals(securityAnswer))
+        if(!targetUser.getSecurityQuestion().equals(securityAnswer))
             return SignUpMenuMessages.INCORRECT_SECURITY_FORGET_PASSWORD_ERROR;
         
         String newPassword=SignUpMenu.getNewPasswordFromUser();
         newPassword=UserInfoOperator.encodeStringToSha256(newPassword);
         
         targetUser.setPassword(newPassword);
-        //NOTE: UPDATED DATA NEEDS TO BE SAVED IN JSON
+        UserInfoOperator.storeUserDataInJson(targetUser, "src/main/java/jsonData/Users.json");
         return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
     }
 
     public static SignUpMenuMessages handleNewPasswordEntry(String password, String passwordRepeat){
-        if(password==null || passwordRepeat ==null)
-          return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
+
+        if(password==null)
+         return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;         
+
+        if(password.equals("random")){
+            password=UserInfoOperator.generateRandomPassword();
+            passwordRepeat=SignUpMenu.confirmRandomPassword(password);
+        }
+
+        if( passwordRepeat ==null)
+          return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;         
+
         if(!isPasswordRepeatedCorrectly(password, passwordRepeat))
           return SignUpMenuMessages.INCORRECT_REPEAT_FORGET_PASSWORD_ERROR;
+
+        if(!isPasswordStrong(password))
+          return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
+        
 
         return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
     }
@@ -120,6 +158,20 @@ public class SignUpMenuController {
         if(password.equals(passwordRepeat))
             return true;
         else return false;
+    }
+
+    public static void setNewPenalty(){
+        failedAttempts++;
+        failurePenalty=failedAttempts*5;
+        adjustPenaltyByTime();
+    }
+
+    public static void adjustPenaltyByTime(){
+        PenaltyTimer.setProcessDuration(getPenalty());
+        PenaltyTimer.setProcessStartingTime();
+
+        Timer timerObj = new Timer(true);
+        timerObj.scheduleAtFixedRate(new PenaltyTimer(), 0, 1000);
     }
 
     public static SignUpMenuMessages runControllerSignupFunction(String signupComponentsInput) throws NoSuchAlgorithmException{
@@ -175,4 +227,11 @@ public class SignUpMenuController {
         return SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER;
     }
 
+    public static int getPenalty(){
+        return failurePenalty;
+    }
+
+    public static void decreasePenalty(){
+        failurePenalty--;
+    }
 }

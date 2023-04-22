@@ -31,9 +31,20 @@ public class Orders {
         return flagMatcher.group("option");
     }
 
+    public static boolean doesFlagExist(String flag, String input){
+        Matcher matcher=createMatcher(flag, input);
+        if(matcher.find())
+          return true;
+
+        return false;
+    }
+
     public static String findFlagOption(String flag, String input){
         
         String option =findRawFlagOption(flag, input);
+        if(option==null)
+            return null;
+
         if(option.charAt(0)=='\"')
          option=trimEndAndStartOfString(option);
 

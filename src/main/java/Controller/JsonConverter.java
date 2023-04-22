@@ -21,14 +21,13 @@ import Model.User;
 public class JsonConverter {
 
 
-   
-
-    
-
     public static void putUserDataInFile(String username, String password,String email, String slogan,
-         String securityQ, String nickname,String rank,String highscore ,String dirFromSrc) {
+         String securityQ, String nickname,String rank,String highscore,boolean stayLoggedIn ,String dirFromSrc) {
 
             JSONObject newUser= new JSONObject();
+            String loginValue;
+            if (stayLoggedIn) loginValue="true";
+            else loginValue="false";
 
             newUser.put("username", username);
             newUser.put("password", password);
@@ -38,17 +37,20 @@ public class JsonConverter {
             newUser.put("nickname", nickname);
             newUser.put("rank", rank);
             newUser.put("highscore", highscore);
+            newUser.put("stayLoggedIn", loginValue);
 
 
+            
 
             JSONArray userData=getUsersDataInJson(dirFromSrc);
             int userIndexInData=getUserIndexInJsonArray(username, dirFromSrc);
-
+            
+            
             if(userIndexInData==-1)
                 userData.add(newUser);
             else{
                 userData.remove(userIndexInData);
-                userData.add(userIndexInData, userData);
+                userData.add(newUser);
             }
 
             try{
@@ -69,12 +71,12 @@ public class JsonConverter {
             User userUnderRestoration=new User(null, null, null, null, null);
             fillUserInfo(userUnderRestoration, i, usersJsonArray);
             DataBase.addUser(userUnderRestoration);
+            if(userUnderRestoration.getStayLoggedIn())
+             DataBase.setCurrentUser(userUnderRestoration);
         }
 
     }
-
-
-    
+   
     private static void fillUserInfo(User user,int userIndex, JSONArray jsonData){
         JSONObject UserInJson=(JSONObject) jsonData.get(userIndex);
         user.setNickName(getJsonKeyValue("nickname", UserInJson));
@@ -84,6 +86,11 @@ public class JsonConverter {
         user.setSecurityQuestion(getJsonKeyValue("securityQ", UserInJson));
         String hashedPassword=getJsonKeyValue("password", UserInJson);
         user.setPassword(hashedPassword);
+
+        String loginStatInString=getJsonKeyValue("stayLoggedIn", UserInJson);
+        if(loginStatInString.equals("true"))
+         user.setStayLoggedIn(true);
+        else user.setStayLoggedIn(false);
     }
 
     private static String getJsonKeyValue(String key, JSONObject jsonObject){

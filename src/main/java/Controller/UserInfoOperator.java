@@ -38,6 +38,7 @@ public class UserInfoOperator {
         return securityQuestions.get(indexFromOne-1);
     }
 
+
     public static void storeUserDataInJson(User user,String dirFromSrc) throws NoSuchAlgorithmException{
         String username=user.getUsername();
         String password=user.getPassword();
@@ -47,9 +48,10 @@ public class UserInfoOperator {
         String nickname=user.getNickName();
         String rank=Integer.toString(user.getRank());
         String highscore=Integer.toString(user.getHighscore());
+        boolean loginStatus=user.getStayLoggedIn();
 
         JsonConverter.putUserDataInFile(username, password, email, slogan, 
-                        securityQuestion, nickname,rank,highscore ,dirFromSrc);
+                        securityQuestion, nickname,rank,highscore,loginStatus ,dirFromSrc);
     }
 
     public static void updateAllUsersJsonData(String dirFromSrc) throws NoSuchAlgorithmException{

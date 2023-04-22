@@ -15,17 +15,17 @@ public class User {
     private String email;
     private String slogan;
     private String securityQuestion;
+    private boolean stayLoggedIn;
     private int highscore;
     private int rank;
 
-
-    private ArrayList<Building> Buildings;
-    private HashMap <String , Integer> Resources;
-    private ArrayList <Troop> Army;
-    private Government Government;
-    private int gold;
-    private int availablePopulation;
-    private int totalPopulation;
+    public User(String username, String password, String nickname,String email, String slogan) {
+        this.username = username;
+        this.password = password;
+        this.nickName=nickname;
+        this.email = email;
+        this.slogan = slogan;
+    }
 
     public String getUsername() {
         return username;
@@ -75,16 +75,8 @@ public class User {
         this.securityQuestion = securityQuestion;
     }
 
-    public User( String username, String password,String nickname,String email ,String slogan ){
-        this.username=username;
-        this.password=password;
-        this.nickName=nickname;
-        this.email=email;
-        this.slogan=slogan;
-    }
-
-    public void setRank(int rank){
-        this.rank=rank;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public void setHighscore(int highscore){
@@ -97,6 +89,14 @@ public class User {
 
     public int getHighscore(){
         return highscore;
+    }
+
+    public void setStayLoggedIn(boolean status){
+        stayLoggedIn=status;
+    }
+
+    public boolean getStayLoggedIn(){
+        return stayLoggedIn;
     }
 
 

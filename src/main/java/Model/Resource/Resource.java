@@ -8,9 +8,13 @@ public class Resource {
     private double count;
     private String storage;//where we store it
     private static ArrayList<Resource> resources;
+    private static ArrayList<Resource> foods;
+    private static ArrayList<Resource> weapons;
 
     static {
         resources = new ArrayList<>();
+        foods = new ArrayList<>();
+        weapons = new ArrayList<>();
     }
 
     public Resource(String name, int price, String storage) {
@@ -24,8 +28,12 @@ public class Resource {
         return name;
     }
 
-    public int getPrice() {
+    public int getSellPrice() {
         return price;
+    }
+
+    public int getBuyPrice() {
+        return (price*1);
     }
 
     public double getCount() {
@@ -36,7 +44,7 @@ public class Resource {
         return storage;
     }
 
-    public void changeCount(int count) {
+    public void changeCount(double count) {
         this.count += count;
     }
 
@@ -46,6 +54,21 @@ public class Resource {
 
     public static void addToResources(Resource resource) {
         resources.add(resource);
+        if (resource.getName().equals("Bread")
+                || resource.getName().equals("Meat")
+                || resource.getName().equals("Apples")
+                || resource.getName().equals("Cheese")) {
+            foods.add(resource);
+        } else if (resource.getName().equals("Sword")
+                || resource.getName().equals("Spear")
+                || resource.getName().equals("Pike")
+                || resource.getName().equals("Bow")
+                || resource.getName().equals("CrossBow")
+                || resource.getName().equals("Mace")
+                || resource.getName().equals("MetalArmor")
+                || resource.getName().equals("LeatherArmor")) {
+            weapons.add(resource);
+        }
     }
 
     public static ArrayList<Resource> getAllResources() {
@@ -75,5 +98,13 @@ public class Resource {
         ResourceEnum.addToResources(ResourceEnum.Hops);
 
         return resources;
+    }
+
+    public static ArrayList<Resource> getFoods() {
+        return foods;
+    }
+
+    public static ArrayList<Resource> getWeapons() {
+        return weapons;
     }
 }

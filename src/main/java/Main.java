@@ -17,6 +17,6 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
         Scanner scanner= new Scanner(System.in);
-       SignUpMenu.run(scanner);
+        SignUpMenu.run(scanner);
 }
 }

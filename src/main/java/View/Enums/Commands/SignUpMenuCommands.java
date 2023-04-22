@@ -9,6 +9,8 @@ public enum SignUpMenuCommands {
     
     SECURITY("\\s*question\\s+pick\\s+(?<securityComponents>.+)"),
 
+    LOGIN("\\s*user\\s+login\\s+(?<loginComponents>.+)"),
+
     FORGOT_PASSWORD("\\s*forgot\\s+my\\s+password"),
     ;
     private String regex;

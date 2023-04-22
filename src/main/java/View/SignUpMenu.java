@@ -14,28 +14,31 @@ import View.Enums.Messages.SignUpMenuMessages;
 public class SignUpMenu {
     
     public static void run(Scanner scanner) throws NoSuchAlgorithmException {
-
         String input;
-        while (true) {
+
+        while (DataBase.getCurrentUser()==null) {
             Matcher matcher;
             input=scanner.nextLine();
 
             if(input.equals("exit"))
              return;
             
-            if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) !=null )
-            //NOTE: subUsername is for handling username suggestment and to call the function back
-            createUser(matcher);
+            if(SignUpMenuController.getPenalty()>0)
+                Orders.printLine("error: you have to wait "+SignUpMenuController.getPenalty()+" seconds before next order!");
 
             else if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) !=null )
+            createUser(matcher);
+
+            else if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD)) !=null )
                 forgotMyPassWord();
             
-
-
-
+            else if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.LOGIN))!=null )
+                userLogin(matcher);
+            
+            else Orders.printLine("error: invalid command!");
         }
-
-
+        handleLoginProcess();
+        LoginMenu.run(scanner);
     }
 
     private static void createUser(Matcher matcher) throws NoSuchAlgorithmException {
@@ -65,7 +68,7 @@ public class SignUpMenu {
              System.out.println("error: invalid username!");
              break;
             
-            case WEAK_PASSWORD_SIGNUP_ERROR:
+            case WEAK_PASSWORD_ERROR:
              System.out.println("error: your password is weak!");
              break;
 
@@ -83,18 +86,45 @@ public class SignUpMenu {
 
     }
 
-    private static void userLogin(Matcher matcher) {
+    private static void userLogin(Matcher matcher) throws NoSuchAlgorithmException {
+        String loginComponents=matcher.group("loginComponents");
+        String username=Orders.findFlagOption("-u", loginComponents);
+        String password=Orders.findFlagOption("-p", loginComponents);
+        boolean stayLoggidInFlag=Orders.doesFlagExist("--stay-logged-in", loginComponents);
+
+        SignUpMenuMessages result=SignUpMenuController.userLoginController(username, password, stayLoggidInFlag);
+        switch (result) {
+            case LOGIN_EMPTY_FIELDS_ERROR:
+                Orders.printLine("error: empty username or password field!");
+                break;
+            case LOGIN_INCORRECT_PASSWORD_ERROR:
+                Orders.printLine("error: incorrect password!");
+                break;
+            case LOGIN_INVALID_USERNAME_ERROR:
+                Orders.printLine("error: invalid username!");
+                break;
+            case SUCCESFUL_LOGIN:
+                Orders.printLine("login succesful!");
+                break;
+            default:
+                Orders.printLine("error logging in!");
+                break;
+        }
+
+        if(!result.equals(SignUpMenuMessages.SUCCESFUL_LOGIN))
+            SignUpMenuController.setNewPenalty();
+
     }
 
     private static void forgotMyPassWord() throws NoSuchAlgorithmException {
         Orders.printLine("Please enter your email below:");
         String userEmail=Orders.getNextlineInput();
 
-        Orders.printLine("now try to remember the security question you have answered!");
+        Orders.printLine("try to remember the security question you have answered!");
         Orders.printLine("===the questions where: ");
         displaySecurityQuestions();
 
-        Orders.printLine("===please enter your security answer: ");
+        Orders.printLine("===please enter your security answer to start recovery: ");
         String answer=Orders.getNextlineInput();
 
         SignUpMenuMessages message=SignUpMenuController.forgotMyPassWordController(userEmail,answer);
@@ -142,8 +172,10 @@ public class SignUpMenu {
             String input=Orders.getNextlineInput();
 
             Matcher matcher;
-            if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SECURITY)) ==null )
+            if( (matcher=SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SECURITY)) ==null ){
                 Orders.printLine("error: invalid input!");
+                continue;
+            }
                 
                 
             String inputComponents=matcher.group("securityComponents");
@@ -169,20 +201,25 @@ public class SignUpMenu {
     }
 
     public static String getNewPasswordFromUser(){
-        Orders.printLine("password recovery was succesful! now enter and repeat a new password!");
+        Orders.printLine("identification was succesful!");
 
         String input;
         while (true) {
+            Orders.printLine("enter and repeat a new password!(-newp <password> <repeat>)");
             input=Orders.getNextlineInput();
             String password=Orders.findFlagOption("-newp", input);
             String passwordConfirmation=Orders.findWordAfterFlagSequence("-newp", input);
-            SignUpMenuMessages message=SignUpMenuController.handleNewPasswordEntry(passwordConfirmation, password);
+            SignUpMenuMessages message=SignUpMenuController.handleNewPasswordEntry(password,passwordConfirmation);
 
             if(message.equals(SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD))
                 return password;
             
+            else if(message.equals(SignUpMenuMessages.WEAK_PASSWORD_ERROR))
+                Orders.printLine("error: your new password is weak!");
+
             else
               Orders.printLine("error: invalid input or unmatching password repeat!");
+
         }
     }
 
@@ -198,6 +235,9 @@ public class SignUpMenu {
         }
     }
 
-
+    private static void handleLoginProcess(){
+        User welcomedUser=DataBase.getCurrentUser();
+        Orders.printLine("welcome: "+welcomedUser.getNickName()+"! ");
+    }
 
 }
