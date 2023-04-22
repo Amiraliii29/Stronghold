@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.Resource.Resource;
 import Model.User;
 
 import java.util.ArrayList;

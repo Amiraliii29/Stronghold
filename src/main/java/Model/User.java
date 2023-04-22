@@ -1,12 +1,12 @@
 package Model;
 
-import Model.Buildings.*;
-import Model.Citizen.*;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import Controller.JsonConverter;
 
 public class User {
+    private static ArrayList<User> users;
+    private static User currentUser;
 
     private String username;
     private String password;
@@ -14,14 +14,22 @@ public class User {
     private String email;
     private String slogan;
     private String securityQuestion;
+    private boolean stayLoggedIn;
     private int highscore;
     private int rank;
 
-    public User(String username, String password, String email, String slogan) {
+    static {
+        users = new ArrayList<>();
+        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
+    }
+
+    public User(String username, String password, String nickname,String email, String slogan) {
         this.username = username;
         this.password = password;
+        this.nickName=nickname;
         this.email = email;
         this.slogan = slogan;
+        users.add(this);
     }
 
     public String getUsername() {
@@ -76,15 +84,59 @@ public class User {
         this.rank = rank;
     }
 
-    public void setHighscore(int highscore) {
-        this.highscore = highscore;
+    public void setHighscore(int highscore){
+        this.highscore=highscore;
     }
 
-    public int getRank() {
+    public int getRank(){
         return rank;
     }
 
-    public int getHighscore() {
+    public int getHighscore(){
         return highscore;
+    }
+
+    public void setStayLoggedIn(boolean status){
+        stayLoggedIn=status;
+    }
+
+    public boolean getStayLoggedIn(){
+        return stayLoggedIn;
+    }
+
+    public static User getUserByUserName(String userName) {
+        for (User user : users)
+            if (user.getUsername().equals(userName))
+                return user;
+
+        return null;
+    }
+
+    public static User getUserByEmail(String email) {
+        for (User user : users)
+            if (user.getEmail().equals(email))
+                return user;
+
+        return null;
+    }
+
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public boolean isStayedLoggedIn() {
+        return stayLoggedIn;
+    }
+
+    public static void addUser(User user){
+        users.add(user);
+    }
+
+    public static User getCurrentUser(){
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user){
+        currentUser=user;
     }
 }

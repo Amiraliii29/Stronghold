@@ -3,45 +3,49 @@ package Model;
 import Model.Buildings.Building;
 
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Controller.JsonConverter;
+
 public class DataBase {
-    private static final ArrayList<User> users = new ArrayList<User>();
-    private static final ArrayList<Map> maps = new ArrayList<Map>();
-    private static User currentUser;
+    private static final ArrayList<Government> governments;
+    private static final ArrayList<Map> maps;
+    private static Government currentGovernment;
     private static Map selectedMap;
     private static Building selectedBuilding;
-    private static ArrayList<Troop> selectedUnit = new ArrayList<Troop>();
+    private static ArrayList<Troop> selectedUnit;
 
 
-    public static void setCurrentUser(User currentUser) {
-        DataBase.currentUser = currentUser;
+    static {
+        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
+        governments = new ArrayList<>();
+        maps = new ArrayList<>();
+        selectedUnit = new ArrayList<>();
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
+
+
+    public static Government getCurrentGovernment() {
+        return currentGovernment;
     }
 
-    public static User getUserByUserName(String userName) {
-        for (User user : users)
-            if (user.getUsername().equals(userName))
-                return user;
+    public static void setCurrentGovernment(Government currentGovernment) {
+        DataBase.currentGovernment = currentGovernment;
+    }
+
+    public static Government getGovernmentByUserName(String userName) {
+        for (Government government:governments)
+            if (government.getOwner().getUsername().equals(userName))
+                return government;
 
         return null;
     }
 
-    public static User getUserByEmail(String email) {
-        for (User user : users)
-            if (user.getEmail().equals(email))
-                return user;
 
-        return null;
-    }
-
-
-    public static void addUser(User user) {
-        users.add(user);
+    public static void addGovernment(Government government) {
+        governments.add(government);
     }
 
     public static Building getSelectedBuilding() {
@@ -73,8 +77,5 @@ public class DataBase {
 
     public static void setSelectedMap(Map selectedMap) {
         DataBase.selectedMap = selectedMap;
-    }
-
-    public static String getCaptcha() {
     }
 }
