@@ -6,6 +6,7 @@ import Model.Resource;
 import java.util.ArrayList;
 
 public abstract class Building {
+    protected Resource resource;
     protected String name;
     protected int xCoordinateLeft;
     protected int xCoordinateRight;
@@ -13,9 +14,9 @@ public abstract class Building {
     protected int yCoordinateUp;
     protected ArrayList<Land> lands;
     protected int hp;
-    protected Resource resource;
     protected int numberOfResource;
     protected int cost;
+    protected boolean canPass;
 
     // add each kind of building to users arraylist in database ! //TODO
     public Building(String name, int hp, Resource resource, int numberOfResource, int cost) {

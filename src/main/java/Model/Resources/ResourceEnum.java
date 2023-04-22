@@ -1,4 +1,4 @@
-package Model.Resource;
+package Model.Resources;
 
 public enum ResourceEnum {
     Bread("Bread", 100, "Granary"),
