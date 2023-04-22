@@ -41,6 +41,10 @@ public class Government {
         weapons = Resource.getWeapons();
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
     private void setFoodFactors() {
         foodCount = 0;
         foodType = 0;
@@ -50,10 +54,6 @@ public class Government {
                 foodType++;
             }
         }
-    }
-
-    public User getOwner() {
-        return owner;
     }
 
     public int getPopularity() {
@@ -69,6 +69,22 @@ public class Government {
         else popularity += (((tax - 5) * (-4)) - 12);
 
         return popularity;
+    }
+
+    public boolean addToStockpile(Resource resource, int number) {
+        return Stockpile.addResource(stockpiles, resource, number);
+    }
+
+    public int freeStockpileSpace(Resource resource) {
+        return Stockpile.freeSpaceForResource(stockpiles, resource);
+    }
+
+    public int getResourceInStockpiles(Resource resource) {
+        return Stockpile.getResourceCount(stockpiles, resource);
+    }
+
+    public boolean removeFromStockpile(Resource resource, int number) {
+        return Stockpile.removeResource(stockpiles, resource, number);
     }
 
     public void addAndRemoveFromGovernment() {
@@ -143,6 +159,10 @@ public class Government {
             moneyPerPerson = getMoneyEachPersonPay(tax);
         }
         this.tax = tax;
+    }
+
+    public void changeMoney(double money) {
+        this.money += money;
     }
 
     public int getWorkerRate() {
