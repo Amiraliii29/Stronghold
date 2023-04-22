@@ -1,7 +1,7 @@
 package Model.Buildings;
 
 import Model.Land;
-import Model.Resource;
+import Model.Resources.Resource;
 
 import java.util.ArrayList;
 
