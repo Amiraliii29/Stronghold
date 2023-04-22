@@ -1,16 +1,13 @@
 package Model;
 
-<<<<<<< HEAD
-=======
+import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
-import Model.Resource.Resource;
+import Model.Resources.Resource;
 
 import java.util.ArrayList;
 
-import static java.lang.Math.floor;
-
->>>>>>> 27e21bc616b4d00ce54de1d0ee47e96e45cee43a
 public class Government {
+    private User owner;
     private int popularity;
     private int workerRate;
     private int population;
@@ -21,19 +18,13 @@ public class Government {
     private int tax;
     private int faith;
     private int fear;
-<<<<<<< HEAD
-
-    public int getPopularity() {
-        popularity = food + faith + fear + tax;
-        return popularity;
-    }
-
-=======
     private double money;
     private ArrayList<Resource> resources;
     private static ArrayList<Resource> foods;
     private static ArrayList<Resource> weapons;
     private ArrayList<Stockpile> stockpiles;
+    private ArrayList<Troop> troops;
+    private ArrayList<Building> buildings;
 
     public Government(User owner, double money) {
         this.owner = owner;
@@ -158,37 +149,22 @@ public class Government {
         return workerRate;
     }
 
->>>>>>> 27e21bc616b4d00ce54de1d0ee47e96e45cee43a
     public int getFood() {
         return food;
-    }
-
-    public void setFood(int food) {
-        this.food = food;
     }
 
     public int getTax() {
         return tax;
     }
 
-    public void setTax(int tax) {
-        this.tax = tax;
-    }
-
     public int getFaith() {
         return faith;
-    }
-
-    public void setFaith(int faith) {
-        this.faith = faith;
     }
 
     public int getFear() {
         return fear;
     }
 
-<<<<<<< HEAD
-=======
     public double getMoney() {
         return money;
     }
@@ -223,17 +199,11 @@ public class Government {
         return weapons;
     }
 
->>>>>>> 27e21bc616b4d00ce54de1d0ee47e96e45cee43a
     public void setFear(int fear) {
         this.fear = fear;
     }
 
-<<<<<<< HEAD
-    public int getWorkerRate() {
-        return workerRate;
-=======
     public void setFaith(int faith) {
         this.faith = faith;
->>>>>>> 27e21bc616b4d00ce54de1d0ee47e96e45cee43a
     }
 }
