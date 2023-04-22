@@ -114,4 +114,12 @@ public class User {
 
         return null;
     }
+
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public boolean isStayLoggedIn() {
+        return stayLoggedIn;
+    }
 }

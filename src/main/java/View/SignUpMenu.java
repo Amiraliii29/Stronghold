@@ -1,9 +1,7 @@
 package View;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 import java.util.regex.Matcher;
-
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
 import Model.DataBase;

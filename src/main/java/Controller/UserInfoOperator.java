@@ -14,7 +14,6 @@ public class UserInfoOperator {
     
     private static final ArrayList<String> defaultSlogans = new ArrayList<String>();
     private static final ArrayList<String> securityQuestions= new ArrayList<String>();
-
     private static SecureRandom randomGenerator=new SecureRandom();
 
 
