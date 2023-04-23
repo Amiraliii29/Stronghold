@@ -15,7 +15,7 @@ public class User {
     private String slogan;
     private String securityQuestion;
     private boolean stayLoggedIn;
-    private int highscore;
+    private int highScore;
     private int rank;
 
     static {
@@ -84,16 +84,16 @@ public class User {
         this.rank = rank;
     }
 
-    public void setHighscore(int highscore){
-        this.highscore=highscore;
+    public void setHighScore(int highScore){
+        this.highScore = highScore;
     }
 
     public int getRank(){
         return rank;
     }
 
-    public int getHighscore(){
-        return highscore;
+    public int getHighScore(){
+        return highScore;
     }
 
     public void setStayLoggedIn(boolean status){

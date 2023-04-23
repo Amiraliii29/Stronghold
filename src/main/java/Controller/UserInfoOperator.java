@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.regex.Matcher;
 
-import Model.DataBase;
 import Model.User;
 
 public class UserInfoOperator {
@@ -48,7 +47,7 @@ public class UserInfoOperator {
         String securityQuestion=user.getSecurityQuestion();
         String nickname=user.getNickName();
         String rank=Integer.toString(user.getRank());
-        String highscore=Integer.toString(user.getHighscore());
+        String highscore=Integer.toString(user.getHighScore());
         boolean loginStatus=user.getStayLoggedIn();
 
         JsonConverter.putUserDataInFile(username, password, email, slogan, 

@@ -6,20 +6,20 @@ import View.Enums.Messages.TradeMenuMessages;
 import java.util.HashMap;
 
 public class TradeMenuController {
-    private static HashMap<User,String> requset;
+    private static HashMap<User,String> requests;
      //ideal trade request string: <resource under trade> <amount> <want to give or recieve> "<message written>";
     private static User currentUser;
 
     static {
-        requset = new HashMap<>();
+        requests = new HashMap<>();
     }
 
 
-    public static HashMap<User, String> getRequest() {
-        return requset;
+    public static HashMap<User, String> getRequests() {
+        return requests;
     }
 
-    public static TradeMenuMessages showTradesAvailbale(){
+    public static TradeMenuMessages showTradesAvailable(){
         return null;
     } 
 
@@ -32,15 +32,17 @@ public class TradeMenuController {
         //ToDo
     }
 
-    public static void sendTradeRequest(User receivingPlayer,int amount ,String tradeType,String message){
-
+    public static void sendTradeRequest(String resourceName , String  amount , String price , String message  , String governmentName){
+        if(resourceName == null || amount == null || price == null
+                || price == null || message == null || governmentName == null)
+            return;
     }
 
     public static void acceptTradeByRequest(String request){
 
     }
 
-    public static void rejectTradeByrequest(String request){
+    public static void rejectTradeByRequest(String request){
 
     }
 
