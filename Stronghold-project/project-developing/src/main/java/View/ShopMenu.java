@@ -1,6 +1,11 @@
 package View;
 
+import Controller.ShopMenuController;
+import View.Enums.Commands.ShopMenuCommands;
+import View.Enums.Messages.ShopMenuMessages;
+
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class ShopMenu {
 
@@ -25,7 +30,7 @@ public class ShopMenu {
     private static void buyItemByName(Matcher matcher , Scanner scanner){
         String itemName = matcher.group("name");
         int amount = Integer.parseInt(matcher.group("amount"));
-        ShopMenuMessages message = ShopMenuController.buyItemByName(itemName , amount , scanner );
+        ShopMenuMessages message = ShopMenuController.buyItemByName(itemName , amount , scanner);
 
         switch (message){
             case INVALID_ITEM_NAME:
@@ -48,7 +53,10 @@ public class ShopMenu {
         }
     }
 
-    private static void sellItemByName(String input){
+    private static void sellItemByName(Matcher matcher , Scanner scanner){
+        String itemName = matcher.group("name");
+        int amount = Integer.parseInt(matcher.group("amount"));
+        ShopMenuMessages message = ShopMenuController.buyItemByName(itemName , amount , scanner);
 
     }
 
