@@ -2,16 +2,17 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
+import Model.PeoplePac.Unit;
 import Model.Resources.Resource;
 
 import java.util.ArrayList;
 
 public class Government {
-    private User owner;
+    private final User owner;
     private int popularity;
-    private int workerRate;
-    private int population;
-    private int freeWorker;
+    private int workerRate;//TODO
+    private int population;//TODO
+    private int freeWorker;//TODO
     private int food;
     private int foodType;
     private int foodCount;
@@ -20,17 +21,15 @@ public class Government {
     private int fear;
     private double money;
     private ArrayList<Resource> resources;
-    private static ArrayList<Resource> foods;
-    private static ArrayList<Resource> weapons;
+    private ArrayList<Resource> foods;
+    private ArrayList<Resource> weapons;
     private ArrayList<Stockpile> stockpiles;
-    private ArrayList<Stockpile> Armoury;
-    private ArrayList<Stockpile> Granary;
-    private ArrayList<Troop> troops;
+    private ArrayList<Stockpile> armoury;
+    private ArrayList<Stockpile> granary;
+    private ArrayList<Unit> units;
     private ArrayList<Building> buildings;
 
-    public Government(User owner, double money) {
-        this.owner = owner;
-        this.money = money;
+    {
         this.food = 0;
         this.popularity = 0;
         this.tax = 0;
@@ -42,21 +41,20 @@ public class Government {
         resources = Resource.getResources();
         foods = Resource.getFoods();
         weapons = Resource.getWeapons();
+        stockpiles = new ArrayList<>();
+        armoury = new ArrayList<>();
+        granary = new ArrayList<>();
+        units = new ArrayList<>();
+        buildings = new ArrayList<>();
+    }
+
+    public Government(User owner, double money) {
+        this.owner = owner;
+        this.money = money;
     }
 
     public User getOwner() {
         return owner;
-    }
-
-    private void setFoodFactors() {
-        foodCount = 0;
-        foodType = 0;
-        for (Resource resource : foods) {
-            if (resource.getCount() > 0) {
-                foodCount += resource.getCount();
-                foodType++;
-            }
-        }
     }
 
     public int getPopularity() {
@@ -78,40 +76,40 @@ public class Government {
         if (resources.contains(resource))
             return Stockpile.addResource(stockpiles, resource, number);
         else if (foods.contains(resource))
-            return Stockpile.addResource(Granary, resource, number);
+            return Stockpile.addResource(granary, resource, number);
         else
-            return Stockpile.addResource(Armoury, resource, number);
+            return Stockpile.addResource(armoury, resource, number);
     }
 
     public int freeStockpileSpace(Resource resource) {
         if (resources.contains(resource))
             return Stockpile.freeSpaceForResource(stockpiles, resource);
         else if (foods.contains(resource))
-            return Stockpile.freeSpaceForResource(stockpiles, resource);
+            return Stockpile.freeSpaceForResource(granary, resource);
         else
-            return Stockpile.freeSpaceForResource(stockpiles, resource);
+            return Stockpile.freeSpaceForResource(armoury, resource);
     }
 
     public int getResourceInStockpiles(Resource resource) {
         if (resources.contains(resource))
             return Stockpile.getResourceCount(stockpiles, resource);
         else if (foods.contains(resource))
-            return Stockpile.getResourceCount(stockpiles, resource);
+            return Stockpile.getResourceCount(granary, resource);
         else
-            return Stockpile.getResourceCount(stockpiles, resource);
+            return Stockpile.getResourceCount(armoury, resource);
     }
 
     public boolean removeFromStockpile(Resource resource, int number) {
         if (resources.contains(resource))
             return Stockpile.removeResource(stockpiles, resource, number);
         else if (foods.contains(resource))
-            return Stockpile.removeResource(stockpiles, resource, number);
+            return Stockpile.removeResource(granary, resource, number);
         else
-            return Stockpile.removeResource(stockpiles, resource, number);
+            return Stockpile.removeResource(armoury, resource, number);
     }
 
     public void addAndRemoveFromGovernment() {
-        // call in next turn
+        // call in next turn //TODO
         setFoodFactors();
         if (this.population * ((this.food * 0.5) + 1) >= this.foodCount) {
             removeFood(this.population * ((this.food * 0.5) + 1));
@@ -125,8 +123,20 @@ public class Government {
                 this.food--;
             }
         }
-
         doTaxes();
+
+        //add worker //TODO
+    }
+
+    private void setFoodFactors() {
+        foodCount = 0;
+        foodType = 0;
+        for (Resource resource : foods) {
+            if (resource.getCount() > 0) {
+                foodCount += resource.getCount();
+                foodType++;
+            }
+        }
     }
 
     private void removeFood(double numberForRemove) {
@@ -152,6 +162,14 @@ public class Government {
         this.money += (moneyPerPerson * population);
     }
 
+    private double getMoneyEachPersonPay(int tax) {
+        double moneyPerPerson = 0;
+        if (tax < 0) moneyPerPerson += (((tax + 3) * 0.2) - 1);
+        else if (tax == 0) moneyPerPerson = 0;
+        else moneyPerPerson += (tax * 0.2) + 0.4;
+        return moneyPerPerson;
+    }
+
     public void setFood(int food) {
         setFoodFactors();
         if (this.population * ((food * 0.5) + 1) >= this.foodCount) this.food = food;
@@ -165,14 +183,6 @@ public class Government {
                 food--;
             }
         }
-    }
-
-    private double getMoneyEachPersonPay(int tax) {
-        double moneyPerPerson = 0;
-        if (tax < 0) moneyPerPerson += (((tax + 3) * 0.2) - 1);
-        else if (tax == 0) moneyPerPerson = 0;
-        else moneyPerPerson += (tax * 0.2) + 0.4;
-        return moneyPerPerson;
     }
 
     public void setTax(int tax) {
@@ -234,12 +244,52 @@ public class Government {
         return foodCount;
     }
 
-    public static ArrayList<Resource> getFoods() {
+    public ArrayList<Resource> getFoods() {
         return foods;
     }
 
-    public static ArrayList<Resource> getWeapons() {
+    public ArrayList<Resource> getWeapons() {
         return weapons;
+    }
+
+    public ArrayList<Stockpile> getStockpiles() {
+        return stockpiles;
+    }
+
+    public void addStockpiles(Stockpile stockpile) {
+        this.stockpiles.add(stockpile);
+    }
+
+    public ArrayList<Stockpile> getArmoury() {
+        return armoury;
+    }
+
+    public void addArmoury(Stockpile armoury) {
+        this.armoury.add(armoury);
+    }
+
+    public ArrayList<Stockpile> getGranary() {
+        return granary;
+    }
+
+    public void addGranary(Stockpile granary) {
+        this.granary.add(granary);
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units;
+    }
+
+    public void addUnits(Unit unit) {
+        this.units.add(unit);
+    }
+
+    public ArrayList<Building> getBuildings() {
+        return buildings;
+    }
+
+    public void addBuildings(Building building) {
+        this.buildings.add(building);
     }
 
     public void setFear(int fear) {

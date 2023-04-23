@@ -19,7 +19,9 @@ public enum ResourceEnum {
     Hops("Hops", 100, "Stockpile"),
     Ale("Ale", 100, "Stockpile"),
     Stone("Stone", 100, "Stockpile"),
-    Pitch("Pitch", 100, "Stockpile");
+    Pitch("Pitch", 100, "Stockpile"),
+    Horse("Horse", 100, "Stable"),
+    ;
 
     private String name;
     private int price;
@@ -31,8 +33,9 @@ public enum ResourceEnum {
         this.storage = storage;
     }
 
-    public static void addToResources(ResourceEnum resourceEnum) {
-        Resource resource = new Resource(resourceEnum.name, resourceEnum.price, resourceEnum.storage);
-        Resource.addToResources(resource);
+    public static Resource createResources(ResourceEnum resourceEnum) {
+        return new Resource(resourceEnum.name, resourceEnum.price, resourceEnum.storage);
+//        Resource resource = new Resource(resourceEnum.name, resourceEnum.price, resourceEnum.storage);
+//        Resource.addToResources(resource);
     }
 }
