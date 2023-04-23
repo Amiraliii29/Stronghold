@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 
 public class Orders {
 
-    private static Scanner scanner=new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
  
 
 
@@ -25,14 +25,14 @@ public class Orders {
     private static String findRawFlagOption(String flag, String input){
         String optionRegex="(?<option>(\"[^\"]+\")|([^\\s]+))";
         String flagRegex=flag+"\\s+"+optionRegex;
-        Matcher flagMatcher=createMatcher(flagRegex, input);
+        Matcher flagMatcher = createMatcher(flagRegex, input);
         if(!flagMatcher.find()) return null;
 
         return flagMatcher.group("option");
     }
 
     public static boolean doesFlagExist(String flag, String input){
-        Matcher matcher=createMatcher(flag, input);
+        Matcher matcher = createMatcher(flag, input);
         if(matcher.find())
           return true;
 
