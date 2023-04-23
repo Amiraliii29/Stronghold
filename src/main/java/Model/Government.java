@@ -2,8 +2,10 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
+import Model.Buildings.Trap;
 import Model.PeoplePac.Unit;
 import Model.Resources.Resource;
+import View.TradeMenu;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class Government {
     private ArrayList<Stockpile> granary;
     private ArrayList<Unit> units;
     private ArrayList<Building> buildings;
+    private ArrayList<TradeRequest> requestsAskedFromMe;
 
     {
         this.food = 0;
@@ -51,6 +54,7 @@ public class Government {
     public Government(User owner, double money) {
         this.owner = owner;
         this.money = money;
+        requestsAskedFromMe = new ArrayList<>();
     }
 
     public User getOwner() {
@@ -298,5 +302,8 @@ public class Government {
 
     public void setFaith(int faith) {
         this.faith = faith;
+    }
+    public void addToRequestsAskedFromMe(TradeRequest tradeRequest){
+        requestsAskedFromMe.add(tradeRequest);
     }
 }

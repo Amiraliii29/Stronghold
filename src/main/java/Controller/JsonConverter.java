@@ -2,13 +2,8 @@ package Controller;
 
 
 
-import java.util.List;
-
-
 import java.io.*;
 
-import org.*;
-import org.json.simple.*;  
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -95,7 +90,7 @@ public class JsonConverter {
             user.setStayLoggedIn(false);
 
         user.setRank(Integer.parseInt(getJsonKeyValue("rank", UserInJson)));
-        user.setHighscore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
+        user.setHighScore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
     }
 
     private static String getJsonKeyValue(String key, JSONObject jsonObject){

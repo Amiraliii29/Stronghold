@@ -36,7 +36,7 @@ public class ProfileMenuController {
     }
 
     public static String displayHighscore() {
-        int highscore=currentUser.getHighscore();
+        int highscore=currentUser.getHighScore();
         return "your highscore is: "+highscore;
     }
 

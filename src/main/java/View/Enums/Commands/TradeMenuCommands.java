@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum TradeMenuCommands {
-    ;
 
+    TRADE_REQUEST("^\\s*trade\\s*(?<options>.+)$");
 
     private String regex;
 
