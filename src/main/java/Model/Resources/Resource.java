@@ -9,13 +9,15 @@ public class Resource {
     private double count;
     private String storage;//where we store it
     private static ArrayList<Resource> resources;
-    private static ArrayList<Resource> foods;
-    private static ArrayList<Resource> weapons;
+    private static ArrayList<String> resourceNames;
+    private static ArrayList<String> foodNames;
+    private static ArrayList<String> weaponNames;
 
     static {
         resources = new ArrayList<>();
-        foods = new ArrayList<>();
-        weapons = new ArrayList<>();
+        resourceNames = new ArrayList<>();
+        foodNames = new ArrayList<>();
+        weaponNames = new ArrayList<>();
     }
 
     public Resource(String name, int price, String storage) {
@@ -59,7 +61,7 @@ public class Resource {
                 || resource.getName().equals("Meat")
                 || resource.getName().equals("Apples")
                 || resource.getName().equals("Cheese")) {
-            foods.add(resource);
+            foodNames.add(resource.getName());
         } else if (resource.getName().equals("Sword")
                 || resource.getName().equals("Spear")
                 || resource.getName().equals("Pike")
@@ -68,7 +70,7 @@ public class Resource {
                 || resource.getName().equals("Mace")
                 || resource.getName().equals("MetalArmor")
                 || resource.getName().equals("LeatherArmor")) {
-            weapons.add(resource);
+            w.add(resource);
         }
     }
 
@@ -101,12 +103,20 @@ public class Resource {
         return resources;
     }
 
-    public static ArrayList<Resource> getFoods() {
-        return foods;
+    public static ArrayList<Resource> getResources() {
+        return resources;
     }
 
-    public static ArrayList<Resource> getWeapons() {
-        return weapons;
+    public static ArrayList<String> getResourceNames() {
+        return resourceNames;
+    }
+
+    public static ArrayList<String> getFoodNames() {
+        return foodNames;
+    }
+
+    public static ArrayList<String> getWeaponNames() {
+        return weaponNames;
     }
 
     @Override
