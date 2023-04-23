@@ -30,7 +30,7 @@ public class Resource {
     }
 
     public int getSellPrice() {
-        return price;
+        return ((price * 8) / 10);
     }
 
     public int getBuyPrice() {
