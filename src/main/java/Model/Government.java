@@ -2,7 +2,9 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
+import Model.Buildings.Trap;
 import Model.Resources.Resource;
+import View.TradeMenu;
 
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class Government {
     private ArrayList<Stockpile> stockpiles;
     private ArrayList<Troop> troops;
     private ArrayList<Building> buildings;
+    private ArrayList<TradeRequest> requestsAskedFromMe;
 
     public Government(User owner, double money) {
         this.owner = owner;
@@ -39,6 +42,7 @@ public class Government {
         resources = Resource.getAllResources();
         foods = Resource.getFoods();
         weapons = Resource.getWeapons();
+        requestsAskedFromMe = new ArrayList<>();
     }
 
     public User getOwner() {
@@ -225,5 +229,8 @@ public class Government {
 
     public void setFaith(int faith) {
         this.faith = faith;
+    }
+    public void addToRequestsAskedFromMe(TradeRequest tradeRequest){
+        requestsAskedFromMe.add(tradeRequest);
     }
 }
