@@ -20,11 +20,9 @@ public class Government {
     private int fear;
     private double money;
     private ArrayList<Resource> resources;
-    private ArrayList<Resource> foods;
-    private ArrayList<Resource> weapons;
+    private static ArrayList<Resource> foods;
+    private static ArrayList<Resource> weapons;
     private ArrayList<Stockpile> stockpiles;
-    private ArrayList<Stockpile> Granary;
-    private ArrayList<Stockpile> Armoury;
     private ArrayList<Troop> troops;
     private ArrayList<Building> buildings;
 
@@ -38,12 +36,9 @@ public class Government {
         this.faith = 0;
         this.population = 0;
         this.freeWorker = 0;
-        resources = new ArrayList<>();
-        foods = new ArrayList<>();
-        weapons = new ArrayList<>();
-        stockpiles = new ArrayList<>();
-        Granary = new ArrayList<>();
-        Armoury = new ArrayList<>();
+        resources = Resource.getAllResources();
+        foods = Resource.getFoods();
+        weapons = Resource.getWeapons();
     }
 
     public User getOwner() {
@@ -77,8 +72,7 @@ public class Government {
     }
 
     public boolean addToStockpile(Resource resource, int number) {
-//        return Stockpile.addResource(stockpiles, resource, number);
-        if ()
+        return Stockpile.addResource(stockpiles, resource, number);
     }
 
     public int freeStockpileSpace(Resource resource) {
@@ -217,11 +211,11 @@ public class Government {
         return foodCount;
     }
 
-    public ArrayList<Resource> getFoods() {
+    public static ArrayList<Resource> getFoods() {
         return foods;
     }
 
-    public ArrayList<Resource> getWeapons() {
+    public static ArrayList<Resource> getWeapons() {
         return weapons;
     }
 
@@ -231,29 +225,5 @@ public class Government {
 
     public void setFaith(int faith) {
         this.faith = faith;
-    }
-
-    public void addFood(Resource food) {
-        foods.add(food);
-    }
-
-    public void addWeapon(Resource weapon) {
-        weapons.add(weapon);
-    }
-
-    public void addResource(Resource resource) {
-        resources.add(resource);
-    }
-
-    public ArrayList<Stockpile> getStockpiles() {
-        return stockpiles;
-    }
-
-    public ArrayList<Stockpile> getGranary() {
-        return Granary;
-    }
-
-    public ArrayList<Stockpile> getArmoury() {
-        return Armoury;
     }
 }
