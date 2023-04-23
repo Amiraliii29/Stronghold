@@ -23,6 +23,8 @@ public class Government {
     private static ArrayList<Resource> foods;
     private static ArrayList<Resource> weapons;
     private ArrayList<Stockpile> stockpiles;
+    private ArrayList<Stockpile> Armoury;
+    private ArrayList<Stockpile> Granary;
     private ArrayList<Troop> troops;
     private ArrayList<Building> buildings;
 
@@ -36,7 +38,8 @@ public class Government {
         this.faith = 0;
         this.population = 0;
         this.freeWorker = 0;
-        resources = Resource.getAllResources();
+        Resource.newAllResources();
+        resources = Resource.getResources();
         foods = Resource.getFoods();
         weapons = Resource.getWeapons();
     }
@@ -72,19 +75,39 @@ public class Government {
     }
 
     public boolean addToStockpile(Resource resource, int number) {
-        return Stockpile.addResource(stockpiles, resource, number);
+        if (resources.contains(resource))
+            return Stockpile.addResource(stockpiles, resource, number);
+        else if (foods.contains(resource))
+            return Stockpile.addResource(Granary, resource, number);
+        else
+            return Stockpile.addResource(Armoury, resource, number);
     }
 
     public int freeStockpileSpace(Resource resource) {
-        return Stockpile.freeSpaceForResource(stockpiles, resource);
+        if (resources.contains(resource))
+            return Stockpile.freeSpaceForResource(stockpiles, resource);
+        else if (foods.contains(resource))
+            return Stockpile.freeSpaceForResource(stockpiles, resource);
+        else
+            return Stockpile.freeSpaceForResource(stockpiles, resource);
     }
 
     public int getResourceInStockpiles(Resource resource) {
-        return Stockpile.getResourceCount(stockpiles, resource);
+        if (resources.contains(resource))
+            return Stockpile.getResourceCount(stockpiles, resource);
+        else if (foods.contains(resource))
+            return Stockpile.getResourceCount(stockpiles, resource);
+        else
+            return Stockpile.getResourceCount(stockpiles, resource);
     }
 
     public boolean removeFromStockpile(Resource resource, int number) {
-        return Stockpile.removeResource(stockpiles, resource, number);
+        if (resources.contains(resource))
+            return Stockpile.removeResource(stockpiles, resource, number);
+        else if (foods.contains(resource))
+            return Stockpile.removeResource(stockpiles, resource, number);
+        else
+            return Stockpile.removeResource(stockpiles, resource, number);
     }
 
     public void addAndRemoveFromGovernment() {

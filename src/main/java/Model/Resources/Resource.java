@@ -54,7 +54,6 @@ public class Resource {
     }
 
     public static void addToResources(Resource resource) {
-        resources.add(resource);
         if (resource.getName().equals("Bread")
                 || resource.getName().equals("Meat")
                 || resource.getName().equals("Apples")
@@ -69,11 +68,13 @@ public class Resource {
                 || resource.getName().equals("MetalArmor")
                 || resource.getName().equals("LeatherArmor")) {
             weapons.add(resource);
-        }
+        } else resources.add(resource);
     }
 
-    public static ArrayList<Resource> getAllResources() {
+    public static void newAllResources() {
         resources = new ArrayList<>();
+        foods = new ArrayList<>();
+        weapons = new ArrayList<>();
 
         //food
         ResourceEnum.addToResources(ResourceEnum.Bread);
@@ -97,7 +98,9 @@ public class Resource {
         ResourceEnum.addToResources(ResourceEnum.Ale);
         ResourceEnum.addToResources(ResourceEnum.Flour);
         ResourceEnum.addToResources(ResourceEnum.Hops);
+    }
 
+    public static ArrayList<Resource> getResources() {
         return resources;
     }
 
