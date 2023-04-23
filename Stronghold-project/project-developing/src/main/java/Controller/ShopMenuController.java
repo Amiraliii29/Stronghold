@@ -25,20 +25,24 @@ public class ShopMenuController {
 
     }
 
-    private static void setNewPrices() {
+    public static void setNewPrices() {
 
     }
     
-    private static void showItems(){
-    
+    public static String showItems(){
+        String toReturn = "";
+        int itemsCounter = 1;
+        for (Resource item : items) {
+            toReturn += itemsCounter + ". " + item.getName() + " = " + item.getBuyingPrice()  + " (gold)\n";
+        }
+        return toReturn;
     }
 
 
-    public static void buyItemByName(String name, int amount) {
-
+    public static ShopMenuMessages buyItemByName(String name, int amount) {
     }
 
-    public static void sellItemByName(String name, int amount) {
+    public static ShopMenuMessages sellItemByName(String name, int amount) {
 
     }
 
