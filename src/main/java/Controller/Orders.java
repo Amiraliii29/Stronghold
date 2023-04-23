@@ -45,9 +45,7 @@ public class Orders {
         if(option==null)
             return null;
 
-        if(option.charAt(0)=='\"')
-         option=trimEndAndStartOfString(option);
-
+        option=trimIfNeeded(option);
         return option;
     }
 
@@ -70,8 +68,7 @@ public class Orders {
 
         
         String nextWord= nextWordMatcher.group("nextWord");
-        if(nextWord.charAt(0)=='\"')
-         nextWord=trimEndAndStartOfString(nextWord);
+        nextWord=trimIfNeeded(nextWord);
 
         return nextWord;
     }
@@ -84,7 +81,7 @@ public class Orders {
         //      chize cherto pert vared karde va error bayad begire
     }
 
-    public static String trimEndAndStartOfString(String input){
+    private static String trimEndAndStartOfString(String input){
         String output="";
         for (int i = 1; i < input.length()-1; i++) {
             output=output.concat(""+input.charAt(i));
