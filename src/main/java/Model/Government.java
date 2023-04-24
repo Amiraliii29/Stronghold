@@ -31,6 +31,8 @@ public class Government {
     private ArrayList<Unit> units;
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
+    private ArrayList<TradeRequest> tradeHistory;
+    private ArrayList<TradeRequest> requestNotifications;
 
     {
         this.food = 0;
@@ -55,6 +57,8 @@ public class Government {
         this.owner = owner;
         this.money = money;
         requestsAskedFromMe = new ArrayList<>();
+        tradeHistory = new ArrayList<>();
+        requestNotifications = new ArrayList<>();
     }
 
     public User getOwner() {
@@ -305,5 +309,36 @@ public class Government {
     }
     public void addToRequestsAskedFromMe(TradeRequest tradeRequest){
         requestsAskedFromMe.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getRequestsAskedFromMe() {
+        return requestsAskedFromMe;
+    }
+    public TradeRequest getRequestById(int id){
+        for (TradeRequest tradeRequest : requestsAskedFromMe) {
+            if(tradeRequest.getId() == id)
+                return tradeRequest;
+        }
+        return null;
+    }
+
+    public ArrayList<TradeRequest> getTradeHistory() {
+        return tradeHistory;
+    }
+    public void addToTradeHistory(TradeRequest tradeRequest){
+        tradeHistory.add(tradeRequest);
+    }
+    public void removeFromRequestsAskedFromMe(TradeRequest tradeRequest){
+        requestsAskedFromMe.remove(tradeRequest);
+    }
+    public void addToRequestNotification(TradeRequest tradeRequest){
+        requestNotifications.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getRequestNotifications() {
+        return requestNotifications;
+    }
+    public void removeAllRequestNotification(){
+        requestNotifications.clear();
     }
 }
