@@ -16,8 +16,8 @@ public class Siege extends Unit{
     }
 
     public Siege(Government owner, String name, int speed, int hitPoint, int damage,
-                 int attackRange, ArrayList<Resource> resources, State state, int cost, int engineerNeed) {
-        super(owner, name, speed, hitPoint, damage, attackRange, resources, state, cost);
+                 int attackRange, State state, int cost, int engineerNeed) {
+        super(owner, name, speed, hitPoint, damage, attackRange, state, cost);
         this.engineerNeed = engineerNeed;
     }
 

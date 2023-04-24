@@ -1,8 +1,5 @@
 package Model.PeoplePac;
 import Model.Government;
-import Model.Resources.Resource;
-
-import java.util.ArrayList;
 
 public abstract class Unit {
     private Government owner;
@@ -14,18 +11,16 @@ public abstract class Unit {
     private int damage;
     private int attackRange;
     private State state;
-    private ArrayList<Resource> weapons;
     private int cost;
 
     public Unit(Government owner, String name, int speed, int hitPoint, int damage,
-                int attackRange, ArrayList<Resource> weapons, State state, int cost) {
+                int attackRange, State state, int cost) {
         this.owner = owner;
         this.name = name;
         this.speed = speed;
         this.hitPoint = hitPoint;
         this.damage = damage;
         this.attackRange = attackRange;
-        this.weapons = weapons;
         this.state = state;
         this.cost = cost;
         owner.addUnits(this);
@@ -76,9 +71,6 @@ public abstract class Unit {
         return state;
     }
 
-    public ArrayList<Resource> getWeapons() {
-        return weapons;
-    }
 
     public int getCost() {
         return cost;
