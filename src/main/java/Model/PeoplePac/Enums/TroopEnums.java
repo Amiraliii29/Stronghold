@@ -1,6 +1,7 @@
-package Model.PeoplePac;
+package Model.PeoplePac.Enums;
 
 import Model.Government;
+import Model.PeoplePac.Troop;
 import Model.Resources.Resource;
 import Model.Resources.ResourceEnum;
 

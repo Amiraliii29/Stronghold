@@ -1,6 +1,7 @@
-package Model.PeoplePac;
+package Model.PeoplePac.Enums;
 
 import Model.Government;
+import Model.PeoplePac.Siege;
 
 public enum SiegeEnums {
     PortableShield("PortableShield", 2, 100, 0, 0, 100, 1),

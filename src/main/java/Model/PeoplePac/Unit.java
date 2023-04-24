@@ -1,5 +1,6 @@
 package Model.PeoplePac;
 import Model.Government;
+import Model.PeoplePac.Enums.State;
 
 public abstract class Unit {
     private Government owner;
