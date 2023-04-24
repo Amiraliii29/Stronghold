@@ -13,6 +13,8 @@ public class TradeMenu {
         String input;
         Matcher matcher;
 
+        showNotifications();
+
         while (true){
             input = Input_Output.getInput();
 
@@ -22,6 +24,10 @@ public class TradeMenu {
                 tradeList();
             else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.ACCEPT_TRADE)) != null)
                 acceptTrade(matcher);
+            else if(TradeMenuCommands.getMatcher(input , TradeMenuCommands.TRADE_HISTORY) != null )
+                tradeHistory();
+            else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.TRADE_REJECT)) != null)
+
         }
     }
 
@@ -89,9 +95,28 @@ public class TradeMenu {
     }
 
     private static void tradeHistory() {
+        String toPrint;
+        toPrint = TradeMenuController.showTradeHistory();
+
+        System.out.print(toPrint);
     }
 
-    private static void showMessage() {
+    private static void showNotifications(){
+        String toPrint = TradeMenuController.showNotificationsController();
 
+        System.out.print(toPrint);
+    }
+    private static void rejectTrade(Matcher matcher){
+        String id = matcher.group("id");
+        TradeMenuMessages message = TradeMenuController.rejectTradeByRequest(id);
+
+        switch (message){
+            case INVALID_REQUEST_ID:
+                System.out.println("reject request error: invalid request id");
+                break;
+            case TRADE_REQUEST_REJECTED_SUCCESSFULLY:
+                System.out.println("trade request rejected successfully");
+                break;
+        }
     }
 }

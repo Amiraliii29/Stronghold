@@ -29,6 +29,7 @@ public class Government {
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
     private ArrayList<TradeRequest> tradeHistory;
+    private ArrayList<TradeRequest> requestNotifications;
 
     public Government(User owner, double money) {
         this.owner = owner;
@@ -45,6 +46,7 @@ public class Government {
         weapons = Resource.getWeapons();
         requestsAskedFromMe = new ArrayList<>();
         tradeHistory = new ArrayList<>();
+        requestNotifications = new ArrayList<>();
     }
 
     public User getOwner() {
@@ -255,5 +257,15 @@ public class Government {
     }
     public void removeFromRequestsAskedFromMe(TradeRequest tradeRequest){
         requestsAskedFromMe.remove(tradeRequest);
+    }
+    public void addToRequestNotification(TradeRequest tradeRequest){
+        requestNotifications.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getRequestNotifications() {
+        return requestNotifications;
+    }
+    public void removeAllRequestNotification(){
+        requestNotifications.clear();
     }
 }

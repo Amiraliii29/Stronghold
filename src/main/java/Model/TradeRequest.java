@@ -50,4 +50,12 @@ public class TradeRequest {
     public void setAcceptanceMessage(String acceptanceMessage) {
         this.acceptanceMessage = acceptanceMessage;
     }
+
+    public Government getGovernmentThatHasBeenAsked() {
+        return governmentThatHasBeenAsked;
+    }
+
+    public String getAcceptanceMessage() {
+        return acceptanceMessage;
+    }
 }
