@@ -28,6 +28,7 @@ public class Government {
     private ArrayList<Troop> troops;
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
+    private ArrayList<TradeRequest> tradeHistory;
 
     public Government(User owner, double money) {
         this.owner = owner;
@@ -43,6 +44,7 @@ public class Government {
         foods = Resource.getFoods();
         weapons = Resource.getWeapons();
         requestsAskedFromMe = new ArrayList<>();
+        tradeHistory = new ArrayList<>();
     }
 
     public User getOwner() {
@@ -232,5 +234,26 @@ public class Government {
     }
     public void addToRequestsAskedFromMe(TradeRequest tradeRequest){
         requestsAskedFromMe.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getRequestsAskedFromMe() {
+        return requestsAskedFromMe;
+    }
+    public TradeRequest getRequestById(int id){
+        for (TradeRequest tradeRequest : requestsAskedFromMe) {
+            if(tradeRequest.getId() == id)
+                return tradeRequest;
+        }
+        return null;
+    }
+
+    public ArrayList<TradeRequest> getTradeHistory() {
+        return tradeHistory;
+    }
+    public void addToTradeHistory(TradeRequest tradeRequest){
+        tradeHistory.add(tradeRequest);
+    }
+    public void removeFromRequestsAskedFromMe(TradeRequest tradeRequest){
+        requestsAskedFromMe.remove(tradeRequest);
     }
 }

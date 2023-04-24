@@ -15,8 +15,17 @@ public class TradeMenuController {
      //ideal trade request string: <resource under trade> <amount> <want to give or recieve> "<message written>";
 
 
-    public static TradeMenuMessages showTradesAvailable(){
-        return null;
+    public static String tradeListController(){
+        String toReturn = "";
+        int counter = 1;
+        for (TradeRequest tradeRequest : DataBase.getCurrentGovernment().getRequestsAskedFromMe()) {
+            toReturn += counter + ". " + tradeRequest.getResource().getName() + ", amount: " + tradeRequest.getAmount()
+                    + " , price: " + tradeRequest.getPrice() + " , goverment that requested: " +
+                    tradeRequest.getGovernmentThatRequested() + " , message: " + tradeRequest.getMessage() +
+                    " , id: " + tradeRequest.getId() + "\n";
+
+        }
+        return toReturn;
     } 
 
     public static TradeMenuMessages showTradeHistory(){
@@ -61,7 +70,32 @@ public class TradeMenuController {
         }
     }
 
-    public static void acceptTradeByRequest(String request){
+    public static TradeMenuMessages acceptTradeByRequest(String id , String acceptanceMessage){
+        int idInt = Integer.parseInt(id);
+        TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestById(idInt);
+        if(tradeRequest == null)
+            return TradeMenuMessages.INVALID_REQUEST_ID;
+        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(tradeRequest.getResource())
+                < tradeRequest.getAmount())
+            return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
+        else if(tradeRequest.getGovernmentThatRequested().freeStockpileSpace(tradeRequest.getResource())
+                < tradeRequest.getAmount())
+            return TradeMenuMessages.NOT_ENOUGH_FREE_SPACE;
+        else if(tradeRequest.getGovernmentThatRequested().getMoney() < tradeRequest.getPrice() * tradeRequest.getAmount())
+            return TradeMenuMessages.NOT_ENOUGH_MONEY;
+        else{
+            //change stockpile and money
+            DataBase.getCurrentGovernment().removeFromStockpile(tradeRequest.getResource() , tradeRequest.getAmount());
+            tradeRequest.getGovernmentThatRequested().changeMoney(tradeRequest.getPrice() * tradeRequest.getAmount());
+            //add to trade history and delete from tradeList
+            DataBase.getCurrentGovernment().addToTradeHistory(tradeRequest);
+            tradeRequest.getGovernmentThatRequested().addToTradeHistory(tradeRequest);
+            DataBase.getCurrentGovernment().removeFromRequestsAskedFromMe(tradeRequest);
+            allRequests.remove(tradeRequest);
+
+            return TradeMenuMessages.ACCEPT_TRADE_SUCCESS;
+
+        }
 
     }
 

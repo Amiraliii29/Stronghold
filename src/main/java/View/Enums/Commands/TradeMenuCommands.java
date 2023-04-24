@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 
 public enum TradeMenuCommands {
 
-    TRADE_REQUEST("^\\s*trade\\s*(?<options>.+)$");
+    TRADE_REQUEST("^\\s*trade\\s*(?<options>.+)$"),
+    TRADE_LIST("^\\s*trade\\s*list\\s*$"),
+    ACCEPT_TRADE("^\\s*trade\\s+accept\\s*(?<options>.+)\\s*$");
 
     private String regex;
 
