@@ -20,7 +20,6 @@ public enum ResourceEnum {
     Ale("Ale", 100, "Stockpile"),
     Stone("Stone", 100, "Stockpile"),
     Pitch("Pitch", 100, "Stockpile"),
-    Horse("Horse", 100, "Stable"),
     ;
 
     private String name;
