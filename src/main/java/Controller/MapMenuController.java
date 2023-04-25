@@ -1,10 +1,17 @@
 package Controller;
 
 import Model.DataBase;
-import View.Enums.Messages.MapMenuMessages;
+import Model.Square;
+import Model.Units.Troop;
+
+import java.util.HashMap;
 
 public class MapMenuController {
+    private static int xLocationOnMap;
+    private static int yLocationOnMap;
     public static String[][] showMapController(int x , int y){
+        xLocationOnMap = x;
+        yLocationOnMap = y;
 
         String[][] mapToShow = new String[20][20];
 
@@ -29,9 +36,62 @@ public class MapMenuController {
         }
         return mapToShow;
     }
-    public static String moveMapController(String direction , String amount){
+    public static String[][] moveMapController(String direction ,String direction2,  String amount){
+        int amountInt;
+        if(amount == null)
+            amountInt = 1;
+        else
+            amountInt = Integer.parseInt(amount);
+
+        switch (direction){
+            case "up":
+                yLocationOnMap += amountInt;
+                break;
+            case "down":
+                yLocationOnMap -= amountInt;
+                break;
+            case "right":
+                xLocationOnMap += amountInt;
+                break;
+            case "left":
+                xLocationOnMap -= amountInt;
+                break;
+        }
+        switch (direction2){
+            case "up":
+                yLocationOnMap += amountInt;
+                break;
+            case "down":
+                yLocationOnMap -= amountInt;
+                break;
+            case "right":
+                xLocationOnMap += amountInt;
+                break;
+            case "left":
+                xLocationOnMap -= amountInt;
+                break;
+        }
+        return showMapController(xLocationOnMap , yLocationOnMap);
     }
-    public static String showDetailsController(int x, int y){
+    public static String showDetailsController(String  x, String y){
+        String toReturn = "";
+        if(x == null)
+            return "show map details error: please enter x\n";
+        else if(y == null)
+            return "show map details error: please enter y\n";
+
+
+            int xInt = Integer.parseInt(x);
+            int yInt = Integer.parseInt(y);
+            Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
+            toReturn += "Land type: " + square.getLand() + "\nresource: " + square.getResource().getName()
+                    + "\nTroops: ";
+            HashMap<Troop ,  Integer> troopsTypeAndCount = square.getTroopsTypeAndCount();
+            for (Troop troop : troopsTypeAndCount.keySet()) {
+                toReturn += troop.getName() + " (" + troopsTypeAndCount.get(troop) + ")\n";
+            }
+            toReturn += "building: " + square.getBuilding().getName();
+            return toReturn;
     }
 }
 

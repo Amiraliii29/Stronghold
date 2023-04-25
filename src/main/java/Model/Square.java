@@ -8,6 +8,7 @@ import Model.Units.Troop;
 //>>>>>>> 87bc903bd264ca81305e9fb153fecf954fbf97c0
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Square {
     private ArrayList<Troop> troops;
@@ -53,5 +54,21 @@ public class Square {
 
     public int getY() {
         return y;
+    }
+
+    public String getLand() {
+        return land;
+    }
+    public HashMap<Troop , Integer> getTroopsTypeAndCount(){
+        HashMap<Troop , Integer> troopsTypeAndCount = new HashMap<>();
+        for (Troop troop : troops) {
+            if(!troopsTypeAndCount.keySet().contains(troop))
+                troopsTypeAndCount.put(troop , 1);
+            else{
+                int tmp =  troopsTypeAndCount.get(troop);
+                troopsTypeAndCount.remove(troop);
+                troopsTypeAndCount.put(troop , tmp + 1);
+            }
+        }
     }
 }
