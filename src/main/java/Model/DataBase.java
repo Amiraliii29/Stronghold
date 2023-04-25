@@ -69,6 +69,7 @@ public class DataBase {
     }
 
     public static Map getMapByName(String name) {
+        return null;
     }
 
     public static Map getSelectedMap() {

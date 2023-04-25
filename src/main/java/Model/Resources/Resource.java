@@ -54,7 +54,6 @@ public class Resource {
     }
 
     public static void addToResources(Resource resource) {
-        resources.add(resource);
         if (resource.getName().equals("Bread")
                 || resource.getName().equals("Meat")
                 || resource.getName().equals("Apples")
@@ -69,35 +68,42 @@ public class Resource {
                 || resource.getName().equals("MetalArmor")
                 || resource.getName().equals("LeatherArmor")) {
             weapons.add(resource);
-        }
+        } else resources.add(resource);
     }
 
-    public static ArrayList<Resource> getAllResources() {
+    public static void newAllResources() {
         resources = new ArrayList<>();
+        foods = new ArrayList<>();
+        weapons = new ArrayList<>();
 
-        //food
-        ResourceEnum.addToResources(ResourceEnum.Bread);
-        ResourceEnum.addToResources(ResourceEnum.Meat);
-        ResourceEnum.addToResources(ResourceEnum.Apples);
-        ResourceEnum.addToResources(ResourceEnum.Cheese);
-        //weapon
-        ResourceEnum.addToResources(ResourceEnum.Bow);
-        ResourceEnum.addToResources(ResourceEnum.CrossBow);
-        ResourceEnum.addToResources(ResourceEnum.Sword);
-        ResourceEnum.addToResources(ResourceEnum.Spear);
-        ResourceEnum.addToResources(ResourceEnum.Mace);
-        ResourceEnum.addToResources(ResourceEnum.Pike);
-        ResourceEnum.addToResources(ResourceEnum.MetalArmor);
-        ResourceEnum.addToResources(ResourceEnum.LeatherArmor);
-        //other
-        ResourceEnum.addToResources(ResourceEnum.Wood);
-        ResourceEnum.addToResources(ResourceEnum.Stone);
-        ResourceEnum.addToResources(ResourceEnum.Iron);
-        ResourceEnum.addToResources(ResourceEnum.Pitch);
-        ResourceEnum.addToResources(ResourceEnum.Ale);
-        ResourceEnum.addToResources(ResourceEnum.Flour);
-        ResourceEnum.addToResources(ResourceEnum.Hops);
+        for (ResourceEnum en : ResourceEnum.values()) {
+            Resource.addToResources(ResourceEnum.createResources(en));
+        }
+//        //food
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Bread));
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Meat);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Apples);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Cheese);
+//        //weapon
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Bow);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.CrossBow);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Sword);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Spear);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Mace);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Pike);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.MetalArmor);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.LeatherArmor);
+//        //other
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Wood);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Stone);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Iron);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Pitch);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Ale);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Flour);
+//        Resource.addToResources(ResourceEnum.createResources(ResourceEnum.Hops);
+    }
 
+    public static ArrayList<Resource> getResources() {
         return resources;
     }
 

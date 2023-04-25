@@ -1,13 +1,19 @@
 package Model;
 
 import Model.Buildings.Building;
+import Model.Resources.Resource;
+//<<<<<<< HEAD
+//=======
+import Model.Units.Troop;
+//>>>>>>> 87bc903bd264ca81305e9fb153fecf954fbf97c0
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Square {
     private ArrayList<Troop> troops;
     private Building building;
-    private Land land;
+    private String land;
     private Resource resource;
     private int x;
     private int y;
@@ -34,14 +40,6 @@ public class Square {
         this.building = building;
     }
 
-    public Land getLand() {
-        return land;
-    }
-
-    public void setLand(Land land) {
-        this.land = land;
-    }
-
     public Resource getResource() {
         return resource;
     }
@@ -56,5 +54,21 @@ public class Square {
 
     public int getY() {
         return y;
+    }
+
+    public String getLand() {
+        return land;
+    }
+    public HashMap<Troop , Integer> getTroopsTypeAndCount(){
+        HashMap<Troop , Integer> troopsTypeAndCount = new HashMap<>();
+        for (Troop troop : troops) {
+            if(!troopsTypeAndCount.keySet().contains(troop))
+                troopsTypeAndCount.put(troop , 1);
+            else{
+                int tmp =  troopsTypeAndCount.get(troop);
+                troopsTypeAndCount.remove(troop);
+                troopsTypeAndCount.put(troop , tmp + 1);
+            }
+        }
     }
 }

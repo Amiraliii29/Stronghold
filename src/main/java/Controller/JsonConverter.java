@@ -1,26 +1,15 @@
 package Controller;
 
-
-
-import java.util.List;
-
-
 import java.io.*;
 
-import org.*;
-import org.json.simple.*;  
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
-
 import Model.User;
 
 public class JsonConverter {
-
-
     public static void putUserDataInFile(String username, String password,String email, String slogan,
          String securityQ, String nickname,String rank,String highscore,boolean stayLoggedIn ,String dirFromSrc) {
 
@@ -95,7 +84,7 @@ public class JsonConverter {
             user.setStayLoggedIn(false);
 
         user.setRank(Integer.parseInt(getJsonKeyValue("rank", UserInJson)));
-        user.setHighscore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
+        user.setHighScore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
     }
 
     private static String getJsonKeyValue(String key, JSONObject jsonObject){

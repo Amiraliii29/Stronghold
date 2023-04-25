@@ -4,28 +4,31 @@ import java.util.ArrayList;
 
 public class Map {
     private String name;
-    private ArrayList<Square> squares;
-    private int x;
-    private int y;
+    private Square[][] squares;
+    private int width;
+    private int length;
 
-    public Map(String name, int x, int y) {
+    public Map(String name, int width, int length) {
         this.name = name;
-        this.x = x;
-        this.y = y;
-        this.squares = new ArrayList<>();
+        this.width = width;
+        this.length = length;
+        this.squares = new Square[width][length];
         //create squares
     }
 
-    public ArrayList<Square> getSquares() {
+    public Square[][] getSquares() {
         return squares;
     }
-
-    public int getX() {
-        return x;
+    public Square getSquareFromMap(int x , int y){
+        return squares[x][y];
     }
 
-    public int getY() {
-        return y;
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
     }
 
     public String getName() {
