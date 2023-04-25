@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Buildings.Building;
+import Model.Resources.Resource;
 
 import java.util.ArrayList;
 

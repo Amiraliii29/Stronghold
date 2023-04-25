@@ -27,7 +27,9 @@ public class TradeMenu {
             else if(TradeMenuCommands.getMatcher(input , TradeMenuCommands.TRADE_HISTORY) != null )
                 tradeHistory();
             else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.TRADE_REJECT)) != null)
-
+                rejectTrade(matcher);
+            else
+                System.out.println("invalid command");
         }
     }
 
