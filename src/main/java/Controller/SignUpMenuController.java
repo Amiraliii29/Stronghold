@@ -64,7 +64,7 @@ public class SignUpMenuController {
           return SignUpMenuMessages.LOGIN_INCORRECT_PASSWORD_ERROR;
 
 
-        if(stayLoggedInoption!= null){
+        if(stayLoggedInoption== true){
             targetUser.setStayLoggedIn(true);
             UserInfoOperator.storeUserDataInJson(targetUser,"src/main/java/jsonData/Users.json" );
         }
