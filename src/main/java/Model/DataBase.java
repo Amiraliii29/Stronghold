@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Controller.JsonConverter;
+import Model.Units.Troop;
 
 public class DataBase {
     private static final ArrayList<Government> governments;

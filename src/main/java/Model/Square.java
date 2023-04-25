@@ -70,5 +70,6 @@ public class Square {
                 troopsTypeAndCount.put(troop , tmp + 1);
             }
         }
+        return troopsTypeAndCount;
     }
 }
