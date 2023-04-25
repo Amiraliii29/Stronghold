@@ -14,7 +14,8 @@ public abstract class Unit {
     private State state;
     private int cost;
 
-    public Unit(String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
+    public Unit(Government owner, String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
+        this.owner = owner;
         this.name = name;
         this.speed = speed;
         this.hitPoint = hitPoint;
@@ -67,8 +68,9 @@ public abstract class Unit {
     }
 
     public int getDamage() {
-        //look from fear //TODO
-        return damage;
+        double damageFinal = 100 + (owner.getFear() * (-5));
+        damageFinal = Math.floor((damage * damageFinal) / 100);
+        return ((int) (damageFinal));
     }
 
     public int getAttackRange() {

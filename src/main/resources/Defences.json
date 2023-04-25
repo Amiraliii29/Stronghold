@@ -1,0 +1,256 @@
+[
+  {
+    "range": 5,
+    "capacity": 30,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "BigStoneGate",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 800,
+    "numberOfResource": 20,
+    "cost": 0,
+    "canPass": true
+  },
+  {
+    "range": 5,
+    "capacity": 15,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "SmallStoneGate",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 600,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": true
+  },
+  {
+    "range": 5,
+    "capacity": 60,
+    "name": "Keep",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 1000,
+    "numberOfResource": 0,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 0,
+    "capacity": 20,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "DrawBridge",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 500,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": true
+  },
+  {
+    "range": 10,
+    "capacity": 10,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "LookOutTower",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 500,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 7,
+    "capacity": 15,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "PerimeterTower",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 500,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 5,
+    "capacity": 3,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Wall",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 2,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 3,
+    "capacity": 2,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "SmallWall",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 1,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 0,
+    "capacity": 0,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "StrongWall",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 500,
+    "numberOfResource": 3,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 0,
+    "capacity": 3,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Stair",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 2,
+    "cost": 0,
+    "canPass": true
+  },
+  {
+    "range": 7,
+    "capacity": 20,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "DefenciveTower",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 600,
+    "numberOfResource": 15,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 9,
+    "capacity": 45,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "SquareTower",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 900,
+    "numberOfResource": 35,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "range": 9,
+    "capacity": 50,
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "CircularTower",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 1000,
+    "numberOfResource": 40,
+    "cost": 0,
+    "canPass": false
+  }
+]

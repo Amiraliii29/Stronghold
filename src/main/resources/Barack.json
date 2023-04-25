@@ -1,0 +1,71 @@
+[
+  {
+    "troops": [
+      "ArcherBow",
+      "Slave",
+      "Slinger",
+      "Assassin",
+      "HorseArcher",
+      "ArabianSwordMan",
+      "FireThrower"
+    ],
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "MercenaryPost",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "troops": [
+      "Archer",
+      "CrossBowMan",
+      "SpearMan",
+      "PikeMan",
+      "SwordMan",
+      "Knight"
+    ],
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Barrack",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 15,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "troops": [
+      "Monk"
+    ],
+    "resource": null,
+    "name": "Cathedral",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 0,
+    "cost": 1000,
+    "canPass": false
+  }
+]

@@ -9,11 +9,14 @@ import java.util.Map;
 public class Stockpile extends Building {
     // when user build an stockpile add that to government in Government !! //TODO
     private HashMap<Resource, Integer> resources;
+    private ArrayList<String> resourcesStored;
     private final int capacity;//how many resource in one slot of stockpile
 
-    public Stockpile(String name, int hp, Resource resource, int numberOfResource, int cost , boolean canPass) {
-        super(name, hp, resource, numberOfResource, cost , canPass);
+    public Stockpile(String name, int hp, Resource resource, int numberOfResource,
+                     ArrayList<String> resourcesStored, int cost, boolean canPass) {
+        super(name, hp, resource, numberOfResource, cost, canPass);
         this.capacity = 40;
+        this.resourcesStored = resourcesStored;
         resources = new HashMap<>();
     }
 

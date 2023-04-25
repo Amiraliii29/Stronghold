@@ -2,12 +2,15 @@ package Model.Buildings;
 
 import Model.Resources.Resource;
 
+import java.util.ArrayList;
+
 public class TownBuilding extends Building {
     private int capacity;
     private int popularityRate;
 
-    public TownBuilding(String name, int hp, Resource resource, int numberOfResource, int cost, int capacity, int popularityRate) {
-        super(name, hp, resource, numberOfResource, cost);
+    public TownBuilding(String name, int hp, Resource resource, int numberOfResource,
+                        int cost, int capacity, int popularityRate, boolean canPass) {
+        super(name, hp, resource, numberOfResource, cost, canPass);
         this.capacity = capacity;
         this.popularityRate = popularityRate;
     }

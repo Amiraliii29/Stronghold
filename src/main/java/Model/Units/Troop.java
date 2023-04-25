@@ -13,8 +13,8 @@ public class Troop extends Unit{
     private ArrayList<Resource> weapons;
 
     public Troop(Government owner, String name, int speed, int hitPoint, int damage, int attackRange,
-                 ArrayList<Resource> resources, State state, int cost, boolean climbLadder, boolean digMoat) {
-        super(owner, name, speed, hitPoint, damage, attackRange, state, cost);
+                 ArrayList<Resource> resources, int cost, boolean climbLadder, boolean digMoat) {
+        super(owner, name, speed, hitPoint, damage, attackRange, cost);
         this.weapons = resources;
         this.climbLadder = climbLadder;
         this.digMoat = digMoat;

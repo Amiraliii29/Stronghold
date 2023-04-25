@@ -4,6 +4,6 @@ import Model.Government;
 
 public class Ladderman extends Unit{
     public Ladderman(Government owner) {
-        super(owner, name, speed, hitPoint, damage, attackRange, state, cost); //TODO
+        super(owner, "LadderMan", 3, 50, 0, 0, 20);
     }
 }

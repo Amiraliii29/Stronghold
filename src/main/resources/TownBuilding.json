@@ -1,0 +1,56 @@
+[
+  {
+    "capacity": 0,
+    "popularityRate": 2,
+    "name": "Church",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 0,
+    "cost": 250,
+    "canPass": false
+  },
+  {
+    "capacity": 0,
+    "popularityRate": 8,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Home",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 150,
+    "numberOfResource": 6,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "capacity": 0,
+    "popularityRate": 0,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Shop",
+    "xCoordinateLeft": 0,
+    "xCoordinateRight": 0,
+    "yCoordinateDown": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  }
+]

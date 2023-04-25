@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Barrack extends Building {
-    private ArrayList<Troop> troops;
+    private ArrayList<String> troops;
     private HashMap<Troop, Integer> troopsCreated;
 
-    public Barrack(String name, int hp, Resource resource, int numberOfResource, int cost , boolean canPass) {
-        super(name, hp, resource, numberOfResource, cost , canPass);
-        troops = new ArrayList<>();
+    public Barrack(String name, int hp, Resource resource, int numberOfResource, ArrayList<String> troops, int cost, boolean canPass) {
+        super(name, hp, resource, numberOfResource, cost, canPass);
+        this.troops = troops;
         troopsCreated = new HashMap<>();
     }
 
-    public ArrayList<Troop> getTroops() {
+    public ArrayList<String> getTroops() {
         return troops;
     }
 

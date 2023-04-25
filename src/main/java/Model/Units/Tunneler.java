@@ -6,7 +6,7 @@ public class Tunneler extends Unit{
     private boolean busy;
 
     public Tunneler(Government owner) {
-        super(owner, name, speed, hitPoint, damage, attackRange, state, cost);
+        super(owner, "Tunneler", 3, 60, 0, 0, 20);
     }
 
     public void setBusy(boolean busy) {
