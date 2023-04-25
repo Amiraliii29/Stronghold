@@ -14,6 +14,7 @@ public class ProfileMenu {
 
     public static void run() throws NoSuchAlgorithmException {
 
+        Input_Output.outPut("PROFILE MENU:");
         ProfileMenuController.setCurrentUser(User.getCurrentUser());
         String input;
 

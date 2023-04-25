@@ -13,6 +13,7 @@ public class SignUpMenu {
 
     public static void run() throws NoSuchAlgorithmException {
         String input;
+        Input_Output.outPut("SIGNUP MENU:");
 
         while (User.getCurrentUser()==null) {
             Matcher matcher;
