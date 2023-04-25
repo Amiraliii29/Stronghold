@@ -2,10 +2,8 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
-import Model.Buildings.Trap;
-import Model.PeoplePac.Unit;
+import Model.Units.Unit;
 import Model.Resources.Resource;
-import View.TradeMenu;
 
 import java.util.ArrayList;
 

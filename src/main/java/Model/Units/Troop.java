@@ -1,7 +1,7 @@
-package Model.PeoplePac;
+package Model.Units;
 
 import Model.Government;
-import Model.PeoplePac.Enums.State;
+import Model.Units.Enums.State;
 import Model.Resources.Resource;
 
 import java.util.ArrayList;

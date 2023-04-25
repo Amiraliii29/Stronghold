@@ -1,7 +1,7 @@
-package Model.PeoplePac.Enums;
+package Model.Units.Enums;
 
 import Model.Government;
-import Model.PeoplePac.Troop;
+import Model.Units.Troop;
 import Model.Resources.Resource;
 import Model.Resources.ResourceEnum;
 
@@ -22,7 +22,8 @@ public enum TroopEnums {
     Assassin("Assassin", 3, 90, 3, 1, null, null, 75, false, false, false),
     HorseArcher("HorseArcher", 5, 90, 30, 15, null, null, 80, false, false, false),
     ArabianSwordMan("ArabianSwordMan", 1, 110, 50, 1, null, null, 75, false, false, false),
-    FireThrower("FireThrower", 3, 70, 50, 10, null, null, 100, false, false, false)
+    FireThrower("FireThrower", 3, 70, 50, 10, null, null, 100, false, false, false),
+    Engineer("Engineer", 2, 70, 0, 0, null, null, 50, false, false, false),
     ;
 
     private String name;

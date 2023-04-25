@@ -1,15 +1,12 @@
-package Model.PeoplePac;
+package Model.Units;
 
 import Model.Government;
-import Model.Resources.Resource;
-
-import java.util.ArrayList;
 
 public class Tunneler extends Unit{
     private boolean busy;
 
     public Tunneler(Government owner) {
-        super(owner, name, speed, hitPoint, damage, attackRange, resources, state, cost);
+        super(owner, name, speed, hitPoint, damage, attackRange, state, cost);
     }
 
     public void setBusy(boolean busy) {

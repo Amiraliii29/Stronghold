@@ -1,7 +1,5 @@
 package Controller;
 
-
-
 import java.io.*;
 
 import org.json.simple.JSONArray;
@@ -9,13 +7,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
-
 import Model.User;
 
 public class JsonConverter {
-
-
     public static void putUserDataInFile(String username, String password,String email, String slogan,
          String securityQ, String nickname,String rank,String highscore,boolean stayLoggedIn ,String dirFromSrc) {
 

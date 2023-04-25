@@ -2,13 +2,17 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Resources.Resource;
+//<<<<<<< HEAD
+//=======
+import Model.Units.Troop;
+//>>>>>>> 87bc903bd264ca81305e9fb153fecf954fbf97c0
 
 import java.util.ArrayList;
 
 public class Square {
     private ArrayList<Troop> troops;
     private Building building;
-    private Land land;
+    private String land;
     private Resource resource;
     private int x;
     private int y;
@@ -33,14 +37,6 @@ public class Square {
 
     public void setBuilding(Building building) {
         this.building = building;
-    }
-
-    public Land getLand() {
-        return land;
-    }
-
-    public void setLand(Land land) {
-        this.land = land;
     }
 
     public Resource getResource() {

@@ -1,19 +1,12 @@
-package Model.PeoplePac;
+package Model.Units;
 
 import Model.Government;
-import Model.PeoplePac.Enums.State;
-
-import java.util.ArrayList;
+import Model.Units.Enums.State;
 
 public class Siege extends Unit{
     private int engineerNeed;
-    private ArrayList<Engineer> engineers;
 
     //resource they throw //TODO
-
-    {
-        engineers = new ArrayList<>();
-    }
 
     public Siege(Government owner, String name, int speed, int hitPoint, int damage,
                  int attackRange, State state, int cost, int engineerNeed) {
@@ -23,13 +16,5 @@ public class Siege extends Unit{
 
     public int getEngineerNeed() {
         return engineerNeed;
-    }
-
-    public ArrayList<Engineer> getEngineers() {
-        return engineers;
-    }
-
-    public void addEngineers(Engineer engineer) {
-        this.engineers.add(engineer);
     }
 }

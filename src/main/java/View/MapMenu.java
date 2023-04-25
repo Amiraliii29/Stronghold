@@ -23,7 +23,13 @@ public class MapMenu {
 
         String[][] toPrint = MapMenuController.showMapController(x , y);
 
-        System.out.println(toPrint);
+        for (int i = 0 ; i < 20 ; i++){
+            for (int j = 0 ; j < 20 ; j++){
+                if(toPrint == null)
+                    break;
+                System.out.println(toPrint[i][j]);
+            }
+        }
     }
     private static void moveMap(Matcher matcher){
 

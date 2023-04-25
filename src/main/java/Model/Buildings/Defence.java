@@ -6,29 +6,12 @@ public class Defence extends Building {
     private int defenceRange;
     private int attackRange;
     private int capacity;
-    private boolean canPass;
 
-    public Defence(String name, int hp, Resource resource, int numberOfResource, int cost) {
-        super(name, hp, resource, numberOfResource, cost);
-    }
-
-    public boolean getCanPass() {
-        return canPass;
-    }
-
-    public void setCanPass(boolean canPass) {
-        this.canPass = canPass;
-    }
-
-    public void setDefenceRange(int defenceRange) {
+    public Defence(String name, int hp, Resource resource, int numberOfResource, int cost,
+                   boolean canPass, int defenceRange, int attackRange, int capacity) {
+        super(name, hp, resource, numberOfResource, cost, canPass);
         this.defenceRange = defenceRange;
-    }
-
-    public void setAttackRange(int attackRange) {
         this.attackRange = attackRange;
-    }
-
-    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 

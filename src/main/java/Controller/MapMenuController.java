@@ -16,15 +16,18 @@ public class MapMenuController {
             for (int i = -10 ; i < 10 ; i++){
                 for (int j = -10 ; j < 10 ; j++){
                     if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getTroops().size() != 0)
-                        mapToShow[i+10][j+10] = "S";
+                        mapToShow[i+10][j+10] = "S|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getBuilding() != null)
-                        mapToShow[i+10][j+10] = "B";
-                    
-
+                        mapToShow[i+10][j+10] = "B|";
+                    else if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getResource() != null){
+                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).
+                                getResource().getName().toCharArray();
+                        mapToShow[i+10][j+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
+                    }
                 }
             }
         }
-
+        return mapToShow;
     }
     public static String moveMapController(String direction , String amount){
     }
