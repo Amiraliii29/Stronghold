@@ -10,8 +10,8 @@ public class Barrack extends Building {
     private ArrayList<Troop> troops;
     private HashMap<Troop, Integer> troopsCreated;
 
-    public Barrack(String name, int hp, Resource resource, int numberOfResource, int cost) {
-        super(name, hp, resource, numberOfResource, cost);
+    public Barrack(String name, int hp, Resource resource, int numberOfResource, int cost , boolean canPass) {
+        super(name, hp, resource, numberOfResource, cost , canPass);
         troops = new ArrayList<>();
         troopsCreated = new HashMap<>();
     }

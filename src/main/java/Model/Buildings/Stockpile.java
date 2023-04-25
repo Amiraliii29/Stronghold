@@ -11,8 +11,8 @@ public class Stockpile extends Building {
     private HashMap<Resource, Integer> resources;
     private final int capacity;//how many resource in one slot of stockpile
 
-    public Stockpile(String name, int hp, Resource resource, int numberOfResource, int cost) {
-        super(name, hp, resource, numberOfResource, cost);
+    public Stockpile(String name, int hp, Resource resource, int numberOfResource, int cost , boolean canPass) {
+        super(name, hp, resource, numberOfResource, cost , canPass);
         this.capacity = 40;
         resources = new HashMap<>();
     }

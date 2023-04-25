@@ -54,7 +54,7 @@ public class TradeMenuController {
 
         Resource resourceToTrade = null;
 
-        for (Resource allResource : Resource.getAllResources()) {
+        for (Resource allResource : Resource.getResources()) {
             if(allResource.getName().equals(resourceName)) {
                 resourceToTrade = allResource;
                 break;
