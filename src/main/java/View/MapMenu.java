@@ -20,6 +20,8 @@ public class MapMenu {
                 moveMap(matcher);
             else if((matcher = MapMenuCommands.getMatcher(input , MapMenuCommands.SHOW_DETAILS)) != null)
                 showMap(matcher);
+            else if(MapMenuCommands.getMatcher(input , MapMenuCommands.EXIT) != null)
+                exit(scanner);
         }
     }
     private static void showMap(Matcher matcher){
@@ -59,6 +61,9 @@ public class MapMenu {
 
         System.out.print(toPrint);
     }
-    private static void exit(){
+    private static void exit(Scanner scanner){
+        System.out.println("returned back to main menu");
+        GameMenu runner = new GameMenu();
+        runner.run(scanner);
     }
 }
