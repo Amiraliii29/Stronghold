@@ -55,7 +55,7 @@ public enum TroopEnums {
 
     public static Troop createUnit(Government owner, TroopEnums troop) {
         Troop newTroop = new Troop(owner, troop.name, troop.speed, troop.hitPoint, troop.damage,
-                troop.attackRange, troop.weapons, State.Stan_Ground, troop.cost, troop.climbLadder, troop.digMoat);
+                troop.attackRange, troop.weapons, troop.cost, troop.climbLadder, troop.digMoat);
         newTroop.setNeedHorse(troop.needHorse);
         return newTroop;
     }

@@ -20,14 +20,6 @@ public class Barrack extends Building {
         return troops;
     }
 
-    public void addTroop(Troop troop) {
-        this.troops.add(troop);
-    }
-
-    public void setTroops(ArrayList<Troop> troops) {
-        this.troops = troops;
-    }
-
     public HashMap<Troop, Integer> getTroopsCreated() {
         return troopsCreated;
     }
