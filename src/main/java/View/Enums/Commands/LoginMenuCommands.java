@@ -4,6 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum LoginMenuCommands {
+    
+    LOGOUT("\\s*logout\\s*"),
+
+    ENTER_PROFILE_MENU("\\s*enter\\s+profile\\s+menu\\s*"),
+
+    ENTER_MAP_MENU("\\s*enter\\s+map\\s+menu\\s*"),
     ;
     private String regex;
 
