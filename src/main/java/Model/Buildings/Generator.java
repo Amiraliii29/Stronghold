@@ -8,8 +8,13 @@ public class Generator extends Building{
     private Resource resourceNeed;
     private int numberOfWorker;
 
-    public Generator(String name, int hp, Resource resource, int numberOfResource, int cost) {
+    public Generator(String name, int hp, Resource resource, int numberOfResource, int cost, int rate,
+                     Resource resourceGenerate, Resource resourceNeed, int numberOfWorker) {
         super(name, hp, resource, numberOfResource, cost);
+        this.rate = rate;
+        this.resourceGenerate = resourceGenerate;
+        this.resourceNeed = resourceNeed;
+        this.numberOfWorker = numberOfWorker;
     }
 
     public void setRate(int rate) {

@@ -1,7 +1,7 @@
 package Model.Buildings;
 
 import Model.Resources.Resource;
-import Model.Troop;
+import Model.Units.Troop;
 
 import java.util.ArrayList;
 import java.util.HashMap;

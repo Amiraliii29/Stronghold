@@ -6,8 +6,10 @@ public class TownBuilding extends Building {
     private int capacity;
     private int popularityRate;
 
-    public TownBuilding(String name, int hp, Resource resource, int numberOfResource, int cost) {
+    public TownBuilding(String name, int hp, Resource resource, int numberOfResource, int cost, int capacity, int popularityRate) {
         super(name, hp, resource, numberOfResource, cost);
+        this.capacity = capacity;
+        this.popularityRate = popularityRate;
     }
 
     public void setCapacity(int capacity) {
