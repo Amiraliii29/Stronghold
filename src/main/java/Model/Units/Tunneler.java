@@ -1,11 +1,10 @@
 package Model.Units;
-
 import Model.Government;
 
 public class Tunneler extends Unit{
     private boolean busy;
 
-    public Tunneler(Government owner) {
+    private Tunneler(Government owner) {
         super(owner, "Tunneler", 3, 60, 0, 0, 20);
     }
 
@@ -15,5 +14,12 @@ public class Tunneler extends Unit{
 
     public boolean isBusy() {
         return busy;
+    }
+
+    public static Tunneler createTunneler(Government owner, int xCoordinate, int yCoordinate) {
+        Tunneler newTunneler = new Tunneler(owner);
+        newTunneler.xCoordinate = xCoordinate;
+        newTunneler.yCoordinate = yCoordinate;
+        return newTunneler;
     }
 }

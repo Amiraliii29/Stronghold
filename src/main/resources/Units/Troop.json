@@ -1,0 +1,306 @@
+[
+  {
+    "climbLadder": true,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "Bow",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "Archer",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 4,
+    "hitPoint": 70,
+    "damage": 30,
+    "attackRange": 15,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "CrossBow",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      },
+      {
+        "name": "LeatherArmor",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "CrossBowMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 90,
+    "damage": 30,
+    "attackRange": 15,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": true,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "Spear",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "SpearMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 3,
+    "hitPoint": 50,
+    "damage": 40,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "Pike",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      },
+      {
+        "name": "MetalArmor",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "PikeMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 110,
+    "damage": 40,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": true,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "Mace",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      },
+      {
+        "name": "LeatherArmor",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "MaceMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 3,
+    "hitPoint": 90,
+    "damage": 50,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [
+      {
+        "name": "Sword",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      },
+      {
+        "name": "MetalArmor",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "SwordMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 1,
+    "hitPoint": 110,
+    "damage": 60,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": true,
+    "weapons": [
+      {
+        "name": "Sword",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      },
+      {
+        "name": "MetalArmor",
+        "price": 100,
+        "count": 0.0,
+        "storage": "Armoury"
+      }
+    ],
+    "name": "Knight",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 5,
+    "hitPoint": 110,
+    "damage": 60,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "BlackMonk",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 90,
+    "damage": 40,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 12
+  },
+  {
+    "climbLadder": false,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [],
+    "name": "ArcherBow",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 4,
+    "hitPoint": 70,
+    "damage": 30,
+    "attackRange": 15,
+    "state": "Stan_Ground",
+    "cost": 80
+  },
+  {
+    "climbLadder": false,
+    "digMoat": true,
+    "needHorse": false,
+    "weapons": [],
+    "name": "Slave",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 4,
+    "hitPoint": 30,
+    "damage": 10,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 5
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "Slinger",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 4,
+    "hitPoint": 50,
+    "damage": 30,
+    "attackRange": 10,
+    "state": "Stan_Ground",
+    "cost": 10
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "Assassin",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 3,
+    "hitPoint": 90,
+    "damage": 3,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 75
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "HorseArcher",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 5,
+    "hitPoint": 90,
+    "damage": 30,
+    "attackRange": 15,
+    "state": "Stan_Ground",
+    "cost": 80
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "ArabianSwordMan",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 1,
+    "hitPoint": 110,
+    "damage": 50,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 75
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "FireThrower",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 3,
+    "hitPoint": 70,
+    "damage": 50,
+    "attackRange": 10,
+    "state": "Stan_Ground",
+    "cost": 100
+  }
+]

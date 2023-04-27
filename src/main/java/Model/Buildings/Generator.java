@@ -4,7 +4,8 @@ import Model.Resources.Resource;
 
 import java.util.ArrayList;
 
-public class Generator extends Building{
+public class Generator extends Building {
+    private static ArrayList<Generator> generators;
     private int usingRate;
     private int generatingRate;
     private Resource resourceGenerate;
@@ -53,7 +54,7 @@ public class Generator extends Building{
         return numberOfWorker;
     }
 
-    private Generator (Generator g) {
+    private Generator(Generator g) {
         super(g.name, g.hp, g.resource, g.numberOfResource, g.cost, g.canPass);
         this.usingRate = g.usingRate;
         this.generatingRate = g.generatingRate;
@@ -62,7 +63,7 @@ public class Generator extends Building{
         this.numberOfWorker = g.numberOfWorker;
     }
 
-    public Generator clone() {
+    public Generator createGenerator() {
         return new Generator(this);
     }
 }
