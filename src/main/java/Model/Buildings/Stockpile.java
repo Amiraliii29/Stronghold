@@ -1,22 +1,44 @@
 package Model.Buildings;
 
+import Model.Government;
 import Model.Resources.Resource;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Stockpile extends Building {
-    // when user build an stockpile add that to government in Government !! //TODO
+    private static ArrayList<Stockpile> stockpiles;
+    private static ArrayList<String> stockpilesName;
     private HashMap<Resource, Integer> resources;
     private ArrayList<String> resourcesStored;
     private final int capacity;//how many resource in one slot of stockpile
 
-    public Stockpile(String name, int hp, Resource resource, int numberOfResource,
-                     ArrayList<String> resourcesStored, int cost, boolean canPass) {
-        super(name, hp, resource, numberOfResource, cost, canPass);
-        this.capacity = 40;
+    static {
+        try {
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Stockpile>>() {}.getType();
+            stockpiles = gson.fromJson(new FileReader("src/main/resources/Buildings/Stockpiles.json"), type);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stockpilesName = new ArrayList<>();
+        for (Stockpile stockpile: stockpiles) {
+            stockpilesName.add(stockpile.name);
+        }
+    }
+
+    private Stockpile(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
+                     int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> resourcesStored, int capacity) {
+        super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.resourcesStored = resourcesStored;
+        this.capacity = capacity;
         resources = new HashMap<>();
     }
 
@@ -103,5 +125,30 @@ public class Stockpile extends Building {
         } else {
             resources.put(resource, resources.get(resource)-number);
         }
+    }
+
+    public static ArrayList<String> getStockpilesName() {
+        return stockpilesName;
+    }
+
+    public ArrayList<String> getResourcesStored() {
+        return resourcesStored;
+    }
+
+    public static Stockpile createStockpile(Government owner, int xCoordinateLeft, int yCoordinateUp, String stockpileName) {
+        for (Stockpile stockpile : stockpiles) {
+            if (stockpile.name.equals(stockpileName)) {
+                Stockpile newStockpile = new Stockpile(owner, stockpile.name, stockpile.width, stockpile.length, xCoordinateLeft,
+                        yCoordinateUp, stockpile.lands, stockpile.hp, stockpile.resource, stockpile.numberOfResource, stockpile.cost,
+                        stockpile.canPass, stockpile.resourcesStored, stockpile.capacity);
+                if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
+                else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
+                else owner.addStockpiles(newStockpile);
+
+                //add to squares//TODO
+                return newStockpile;
+            }
+        }
+        return null;
     }
 }

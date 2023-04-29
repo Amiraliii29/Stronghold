@@ -12,23 +12,28 @@ import java.util.ArrayList;
 
 public class Defence extends Building {
     private static ArrayList<Defence> defences;
+    private static ArrayList<String> defencesName;
     private int range;
     private int capacity;
 
     static {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<Defence>>(){}.getType();
+            Type type = new TypeToken<ArrayList<Defence>>() {}.getType();
             defences = gson.fromJson(new FileReader("src/main/resources/Buildings/Defences.json"), type);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        defencesName = new ArrayList<>();
+        for (Defence defence : defences) {
+            defencesName.add(defence.name);
+        }
     }
 
-    public Defence(String name, int hp, Resource resource, int numberOfResource, int cost,
-                   boolean canPass, int range, int capacity) {
-        super(name, hp, resource, numberOfResource, cost, canPass);
+    private Defence(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
+                    int hp, Resource resource, int numberOfResource, int cost, boolean canPass, int range, int capacity) {
+        super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.range = range;
         this.capacity = capacity;
     }
@@ -41,11 +46,20 @@ public class Defence extends Building {
         return capacity;
     }
 
+    public static ArrayList<String> getDefencesName() {
+        return defencesName;
+    }
+
     public static Defence createDefence(Government owner, int xCoordinateLeft, int yCoordinateUp, String defenceName) {
         for (Defence defence : defences) {
-            if (defence.getName().equals(defenceName)) {
-
+            if (defence.name.equals(defenceName)) {
+                Defence newDefence = new Defence(owner, defence.name, defence.width, defence.length, xCoordinateLeft,
+                        yCoordinateUp, defence.lands, defence.hp, defence.resource, defence.numberOfResource, defence.cost,
+                        defence.canPass, defence.range, defence.capacity);
+                owner.addBuildings(newDefence);
+                return newDefence;
             }
         }
+        return null;
     }
 }

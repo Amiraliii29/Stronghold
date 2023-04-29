@@ -6,7 +6,6 @@ import Model.Resources.Resource;
 import java.util.ArrayList;
 
 public abstract class Building {
-    protected Resource resource;
     protected Government owner;
     protected String name;
     protected int width;
@@ -15,31 +14,34 @@ public abstract class Building {
     protected int yCoordinateUp;
     protected ArrayList<String> lands;
     protected int hp;
+    protected Resource resource;
     protected int numberOfResource;
     protected int cost;
     protected boolean canPass;
 
     // add each kind of building to users arraylist in database ! //TODO
-    public Building(String name, int hp, Resource resource, int numberOfResource, int cost, boolean canPass, int width, int length) {
+
+
+    public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
+                    ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
+        this.owner = owner;
         this.name = name;
+        this.width = width;
+        this.length = length;
+        this.xCoordinateLeft = xCoordinateLeft;
+        this.yCoordinateUp = yCoordinateUp;
+        this.lands = lands;
         this.hp = hp;
         this.resource = resource;
         this.numberOfResource = numberOfResource;
         this.cost = cost;
         this.canPass = canPass;
-        this.width = width;
-        this.length = length;
-        lands = new ArrayList<>();
-    }
-
-    public void setWidthAndLength(int width, int length) {
-        this.width = width;
-        this.length = length;
     }
 
     public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
         this.xCoordinateLeft = xCoordinateLeft;
         this.yCoordinateUp = yCoordinateUp;
+        //add building to square and remove last coordinate//TODO
     }
 
     public int changeHP(int damage) {
@@ -49,10 +51,6 @@ public abstract class Building {
 
     public Government getOwner() {
         return owner;
-    }
-
-    public void setOwner(Government owner) {
-        this.owner = owner;
     }
 
     public String getName() {
@@ -77,10 +75,6 @@ public abstract class Building {
 
     public ArrayList<String> getLands() {
         return lands;
-    }
-
-    public void addLands(String  land) {
-        this.lands.add(land);
     }
 
     public int getHp() {

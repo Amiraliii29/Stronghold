@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class Barrack extends Building {
     private static ArrayList<Barrack> barracks;
+    private static ArrayList<String> barracksName;
     private ArrayList<String> troops;
     private HashMap<Troop, Integer> troopsCreated;
 
@@ -26,11 +27,15 @@ public class Barrack extends Building {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        barracksName = new ArrayList<>();
+        for (Barrack barrack : barracks) {
+            barracksName.add(barrack.name);
+        }
     }
 
-    private Barrack(String name, int hp, Resource resource, int numberOfResource,
-                    ArrayList<String> troops, int cost, boolean canPass, int width, int length) {
-        super(name, hp, resource, numberOfResource, cost, canPass, width, length);
+    public Barrack(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
+                   int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> troops) {
+        super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.troops = troops;
         troopsCreated = new HashMap<>();
     }
@@ -52,13 +57,18 @@ public class Barrack extends Building {
 
     }
 
+    public static ArrayList<String> getBarracksName() {
+        return barracksName;
+    }
+
     public static Barrack createBarrack(Government owner, int xCoordinateLeft, int yCoordinateUp, String barrackName) {
         for (Barrack barrack : barracks) {
-            if (barrack.getName().equals(barrackName)) {
-                Barrack newBarrack = new Barrack(barrackName, barrack.hp, barrack.resource,
-                        barrack.numberOfResource, barrack.troops, barrack.cost, barrack.canPass, barrack.width, barrack.length);
-                newBarrack.setCoordinate(xCoordinateLeft, yCoordinateUp);
-                newBarrack.setOwner(owner);
+            if (barrack.name.equals(barrackName)) {
+                Barrack newBarrack = new Barrack(owner, barrack.name, barrack.width, barrack.length, xCoordinateLeft,
+                        yCoordinateUp, barrack.lands, barrack.hp, barrack.resource, barrack.numberOfResource, barrack.cost,
+                        barrack.canPass, barrack.troops);
+                owner.addBuildings(newBarrack);
+                //add to squares//TODO
                 return barrack;
             }
         }
