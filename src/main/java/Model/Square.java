@@ -2,10 +2,8 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Resources.Resource;
-//<<<<<<< HEAD
-//=======
+
 import Model.Units.Troop;
-//>>>>>>> 87bc903bd264ca81305e9fb153fecf954fbf97c0
 
 import java.util.ArrayList;
 import java.util.HashMap;

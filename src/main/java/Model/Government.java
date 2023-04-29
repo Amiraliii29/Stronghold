@@ -12,6 +12,7 @@ public class Government {
     private final User owner;
     private int popularity;
     private int workerRate;//TODO
+    private int maxPopulation;
     private int population;//TODO
     private int freeWorker;//TODO
     private int food;

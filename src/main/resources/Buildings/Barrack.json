@@ -66,5 +66,28 @@
     "numberOfResource": 0,
     "cost": 0,
     "canPass": false
+  },
+  {
+    "troops": [
+      "Engineer",
+      "LadderMan",
+      "Tunneler"
+    ],
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "EngineerGuild",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 10,
+    "cost": 100,
+    "canPass": false
   }
 ]
