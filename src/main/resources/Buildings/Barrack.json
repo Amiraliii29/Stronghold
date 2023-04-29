@@ -16,9 +16,9 @@
       "storage": "Stockpile"
     },
     "name": "MercenaryPost",
+    "width": 5,
+    "length": 5,
     "xCoordinateLeft": 0,
-    "xCoordinateRight": 0,
-    "yCoordinateDown": 0,
     "yCoordinateUp": 0,
     "lands": [],
     "hp": 200,
@@ -42,9 +42,9 @@
       "storage": "Stockpile"
     },
     "name": "Barrack",
+    "width": 6,
+    "length": 6,
     "xCoordinateLeft": 0,
-    "xCoordinateRight": 0,
-    "yCoordinateDown": 0,
     "yCoordinateUp": 0,
     "lands": [],
     "hp": 300,
@@ -56,16 +56,15 @@
     "troops": [
       "Monk"
     ],
-    "resource": null,
     "name": "Cathedral",
+    "width": 8,
+    "length": 8,
     "xCoordinateLeft": 0,
-    "xCoordinateRight": 0,
-    "yCoordinateDown": 0,
     "yCoordinateUp": 0,
     "lands": [],
     "hp": 400,
     "numberOfResource": 0,
-    "cost": 1000,
+    "cost": 0,
     "canPass": false
   }
 ]
