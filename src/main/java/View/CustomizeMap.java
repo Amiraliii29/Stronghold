@@ -53,8 +53,16 @@ public class CustomizeMap {
     private static void selectMap(Matcher matcher){
         String mapName = matcher.group("mapName");
 
-        CustomizeMapController.selectMapController(mapName);
+        CustomizeMapMessages message =  CustomizeMapController.selectMapController(mapName);
 
+        switch (message){
+            case SELECT_MAP_SUCCESS:
+                System.out.println("map selected successfully");
+                break;
+            case MAP_NOT_FOUND:
+                System.out.println("select map error: map with this name doesn't exist");
+                break;
+        }
     }
     private static void setTexture(Matcher matcher){
         String options = matcher.group("options");

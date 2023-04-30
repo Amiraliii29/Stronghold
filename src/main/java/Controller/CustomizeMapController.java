@@ -32,8 +32,12 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages selectMapController(String mapName){
-        if()
         Map.loadMap(mapName);
+        if(DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.MAP_NOT_FOUND;
+
+        else
+            return CustomizeMapMessages.SELECT_MAP_SUCCESS;
     }
     public static CustomizeMapMessages setTextureController(String x , String y , String type){
         if(x == null || CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null)

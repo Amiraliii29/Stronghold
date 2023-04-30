@@ -10,6 +10,8 @@ public enum CustomizeMapMessages {
     NO_X,
     NO_Y,
     X_OUT_OF_BOUNDS,
-    Y_OUT_OF_BOUNDS;
+    Y_OUT_OF_BOUNDS,
+    MAP_NOT_FOUND,
+    SELECT_MAP_SUCCESS;
 
 }
