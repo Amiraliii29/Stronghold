@@ -73,6 +73,10 @@ public class Square {
         return troopsTypeAndCount;
     }
 
+    public boolean canPass() {
+        //TODO
+    }
+
     public void setLand(Land land) {
         this.land = land;
     }
