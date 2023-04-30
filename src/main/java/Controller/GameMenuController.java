@@ -83,11 +83,6 @@ public class GameMenuController {
         if (!DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).canPass())
             return GameMenuMessages.CANT_GO_THERE;
 
-        return moveUnits(xCoordinate, yCoordinate);
-    }
-
-    private static GameMenuMessages moveUnits(int x, int y) {
-
     }
 
     private static boolean dfs(int x, int y, int xFin, int yFin, int speed, boolean up, boolean stair) {
