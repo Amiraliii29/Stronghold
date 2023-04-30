@@ -7,6 +7,7 @@ import Model.Resources.Resource;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class Government {
     private final User owner;
@@ -318,5 +319,13 @@ public class Government {
 
     public void removeAllRequestNotification() {
         requestNotifications.clear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Government that = (Government) o;
+        return Objects.equals(owner, that.owner);
     }
 }

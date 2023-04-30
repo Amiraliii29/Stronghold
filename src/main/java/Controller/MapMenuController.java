@@ -3,6 +3,7 @@ package Controller;
 import Model.DataBase;
 import Model.Square;
 import Model.Units.Troop;
+import Model.Units.Unit;
 
 import java.util.HashMap;
 
@@ -22,7 +23,7 @@ public class MapMenuController {
         else{
             for (int i = -10 ; i < 10 ; i++){
                 for (int j = -10 ; j < 10 ; j++){
-                    if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getTroops().size() != 0)
+                    if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getUnits().size() != 0)
                         mapToShow[i+10][j+10] = "S|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getBuilding() != null)
                         mapToShow[i+10][j+10] = "B|";
@@ -86,9 +87,9 @@ public class MapMenuController {
             Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
             toReturn += "Land type: " + square.getLand() + "\nresource: " + square.getResource().getName()
                     + "\nTroops: ";
-            HashMap<Troop ,  Integer> troopsTypeAndCount = square.getTroopsTypeAndCount();
-            for (Troop troop : troopsTypeAndCount.keySet()) {
-                toReturn += troop.getName() + " (" + troopsTypeAndCount.get(troop) + ")\n";
+            HashMap<Unit,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
+            for (Unit unit : unitsTypeAndCount.keySet()) {
+                toReturn += unit.getName() + " (" + unitsTypeAndCount.get(unit) + ")\n";
             }
             toReturn += "building: " + square.getBuilding().getName();
             return toReturn;

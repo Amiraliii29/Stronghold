@@ -3,12 +3,10 @@ package Model;
 import Model.Buildings.Building;
 
 import java.util.ArrayList;
-import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import Controller.JsonConverter;
 import Model.Units.Troop;
+import Model.Units.Unit;
 
 public class DataBase {
     private static final ArrayList<Government> governments;
@@ -16,7 +14,7 @@ public class DataBase {
     private static Government currentGovernment;
     private static Map selectedMap;
     private static Building selectedBuilding;
-    private static ArrayList<Troop> selectedUnit;
+    private static ArrayList<Unit> selectedUnit;
 
 
     static {
@@ -56,12 +54,16 @@ public class DataBase {
         DataBase.selectedBuilding = selectedBuilding;
     }
 
-    public static ArrayList<Troop> getSelectedUnit() {
+    public static ArrayList<Unit> getSelectedUnit() {
         return selectedUnit;
     }
 
     public static void addSelectedUnit(Troop selectedUnit) {
         DataBase.selectedUnit.add(selectedUnit);
+    }
+
+    public static void setSelectedUnit(ArrayList<Unit> selectedUnit) {
+        DataBase.selectedUnit = selectedUnit;
     }
 
     public static void addMap(Map map) {

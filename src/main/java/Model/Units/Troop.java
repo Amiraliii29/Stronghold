@@ -26,6 +26,9 @@ public class Troop extends Unit{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        for (Troop troop : troops) {
+            allUnits.add(troop.name);
+        }
     }
     private Troop(Government owner, String name, int speed, int hitPoint, int damage, int attackRange,
                  ArrayList<Resource> weapons, int cost, boolean climbLadder, boolean digMoat) {

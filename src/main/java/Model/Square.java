@@ -4,12 +4,13 @@ import Model.Buildings.Building;
 import Model.Resources.Resource;
 
 import Model.Units.Troop;
+import Model.Units.Unit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
-    private ArrayList<Troop> troops;
+    private ArrayList<Unit> units;
     private Building building;
     private String land;
     private Resource resource;
@@ -19,15 +20,16 @@ public class Square {
     public Square(int x, int y) {
         this.x = x;
         this.y = y;
-        troops = new ArrayList<>();
+        units = new ArrayList<>();
+        this.land = "defaultLand";
     }
 
-    public ArrayList<Troop> getTroops() {
-        return troops;
+    public ArrayList<Unit> getUnits() {
+        return units;
     }
 
-    public void addTroop(Troop troop) {
-        this.troops.add(troop);
+    public void addTroop(Unit unit) {
+        this.units.add(unit);
     }
 
     public Building getBuilding() {
@@ -57,16 +59,14 @@ public class Square {
     public String getLand() {
         return land;
     }
-    public HashMap<Troop , Integer> getTroopsTypeAndCount(){
-        HashMap<Troop , Integer> troopsTypeAndCount = new HashMap<>();
-        for (Troop troop : troops) {
-            if(!troopsTypeAndCount.keySet().contains(troop))
-                troopsTypeAndCount.put(troop , 1);
-            else{
-                int tmp =  troopsTypeAndCount.get(troop);
-                troopsTypeAndCount.remove(troop);
-                troopsTypeAndCount.put(troop , tmp + 1);
-            }
+
+    public HashMap<Unit, Integer> getUnitsTypeAndCount() {
+        HashMap<Unit, Integer> troopsTypeAndCount = new HashMap<>();
+        for (Unit unit : units) {
+            if (!troopsTypeAndCount.keySet().contains(unit))
+                troopsTypeAndCount.put(unit, 1);
+            else
+                troopsTypeAndCount.put(unit, troopsTypeAndCount.get(unit) + 1);
         }
         return troopsTypeAndCount;
     }
