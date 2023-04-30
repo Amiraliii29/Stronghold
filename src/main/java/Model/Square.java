@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Square {
     private ArrayList<Unit> units;
     private Building building;
-    private String land;
+    private Land  land;
     private Resource resource;
     private int x;
     private int y;
@@ -21,7 +21,7 @@ public class Square {
         this.x = x;
         this.y = y;
         units = new ArrayList<>();
-        this.land = "defaultLand";
+        this.land = Land.DEFAULT;
     }
 
     public ArrayList<Unit> getUnits() {
@@ -56,7 +56,7 @@ public class Square {
         return y;
     }
 
-    public String getLand() {
+    public Land getLand() {
         return land;
     }
 
@@ -73,5 +73,12 @@ public class Square {
 
     public boolean canPass() {
         //TODO
+    }
+
+    public void setLand(Land land) {
+        this.land = land;
+    }
+    public void removeAllTroops(){
+        units.clear();
     }
 }
