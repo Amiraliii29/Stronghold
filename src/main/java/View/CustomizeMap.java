@@ -5,8 +5,10 @@ import Controller.Orders;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
+import javax.print.attribute.standard.MediaSize;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Scanner;
+import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 
 public class CustomizeMap {
@@ -43,12 +45,39 @@ public class CustomizeMap {
             case INVALID_WIDTH:
                 System.out.println("create new map error: invalid width");
                 break;
+            case CREATE_NEW_MAP_SUCCESS:
+                System.out.println("new map created successfully");
+                break;
         }
     }
     private static void selectMap(Matcher matcher){
+        String mapName = matcher.group("mapName");
+
+        CustomizeMapController.selectMapController(mapName);
 
     }
     private static void setTexture(Matcher matcher){
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String type = Orders.findFlagOption("-t" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.setTextureController(x , y , type);
+
+        switch (message){
+            case NO_X:
+                System.out.println("settexture error: invalid x amount");
+                break;
+            case NO_Y:
+                System.out.println("settexture error: invalid y amount");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("settexture error: x amount out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("settexture error: y amount out of bounds");
+                break;
+        }
     }
     private static void clear(Matcher matcher){
     }

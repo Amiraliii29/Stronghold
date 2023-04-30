@@ -21,6 +21,7 @@ public class Square {
         this.x = x;
         this.y = y;
         units = new ArrayList<>();
+        this.land = "defaultLand";
     }
 
     public ArrayList<Unit> getUnits() {
