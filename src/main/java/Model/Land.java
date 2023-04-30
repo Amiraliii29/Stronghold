@@ -1,20 +1,20 @@
 package Model;
 
 public enum Land {
-    DEFAULT("default Land"),
+    DEFAULT("default"),
     GRAVEL("gravel"),
-    FLAT_ROCK("flat rock"),
+    FLAT_ROCK("flatRock"),
     ROCK("rock"),
     IRON("iron"),
     GRASS("grass"),
     MEADOW("meadow"),
-    FULL_MEADOW("high density meadow"),
+    FULL_MEADOW("highDensityMeadow"),
     OIL("oil"),
     PLAIN("plain"),
-    LOW_DEPTH_WATER("low depth water"),
+    LOW_DEPTH_WATER("lowDepthWater"),
     RIVER("river"),
-    SMALL_LAKE("small lake"),
-    BIG_LAKE("big lake"),
+    SMALL_LAKE("smallLake"),
+    BIG_LAKE("bigLake"),
     BEACH("beach"),
     SEA("sea"),
     ;
@@ -25,5 +25,8 @@ public enum Land {
     }
     public static String getName(Land mainEnum){
         return mainEnum.name;
+    }
+    public static Land getLandByName(String name){
+        return Land.valueOf(name);
     }
 }

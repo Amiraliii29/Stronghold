@@ -69,21 +69,31 @@ public class CustomizeMap {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
         String type = Orders.findFlagOption("-t" , options);
+        String x1 = Orders.findFlagOption("-x1" , options);
+        String y1 = Orders.findFlagOption("-y1" , options);
+        String x2 = Orders.findFlagOption("-x2" , options);
+        String y2 = Orders.findFlagOption("-y2" , options);
 
-        CustomizeMapMessages message = CustomizeMapController.setTextureController(x , y , type);
+        CustomizeMapMessages message = CustomizeMapController.setTextureController(x , y , x1 , y1 , x2 , y2 , type);
 
         switch (message){
-            case NO_X:
-                System.out.println("settexture error: invalid x amount");
+            case INVALID_OPTIONS:
+                System.out.println("settexture error: invalid options please enter x and y components");
                 break;
-            case NO_Y:
-                System.out.println("settexture error: invalid y amount");
+            case INVALID_NUMBER:
+                System.out.println("settexture error: invalid number");
                 break;
             case X_OUT_OF_BOUNDS:
-                System.out.println("settexture error: x amount out of bounds");
+                System.out.println("settexture error: x out of bounds");
                 break;
             case Y_OUT_OF_BOUNDS:
-                System.out.println("settexture error: y amount out of bounds");
+                System.out.println("settexture error: y out of bounds");
+                break;
+            case INVALID_TYPE:
+                System.out.println("settexture error: invalid type");
+                break;
+            case SET_TEXTURE_SUCCESS:
+                System.out.println("settexture success :)");
                 break;
         }
     }

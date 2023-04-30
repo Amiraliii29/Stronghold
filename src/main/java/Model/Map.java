@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class Map {
+    // toole mehvar ofogi = length  moalefe ofoghi = x
+    // toole mehvar amoudi = width  moalefe amoudi = y
     private String name;
     private Square[][] squares;
     private int width;
