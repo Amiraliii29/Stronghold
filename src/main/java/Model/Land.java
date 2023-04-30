@@ -9,6 +9,14 @@ public enum Land {
     GRASS("grass"),
     MEADOW("meadow"),
     FULL_MEADOW("high density meadow"),
+    OIL("oil"),
+    PLAIN("plain"),
+    LOW_DEPTH_WATER("low depth water"),
+    RIVER("river"),
+    SMALL_LAKE("small lake"),
+    BIG_LAKE("big lake"),
+    BEACH("beach"),
+    SEA("sea"),
     ;
     private String name;
 
