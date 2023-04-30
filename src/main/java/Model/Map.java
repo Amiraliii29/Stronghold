@@ -46,26 +46,26 @@ public class Map {
         return name;
     }
 
-    public static void saveMap(Square[][] squares, String fileName) {
+    public static void saveMap(Map map, String fileName) {
         // filename only without address only name
         // will save it in resources/Map/<fileName>
         try {
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             FileWriter file = new FileWriter(fileAddress);
             Gson gson = new Gson();
-            gson.toJson(squares, file);
+            gson.toJson(map, file);
             file.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void loadMap(Map map, String fileName) {
+    public static void loadMap(String fileName) {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<Square[][]>(){}.getType();
+            Type type = new TypeToken<Map>(){}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
-            map.setSquares(gson.fromJson(new FileReader(fileAddress), type));
+            DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
         } catch (IOException e) {
             e.printStackTrace();
         }

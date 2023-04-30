@@ -3,11 +3,13 @@ package Controller;
 import Model.DataBase;
 import Model.Government;
 import Model.Square;
+import Model.Units.State;
 import Model.Units.Unit;
 import View.Enums.Messages.GameMenuMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GameMenuController {
     public static GameMenuMessages nextTurnController() {
@@ -38,7 +40,8 @@ public class GameMenuController {
         String x = Orders.findFlagOption("-x", option);
         String y = Orders.findFlagOption("-y", option);
         String type = Orders.findFlagOption("-type", option);
-        if (!x.matches("^\\d+$") || !y.matches("^\\d+$"))
+        assert x != null;
+        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
         if (!Unit.getAllUnits().contains(type))
             return GameMenuMessages.INVALID_TROOP_TYPE;
@@ -54,23 +57,52 @@ public class GameMenuController {
                 selectedUnit.add(unit);
             }
         }
+        if (selectedUnit.size() == 0) return GameMenuMessages.THERE_IS_NO_UNIT;
         DataBase.setSelectedUnit(selectedUnit);
         return GameMenuMessages.SUCCESS;
     }
 
-    public static GameMenuMessages moveUnitController(String x, String y) {
+    public static GameMenuMessages moveUnitController(String coordinate) {
         return null;
     }
 
-    public static GameMenuMessages setUnitModeController(String x, String y, String mode) {
+    public static GameMenuMessages setUnitModeController(String option) {
+        String x = Orders.findFlagOption("-x", option);
+        String y = Orders.findFlagOption("-y", option);
+        String state = Orders.findFlagOption("-s", option);
+        assert x != null;
+        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
+            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+        int xCoordinate = Integer.parseInt(x);
+        int yCoordinate = Integer.parseInt(y);
+        if (DataBase.getSelectedMap().getLength() < xCoordinate
+                || DataBase.getSelectedMap().getWidth() < yCoordinate)
+            return GameMenuMessages.INVALID_COORDINATE;
+
+        State newState;
+        switch (Objects.requireNonNull(state)) {
+            case "Standing" -> newState = State.Stan_Ground;
+            case "Defensive" -> newState = State.Defensive;
+            case "Offensive" -> newState = State.Aggressive;
+            default -> {
+                return GameMenuMessages.INVALID_STATE;
+            }
+        }
+
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
+        for (Unit unit : square.getUnits()) {
+            if (unit.getOwner().equals(DataBase.getCurrentGovernment())) {
+                unit.changeState(newState);
+            }
+        }
+        return GameMenuMessages.SUCCESS;
+    }
+
+    public static GameMenuMessages attackGroundController(String enemy) {
         return null;
     }
 
-    public static GameMenuMessages attackController(String enemy) {
-        return null;
-    }
-
-    public static GameMenuMessages attackController(String x, String y) {
+    public static GameMenuMessages attackAirController(String coordinate) {
         return null;
     }
 
@@ -78,7 +110,7 @@ public class GameMenuController {
         return null;
     }
 
-    public static GameMenuMessages digTunnelController(String x, String y) {
+    public static GameMenuMessages digTunnelController(String coordinate) {
         return null;
     }
 

@@ -62,16 +62,30 @@ public class GameMenu {
             case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate!");
             case INVALID_TROOP_TYPE -> Input_Output.outPut("we don't have a unit with this name");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("coordinate is invalid!");
+            case THERE_IS_NO_UNIT -> Input_Output.outPut("there is no unit with this name here");
         }
     }
 
     private static void moveUnit(Matcher matcher) {
+        String coordinate = matcher.group("coordinate");
+        GameMenuMessages message = GameMenuController.moveUnitController(coordinate);
+        switch (message) {
+
+        }
     }
 
     private static void patrol(Matcher matcher) {
     }
 
     private static void setUnitMode(Matcher matcher) {
+        String option = matcher.group("option");
+        GameMenuMessages message = GameMenuController.setUnitModeController(option);
+        switch (message) {
+            case SUCCESS -> Input_Output.outPut("state changed");
+            case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate!");
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("coordinate is invalid!");
+            case THERE_IS_NO_UNIT -> Input_Output.outPut("there is no unit with this name here");
+        }
     }
 
     private static void attackAir(Matcher matcher) {
