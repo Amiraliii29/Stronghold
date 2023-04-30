@@ -9,6 +9,7 @@ public enum CustomizeMapCommands {
     SELECT_MAP("^\\s*select\\s*map\\s*(?<mapName>\\S+)\\s*$"),
     SET_TEXTURE("^\\s*settexture\\s*(?<options>.+)\\s*$"),
     CLEAR("^\\s*clear\\s*(?<options>.+)$"),
+    DROP_TREE("^\\s*droptree\\s*(?<options>.+)\\s*$"),
     ;
     private String regex;
 

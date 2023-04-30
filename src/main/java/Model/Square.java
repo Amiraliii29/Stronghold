@@ -14,6 +14,8 @@ public class Square {
     private Building building;
     private Land  land;
     private Resource resource;
+    private Trees tree = null;
+    private int treeAmount = 0;
     private int x;
     private int y;
 
@@ -76,5 +78,20 @@ public class Square {
     }
     public void removeAllTroops(){
         units.clear();
+    }
+
+    public Trees getTree() {
+        return tree;
+    }
+
+    public void setTree(Trees tree) {
+        this.tree = tree;
+    }
+
+    public void setTreeAmount(int treeAmount) {
+        this.treeAmount = treeAmount;
+    }
+    public void changeTreeAmount(int amount){
+        treeAmount += amount;
     }
 }

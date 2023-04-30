@@ -16,6 +16,8 @@ public enum CustomizeMapMessages {
     INVALID_TYPE,
     SET_TEXTURE_SUCCESS,
     CLEAR_TILE_SUCCESS,
+    INVALID_TREE_NAME,
+    DROP_TREE_SUCCESS,
     ;
 
 }

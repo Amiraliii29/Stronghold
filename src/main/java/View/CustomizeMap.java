@@ -26,6 +26,8 @@ public class CustomizeMap {
                 setTexture(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CLEAR)) != null)
                 clear(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_TREE)) != null)
+                dropTree(matcher);
         }
     }
     private static void createNewMap(Matcher matcher){
@@ -131,6 +133,34 @@ public class CustomizeMap {
     private static void dropRock(Matcher matcher){
     }
     private static void dropTree(Matcher matcher){
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String type = Orders .findFlagOption("-t" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropTreeController(x , y , type);
+
+        switch (message){
+            case INVALID_NUMBER:
+                System.out.println("drop tree error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("drop tree error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("drop tree error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("drop tree error: y out of bounds");
+                break;
+            case DROP_TREE_SUCCESS:
+                System.out.println("tree dropped successfully");
+                break;
+            case INVALID_TREE_NAME:
+                System.out.println("drop tree error: invalid tree name");
+                break;
+        }
+
     }
     private static void printer(String toPrint){
         System.out.println(toPrint);

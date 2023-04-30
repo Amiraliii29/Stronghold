@@ -1,10 +1,7 @@
 package Controller;
 
 
-import Model.DataBase;
-import Model.Land;
-import Model.Map;
-import Model.Square;
+import Model.*;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
@@ -131,6 +128,27 @@ public class CustomizeMapController {
         return null;
     }
     public static CustomizeMapMessages dropTreeController(String x , String y , String type){
-        return null;
+        if(x == null || y  == null)
+            return CustomizeMapMessages.INVALID_OPTIONS;
+        if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
+                CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+        else if(Trees.getTreeByName(type) == null)
+            return CustomizeMapMessages.INVALID_TREE_NAME;
+        else {
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
+            selectedSquare.setTree(Trees.getTreeByName(type));
+            selectedSquare.setTreeAmount(100);
+            return CustomizeMapMessages.DROP_TREE_SUCCESS;
+        }
+
     }
 }
