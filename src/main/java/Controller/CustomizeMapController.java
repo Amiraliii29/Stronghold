@@ -1,12 +1,29 @@
 package Controller;
 
 
+import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
 public class CustomizeMapController {
-    public static CustomizeMapMessages createNewMapController(String mapName , String length , String width){
-        return null;
+    public static CustomizeMapMessages createNewMapController(String mapName , String length , String width) {
+        if (mapName == null)
+            return CustomizeMapMessages.NO_NAME;
+        else if (length == null)
+            return CustomizeMapMessages.NO_LENGTH;
+        else if (width == null)
+            return CustomizeMapMessages.NO_WIDTH;
+
+        int widthInt = Integer.parseInt(width);
+        int lengthInt = Integer.parseInt(length);
+
+        if(CustomizeMapCommands.getMatcher(width , CustomizeMapCommands.VALID_NUMBER) == null || widthInt < 0)
+            return CustomizeMapMessages.INVALID_WIDTH;
+        else if(CustomizeMapCommands.getMatcher(length , CustomizeMapCommands.VALID_NUMBER) == null || lengthInt < 0)
+            return CustomizeMapMessages.INVALID_LENGTH;
+
+
     }
+
     public static CustomizeMapMessages selectMapController(String mapName){
         return null;
     }

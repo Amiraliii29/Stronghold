@@ -4,7 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum CustomizeMapCommands {
-    ;
+    CREATE_NEW_MAP("^\\s*create\\s*new\\s*map(?<options>.+)$"),
+    VALID_NUMBER("^\\d+$");
     private String regex;
 
     private CustomizeMapCommands(String regex) {
