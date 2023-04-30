@@ -26,6 +26,9 @@ public class Siege extends Unit {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        for (Siege siege : sieges){
+            allUnits.add(siege.name);
+        }
     }
 
     private Siege(Government owner, String name, int speed, int hitPoint, int damage, int attackRange,
