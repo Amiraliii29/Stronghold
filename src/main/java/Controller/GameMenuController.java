@@ -1,14 +1,13 @@
 package Controller;
 
 import Model.DataBase;
-import Model.Government;
 import Model.Square;
+import Model.Units.Engineer;
 import Model.Units.State;
 import Model.Units.Unit;
 import View.Enums.Messages.GameMenuMessages;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class GameMenuController {
@@ -63,7 +62,48 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages moveUnitController(String coordinate) {
-        return null;
+        String x = Orders.findFlagOption("-x", coordinate);
+        String y = Orders.findFlagOption("-y", coordinate);
+        assert x != null;
+        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
+            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+        int xCoordinate = Integer.parseInt(x);
+        int yCoordinate = Integer.parseInt(y);
+        if (DataBase.getSelectedMap().getLength() < xCoordinate || DataBase.getSelectedMap().getWidth() < yCoordinate)
+            return GameMenuMessages.INVALID_COORDINATE;
+
+        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+
+        int speed = DataBase.getSelectedUnit().get(0).getSpeed();
+//        int firstX = DataBase.getSelectedUnit().get(0).getXCoordinate();
+//        int firstY = DataBase.getSelectedUnit().get(0).getYCoordinate();
+//        if (Math.abs((xCoordinate - firstX)) > range || Math.abs((yCoordinate - firstY)) > range)
+//            return GameMenuMessages.OUT_OF_RANGE;
+
+        if (!DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).canPass())
+            return GameMenuMessages.CANT_GO_THERE;
+
+        return moveUnits(xCoordinate, yCoordinate);
+    }
+
+    private static GameMenuMessages moveUnits(int x, int y) {
+
+    }
+
+    private static boolean dfs(int x, int y, int xFin, int yFin, int speed, boolean up, boolean stair) {
+        if (speed >= 0 && x == xFin && y == yFin) return true;
+        if (speed == 0) return false;
+
+
+
+//        (dfs(x+1, y, xFin, yFin, speed-1)
+//                || dfs(x-1, y, xFin, yFin, speed-1)
+//                || dfs(x, y+1, xFin, yFin, speed-1)
+//                || dfs(x, y-1, xFin, yFin, speed-1))
+    }
+
+    private static boolean moveUnit(int x, int y) {
+
     }
 
     public static GameMenuMessages setUnitModeController(String option) {
@@ -107,7 +147,11 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages pourOilController(String direction) {
-        return null;
+        if (DataBase.getSelectedUnit().size() == 0)
+            return GameMenuMessages.CHOSE_UNIT_FIRST;
+        if (!(DataBase.getSelectedUnit().get(0) instanceof Engineer))
+            return GameMenuMessages.UNIT_ISNT_ENGINEER;
+
     }
 
     public static GameMenuMessages digTunnelController(String coordinate) {

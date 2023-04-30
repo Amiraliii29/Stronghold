@@ -1,6 +1,6 @@
 package Controller;
 
-
+        return null;
 import Model.DataBase;
 import Model.Map;
 import View.Enums.Commands.CustomizeMapCommands;

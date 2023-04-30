@@ -70,4 +70,8 @@ public class Square {
         }
         return troopsTypeAndCount;
     }
+
+    public boolean canPass() {
+        //TODO
+    }
 }

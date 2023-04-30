@@ -2,6 +2,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+
+import Model.Buildings.Generator;
 import View.Input_Output;
 import org.json.simple.parser.ParseException;
 import View.SignUpMenu;
@@ -11,7 +13,6 @@ public class Main {
 //        Scanner scanner = new Scanner(System.in);
 //        Input_Output.setScanner(scanner);
 //        SignUpMenu.run();
-
 
     }
 }
