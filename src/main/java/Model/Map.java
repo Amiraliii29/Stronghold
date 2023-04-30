@@ -49,12 +49,24 @@ public class Map {
     }
 
 
-    public boolean canBuildInPlaceByType(Building building, int x, int y, int xSize, int ySize){
-        for (int i = x; i < x+xSize; i++) {
-            for (int j = y; j <y+ySize; j++) {
+    public boolean canBuildInPlaceByType(Building building, int x, int y){
+    
+        boolean check=false;
+        
+        for (int i = x; i < x+building.getLength(); i++) {
+            for (int j = y; j <y+building.getLength(); j++) {
+                
 
+                for (String validLand : building.getLands()) 
+                    if(squares[i][j].getLand().equals(validLand))
+                        check=true;
+
+                if(!check) return false;
+                else check=false;
             }
         }
+
+        return true;
     }
 
     public static void saveMap(Square[][] squares, String fileName) {

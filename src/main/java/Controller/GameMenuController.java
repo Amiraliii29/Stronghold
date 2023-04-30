@@ -1,6 +1,10 @@
 package Controller;
 
+import java.util.ArrayList;
+
 import Model.Map;
+import Model.Square;
+import Model.Buildings.*;
 import View.Enums.Messages.GameMenuMessages;
 
 public class GameMenuController {
@@ -14,7 +18,7 @@ public class GameMenuController {
         return null;
     }
     public static GameMenuMessages dropBuildingController(String x , String y , String type){
-        return null;
+        String buildingCategory= getBuildingCategoryByName(type);
     }
     public  static GameMenuMessages selectBuildingController(String x , String y){
         return null;
@@ -63,4 +67,26 @@ public class GameMenuController {
         currentMap=map;
     }
 
+
+
+    private static String getBuildingCategoryByName(String buildingName){
+        for (String name : Generator.getGeneratorsName()) {
+            if(buildingName.equals(name))
+                return "Generator";
+        }
+        //TODO: FILL THE REST
+
+        return null;
+    }
+
+    private static ArrayList<String> getBuildingValidLandsByName(String buildingName, String buildingType){
+        switch (buildingType) {
+            case "Generator":
+                Generator
+                break;
+        
+            default:
+                break;
+        }
+    }
 }

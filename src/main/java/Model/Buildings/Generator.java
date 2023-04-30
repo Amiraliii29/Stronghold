@@ -31,6 +31,7 @@ public class Generator extends Building {
         generatorsName = new ArrayList<>();
         for (Generator generator : generators) {
             generatorsName.add(generator.name);
+            generators.add( generator);
         }
     }
 
@@ -79,6 +80,10 @@ public class Generator extends Building {
 
     public static ArrayList<String> getGeneratorsName() {
         return generatorsName;
+    }
+
+    public static ArrayList<Generator> getGenerators(){
+        return generators;
     }
 
     public static Generator createGenerator(Government owner, int xCoordinateLeft, int yCoordinateUp, String generatorName) {

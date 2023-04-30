@@ -4,14 +4,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import View.Input_Output;
 import org.json.simple.parser.ParseException;
+
+import Model.Buildings.Generator;
 import View.SignUpMenu;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
-//        Scanner scanner = new Scanner(System.in);
-//        Input_Output.setScanner(scanner);
-//        SignUpMenu.run();
-
+           System.out.println(""+ Generator.getGeneratorsName().get(0)
+           );
 
     }
 }
