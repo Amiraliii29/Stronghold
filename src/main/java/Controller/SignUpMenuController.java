@@ -37,7 +37,11 @@ public class SignUpMenuController {
 
         if(!UserInfoOperator.isEmailFormatValid(email))
          return SignUpMenuMessages.INVALID_EMAIL_SIGNUP_ERROR;
-        
+       
+         if(slogan.equals("random")){
+            slogan=UserInfoOperator.getRandomSlogan();
+            SignUpMenu.displayRandomSlogan(slogan);
+        }
 
         passWord=UserInfoOperator.encodeStringToSha256(passWord);
         User newUser=new User(userName, passWord, nickName,email, slogan);
@@ -148,10 +152,7 @@ public class SignUpMenuController {
             password=UserInfoOperator.generateRandomPassword();
             passwordConfirmation=SignUpMenu.confirmRandomPassword(password);
         }
-        if(slogan.equals("random")){
-            slogan=UserInfoOperator.getRandomSlogan();
-            SignUpMenu.displayRandomSlogan(slogan);
-        }
+
 
         SignUpMenuMessages message= SignUpMenuController.createUserController(username,
                  password, nickName, passwordConfirmation, email, slogan);
@@ -174,7 +175,8 @@ public class SignUpMenuController {
         if(answer==null || pickedQuestion==null || answerRepetition==null)
             return SignUpMenuMessages.EMPTY_FIELDS_SECURITY_ERROR;
         
-        if(!answer.equals(answerRepetition))
+            int questionInNum=Integer.parseInt(pickedQuestion);
+        if(!answer.equals(answerRepetition) || questionInNum>4)
             return SignUpMenuMessages.WRONG_SECURITY_REPEAT_ERROR;
         
         user.setSecurityQuestion(answer);

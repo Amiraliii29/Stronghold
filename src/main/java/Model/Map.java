@@ -34,4 +34,9 @@ public class Map {
     public String getName() {
         return name;
     }
+
+
+    public boolean canBuildInPlaceByType(String buildingType, int x, int y, int xSize, int ySize){
+
+    }
 }

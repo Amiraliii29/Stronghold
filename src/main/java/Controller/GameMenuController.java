@@ -1,8 +1,12 @@
 package Controller;
 
+import Model.Map;
 import View.Enums.Messages.GameMenuMessages;
 
 public class GameMenuController {
+
+    private static Map currentMap;
+
     public static GameMenuMessages nextTurnController(){
         return null;
     }
@@ -54,4 +58,9 @@ public class GameMenuController {
     public static GameMenuMessages showMapController(String x , String y){
         return null;
     }
+
+    public static void setCurrentMap(Map map){
+        currentMap=map;
+    }
+
 }
