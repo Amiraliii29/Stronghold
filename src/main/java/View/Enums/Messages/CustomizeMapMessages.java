@@ -15,6 +15,7 @@ public enum CustomizeMapMessages {
     INVALID_NUMBER,
     INVALID_TYPE,
     SET_TEXTURE_SUCCESS,
+    CLEAR_TILE_SUCCESS,
     ;
 
 }

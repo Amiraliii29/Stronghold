@@ -4,6 +4,7 @@ package Controller;
 import Model.DataBase;
 import Model.Land;
 import Model.Map;
+import Model.Square;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
@@ -103,7 +104,28 @@ public class CustomizeMapController {
         }
     }
     public static CustomizeMapMessages clearController(String x , String y){
-        return null;
+        if(x == null || y  == null)
+            return CustomizeMapMessages.INVALID_OPTIONS;
+        if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
+                CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+
+        else {
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - 1 , xInt - 1);
+            selectedSquare.setLand(Land.DEFAULT);
+            selectedSquare.setBuilding(null);
+            selectedSquare.removeAllTroops();
+            return CustomizeMapMessages.CLEAR_TILE_SUCCESS;
+
+        }
     }
     public static CustomizeMapMessages dropRockController(String x , String y , String direction){
         return null;

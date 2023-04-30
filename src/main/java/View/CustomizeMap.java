@@ -20,6 +20,12 @@ public class CustomizeMap {
             input = Input_Output.getInput();
             if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)
                 createNewMap(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.SELECT_MAP)) != null)
+                selectMap(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.SET_TEXTURE)) != null)
+                setTexture(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CLEAR)) != null)
+                clear(matcher);
         }
     }
     private static void createNewMap(Matcher matcher){
@@ -98,6 +104,29 @@ public class CustomizeMap {
         }
     }
     private static void clear(Matcher matcher){
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.clearController(x , y);
+
+        switch (message){
+            case INVALID_NUMBER:
+                System.out.println("clear tile error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("clear tile error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("clear tile error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("clear tile error: y out of bounds");
+                break;
+            case CLEAR_TILE_SUCCESS:
+                System.out.println("tile cleared successfully");
+                break;
+        }
     }
     private static void dropRock(Matcher matcher){
     }
