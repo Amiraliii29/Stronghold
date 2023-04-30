@@ -1,0 +1,92 @@
+[
+  {
+    "engineerNeed": 1,
+    "howManyLeft": 0,
+    "name": "PortableShield",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 100,
+    "damage": 0,
+    "attackRange": 0,
+    "state": "Stan_Ground",
+    "cost": 100
+  },
+  {
+    "engineerNeed": 4,
+    "howManyLeft": 0,
+    "name": "BatteringRam",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 400,
+    "damage": 100,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 200
+  },
+  {
+    "engineerNeed": 4,
+    "howManyLeft": 0,
+    "name": "SiegeTower",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 300,
+    "damage": 0,
+    "attackRange": 7,
+    "state": "Stan_Ground",
+    "cost": 200
+  },
+  {
+    "engineerNeed": 2,
+    "whatTheyThrow": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "howManyLeft": 20,
+    "name": "Catapult",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 300,
+    "damage": 75,
+    "attackRange": 13,
+    "state": "Stan_Ground",
+    "cost": 250
+  },
+  {
+    "engineerNeed": 3,
+    "whatTheyThrow": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "howManyLeft": 20,
+    "name": "Trebuchet",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 0,
+    "hitPoint": 300,
+    "damage": 100,
+    "attackRange": 17,
+    "state": "Stan_Ground",
+    "cost": 300
+  },
+  {
+    "engineerNeed": 2,
+    "howManyLeft": 10000,
+    "name": "FireBallista",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 2,
+    "hitPoint": 300,
+    "damage": 60,
+    "attackRange": 17,
+    "state": "Stan_Ground",
+    "cost": 250
+  }
+]

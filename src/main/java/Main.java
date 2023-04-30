@@ -8,8 +8,10 @@ import View.SignUpMenu;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
-        Scanner scanner = new Scanner(System.in);
-        Input_Output.setScanner(scanner);
-        SignUpMenu.run();
+//        Scanner scanner = new Scanner(System.in);
+//        Input_Output.setScanner(scanner);
+//        SignUpMenu.run();
+
+
     }
 }

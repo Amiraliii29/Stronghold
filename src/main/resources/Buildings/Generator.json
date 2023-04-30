@@ -1,0 +1,539 @@
+[
+  {
+    "usingRate": 3,
+    "generatingRate": 0,
+    "resourceNeed": {
+      "name": "Ale",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Inn",
+    "width": 4,
+    "length": 4,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 20,
+    "cost": 100,
+    "canPass": false
+  },
+  {
+    "usingRate": 3,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Flour",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "resourceNeed": {
+      "name": "Wheat",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 3,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Mill",
+    "width": 3,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 20,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 4,
+    "resourceGenerate": {
+      "name": "Iron",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 2,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "IronMine",
+    "width": 3,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 20,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 12,
+    "resourceGenerate": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "StoneCow",
+    "width": 2,
+    "length": 1,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 100,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Pitch",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "PitchRig",
+    "width": 3,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 20,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 20,
+    "resourceGenerate": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 3,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Quarry",
+    "width": 5,
+    "length": 5,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 20,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "WoodCutter",
+    "width": 2,
+    "length": 2,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 100,
+    "numberOfResource": 3,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 3,
+    "generatingRate": 1,
+    "resourceGenerate": {
+      "name": "MetalArmor",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Armoury"
+    },
+    "resourceNeed": {
+      "name": "Iron",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "BlackSmith",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 20,
+    "cost": 100,
+    "canPass": false
+  },
+  {
+    "usingRate": 3,
+    "generatingRate": 1,
+    "resourceGenerate": {
+      "name": "Bow",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Armoury"
+    },
+    "resourceNeed": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Fletcher",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 20,
+    "cost": 100,
+    "canPass": false
+  },
+  {
+    "usingRate": 3,
+    "generatingRate": 1,
+    "resourceGenerate": {
+      "name": "Spear",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Armoury"
+    },
+    "resourceNeed": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "PoleTurner",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 20,
+    "cost": 100,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 0,
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Iron",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "OilSmelter",
+    "width": 5,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 100,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 0,
+    "numberOfWorker": 0,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Stable",
+    "width": 8,
+    "length": 4,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 20,
+    "cost": 400,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Apples",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Granary"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Orchard",
+    "width": 10,
+    "length": 10,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Cheese",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Granary"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "DairyFarm",
+    "width": 10,
+    "length": 10,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Hops",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "HopsFarm",
+    "width": 8,
+    "length": 8,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 100,
+    "numberOfResource": 15,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Meat",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Granary"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "HuntersHut",
+    "width": 2,
+    "length": 2,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 100,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 0,
+    "generatingRate": 7,
+    "resourceGenerate": {
+      "name": "Wheat",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "WheatFarm",
+    "width": 8,
+    "length": 8,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 15,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 4,
+    "generatingRate": 4,
+    "resourceGenerate": {
+      "name": "Flour",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "resourceNeed": {
+      "name": "Bread",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Granary"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Bakery",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "usingRate": 5,
+    "generatingRate": 5,
+    "resourceGenerate": {
+      "name": "Hops",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "resourceNeed": {
+      "name": "Ale",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Brewery",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  }
+]

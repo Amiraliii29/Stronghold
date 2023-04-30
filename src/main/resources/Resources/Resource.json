@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Wood",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Iron",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Flour",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Hops",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Ale",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Stone",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Pitch",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  },
+  {
+    "name": "Wheat",
+    "price": 100,
+    "count": 0.0,
+    "storage": "Stockpile"
+  }
+]

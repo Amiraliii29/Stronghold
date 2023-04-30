@@ -2,6 +2,7 @@ package View;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
+
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
 import Model.User;
@@ -15,14 +16,14 @@ public class SignUpMenu {
         String input;
         Input_Output.outPut("SIGNUP MENU:");
 
-        while (User.getCurrentUser()==null) {
+        while (User.getCurrentUser() == null) {
             Matcher matcher;
             input = Input_Output.getInput();
 
             if (input.equals("exit")) break;
 
             if (SignUpMenuController.getPenalty() > 0)
-               Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
+                Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
 
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) != null)
                 createUser(matcher);
@@ -47,7 +48,7 @@ public class SignUpMenu {
         switch (message) {
 
             case EMPTY_FIELDS_SIGNUP_ERROR:
-            Input_Output.outPut("error: you have left some nessecary fields empty!");
+                Input_Output.outPut("error: you have left some nessecary fields empty!");
                 break;
 
             case INVALID_EMAIL_SIGNUP_ERROR:
@@ -173,10 +174,10 @@ public class SignUpMenu {
                 Input_Output.outPut("error: invalid input!");
                 continue;
             }
-                
-                
-            String inputComponents=matcher.group("securityComponents");
-            SignUpMenuMessages response=SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
+
+
+            String inputComponents = matcher.group("securityComponents");
+            SignUpMenuMessages response = SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
 
 
             if (response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))

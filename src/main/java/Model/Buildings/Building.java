@@ -6,35 +6,42 @@ import Model.Resources.Resource;
 import java.util.ArrayList;
 
 public abstract class Building {
-    protected Resource resource;
     protected Government owner;
     protected String name;
+    protected int width;
+    protected int length;
     protected int xCoordinateLeft;
-    protected int xCoordinateRight;
-    protected int yCoordinateDown;
     protected int yCoordinateUp;
     protected ArrayList<String> lands;
     protected int hp;
+    protected Resource resource;
     protected int numberOfResource;
     protected int cost;
     protected boolean canPass;
 
     // add each kind of building to users arraylist in database ! //TODO
-    public Building(String name, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
+
+
+    public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
+                    ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
+        this.owner = owner;
         this.name = name;
+        this.width = width;
+        this.length = length;
+        this.xCoordinateLeft = xCoordinateLeft;
+        this.yCoordinateUp = yCoordinateUp;
+        this.lands = lands;
         this.hp = hp;
         this.resource = resource;
         this.numberOfResource = numberOfResource;
         this.cost = cost;
         this.canPass = canPass;
-        lands = new ArrayList<>();
     }
 
-    public void setCoordinate(int xCoordinateLeft, int xCoordinateRight, int yCoordinateDown, int yCoordinateUp) {
+    public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
         this.xCoordinateLeft = xCoordinateLeft;
-        this.xCoordinateRight = xCoordinateRight;
-        this.yCoordinateDown = yCoordinateDown;
         this.yCoordinateUp = yCoordinateUp;
+        //add building to square and remove last coordinate//TODO
     }
 
     public int changeHP(int damage) {
@@ -46,10 +53,6 @@ public abstract class Building {
         return owner;
     }
 
-    public void setOwner(Government owner) {
-        this.owner = owner;
-    }
-
     public String getName() {
         return name;
     }
@@ -58,24 +61,20 @@ public abstract class Building {
         return xCoordinateLeft;
     }
 
-    public int getXCoordinateRight() {
-        return xCoordinateRight;
-    }
-
-    public int getYCoordinateDown() {
-        return yCoordinateDown;
-    }
-
     public int getYCoordinateUp() {
         return yCoordinateUp;
     }
 
-    public ArrayList<String> getLands() {
-        return lands;
+    public int getLength() {
+        return length;
     }
 
-    public void addLands(String  land) {
-        this.lands.add(land);
+    public int getWidth() {
+        return width;
+    }
+
+    public ArrayList<String> getLands() {
+        return lands;
     }
 
     public int getHp() {

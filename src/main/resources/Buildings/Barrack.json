@@ -1,0 +1,93 @@
+[
+  {
+    "troops": [
+      "ArcherBow",
+      "Slave",
+      "Slinger",
+      "Assassin",
+      "HorseArcher",
+      "ArabianSwordMan",
+      "FireThrower"
+    ],
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "MercenaryPost",
+    "width": 5,
+    "length": 5,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 200,
+    "numberOfResource": 10,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "troops": [
+      "Archer",
+      "CrossBowMan",
+      "SpearMan",
+      "PikeMan",
+      "SwordMan",
+      "Knight"
+    ],
+    "resource": {
+      "name": "Stone",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Barrack",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 15,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "troops": [
+      "Monk"
+    ],
+    "name": "Cathedral",
+    "width": 8,
+    "length": 8,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 400,
+    "numberOfResource": 0,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "troops": [
+      "Engineer",
+      "LadderMan",
+      "Tunneler"
+    ],
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "EngineerGuild",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": [],
+    "hp": 300,
+    "numberOfResource": 10,
+    "cost": 100,
+    "canPass": false
+  }
+]

@@ -1,20 +1,20 @@
 package Model.Units;
 import Model.Government;
-import Model.Units.Enums.State;
 
 public abstract class Unit {
-    private Government owner;
-    private String name;
-    private int xCoordinate;
-    private int yCoordinate;
-    private int speed;
-    private int hitPoint;
-    private int damage;
-    private int attackRange;
-    private State state;
-    private int cost;
+    protected Government owner;
+    protected String name;
+    protected int xCoordinate;
+    protected int yCoordinate;
+    protected int speed;
+    protected int hitPoint;
+    protected int damage;
+    protected int attackRange;
+    protected State state;
+    protected int cost;
 
-    public Unit(String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
+    public Unit(Government owner, String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
+        this.owner = owner;
         this.name = name;
         this.speed = speed;
         this.hitPoint = hitPoint;
@@ -50,11 +50,11 @@ public abstract class Unit {
         return name;
     }
 
-    public int getxCoordinate() {
+    public int getXCoordinate() {
         return xCoordinate;
     }
 
-    public int getyCoordinate() {
+    public int getYCoordinate() {
         return yCoordinate;
     }
 
@@ -67,8 +67,9 @@ public abstract class Unit {
     }
 
     public int getDamage() {
-        //look from fear //TODO
-        return damage;
+        double damageFinal = 100 + (owner.getFear() * (-5));
+        damageFinal = Math.floor((damage * damageFinal) / 100);
+        return ((int) (damageFinal));
     }
 
     public int getAttackRange() {

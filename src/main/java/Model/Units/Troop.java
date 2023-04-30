@@ -1,21 +1,36 @@
 package Model.Units;
 
 import Model.Government;
-import Model.Units.Enums.State;
 import Model.Resources.Resource;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Troop extends Unit{
+    private static ArrayList<Troop> troops;
     private boolean climbLadder;
     private boolean digMoat;
     private boolean needHorse;
     private ArrayList<Resource> weapons;
 
-    public Troop(Government owner, String name, int speed, int hitPoint, int damage, int attackRange,
-                 ArrayList<Resource> resources, State state, int cost, boolean climbLadder, boolean digMoat) {
-        super(owner, name, speed, hitPoint, damage, attackRange, state, cost);
-        this.weapons = resources;
+    static {
+        try {
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Troop>>(){}.getType();
+            troops = gson.fromJson(new FileReader("src/main/resources/Units/Troop.json"), type);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private Troop(Government owner, String name, int speed, int hitPoint, int damage, int attackRange,
+                 ArrayList<Resource> weapons, int cost, boolean climbLadder, boolean digMoat) {
+        super(owner, name, speed, hitPoint, damage, attackRange, cost);
+        this.weapons = weapons;
         this.climbLadder = climbLadder;
         this.digMoat = digMoat;
     }
@@ -38,5 +53,19 @@ public class Troop extends Unit{
 
     public ArrayList<Resource> getWeapons() {
         return weapons;
+    }
+
+    public static Troop createTroop(Government owner, String troopName, int xCoordinate, int yCoordinate) {
+        for (Troop troop : troops) {
+            if (troop.name.equals(troopName)) {
+                Troop newTroop = new Troop(owner, troopName, troop.speed, troop.hitPoint, troop.damage, troop.attackRange,
+                        troop.weapons, troop.cost, troop.climbLadder, troop.digMoat);
+                newTroop.needHorse = troop.needHorse;
+                newTroop.xCoordinate = xCoordinate;
+                newTroop.yCoordinate = yCoordinate;
+                return newTroop;
+            }
+        }
+        return null;
     }
 }
