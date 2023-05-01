@@ -90,7 +90,7 @@ public class Map {
         }
     }
 
-    public static void saveMap(Square[][] squares, String fileName) {
+    public static void saveMap(Map map, String fileName) {
         // filename only without address only name
         // will save it in resources/Map/<fileName>
         try {

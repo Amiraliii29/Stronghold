@@ -5,8 +5,6 @@ import Model.*;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomizeMapController {

@@ -17,6 +17,5 @@ public class Main {
            lol.put("guz", 2);
            lol.put("guz",3);
            System.out.println(lol.size());
-
     }
 }

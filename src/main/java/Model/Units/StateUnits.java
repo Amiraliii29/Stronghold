@@ -1,6 +1,6 @@
 package Model.Units;
 
-public enum State {
+public enum StateUnits {
     Stan_Ground,
     Defensive,
     Aggressive,

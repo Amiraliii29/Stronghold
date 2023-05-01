@@ -14,7 +14,7 @@ public abstract class Unit {
     protected int hitPoint;
     protected int damage;
     protected int attackRange;
-    protected State state;
+    protected StateUnits stateUnits;
     protected int cost;
 
     static {
@@ -34,7 +34,7 @@ public abstract class Unit {
         this.damage = damage;
         this.attackRange = attackRange;
         this.cost = cost;
-        this.state = State.Stan_Ground;
+        this.stateUnits = StateUnits.Stan_Ground;
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
@@ -46,8 +46,8 @@ public abstract class Unit {
         this.owner = owner;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setState(StateUnits stateUnits) {
+        this.stateUnits = stateUnits;
     }
 
     public int changeHitPoint(int damage) {
@@ -89,12 +89,12 @@ public abstract class Unit {
         return attackRange;
     }
 
-    public void changeState(State state) {
-        this.state = state;
+    public void changeState(StateUnits stateUnits) {
+        this.stateUnits = stateUnits;
     }
 
-    public State getState() {
-        return state;
+    public StateUnits getState() {
+        return stateUnits;
     }
 
     public int getCost() {
