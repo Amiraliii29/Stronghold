@@ -17,6 +17,7 @@ public enum Land {
     BIG_LAKE("bigLake"),
     BEACH("beach"),
     SEA("sea"),
+    CLIFF("cliff"),
     ;
     private String name;
 

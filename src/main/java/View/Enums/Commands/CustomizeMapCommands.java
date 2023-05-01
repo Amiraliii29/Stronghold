@@ -10,6 +10,7 @@ public enum CustomizeMapCommands {
     SET_TEXTURE("^\\s*settexture\\s*(?<options>.+)\\s*$"),
     CLEAR("^\\s*clear\\s*(?<options>.+)$"),
     DROP_TREE("^\\s*droptree\\s*(?<options>.+)\\s*$"),
+    DROP_CLIFF("^\\s*droprock\\s*(?<options>.+)\\s*$"),
     ;
     private String regex;
 

@@ -18,6 +18,8 @@ public enum CustomizeMapMessages {
     CLEAR_TILE_SUCCESS,
     INVALID_TREE_NAME,
     DROP_TREE_SUCCESS,
+    INVALID_DIRECTION,
+    DROP_ROCK_SUCCESS,
     ;
 
 }

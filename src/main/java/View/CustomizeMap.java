@@ -7,6 +7,7 @@ import View.Enums.Messages.CustomizeMapMessages;
 
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.SplittableRandom;
 import java.util.regex.Matcher;
@@ -28,6 +29,11 @@ public class CustomizeMap {
                 clear(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_TREE)) != null)
                 dropTree(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_CLIFF)) != null)
+                dropRock(matcher);
+            else{
+                System.out.println("invalid command");
+            }
         }
     }
     private static void createNewMap(Matcher matcher){
@@ -131,6 +137,34 @@ public class CustomizeMap {
         }
     }
     private static void dropRock(Matcher matcher){
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String direction = Orders.findFlagOption("-d" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropRockController(x , y ,direction);
+
+        switch (message){
+            case INVALID_NUMBER:
+                System.out.println("drop rock error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("drop rock error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("drop rock error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("drop rock error: y out of bounds");
+                break;
+            case INVALID_DIRECTION:
+                System.out.println("drop rock error: invalid direction");
+                break;
+            case DROP_ROCK_SUCCESS:
+                System.out.println("rock dropped successfully :)");
+                break;
+
+        }
     }
     private static void dropTree(Matcher matcher){
         String options = matcher.group("options");

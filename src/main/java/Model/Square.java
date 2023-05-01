@@ -13,6 +13,7 @@ public class Square {
     private ArrayList<Unit> units;
     private Building building;
     private Land  land;
+    private String cliffDirection = null;
     private Resource resource;
     private Trees tree = null;
     private int treeAmount = 0;
@@ -97,5 +98,13 @@ public class Square {
     }
     public void changeTreeAmount(int amount){
         treeAmount += amount;
+    }
+
+    public void setCliffDirection(String cliffDirection) {
+        this.cliffDirection = cliffDirection;
+    }
+
+    public String getCliffDirection() {
+        return cliffDirection;
     }
 }

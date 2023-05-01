@@ -6,8 +6,11 @@ import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
 import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class CustomizeMapController {
+    private static String[] randomDirection = {"n" , "s" , "e" , "w"};
     public static CustomizeMapMessages createNewMapController(String mapName , String length , String width) {
         if (mapName == null)
             return CustomizeMapMessages.NO_NAME;
@@ -125,7 +128,33 @@ public class CustomizeMapController {
         }
     }
     public static CustomizeMapMessages dropRockController(String x , String y , String direction){
-        return null;
+        if(x == null || y  == null || direction == null)
+            return CustomizeMapMessages.INVALID_OPTIONS;
+        if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
+                CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+        else if(!direction.equals("n") && !direction.equals("s") && !direction.equals("w") &&
+                !direction.equals("e") && !direction.equals("r"))
+            return CustomizeMapMessages.INVALID_DIRECTION;
+        else {
+            Square squareSelected = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
+            squareSelected.setLand(Land.CLIFF);
+            if(direction.equals("r")){
+                Random random = new Random();
+                int rand = random.nextInt(4);
+                direction = randomDirection[rand];
+            }
+            squareSelected.setCliffDirection(direction);
+            return CustomizeMapMessages.DROP_ROCK_SUCCESS;
+        }
     }
     public static CustomizeMapMessages dropTreeController(String x , String y , String type){
         if(x == null || y  == null)
