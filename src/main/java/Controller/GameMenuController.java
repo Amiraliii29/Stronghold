@@ -4,18 +4,15 @@ import java.lang.Thread.State;
 import java.util.ArrayList;
 
 import Model.DataBase;
-<<<<<<< HEAD
 import Model.Government;
 import Model.Map;
 import Model.Square;
 import Model.Buildings.*;
 import Model.Resources.Resource;
 import Model.Units.Troop;
-=======
 import Model.Square;
 import Model.Units.Engineer;
 import Model.Units.State;
->>>>>>> e2a4699f3aa28b0eff1ba5014a311111a09f95d6
 import Model.Units.Unit;
 import View.Enums.Messages.GameMenuMessages;
 
@@ -90,6 +87,8 @@ public class GameMenuController {
         switch (buildingCategory) {
             case "Generator":
                 Generator generator=Generator.createGenerator(currentGovernment, x, y, buildingName);
+                currentGovernment.changePopulation(generator.getNumberOfWorker());
+                currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
                 currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(),generator.getGeneratingRate());
                 break;
         
