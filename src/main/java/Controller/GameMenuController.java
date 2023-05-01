@@ -1,6 +1,5 @@
 package Controller;
 
-import java.lang.Thread.State;
 import java.util.ArrayList;
 
 import Model.Buildings.Defence;
@@ -11,12 +10,9 @@ import Model.Square;
 import Model.Buildings.*;
 import Model.Resources.Resource;
 import Model.Units.Troop;
-import Model.Square;
 import Model.Units.*;
 import View.Enums.Messages.GameMenuMessages;
-import Model.Map;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameMenuController {
@@ -27,7 +23,9 @@ public class GameMenuController {
     private static ArrayList<Building> allBuildings=new ArrayList<Building>();
 
     private static ArrayList<ArrayList<Square>> allWays;
+
     private static ArrayList<Square> squares;
+
     public static GameMenuMessages nextTurnController() {
         return null;
     }
@@ -39,13 +37,13 @@ public class GameMenuController {
     public static GameMenuMessages userLogout() {
         return null;
     }
-   
+
     public static void addToGameBuildings(Building building){
         allBuildings.add(building);
     }
 
     public static GameMenuMessages dropBuildingController(String x, String y, String buildingType) {
-    
+
         if(!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
         return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
@@ -57,21 +55,21 @@ public class GameMenuController {
             return GameMenuMessages.INVALID_COORDINATE;
 
 
-        if(targetBuilding==null) 
+        if(targetBuilding==null)
             return GameMenuMessages.DROPBUILDING_INVALID_BUILDINGNAME;
-        
+
         if(!currentMap.canConstructBuildingInPlace(targetBuilding, xInNum, yInNum))
             return GameMenuMessages.DROPBUILDING_INVALID_PLACE;
-        
+
         int buildingCost=targetBuilding.getCost();
         if(buildingCost>currentGovernment.getMoney())
             return GameMenuMessages.INSUFFICIENT_GOLD;
-        
+
         int resourceCount=targetBuilding.getNumberOfResource();
         if(targetBuilding.getResource()!=null)
             if(currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount )
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
-        
+
 
         currentMap.constructBuilding(targetBuilding, xInNum, yInNum);
 
@@ -93,13 +91,13 @@ public class GameMenuController {
                 currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
                 currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(),generator.getGeneratingRate());
                 break;
-        
+
             case "TownBuilding":
                 TownBuilding townBuilding=TownBuilding.createTownBuilding(currentGovernment, x, y, buildingName);
                 currentGovernment.addToMaxPopulation(townBuilding.getCapacity());
                 currentGovernment.updateBuildingPopularity();
                 break;
-            
+
             case "Stockpile":
                 Stockpile stockpile=Stockpile.createStockpile(currentGovernment, x, y, buildingName);
 
@@ -111,14 +109,14 @@ public class GameMenuController {
                 break;
         }
     }
-    
+
     private static String getBuildingCategoryByName(String buildingName){
-        for (String name : Generator.getGeneratorsName()) 
+        for (String name : Generator.getGeneratorsName())
             if(buildingName.equals(name)) return "Generator";
-                
-        for (String name : Barrack.getBarracksName()) 
+
+        for (String name : Barrack.getBarracksName())
             if(buildingName.equals(name)) return "Barrack";
-                
+
         for(String name : Defence.getDefencesName())
             if(buildingName.equals(name)) return "Defence";
 
@@ -145,7 +143,7 @@ public class GameMenuController {
         Building targetBuilding=currentMap.getSquareFromMap(xInNum,yInNum).getBuilding();
         if(targetBuilding==null)
             return GameMenuMessages.SELECTBUILDING_EMPTY_SQUARE;
-        
+
         if(!targetBuilding.getOwner().getOwner().getUsername().equals(currentGovernment.getOwner().getUsername()))
             return GameMenuMessages.SELECTBUILDING_UNOWNED_BUILDING;
 
@@ -186,7 +184,7 @@ public class GameMenuController {
 
     private static boolean doesHaveUnitsWeapons(int count,Troop targetTroop){
         ArrayList <Resource> neededWeapons=new ArrayList<Resource>(targetTroop.getWeapons());
-        
+
         for (Resource resource : neededWeapons) {
             resource.changeCount(count-resource.getCount());
         }
@@ -211,8 +209,8 @@ public class GameMenuController {
         }
 
         for (int i = 0; i < count; i++) {
-            Troop newTroop=Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            currentMap.getSquareFromMap(barrackX+2+i%3, barrackY+2+(i+1)%3).addUnit(newTroop);
+            Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
+            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addTroop(newTroop);
             currentGovernment.addUnits(newTroop);
         }
 
@@ -237,7 +235,7 @@ public class GameMenuController {
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
 
             currentGovernment.removeFromStockpile(stone, 5);
-            
+
             if(selectedBuilding.changeHP(-50)> selectedBuilding.getMaximumHp()){
                 selectedBuilding.changeHP(selectedBuilding.getHp()-selectedBuilding.getMaximumHp());
                 break;
@@ -288,58 +286,43 @@ public class GameMenuController {
         if (!DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).canPass())
             return GameMenuMessages.CANT_GO_THERE;
 
-    }
-
-    private static boolean findWay(int x, int y, int xFin, int yFin, int speed, boolean up) {
-        if (speed >= 0 && x == xFin && y == yFin) return true;
-        if (speed == 0) return false;
-
-        Square[][] squares = DataBase.getSelectedMap().getSquares();
-        boolean stair = squares[x][y].getBuilding().getName().equals("Stair");
-        if (stair) up = !up;
-        if (!stair) {
-            if (up) {
-                if (squares[x+1][y].getBuilding() instanceof Defence &&
-                        !squares[x+1][y].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x+1, y, xFin, yFin, speed-1, up))
-                    return true;
-                else if (squares[x-1][y].getBuilding() instanceof Defence &&
-                        !squares[x-1][y].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x-1, y, xFin, yFin, speed-1, up))
-                    return true;
-                else if (squares[x][y+1].getBuilding() instanceof Defence &&
-                        !squares[x][y+1].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x, y+1, xFin, yFin, speed-1, up))
-                    return true;
-                else return squares[x][y - 1].getBuilding() instanceof Defence &&
-                            !squares[x][y - 1].getBuilding().getName().equals("DrawBridge") &&
-                            findWay(x, y - 1, xFin, yFin, speed - 1, up);
-            } else {
-
-            }
-        }
-
-//        (dfs(x+1, y, xFin, yFin, speed-1)
-//                || dfs(x-1, y, xFin, yFin, speed-1)
-//                || dfs(x, y+1, xFin, yFin, speed-1)
-//                || dfs(x, y-1, xFin, yFin, speed-1))
+        if (moveUnit(xCoordinate, yCoordinate)) return GameMenuMessages.SUCCESS;
+        else return GameMenuMessages.CANT_GO_THERE;
     }
 
     private static boolean moveUnit(int x, int y) {
         ArrayList<Unit> unit = DataBase.getSelectedUnit();
 
-        int speed = unit.get(0).getSpeed();
+        int speed = unit.get(0).getMoveLeft();
         int firstX = unit.get(0).getXCoordinate();
         int firstY = unit.get(0).getYCoordinate();
-        boolean up;
+        boolean up = false;
         // define up
         squares = new ArrayList<>();
         allWays = new ArrayList<>();
-        move(unit.get(0), DataBase.getSelectedMap(), firstX, firstY, x, y, speed, up);
+        if (move(unit.get(0), map, firstX, firstY, x, y, speed, up)) {
+            int size = 1000;
+            int index = 0;
+            int i = 0;
+            for (ArrayList<Square> array : allWays) {
+                if (array.size() < size) {
+                    index = i;
+                    size = array.size();
+                }
+                i++;
+            }
 
-        //find shortest way
-        //add move left to units
-        //handle Trap if in pass //TODO
+            for (Square square : allWays.get(index)) {
+                if (unit.size() != 0 && square.getBuilding().getName().equals("Trap")) unit.remove(0);
+                //handle Trap if in pass //TODO
+            }
+
+            for (Unit unitSelected : unit) {
+                unitSelected.setMoveLeft(speed - size);
+                unitSelected.setCoordinate(x, y);
+            }
+            return  true;
+        } else return false;
     }
 
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
@@ -361,8 +344,10 @@ public class GameMenuController {
                 return false;
 
             LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
-            if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")
-                    || map.getSquareFromMap(x, y).getUnits().contains(ladderMan)) up = !up;
+            if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")) up = !up;
+            else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
+                    && unit instanceof Troop
+                    && ((Troop) unit).isClimbLadder()) up = !up;
 
             if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
 
@@ -403,11 +388,11 @@ public class GameMenuController {
                 || DataBase.getSelectedMap().getWidth() < yCoordinate)
             return GameMenuMessages.INVALID_COORDINATE;
 
-        State newState;
+        StateUnits newState;
         switch (Objects.requireNonNull(state)) {
-            case "Standing" -> newState = State.Stan_Ground;
-            case "Defensive" -> newState = State.Defensive;
-            case "Offensive" -> newState = State.Aggressive;
+            case "Standing" -> newState = StateUnits.Stan_Ground;
+            case "Defensive" -> newState = StateUnits.Defensive;
+            case "Offensive" -> newState = StateUnits.Aggressive;
             default -> {
                 return GameMenuMessages.INVALID_STATE;
             }
@@ -461,7 +446,7 @@ public class GameMenuController {
             return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
 
         DataBase.attackEnemyByselectedUnits(distance, currentUnitsX, currentUnitsY);
-        
+
     }
 
     public static GameMenuMessages patrolController(String coordinates) {
@@ -473,7 +458,7 @@ public class GameMenuController {
             return GameMenuMessages.CHOSE_UNIT_FIRST;
         if (!(DataBase.getSelectedUnit().get(0) instanceof Engineer))
             return GameMenuMessages.UNIT_ISNT_ENGINEER;
-
+        return null;
     }
 
     public static GameMenuMessages digTunnelController(String coordinate) {
@@ -521,16 +506,16 @@ public class GameMenuController {
 
 
     private static ArrayList<String> getBuildingValidLandsByName(String buildingName){
-        
-        for (Building building : allBuildings) 
+
+        for (Building building : allBuildings)
             if(building.getName().equals(buildingName))
                 return building.getLands();
-    
+
         return null;
     }
 
     private static Building getBuildingByName(String buildingName){
-        for (Building building : allBuildings) 
+        for (Building building : allBuildings)
             if(building.getName().equals(buildingName))
                 return building;
         return null;
