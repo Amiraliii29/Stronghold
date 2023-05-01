@@ -23,14 +23,17 @@ public class MapMenuController {
         else{
             for (int i = -10 ; i < 10 ; i++){
                 for (int j = -10 ; j < 10 ; j++){
-                    if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getUnits().size() != 0)
-                        mapToShow[i+10][j+10] = "S|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getBuilding() != null)
-                        mapToShow[i+10][j+10] = "B|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).getResource() != null){
+                    if(x+i < 0  || y + j < 0 || x + i > DataBase.getSelectedMap().getLength()
+                            || y + j > DataBase.getSelectedMap().getWidth() )
+                        mapToShow[j+10][i+10] = "0 |";
+                    else if(DataBase.getSelectedMap().getSquareFromMap( y + j, x+i ).getUnits().size() != 0)
+                        mapToShow[j+10][i+10] = "S|";
+                    else if(DataBase.getSelectedMap().getSquareFromMap(y+j , x + i).getBuilding() != null)
+                        mapToShow[j+10][i+10] = "B|";
+                    else if(DataBase.getSelectedMap().getSquareFromMap( y+j , x + i).getResource() != null){
                         char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).
                                 getResource().getName().toCharArray();
-                        mapToShow[i+10][j+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
+                        mapToShow[j+10][i+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
                     }
                 }
             }
@@ -77,9 +80,9 @@ public class MapMenuController {
     public static String showDetailsController(String  x, String y){
         String toReturn = "";
         if(x == null)
-            return "show map details error: please enter x\n";
+            return "show map details error: please enter x next time\n";
         else if(y == null)
-            return "show map details error: please enter y\n";
+            return "show map details error: please enter y next time\n";
 
 
             int xInt = Integer.parseInt(x);
