@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public enum GameMenuCommands {
     SELECT_UNIT("^\\s*select\\s+unit\\s+(?<option>.+)$"),
     MOVE_UNIT("^\\s*move\\s+unit\\s+to\\s+(?<coordinate>.+)$"),
-    PATRON_UNIT("^\\s*patrol\\s+unit\\s+(<coordinate>.+)$"),
+    PATRON_UNIT("^\\s*patrol\\s+unit\\s+(?<coordinate>.+)$"),
     SET_STATE("^\\s*set\\s+(?<option>.+)$"),
     ATTACK_GROUND("^\\s*attack\\s+-e\\s+(?<x>\\d+)\\s+(?<y>\\d+)$"),
     ATTACK_AIR("^\\s*attack\\s+(?<coordinate>.+)$"),
