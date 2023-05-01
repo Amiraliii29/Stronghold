@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Resource {
+    private static ArrayList<Resource> allResources;
     private String name;
     private int price;
     private double count;
@@ -25,7 +26,8 @@ public class Resource {
     static {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<Resource>>(){}.getType();
+            Type type = new TypeToken<ArrayList<Resource>>() {
+            }.getType();
             resources = gson.fromJson(new FileReader("src/main/resources/Resources/Resource.json"), type);
             foods = gson.fromJson(new FileReader("src/main/resources/Resources/Food.json"), type);
             weapons = gson.fromJson(new FileReader("src/main/resources/Resources/Weapon.json"), type);
@@ -33,18 +35,21 @@ public class Resource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        allResources = new ArrayList<>();
         resourcesName = new ArrayList<>();
         foodsName = new ArrayList<>();
         weaponsName = new ArrayList<>();
         for (Resource resource : resources) {
             resourcesName.add(resource.getName());
+            allResources.add(resource);
         }
         for (Resource food : foods) {
             foodsName.add(food.getName());
+            allResources.add(food);
         }
         for (Resource weapon : weapons) {
             weaponsName.add(weapon.getName());
+            allResources.add(weapon);
         }
     }
 
@@ -95,6 +100,10 @@ public class Resource {
         return weaponsName;
     }
 
+    public static ArrayList<Resource> getAllResources() {
+        return allResources;
+    }
+
     public static Resource createResource(String resourceName) {
         for (Resource resource : resources) {
             if (resource.getName().equals(resourceName)) {
@@ -110,6 +119,14 @@ public class Resource {
             if (weapon.getName().equals(resourceName)) {
                 return new Resource(resourceName, weapon.price, weapon.storage);
             }
+        }
+        return null;
+    }
+
+    public static Resource getResourceByName(String name) {
+        for (Resource resource : resources) {
+            if (resource.getName().equals(name))
+                return resource;
         }
         return null;
     }

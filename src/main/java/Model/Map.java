@@ -3,6 +3,8 @@ package Model;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import Model.Buildings.Building;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -33,8 +35,8 @@ public class Map {
         return squares;
     }
 
-    public Square getSquareFromMap(int y, int x) {
-        return squares[y][x];
+    public Square getSquareFromMap(int x, int y) {
+        return squares[x][y];
     }
 
     public int getWidth() {
@@ -47,6 +49,45 @@ public class Map {
 
     public String getName() {
         return name;
+    }
+
+
+    public  boolean canConstructBuildingInPlace(Building building, int x, int y){
+        boolean check=false;
+        
+        for (int i = x; i < x+building.getLength(); i++) {
+            for (int j = y; j <y+building.getWidth(); j++) {
+                
+
+                for (String validLand : building.getLands()) {
+
+                    if(squares[i][j].getLand().equals(validLand))
+                        check=true;
+                    if(squares[i][j].getBuilding()!=null)
+                        return false;
+                }
+
+                if(!check) return false;
+                else check=false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isCoordinationValid (int x, int y){
+        if(x>width || x<0 || y<0 || y>width)
+            return false;
+        return true;
+    }
+
+    public void constructBuilding(Building building, int x , int y){
+
+        for (int i = x; i < x+building.getLength(); i++) {
+            for (int j = y; j <y+building.getWidth(); j++) {
+                
+                squares[i][j].setBuilding(building);
+            }
+        }
     }
 
     public static void saveMap(Map map, String fileName) {

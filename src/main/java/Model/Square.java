@@ -76,6 +76,7 @@ public class Square {
 
     public boolean canPass() {
         //TODO
+        return false;
     }
 
     public void setLand(Land land) {
