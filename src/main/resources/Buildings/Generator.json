@@ -20,7 +20,7 @@
     "length": 4,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": [],
+    "lands": ["shen","mase"],
     "hp": 300,
     "numberOfResource": 20,
     "cost": 100,

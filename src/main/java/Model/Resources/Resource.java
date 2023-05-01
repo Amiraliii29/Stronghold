@@ -114,6 +114,14 @@ public class Resource {
         return null;
     }
 
+    public static Resource getResourceByName(String name){
+        for (Resource resource : resources) {
+            if(resource.getName().equals(name))
+            return resource;
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -5,6 +5,8 @@ import Model.Resources.Resource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import Controller.GameMenuController;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -31,6 +33,7 @@ public class Stockpile extends Building {
         stockpilesName = new ArrayList<>();
         for (Stockpile stockpile: stockpiles) {
             stockpilesName.add(stockpile.name);
+            GameMenuController.addToGameBuildings(stockpile);
         }
     }
 
@@ -144,8 +147,6 @@ public class Stockpile extends Building {
                 if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
                 else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
                 else owner.addStockpiles(newStockpile);
-
-                //add to squares//TODO
                 return newStockpile;
             }
         }

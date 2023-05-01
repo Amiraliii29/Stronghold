@@ -5,6 +5,8 @@ import Model.Resources.Resource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import Controller.GameMenuController;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -28,6 +30,7 @@ public class Defence extends Building {
         defencesName = new ArrayList<>();
         for (Defence defence : defences) {
             defencesName.add(defence.name);
+            GameMenuController.addToGameBuildings(defence);
         }
     }
 
@@ -56,7 +59,6 @@ public class Defence extends Building {
                 Defence newDefence = new Defence(owner, defence.name, defence.width, defence.length, xCoordinateLeft,
                         yCoordinateUp, defence.lands, defence.hp, defence.resource, defence.numberOfResource, defence.cost,
                         defence.canPass, defence.range, defence.capacity);
-                owner.addBuildings(newDefence);
                 return newDefence;
             }
         }
