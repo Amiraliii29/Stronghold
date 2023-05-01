@@ -5,8 +5,6 @@ import Model.Resources.Resource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import Controller.GameMenuController;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -30,7 +28,6 @@ public class TownBuilding extends Building {
         townBuildingsName = new ArrayList<>();
         for (TownBuilding townBuilding : townBuildings) {
             townBuildingsName.add(townBuilding.name);
-            GameMenuController.addToGameBuildings(townBuilding);
         }
     }
 
@@ -68,6 +65,7 @@ public class TownBuilding extends Building {
                 TownBuilding newTownBuilding = new TownBuilding(owner, townBuilding.name, townBuilding.width, townBuilding.length, xCoordinateLeft,
                         yCoordinateUp, townBuilding.lands, townBuilding.hp, townBuilding.resource, townBuilding.numberOfResource, townBuilding.cost,
                         townBuilding.canPass, townBuilding.capacity, townBuilding.popularityRate);
+                owner.addBuildings(newTownBuilding);
                 //add to square//TODO
                 return newTownBuilding;
             }

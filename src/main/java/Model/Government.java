@@ -2,12 +2,10 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
-import Model.Buildings.TownBuilding;
 import Model.Units.Unit;
 import Model.Resources.Resource;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,13 +26,11 @@ public class Government {
     private ArrayList<Stockpile> stockpiles;
     private ArrayList<Stockpile> armoury;
     private ArrayList<Stockpile> granary;
-    private HashMap<String , Integer> resourceGenerationRate;
     private ArrayList<Unit> units;
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
     private ArrayList<TradeRequest> tradeHistory;
     private ArrayList<TradeRequest> requestNotifications;
-    
 
     {
         this.food = 0;
@@ -52,7 +48,6 @@ public class Government {
         requestsAskedFromMe = new ArrayList<>();
         tradeHistory = new ArrayList<>();
         requestNotifications = new ArrayList<>();
-        resourceGenerationRate= new HashMap <String, Integer> ();
     }
 
     public Government(User owner, double money) {
@@ -64,11 +59,7 @@ public class Government {
         return owner;
     }
 
-    public int getMaxPopulation(){
-        return maxPopulation;
-    }
-
-    public void updatePopularity(){
+    public int getPopularity() {
         setFoodFactors();
         popularity = 0;
         popularity += food * 4;
@@ -79,19 +70,7 @@ public class Government {
         if (tax <= 0) popularity += (tax * (-2) + 1);
         else if (tax <= 4) popularity += (tax * (-2));
         else popularity += (((tax - 5) * (-4)) - 12);
-        updateBuildingPopularity();
-    }
 
-    public void updateBuildingPopularity(){
-        for (Building building : buildings) 
-        if(building.getName().equals("Church")){
-            TownBuilding church=(TownBuilding) building;
-            popularity+=church.getPopularityRate();
-            return;
-        }
-    }
-
-    public int getPopularity() {
         return popularity;
     }
 
@@ -306,11 +285,6 @@ public class Government {
         requestsAskedFromMe.add(tradeRequest);
     }
 
-
-    public void addToMaxPopulation(int addValue){
-        maxPopulation+=addValue;
-    }
-
     public ArrayList<TradeRequest> getRequestsAskedFromMe() {
         return requestsAskedFromMe;
     }
@@ -345,23 +319,6 @@ public class Government {
 
     public void removeAllRequestNotification() {
         requestNotifications.clear();
-    }
-
-    public void addToGenerationRate(String resourceType, int addedGenerationValue){
-
-        int previousValue=0;
-       if( resourceGenerationRate.containsKey(resourceType) )
-        previousValue=resourceGenerationRate.get(resourceType);
-
-        resourceGenerationRate.put(resourceType, previousValue+addedGenerationValue);
-    }
-
-    public void changeFreeWorkers(int addedWorkers){
-        freeWorker+=addedWorkers;
-    }
-
-    public void changePopulation(int addedPopulation){
-        population+=addedPopulation;
     }
 
     @Override

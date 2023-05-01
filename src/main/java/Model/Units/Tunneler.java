@@ -1,4 +1,5 @@
 package Model.Units;
+import Model.DataBase;
 import Model.Government;
 
 public class Tunneler extends Unit{
@@ -20,6 +21,8 @@ public class Tunneler extends Unit{
         Tunneler newTunneler = new Tunneler(owner);
         newTunneler.xCoordinate = xCoordinate;
         newTunneler.yCoordinate = yCoordinate;
+        if (xCoordinate >= 0 && yCoordinate >= 0)
+            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTunneler);
         return newTunneler;
     }
 }

@@ -81,16 +81,16 @@ public class Map {
     }
 
     public void constructBuilding(Building building, int x , int y){
-
+        //amirali: i edited x and y
         for (int i = x; i < x+building.getLength(); i++) {
             for (int j = y; j <y+building.getWidth(); j++) {
                 
-                squares[i][j].setBuilding(building);
+                squares[j][i].setBuilding(building);
             }
         }
     }
 
-    public static void saveMap(Square[][] squares, String fileName) {
+    public static void saveMap(Map map, String fileName) {
         // filename only without address only name
         // will save it in resources/Map/<fileName>
         try {

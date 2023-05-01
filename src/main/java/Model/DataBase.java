@@ -18,6 +18,7 @@ public class DataBase {
 
 
     static {
+        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
         governments = new ArrayList<>();
         maps = new ArrayList<>();
         selectedUnit = new ArrayList<>();

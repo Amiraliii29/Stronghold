@@ -2,11 +2,10 @@ package Controller;
 
 
 import Model.*;
+import Model.Buildings.Building;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class CustomizeMapController {
@@ -178,6 +177,51 @@ public class CustomizeMapController {
             selectedSquare.setTreeAmount(100);
             return CustomizeMapMessages.DROP_TREE_SUCCESS;
         }
+
+    }
+
+    public static CustomizeMapMessages dropBuildingController(String x, String y, String type) {
+        if(x == null || y  == null)
+            return CustomizeMapMessages.INVALID_OPTIONS;
+        if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
+                CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+        Building building = GameMenuController.getBuildingByName(type);
+
+        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+        else if ( building == null)
+            return CustomizeMapMessages.INVALID_BUILDING_NAME;
+        else{
+            DataBase.getSelectedMap().constructBuilding(building , xInt , yInt);
+            return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
+        }
+    }
+
+    public static CustomizeMapMessages dropUnitController(String x, String y, String type, String count) {
+        if(x == null || y  == null || count == null)
+            return CustomizeMapMessages.INVALID_OPTIONS;
+        if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
+                CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+        int countInt = Integer.parseInt(count);
+
+        Building building = GameMenuController.getBuildingByName(type);
+
+        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+        else if(countInt < 0)
+            return CustomizeMapMessages.INVALID_COUNT;
 
     }
 }

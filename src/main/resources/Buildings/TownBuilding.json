@@ -1,21 +1,21 @@
 [
   {
     "capacity": 0,
-    "popularityRate": 10,
+    "popularityRate": 2,
     "name": "Church",
     "width": 5,
     "length": 8,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": ["beach","plain","default","grass"],
+    "lands": [],
     "hp": 200,
     "numberOfResource": 0,
     "cost": 250,
     "canPass": false
   },
   {
-    "capacity": 10,
-    "popularityRate": 0,
+    "capacity": 0,
+    "popularityRate": 8,
     "resource": {
       "name": "Wood",
       "price": 100,
@@ -27,14 +27,14 @@
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": ["beach","plain","default","grass"],
+    "lands": [],
     "hp": 150,
     "numberOfResource": 6,
     "cost": 0,
     "canPass": false
   },
   {
-    "capacity": 10,
+    "capacity": 0,
     "popularityRate": 0,
     "resource": {
       "name": "Wood",
@@ -47,7 +47,7 @@
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": ["beach","plain","default","grass"],
+    "lands": [],
     "hp": 300,
     "numberOfResource": 5,
     "cost": 0,

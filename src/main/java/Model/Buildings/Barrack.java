@@ -6,8 +6,6 @@ import Model.Units.Troop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import Controller.GameMenuController;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -32,8 +30,6 @@ public class Barrack extends Building {
         barracksName = new ArrayList<>();
         for (Barrack barrack : barracks) {
             barracksName.add(barrack.name);
-            //NOTE: CHECK TROOPS ARRAYLIST BEING FILLED
-            GameMenuController.addToGameBuildings(barrack);
         }
     }
 
@@ -52,14 +48,6 @@ public class Barrack extends Building {
         return troopsCreated;
     }
 
-    public boolean canBuildTroopByName(String targetTroopName){
-        for (String troopName : troops) {
-            if(troopName.equals(targetTroopName))
-            return true;
-        }
-        return false;
-    }
-
     public int getTroopNumber(Troop troop) {
         //TODO
         return 0;
@@ -73,21 +61,14 @@ public class Barrack extends Building {
         return barracksName;
     }
 
-
-    public static ArrayList<String> getBuildingsLandsByName(String buildingName){
-        for (Barrack barrack : barracks) {
-            if(barrack.name.equals(buildingName))
-                return barrack.lands;
-        }
-        return null;
-    }    
-
     public static Barrack createBarrack(Government owner, int xCoordinateLeft, int yCoordinateUp, String barrackName) {
         for (Barrack barrack : barracks) {
             if (barrack.name.equals(barrackName)) {
                 Barrack newBarrack = new Barrack(owner, barrack.name, barrack.width, barrack.length, xCoordinateLeft,
                         yCoordinateUp, barrack.lands, barrack.hp, barrack.resource, barrack.numberOfResource, barrack.cost,
                         barrack.canPass, barrack.troops);
+                owner.addBuildings(newBarrack);
+                //add to squares//TODO
                 return barrack;
             }
         }

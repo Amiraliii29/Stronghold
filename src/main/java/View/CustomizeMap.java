@@ -31,11 +31,27 @@ public class CustomizeMap {
                 dropTree(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_CLIFF)) != null)
                 dropRock(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_BUILDING)) != null)
+                dropBuilding(matcher);
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_UNIT)) != null)
+                dropUnit(matcher);
             else{
                 System.out.println("invalid command");
             }
         }
     }
+
+    private static void dropUnit(Matcher matcher) {
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String type = Orders.findFlagOption("-t" , options);
+        String count = Orders.findFlagOption("-c" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count);
+
+    }
+
     private static void createNewMap(Matcher matcher){
         String options = matcher.group("options");
         String name = Orders.findFlagOption("-n" , options);
@@ -195,6 +211,35 @@ public class CustomizeMap {
                 break;
         }
 
+    }
+    private static void dropBuilding(Matcher matcher){
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String type = Orders.findFlagOption("-t", options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x , y  , type);
+
+        switch (message){
+            case INVALID_NUMBER:
+                System.out.println("drop building error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("drop building error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("drop building error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("drop building error: y out of bounds");
+                break;
+            case INVALID_BUILDING_NAME:
+                System.out.println("drop building error: invalid building name");
+                break;
+            case DROP_BUILDING_SUCCESS:
+                System.out.println("building dropped successfully");
+                break;
+        }
     }
     private static void printer(String toPrint){
         System.out.println(toPrint);

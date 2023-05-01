@@ -1,5 +1,6 @@
 package Model.Units;
 
+import Model.DataBase;
 import Model.Government;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
@@ -58,14 +59,6 @@ public class Troop extends Unit{
         return weapons;
     }
 
-    public static Troop getTroopByName(String troopName){
-        for (Troop troop : troops) {
-            if(troop.getName().equals(troopName))
-            return troop;
-        }
-        return null;
-    }
-
     public static Troop createTroop(Government owner, String troopName, int xCoordinate, int yCoordinate) {
         for (Troop troop : troops) {
             if (troop.name.equals(troopName)) {
@@ -74,6 +67,8 @@ public class Troop extends Unit{
                 newTroop.needHorse = troop.needHorse;
                 newTroop.xCoordinate = xCoordinate;
                 newTroop.yCoordinate = yCoordinate;
+                if (xCoordinate >= 0 && yCoordinate >= 0)
+                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTroop);
                 return newTroop;
             }
         }

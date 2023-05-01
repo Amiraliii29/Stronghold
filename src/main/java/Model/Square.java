@@ -31,8 +31,12 @@ public class Square {
         return units;
     }
 
-    public void addTroop(Unit unit) {
+    public void addUnit(Unit unit) {
         this.units.add(unit);
+    }
+
+    public void removeUnit(Unit unit) {
+        this.units.remove(unit);
     }
 
     public Building getBuilding() {
@@ -76,6 +80,7 @@ public class Square {
 
     public boolean canPass() {
         //TODO
+        return false;
     }
 
     public void setLand(Land land) {

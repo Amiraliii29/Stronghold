@@ -1,4 +1,5 @@
 package Model.Units;
+import Model.DataBase;
 import Model.Government;
 
 import java.util.ArrayList;
@@ -14,8 +15,9 @@ public abstract class Unit {
     protected int hitPoint;
     protected int damage;
     protected int attackRange;
-    protected State state;
+    protected StateUnits stateUnits;
     protected int cost;
+    protected int moveLeft;
 
     static {
         allUnits = new ArrayList<>();
@@ -34,20 +36,23 @@ public abstract class Unit {
         this.damage = damage;
         this.attackRange = attackRange;
         this.cost = cost;
-        this.state = State.Stan_Ground;
+        this.stateUnits = StateUnits.Stan_Ground;
+        this.moveLeft = speed;
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
+        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
         this.owner = owner;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setState(StateUnits stateUnits) {
+        this.stateUnits = stateUnits;
     }
 
     public int changeHitPoint(int damage) {
@@ -89,12 +94,12 @@ public abstract class Unit {
         return attackRange;
     }
 
-    public void changeState(State state) {
-        this.state = state;
+    public void changeState(StateUnits stateUnits) {
+        this.stateUnits = stateUnits;
     }
 
-    public State getState() {
-        return state;
+    public StateUnits getState() {
+        return stateUnits;
     }
 
     public int getCost() {
@@ -103,6 +108,14 @@ public abstract class Unit {
 
     public static ArrayList<String> getAllUnits() {
         return allUnits;
+    }
+
+    public int getMoveLeft() {
+        return moveLeft;
+    }
+
+    public void setMoveLeft(int moveLeft) {
+        this.moveLeft = moveLeft;
     }
 
     @Override

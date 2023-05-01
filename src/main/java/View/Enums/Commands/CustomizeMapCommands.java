@@ -11,6 +11,8 @@ public enum CustomizeMapCommands {
     CLEAR("^\\s*clear\\s*(?<options>.+)$"),
     DROP_TREE("^\\s*droptree\\s*(?<options>.+)\\s*$"),
     DROP_CLIFF("^\\s*droprock\\s*(?<options>.+)\\s*$"),
+    DROP_BUILDING("^\\s*dropbuilding\\s*(?<options>.+)$"),
+    DROP_UNIT("^\\s*dropunit\\s*(?<options>.+)$"),
     ;
     private String regex;
 

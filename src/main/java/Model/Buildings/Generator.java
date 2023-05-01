@@ -1,12 +1,9 @@
 package Model.Buildings;
 
 import Model.Government;
-import Model.Square;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import Controller.GameMenuController;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,13 +24,13 @@ public class Generator extends Building {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Generator>>() {}.getType();
             generators = gson.fromJson(new FileReader("src/main/resources/Buildings/Generator.json"), type);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         generatorsName = new ArrayList<>();
         for (Generator generator : generators) {
             generatorsName.add(generator.name);
-            GameMenuController.addToGameBuildings(generator);
         }
     }
 
@@ -84,24 +81,14 @@ public class Generator extends Building {
         return generatorsName;
     }
 
-    public static ArrayList<Generator> getGenerators(){
-        return generators;
-    }
-
-    public static ArrayList<String> getBuildingsLandsByName(String buildingName){
-        for (Generator generator : generators) {
-            if(generator.name.equals(buildingName))
-                return generator.lands;
-        }
-        return null;
-    }
-
     public static Generator createGenerator(Government owner, int xCoordinateLeft, int yCoordinateUp, String generatorName) {
         for (Generator generator : generators) {
             if (generator.name.equals(generatorName)) {
                 Generator newGenerator = new Generator(owner, generator.name, generator.width, generator.length, xCoordinateLeft, yCoordinateUp,
                         generator.lands, generator.hp, generator.resource, generator.numberOfResource, generator.cost, generator.canPass,
                         generator.usingRate, generator.generatingRate, generator.resourceGenerate, generator.resourceNeed, generator.numberOfWorker);
+                owner.addBuildings(newGenerator);
+                //add to square//TODO
                 return newGenerator;
             }
         }

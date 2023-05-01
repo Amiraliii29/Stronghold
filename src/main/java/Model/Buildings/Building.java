@@ -14,7 +14,6 @@ public abstract class Building {
     protected int yCoordinateUp;
     protected ArrayList<String> lands;
     protected int hp;
-    protected final int maximumHp;
     protected Resource resource;
     protected int numberOfResource;
     protected int cost;
@@ -37,8 +36,6 @@ public abstract class Building {
         this.numberOfResource = numberOfResource;
         this.cost = cost;
         this.canPass = canPass;
-        this.maximumHp=hp;
-        owner.addBuildings(this);
     }
 
     public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
@@ -98,9 +95,5 @@ public abstract class Building {
 
     public boolean getCanPass() {
         return canPass;
-    }
-
-    public int getMaximumHp(){
-        return maximumHp;
     }
 }

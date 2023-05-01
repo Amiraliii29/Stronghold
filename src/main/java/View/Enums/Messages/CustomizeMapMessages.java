@@ -20,6 +20,9 @@ public enum CustomizeMapMessages {
     DROP_TREE_SUCCESS,
     INVALID_DIRECTION,
     DROP_ROCK_SUCCESS,
+    INVALID_BUILDING_NAME,
+    DROP_BUILDING_SUCCESS,
+    INVALID_COUNT,
     ;
 
 }
