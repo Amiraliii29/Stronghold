@@ -70,7 +70,10 @@ public class GameMenu {
         String coordinate = matcher.group("coordinate");
         GameMenuMessages message = GameMenuController.moveUnitController(coordinate);
         switch (message) {
-
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("wrong format for coordinate");
+            case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate");
+            case CANT_GO_THERE -> Input_Output.outPut("cant go there");
+            case SUCCESS -> Input_Output.outPut("units moved successfully");
         }
     }
 

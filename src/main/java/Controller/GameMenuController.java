@@ -211,7 +211,7 @@ public class GameMenuController {
 
         for (int i = 0; i < count; i++) {
             Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addTroop(newTroop);
+            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addUnit(newTroop);
             currentGovernment.addUnits(newTroop);
         }
 
@@ -287,61 +287,44 @@ public class GameMenuController {
         if (!DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).canPass())
             return GameMenuMessages.CANT_GO_THERE;
 
-        return null;
-    }
-
-    private static boolean findWay(int x, int y, int xFin, int yFin, int speed, boolean up) {
-        if (speed >= 0 && x == xFin && y == yFin) return true;
-        if (speed == 0) return false;
-
-        Square[][] squares = DataBase.getSelectedMap().getSquares();
-        boolean stair = squares[x][y].getBuilding().getName().equals("Stair");
-        if (stair) up = !up;
-        if (!stair) {
-            if (up) {
-                if (squares[x + 1][y].getBuilding() instanceof Defence &&
-                        !squares[x + 1][y].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x + 1, y, xFin, yFin, speed - 1, up))
-                    return true;
-                else if (squares[x - 1][y].getBuilding() instanceof Defence &&
-                        !squares[x - 1][y].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x - 1, y, xFin, yFin, speed - 1, up))
-                    return true;
-                else if (squares[x][y + 1].getBuilding() instanceof Defence &&
-                        !squares[x][y + 1].getBuilding().getName().equals("DrawBridge") &&
-                        findWay(x, y + 1, xFin, yFin, speed - 1, up))
-                    return true;
-                else return squares[x][y - 1].getBuilding() instanceof Defence &&
-                            !squares[x][y - 1].getBuilding().getName().equals("DrawBridge") &&
-                            findWay(x, y - 1, xFin, yFin, speed - 1, up);
-            } else {
-
-            }
-        }
-
-//        (dfs(x+1, y, xFin, yFin, speed-1)
-//                || dfs(x-1, y, xFin, yFin, speed-1)
-//                || dfs(x, y+1, xFin, yFin, speed-1)
-//                || dfs(x, y-1, xFin, yFin, speed-1))
-        return false;
+        if (moveUnit(xCoordinate, yCoordinate)) return GameMenuMessages.SUCCESS;
+        else return GameMenuMessages.CANT_GO_THERE;
     }
 
     private static boolean moveUnit(int x, int y) {
         ArrayList<Unit> unit = DataBase.getSelectedUnit();
 
-        int speed = unit.get(0).getSpeed();
+        int speed = unit.get(0).getMoveLeft();
         int firstX = unit.get(0).getXCoordinate();
         int firstY = unit.get(0).getYCoordinate();
         boolean up = false;
+        Map map = DataBase.getSelectedMap();
         // define up
         squares = new ArrayList<>();
         allWays = new ArrayList<>();
-        move(unit.get(0), DataBase.getSelectedMap(), firstX, firstY, x, y, speed, up);
+        if (move(unit.get(0), map, firstX, firstY, x, y, speed, up)) {
+            int size = 1000;
+            int index = 0;
+            int i = 0;
+            for (ArrayList<Square> array : allWays) {
+                if (array.size() < size) {
+                    index = i;
+                    size = array.size();
+                }
+                i++;
+            }
 
-        //find shortest way
-        //add move left to units
-        //handle Trap if in pass //TODO
-        return false;
+            for (Square square : allWays.get(index)) {
+                if (unit.size() != 0 && square.getBuilding().getName().equals("Trap")) unit.remove(0);
+                //handle Trap if in pass //TODO
+            }
+
+            for (Unit unitSelected : unit) {
+                unitSelected.setMoveLeft(speed - size);
+                unitSelected.setCoordinate(x, y);
+            }
+            return  true;
+        } else return false;
     }
 
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
@@ -363,8 +346,10 @@ public class GameMenuController {
                 return false;
 
             LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
-            if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")
-                    || map.getSquareFromMap(x, y).getUnits().contains(ladderMan)) up = !up;
+            if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")) up = !up;
+            else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
+                    && unit instanceof Troop
+                    && ((Troop) unit).isClimbLadder()) up = !up;
 
             if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
 
@@ -438,6 +423,7 @@ public class GameMenuController {
         if (!(DataBase.getSelectedUnit().get(0) instanceof Engineer))
             return GameMenuMessages.UNIT_ISNT_ENGINEER;
         return null;
+        //TODO
     }
 
     public static GameMenuMessages digTunnelController(String coordinate) {

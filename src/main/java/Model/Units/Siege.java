@@ -1,5 +1,6 @@
 package Model.Units;
 
+import Model.DataBase;
 import Model.Government;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
@@ -58,6 +59,8 @@ public class Siege extends Unit {
                         siege.attackRange, siege.cost, siege.engineerNeed, siege.whatTheyThrow, siege.howManyLeft);
                 newSiege.xCoordinate = xCoordinate;
                 newSiege.yCoordinate = yCoordinate;
+                if (xCoordinate >= 0 && yCoordinate >= 0)
+                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
                 return newSiege;
             }
         }
