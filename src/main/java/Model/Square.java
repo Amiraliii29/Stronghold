@@ -12,8 +12,11 @@ import java.util.HashMap;
 public class Square {
     private ArrayList<Unit> units;
     private Building building;
-    private String land;
+    private Land  land;
+    private String cliffDirection = null;
     private Resource resource;
+    private Trees tree = null;
+    private int treeAmount = 0;
     private int x;
     private int y;
 
@@ -21,7 +24,7 @@ public class Square {
         this.x = x;
         this.y = y;
         units = new ArrayList<>();
-        this.land = "defaultLand";
+        this.land = Land.DEFAULT;
     }
 
     public ArrayList<Unit> getUnits() {
@@ -56,7 +59,7 @@ public class Square {
         return y;
     }
 
-    public String getLand() {
+    public Land getLand() {
         return land;
     }
 
@@ -69,5 +72,39 @@ public class Square {
                 troopsTypeAndCount.put(unit, troopsTypeAndCount.get(unit) + 1);
         }
         return troopsTypeAndCount;
+    }
+
+    public boolean canPass() {
+        //TODO
+    }
+
+    public void setLand(Land land) {
+        this.land = land;
+    }
+    public void removeAllTroops(){
+        units.clear();
+    }
+
+    public Trees getTree() {
+        return tree;
+    }
+
+    public void setTree(Trees tree) {
+        this.tree = tree;
+    }
+
+    public void setTreeAmount(int treeAmount) {
+        this.treeAmount = treeAmount;
+    }
+    public void changeTreeAmount(int amount){
+        treeAmount += amount;
+    }
+
+    public void setCliffDirection(String cliffDirection) {
+        this.cliffDirection = cliffDirection;
+    }
+
+    public String getCliffDirection() {
+        return cliffDirection;
     }
 }

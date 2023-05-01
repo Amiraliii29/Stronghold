@@ -224,7 +224,7 @@ public class GameMenu {
             case SUCCESS -> Input_Output.outPut("state changed");
             case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate!");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("coordinate is invalid!");
-            case THERE_IS_NO_UNIT -> Input_Output.outPut("there is no unit with this name here");
+            case INVALID_STATE -> Input_Output.outPut("invalid state!");
         }
     }
 
@@ -235,9 +235,17 @@ public class GameMenu {
     }
 
     private static void pourOil(Matcher matcher) {
+        String direction = matcher.group("direction");
+        GameMenuMessages message = GameMenuController.pourOilController(direction);
+        switch (message) {
+
+        }
     }
 
     private static void digTunnel(Matcher matcher) {
+        String coordinate = matcher.group("coordinate");
+        GameMenuMessages message = GameMenuController.digTunnelController(coordinate);
+
     }
 
     private static void buildEquipment(Matcher matcher) {

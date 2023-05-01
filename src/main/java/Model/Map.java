@@ -5,12 +5,15 @@ import com.google.gson.reflect.TypeToken;
 
 import Model.Buildings.Building;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class Map {
+    // toole mehvar ofogi = length  moalefe ofoghi = x
+    // toole mehvar amoudi = width  moalefe amoudi = y
     private String name;
     private Square[][] squares;
     private int width;
@@ -106,7 +109,12 @@ public class Map {
             Gson gson = new Gson();
             Type type = new TypeToken<Map>(){}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
-            DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
+            File f = new File(fileAddress);
+            if(f.exists() && !f.isDirectory())
+                DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
+            else
+                DataBase.setSelectedMap(null);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
