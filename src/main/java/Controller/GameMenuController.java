@@ -24,6 +24,7 @@ public class GameMenuController {
     private static ArrayList<Building> allBuildings = new ArrayList<Building>();
 
     private static ArrayList<ArrayList<Square>> allWays;
+
     private static ArrayList<Square> squares;
 
     public static GameMenuMessages nextTurnController() {
@@ -468,7 +469,7 @@ public class GameMenuController {
         return null;
     }
 
-    private static Building getBuildingByName(String buildingName) {
+    public static Building getBuildingByName(String buildingName) {
         for (Building building : allBuildings)
             if (building.getName().equals(buildingName))
                 return building;
