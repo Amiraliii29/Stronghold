@@ -13,13 +13,9 @@ import View.SignUpMenu;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
-<<<<<<< HEAD
-        
-=======
            HashMap <String , Integer> lol= new HashMap<>();
            lol.put("guz", 2);
            lol.put("guz",3);
            System.out.println(lol.size());
->>>>>>> eb051d21fa153be66907859d19ef06162fa4f5b1
     }
 }

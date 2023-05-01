@@ -13,6 +13,7 @@ public abstract class Building {
     protected int xCoordinateLeft;
     protected int yCoordinateUp;
     protected ArrayList<String> lands;
+    protected final int maximumHp;
     protected int hp;
     protected Resource resource;
     protected int numberOfResource;
@@ -36,12 +37,17 @@ public abstract class Building {
         this.numberOfResource = numberOfResource;
         this.cost = cost;
         this.canPass = canPass;
+        this.maximumHp=hp;
     }
 
     public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
         this.xCoordinateLeft = xCoordinateLeft;
         this.yCoordinateUp = yCoordinateUp;
         //add building to square and remove last coordinate//TODO
+    }
+
+    public int getMaximumHp(){
+        return maximumHp;
     }
 
     public int changeHP(int damage) {

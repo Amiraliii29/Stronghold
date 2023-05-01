@@ -14,6 +14,10 @@ public enum GameMenuCommands {
     POUR_OIL("^\\s*pour\\s+oil\\s+-d\\s+(?<direction>.+)$"),
     BUILD_SIEGE("^\\s*build\\s+-q\\s+(?<siegeName>.+)$"),
     DISBAND("^\\s*disband\\s+unit\\s*$"),
+    DROP_BUILDING("\\s*drop\\s+building\\s+(?<buildingComponents>.+)"),
+    SELECT_BUILDING("\\s*select\\s+building\\s+(?<buildingComponents>.+)"),
+    CREATE_UNIT("\\s*create\\s+unit\\s+(?<unitComponents>.+)"),
+    REPAIR_BUILDING("\\s*repair\\s*"),
     ;
     private String regex;
 

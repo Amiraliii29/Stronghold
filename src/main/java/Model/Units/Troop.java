@@ -59,6 +59,15 @@ public class Troop extends Unit{
         return weapons;
     }
 
+    public static Troop getTroopByName(String troopName){
+        for (Troop troop : troops) {
+            if(troop.getName().equals(troopName))
+            return troop;
+        }
+        return null;
+    }
+
+
     public static Troop createTroop(Government owner, String troopName, int xCoordinate, int yCoordinate) {
         for (Troop troop : troops) {
             if (troop.name.equals(troopName)) {
