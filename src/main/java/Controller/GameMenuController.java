@@ -107,7 +107,7 @@ public class GameMenuController {
                 Barrack barrack=Barrack.createBarrack(currentGovernment, x, y, buildingName);
 
             default:
-                Defence defence=Defence.createDefence(currentGovernment, x, y, buildingName)
+                Defence defence=Defence.createDefence(currentGovernment, x, y, buildingName);
                 break;
         }
     }

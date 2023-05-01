@@ -1,6 +1,7 @@
 package Model;
 
 public enum Land {
+    //
     DEFAULT("default"),
     GRAVEL("gravel"),
     FLAT_ROCK("flatRock"),

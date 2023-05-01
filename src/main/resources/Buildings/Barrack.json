@@ -1,4 +1,5 @@
 [
+
   {
     "troops": [
       "ArcherBow",
@@ -20,7 +21,7 @@
     "length": 5,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": [],
+    "lands": ["default","grass","plain"],
     "hp": 200,
     "numberOfResource": 10,
     "cost": 0,
@@ -46,7 +47,7 @@
     "length": 6,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": [],
+    "lands": ["default","grass","plain"],
     "hp": 300,
     "numberOfResource": 15,
     "cost": 0,
@@ -61,7 +62,7 @@
     "length": 8,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": [],
+    "lands": ["default","grass","plain"],
     "hp": 400,
     "numberOfResource": 0,
     "cost": 0,
@@ -84,7 +85,7 @@
     "length": 6,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": [],
+    "lands": ["default","grass","plain"],
     "hp": 300,
     "numberOfResource": 10,
     "cost": 100,
