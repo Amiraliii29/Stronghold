@@ -101,6 +101,10 @@ public class Government {
         }
     }
 
+    public HashMap<String , Integer> getResourceGenerationRates(){
+        return resourceGenerationRate;
+    }
+
     public void setTax(int tax) {
         double moneyPerPerson = getMoneyEachPersonPay(tax);
         while (population * moneyPerPerson > money) {

@@ -422,13 +422,48 @@ public class GameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    public static GameMenuMessages attackGroundController(String enemy) {
+    public static GameMenuMessages attackController(String enemyX,String enemyY) {
+
+        if( !Orders.isInputInteger(enemyY)|| !Orders.isInputInteger(enemyX))
+            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+
+        int targetXInNum=Integer.parseInt(enemyX);
+        int targetYInNum=Integer.parseInt(enemyY);
+
+        if(!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
+            return GameMenuMessages.INVALID_COORDINATE;
+
+        int currentUnitsX=DataBase.getSelectedUnit().get(0).getXCoordinate();
+        int currentUnitsY=DataBase.getSelectedUnit().get(0).getYCoordinate();
+
+        int unitRange=
         return null;
     }
 
-    public static GameMenuMessages attackAirController(String coordinate) {
-        return null;
+    public static GameMenuMessages rangedAttackController(String enemyX,String enemyY) {
+
+        if( !Orders.isInputInteger(enemyY)|| !Orders.isInputInteger(enemyX))
+            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+
+        int targetXInNum=Integer.parseInt(enemyX);
+        int targetYInNum=Integer.parseInt(enemyY);
+
+        if(!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
+            return GameMenuMessages.INVALID_COORDINATE;
+
+        int currentUnitsX=DataBase.getSelectedUnit().get(0).getXCoordinate();
+        int currentUnitsY=DataBase.getSelectedUnit().get(0).getYCoordinate();
+
+        double distance=Map.getDistance(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
+        int unitRange=DataBase.getSelectedUnit().get(0).getAttackRange();
+
+        if(unitRange<distance)
+            return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
+
+        DataBase.attackEnemyByselectedUnits(distance, currentUnitsX, currentUnitsY);
+        
     }
+
 
     public static GameMenuMessages pourOilController(String direction) {
         if (DataBase.getSelectedUnit().size() == 0)
