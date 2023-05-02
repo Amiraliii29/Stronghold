@@ -67,6 +67,16 @@ public class Orders {
         return nextWord;
     }
 
+
+    public static boolean isInputInteger(String input){
+        String integerRegex="\\d+";
+        createMatcher(integerRegex, input);
+        
+        if(input.matches(integerRegex))
+            return true;
+        else return false;
+    }
+
     public static Boolean isOrderNotJunky(String order) {
         //ToDo
 

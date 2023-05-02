@@ -1,4 +1,5 @@
 package Model.Units;
+import Model.DataBase;
 import Model.Government;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public abstract class Unit {
     protected int attackRange;
     protected StateUnits stateUnits;
     protected int cost;
+    protected int moveLeft;
 
     static {
         allUnits = new ArrayList<>();
@@ -35,11 +37,14 @@ public abstract class Unit {
         this.attackRange = attackRange;
         this.cost = cost;
         this.stateUnits = StateUnits.Stan_Ground;
+        this.moveLeft = speed;
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
+        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
@@ -103,6 +108,14 @@ public abstract class Unit {
 
     public static ArrayList<String> getAllUnits() {
         return allUnits;
+    }
+
+    public int getMoveLeft() {
+        return moveLeft;
+    }
+
+    public void setMoveLeft(int moveLeft) {
+        this.moveLeft = moveLeft;
     }
 
     @Override

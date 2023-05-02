@@ -53,6 +53,15 @@ public class Barrack extends Building {
         return 0;
     }
 
+
+    public boolean canBuildTroopByName(String targetTroopName){
+        for (String troopName : troops) {
+            if(troopName.equals(targetTroopName))
+            return true;
+        }
+        return false;
+    }
+
     public void addTroopsCreated(Troop troop, int number) {
 
     }
