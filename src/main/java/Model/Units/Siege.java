@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class Siege extends Unit {
     private static ArrayList<Siege> sieges;
+    private static ArrayList<String> siegesName;
     private int engineerNeed;
     private Resource whatTheyThrow;
     private int howManyLeft;
@@ -27,8 +28,10 @@ public class Siege extends Unit {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        siegesName = new ArrayList<>();
         for (Siege siege : sieges){
             allUnits.add(siege.name);
+            siegesName.add(siege.name);
         }
     }
 
@@ -50,6 +53,10 @@ public class Siege extends Unit {
 
     public int getHowManyLeft() {
         return howManyLeft;
+    }
+
+    public static ArrayList<String> getSiegesName() {
+        return siegesName;
     }
 
     public static Siege createSiege(Government owner, String siegeName, int xCoordinate, int yCoordinate) {

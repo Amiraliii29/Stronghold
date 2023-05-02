@@ -219,6 +219,7 @@ public class GameMenu {
     }
 
     private static void patrol(Matcher matcher) {
+
     }
 
     private static void setUnitMode(Matcher matcher) {
@@ -253,6 +254,11 @@ public class GameMenu {
     }
 
     private static void buildEquipment(Matcher matcher) {
+        String siegeName = matcher.group("siegeName");
+        GameMenuMessages message = GameMenuController.buildEquipmentController(siegeName);
+        switch (message) {
+
+        }
     }
 
     private static void disbandUnit() {
