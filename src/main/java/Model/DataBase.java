@@ -16,7 +16,6 @@ public class DataBase {
     private static Building selectedBuilding;
     private static ArrayList<Unit> selectedUnit;
 
-
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
         governments = new ArrayList<>();

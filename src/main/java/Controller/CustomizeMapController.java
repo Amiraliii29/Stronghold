@@ -198,6 +198,9 @@ public class CustomizeMapController {
         else if ( building == null)
             return CustomizeMapMessages.INVALID_BUILDING_NAME;
         else{
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
+            if(! GameMenuController.getBuildingValidLandsByName(type).contains(Land.getName(selectedSquare.getLand())))
+                return CustomizeMapMessages.UNSUITABLE_LAND;
             DataBase.getSelectedMap().constructBuilding(building , xInt , yInt);
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
         }
@@ -222,6 +225,15 @@ public class CustomizeMapController {
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
         else if(countInt < 0)
             return CustomizeMapMessages.INVALID_COUNT;
+        else{
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
+            if(selectedSquare.getLand().equals(Land.SEA) || selectedSquare.getLand().equals(Land.CLIFF)
+                    || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
+            selectedSquare.getLand().equals(Land.FLAT_ROCK))
+                return CustomizeMapMessages.UNSUITABLE_LAND;
+
+            selectedSquare.addTroop();
+        }
 
     }
 }
