@@ -430,6 +430,10 @@ public class GameMenuController {
         return null;
     }
 
+    public static GameMenuMessages patrolController(String coordinates) {
+        return null;
+    }
+
     public static GameMenuMessages pourOilController(String direction) {
         if (DataBase.getSelectedUnit().size() == 0)
             return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -439,11 +443,32 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages digTunnelController(String coordinate) {
-        return null;
-    }
+        String x = Orders.findFlagOption("-x", coordinate);
+        String y = Orders.findFlagOption("-y", coordinate);
+        assert x != null;
+        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
+            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+        int xCoordinate = Integer.parseInt(x);
+        int yCoordinate = Integer.parseInt(y);
+        if (DataBase.getSelectedMap().getLength() < xCoordinate || DataBase.getSelectedMap().getWidth() < yCoordinate)
+            return GameMenuMessages.INVALID_COORDINATE;
 
-    public static GameMenuMessages buildEquipmentController(String EquipmentName) {
-        return null;
+        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+        if (!(DataBase.getSelectedUnit().get(0) instanceof Tunneler)) return GameMenuMessages.NOT_TUNNELER;
+        if (!DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).canPass())
+            return GameMenuMessages.CANT_GO_THERE;
+
+        if (moveUnit(xCoordinate, yCoordinate)) {
+            //find near building
+            return GameMenuMessages.SUCCESS;
+        }
+        else return GameMenuMessages.CANT_GO_THERE;
+     }
+
+    public static GameMenuMessages buildEquipmentController(String siegeName) {
+        if (!Siege.getSiegesName().contains(siegeName)) return GameMenuMessages.WRONG_NAME;
+        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+        if (!(DataBase.getSelectedUnit().get(0) instanceof Engineer)) return GameMenuMessages.UNIT_ISNT_ENGINEER;
     }
 
     public static GameMenuMessages disbandUnitController() {
