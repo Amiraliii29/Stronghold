@@ -292,6 +292,7 @@ public class GameMenuController {
 
     private static boolean moveUnit(int x, int y) {
         ArrayList<Unit> unit = DataBase.getSelectedUnit();
+        Map map = DataBase.getSelectedMap();
 
         int speed = unit.get(0).getMoveLeft();
         int firstX = unit.get(0).getXCoordinate();
@@ -313,13 +314,17 @@ public class GameMenuController {
             }
 
             for (Square square : allWays.get(index)) {
-                if (unit.size() != 0 && square.getBuilding().getName().equals("Trap")) unit.remove(0);
-                //handle Trap if in pass //TODO
+                if (unit.size() != 0 && square.getBuilding().getName().equals("Trap")) {
+                    unit.remove(0);
+                    square.setBuilding(null);
+                }
             }
 
             for (Unit unitSelected : unit) {
-                unitSelected.setMoveLeft(speed - size);
-                unitSelected.setCoordinate(x, y);
+                if (unitSelected.getMoveLeft() >= allWays.size()) {
+                    unitSelected.setMoveLeft(speed - size);
+                    unitSelected.setCoordinate(x, y);
+                }
             }
             return  true;
         } else return false;
