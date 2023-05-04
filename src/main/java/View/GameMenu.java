@@ -257,7 +257,12 @@ public class GameMenu {
         String siegeName = matcher.group("siegeName");
         GameMenuMessages message = GameMenuController.buildEquipmentController(siegeName);
         switch (message) {
-
+            case WRONG_NAME -> System.out.println("there is no siege with this name");
+            case CHOSE_UNIT_FIRST -> System.out.println("choose Engineer first");
+            case UNIT_ISNT_ENGINEER -> System.out.println("unit is not Engineer");
+            case NOT_ENOUGH_ENGINEER -> System.out.println("not enough Engineer");
+            case NOT_ENOUGH_BALANCE -> System.out.println("you dont have enough money");
+            case SUCCESS -> System.out.println("siege created");
         }
     }
 

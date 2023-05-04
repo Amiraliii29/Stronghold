@@ -36,6 +36,7 @@ public class TestClass {
         GameMenuController.moveUnitController("-x 12 -y 12");
         System.out.println(map.getSquareFromMap(10,10).getUnits());
         System.out.println(map.getSquareFromMap(12,12).getUnits());
+        Assert.assertArrayEquals();
     }
 
 }

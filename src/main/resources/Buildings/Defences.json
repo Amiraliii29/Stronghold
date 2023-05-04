@@ -252,5 +252,20 @@
     "numberOfResource": 40,
     "cost": 0,
     "canPass": false
+  },
+  {
+    "range": 0,
+    "capacity": 0,
+    "resource": null,
+    "name": "SiegeTent",
+    "width": 0,
+    "length": 0,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["default","plain"],
+    "hp": 500,
+    "numberOfResource": 0,
+    "cost": 0,
+    "canPass": false
   }
 ]
