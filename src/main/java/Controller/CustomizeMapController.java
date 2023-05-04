@@ -231,8 +231,9 @@ public class CustomizeMapController {
                     || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
             selectedSquare.getLand().equals(Land.FLAT_ROCK))
                 return CustomizeMapMessages.UNSUITABLE_LAND;
-
-            selectedSquare.addTroop();
+            for(int i = 0 ; i < countInt ; i++) {
+                selectedSquare.addTroop();
+            }
         }
 
     }
