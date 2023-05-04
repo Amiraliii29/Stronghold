@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Square {
     private ArrayList<Unit> units;
     private Building building;
-    private Land  land;
+    private Land land;
     private String cliffDirection = null;
     private Resource resource;
     private Trees tree = null;
@@ -37,6 +37,16 @@ public class Square {
 
     public void removeUnit(Unit unit) {
         this.units.remove(unit);
+    }
+
+    public void removeAllUnit(Unit unit) {
+        int cnt = 0;
+        for (Unit u : units) {
+            if (u.equals(unit)) cnt++;
+        }
+        for (int i = 0; i < cnt; i++) {
+            units.remove(unit);
+        }
     }
 
     public Building getBuilding() {
@@ -86,7 +96,8 @@ public class Square {
     public void setLand(Land land) {
         this.land = land;
     }
-    public void removeAllTroops(){
+
+    public void newSelectedUnit() {
         units.clear();
     }
 
@@ -101,7 +112,8 @@ public class Square {
     public void setTreeAmount(int treeAmount) {
         this.treeAmount = treeAmount;
     }
-    public void changeTreeAmount(int amount){
+
+    public void changeTreeAmount(int amount) {
         treeAmount += amount;
     }
 

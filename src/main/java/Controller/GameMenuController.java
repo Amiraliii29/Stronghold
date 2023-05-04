@@ -30,6 +30,7 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages nextTurnController() {
+        //removeAllTroop
         return null;
     }
 
@@ -213,8 +214,7 @@ public class GameMenuController {
 
         for (int i = 0; i < count; i++) {
             Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addTroop(newTroop);
-            currentGovernment.addUnits(newTroop);
+            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addUnit(newTroop);
         }
 
         currentGovernment.changeFreeWorkers(-count);
@@ -499,9 +499,11 @@ public class GameMenuController {
         if (DataBase.getSelectedUnit().size() < siege.getEngineerNeed()) return GameMenuMessages.NOT_ENOUGH_ENGINEER;
         if (siege.getCost() > currentGovernment.getMoney()) return GameMenuMessages.NOT_ENOUGH_BALANCE;
 
-        currentGovernment.changeMoney(siege.getCost());
         int xCoordinate = DataBase.getSelectedUnit().get(0).getXCoordinate();
         int yCoordinate = DataBase.getSelectedUnit().get(0).getYCoordinate();
+        if (DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding() == null) return GameMenuMessages.CANT_BUILD_HERE;
+
+        currentGovernment.changeMoney(siege.getCost());
         Defence siegeTent = Defence.createDefence(currentGovernment, xCoordinate, yCoordinate, "SiegeTent");
         buildSiege.put(DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate), siegeName);
 
@@ -509,7 +511,15 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages disbandUnitController() {
-        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+        ArrayList<Unit> units = DataBase.getSelectedUnit();
+        int xCoordinate = DataBase.getSelectedUnit().get(0).getXCoordinate();
+        int yCoordinate = DataBase.getSelectedUnit().get(0).getYCoordinate();
+        if (units.size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+
+        currentGovernment.changeFreeWorkers(units.size());
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
+
+        return GameMenuMessages.SUCCESS;
     }
 
     public static GameMenuMessages showMapController(String x, String y) {
