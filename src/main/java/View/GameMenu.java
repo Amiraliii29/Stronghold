@@ -75,6 +75,8 @@ public class GameMenu {
 
     private static void showTurnsPassed(){
         Input_Output.outPut("turns passed: "+GameMenuController.getTurnsPassed());
+    }
+    
     private static void setFearRate(Matcher matcher) {
         int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
 
