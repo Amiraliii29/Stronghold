@@ -3,6 +3,7 @@ package Model;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import Controller.Orders;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.Units.Unit;
@@ -231,6 +232,23 @@ public class Map {
             governmentsInMap.add(government);
         }
     }
+    public int[] getAnEnemyCoordInRange(Unit mainUnit){
+
+        ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
+        int aggressionRange=mainUnit.getAggressionRange();
+        int unitX=mainUnit.getXCoordinate(), unitY=mainUnit.getYCoordinate();
+
+        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));
+        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 2));
+        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 3));
+        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 4));
+
+        for (int[] coord : landsWithinRange)
+            if(doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
+                return coord;
+        return null;
+    }
+
 
     public ArrayList<Government> getGovernmentsInMap() {
         return governmentsInMap;

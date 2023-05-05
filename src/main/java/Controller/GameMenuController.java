@@ -20,17 +20,48 @@ public class GameMenuController {
     private static Government currentGovernment;
     private static Building selectedBuilding = null;
     private static Map currentMap;
-    private static ArrayList<Building> allBuildings = new ArrayList<Building>();
+    private static ArrayList<Building> allBuildings;
+    private static ArrayList<Unit> allUnits; //TODO: FILL
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> squares;
     private static HashMap<Square, String> buildSiege;
 
     static {
         buildSiege = new HashMap<>();
+        allWays = new ArrayList<>();
+        squares = new ArrayList<>();
+        allUnits= new ArrayList<>();
+        allBuildings = new ArrayList<>();
     }
 
-    public static GameMenuMessages nextTurnController() {
-        return null;
+    public static void nextTurnController() {
+        for (HashMap.Entry<Square, String> entry : buildSiege.entrySet()) {
+            Siege siege = Siege.createSiege(currentGovernment, entry.getValue(), entry.getKey().getX(), entry.getKey().getY());
+            for (int i = 0; i < siege.getEngineerNeed(); i++) {
+                entry.getKey().removeUnit(Engineer.createEngineer(currentGovernment, -1, -1));
+            }
+            entry.getKey().getBuilding().changeHP(-10000);
+            DataBase.removeDestroyedBuildings(entry.getKey().getBuilding());
+        }
+
+        ArrayList<Government> governments = DataBase.getGovernments();
+        for (Government government : governments) {
+            if (governments.indexOf(government) == governments.size()-1)
+                DataBase.handleEndOfTurnFights();
+            if (DataBase.getCurrentGovernment().equals(government)) {
+                currentGovernment = governments.get(governments.indexOf(government)+1);
+                DataBase.setCurrentGovernment(currentGovernment);
+                selectedBuilding = null;
+                //call for resources
+                currentGovernment.addAndRemoveFromGovernment();
+                DataBase.generateResourcesForCurrentGovernment();
+
+                allWays = new ArrayList<>();
+                squares = new ArrayList<>();
+                buildSiege = new HashMap<>();
+                break;
+            }
+        }
     }
 
     public static void setCurrentGovernment(Government government) {
@@ -193,7 +224,7 @@ public class GameMenuController {
 
         for (int i = 0; i < count; i++) {
             Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addUnit(newTroop);
+            addToAllUnits(newTroop);
         }
 
         currentGovernment.changeFreeWorkers(-count);
@@ -555,5 +586,13 @@ public class GameMenuController {
             if(building.getName().equals(buildingName))
                 return building;
         return null;
+    }
+
+    public static ArrayList<Unit> getAllUnits(){
+        return allUnits;
+    }
+
+    public static void addToAllUnits(Unit unit){
+        allUnits.add(unit);
     }
 }

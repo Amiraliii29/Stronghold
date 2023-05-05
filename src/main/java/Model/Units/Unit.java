@@ -1,6 +1,7 @@
 package Model.Units;
 import Model.DataBase;
 import Model.Government;
+import Model.Map;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,8 +26,8 @@ public abstract class Unit {
         allUnits.add("Engineer");
         allUnits.add("Tunneler");
         allUnits.add("LadderMan");
-        Troop.createTroop(null, null, 1, 1);
-        Siege.createSiege(null, null, 1, 1);
+        Troop.createTroop(null, null, -1, -1);
+        Siege.createSiege(null, null, -1, -1);
     }
 
     public Unit(Government owner, String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
@@ -126,6 +127,15 @@ public abstract class Unit {
 
     public boolean getDidFight(){
         return didFight;
+    }
+
+    public int getAggressionRange(){
+        if (stateUnits.equals(StateUnits.Aggressive))
+            return (int) (Math.floor((speed+attackRange)*1.2));
+        else if (stateUnits.equals(StateUnits.Defensive))
+            return (int) (Math.floor(speed+attackRange));
+        else
+            return (int) (Math.floor((speed+attackRange)*0.8));
     }
 
     @Override

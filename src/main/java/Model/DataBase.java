@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import Controller.GameMenuController;
 import Controller.JsonConverter;
 import Model.Units.Troop;
 import Model.Units.Unit;
@@ -39,6 +40,8 @@ public class DataBase {
 
     public static void setCurrentGovernment(Government currentGovernment) {
         DataBase.currentGovernment = currentGovernment;
+        selectedUnit = new ArrayList<>();
+        selectedBuilding = null;
     }
 
     public static Government getGovernmentByUserName(String userName) {
@@ -49,6 +52,9 @@ public class DataBase {
         return null;
     }
 
+    public static ArrayList<Government> getGovernments() {
+        return governments;
+    }
 
     public static void addGovernment(Government government) {
         governments.add(government);
@@ -144,13 +150,16 @@ public class DataBase {
          for (Unit unit : selectedUnit) 
              if(unit.getHitPoint()<=0)
                  deadUnits.add(unit);
-         
+
+         for (Unit unit : deadUnits)
+            GameMenuController.getAllUnits().remove(unit);
+
          for (Unit deadUnit : deadUnits) 
              selectedUnit.remove(deadUnits);
     }
  
-    private static void generateResourcesForCurrentGovernment(){
-         HashMap<String, Integer> generationRates=currentGovernment.getResourceGenerationRates();
+    public static void generateResourcesForCurrentGovernment(){
+         HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
          Iterator keySetIterator =  generationRates.keySet().iterator();
          
          while (keySetIterator.hasNext()) {
@@ -216,5 +225,19 @@ public class DataBase {
         if(selectedUnit.get(0).getAttackRange()>1)
             return true;
         else return false;
+    }
+
+    public static void handleEndOfTurnFights(){
+        for (Unit unit : GameMenuController.getAllUnits()) {
+
+            unit.setDidFight(true);
+            int[] targetCoord=selectedMap.getAnEnemyCoordInRange(unit);
+            if(targetCoord != null){
+                GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
+                selectedUnit.clear();
+                selectedUnit.add(unit);
+                unit.setDidFight(true);
+            }
+        }
     }
 }
