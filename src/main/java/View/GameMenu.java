@@ -23,7 +23,7 @@ public class GameMenu {
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_STATE)) != null)
                 setUnitMode(matcher);
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.ATTACK_GROUND)) != null)
-                attackGround(matcher);
+                attack(matcher);
             else if (((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.ATTACK_AIR)) != null))
                 attackAir(matcher);
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DIG_TUNNEL)) != null)
@@ -234,9 +234,81 @@ public class GameMenu {
     }
 
     private static void attackAir(Matcher matcher) {
+        String input=matcher.group("coordinates");
+        String targetX=Orders.findFlagOption("-x", input);
+        String targetY=Orders.findFlagOption("-y", input);
+
+        if(targetX==null || targetY==null){
+            Input_Output.outPut("error: empty coordination fields!");
+            return;
+        }
+
+        GameMenuMessages result=GameMenuController.rangedAttackController(targetX, targetY);
+        switch (result) {
+            case SUCCESS:
+                Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+                break;
+
+            case WRONG_FORMAT_COORDINATE:
+                Input_Output.outPut("error: coordination format is invalid!");
+                break;
+            
+            case INVALID_COORDINATE:
+                Input_Output.outPut("error: coordination is out of map's bounds!");
+                break;
+
+            case ATTACK_NO_ENEMY_IN_AREA:
+                Input_Output.outPut("error: the selected square doesn't have a building!");
+                break;
+
+            case RANGEDATTACK_NON_ARCHER_SELECTION:
+                Input_Output.outPut("error: the selected units are not archers!");
+                break;
+
+            case RANGEDATTACK_TARGET_NOT_IN_RANGE:
+                Input_Output.outPut("error: the target square is not in the range of archers!");
+                break;
+            
+            default:
+                break;
+        }
     }
 
-    private static void attackGround(Matcher matcher) {
+    private static void attack(Matcher matcher) {
+        String input=matcher.group("coordinates");
+        String targetX=Orders.findFlagOption("-x", input);
+        String targetY=Orders.findFlagOption("-y", input);
+
+        if(targetX==null || targetY==null){
+            Input_Output.outPut("error: empty coordination fields!");
+            return;
+        }
+
+        GameMenuMessages result=GameMenuController.attackController(targetX, targetY);
+        switch (result) {
+            case SUCCESS:
+                Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+                break;
+
+            case WRONG_FORMAT_COORDINATE:
+                Input_Output.outPut("error: coordination format is invalid!");
+                break;
+            
+            case INVALID_COORDINATE:
+                Input_Output.outPut("error: coordination is out of map's bounds!");
+                break;
+
+            case ATTACK_NO_ENEMY_IN_AREA:
+                Input_Output.outPut("error: the selected square doesn't have a building!");
+                break;
+
+            case NORMALATTACK_TARGET_NOT_IN_RANGE:
+                Input_Output.outPut("error: the units are not able to reach the target to perform attack!");
+                break;
+
+            default:
+            break;
+        }
     }
 
     private static void pourOil(Matcher matcher) {

@@ -203,7 +203,6 @@ public class Government {
 
     
     public void addToGenerationRate(String resourceType, int addedGenerationValue){
-
         int previousValue=0;
        if( resourceGenerationRate.containsKey(resourceType) )
         previousValue=resourceGenerationRate.get(resourceType);

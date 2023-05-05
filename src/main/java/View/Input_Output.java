@@ -4,6 +4,10 @@ import java.util.Scanner;
 
 public class Input_Output {
     private static Scanner scanner;
+
+    static{
+        scanner=new Scanner(System.in);
+    }
     public static String getInput() {
         String input = scanner.nextLine();
         return input;

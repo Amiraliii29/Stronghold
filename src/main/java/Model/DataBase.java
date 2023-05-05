@@ -1,8 +1,11 @@
 package Model;
 
 import Model.Buildings.Building;
+import Model.Buildings.Generator;
+import Model.Buildings.TownBuilding;
 import Model.Resources.Resource;
 
+import java.lang.management.GarbageCollectorMXBean;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,31 +90,52 @@ public class DataBase {
     public static void setSelectedMap(Map selectedMap) {
         DataBase.selectedMap = selectedMap;
     }
-    
+
+    public static void attackBuildingBySelectedUnits(int xUnderAttack,int yUnderAttack){
+
+        Building buildingUnderAttack=selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getBuilding();
+
+        if(isBuildingFriendly(currentGovernment, buildingUnderAttack))
+                return ;
+
+        for (Unit unit : selectedUnit) 
+            buildingUnderAttack.changeHP(unit.getDamage());
+        if(buildingUnderAttack.getHp()<=0)
+            removeDestroyedBuildings(buildingUnderAttack);
+    }
+
     public static void attackEnemyByselectedUnits(Double distance,int xUnderAttack,int yUnderAttack){
-        ArrayList<Unit> enemyUnits= selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getUnits();
-         Unit randomEnemy;
-         int randomEnemyIndex;
+        ArrayList<Unit> enemyUnits= selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
+        Unit randomEnemy;
+        int randomEnemyIndex;
  
         for (Unit unit : selectedUnit) {
+            
+            if(unit.getDidFight()) 
+                continue;
+            
+            randomEnemyIndex=randomGenerator.nextInt(enemyUnits.size());
+            randomEnemy=enemyUnits.get(randomEnemyIndex);
  
-         randomEnemyIndex=randomGenerator.nextInt(enemyUnits.size());
-         randomEnemy=enemyUnits.get(randomEnemyIndex);
+            if(isUnitFriendly(currentGovernment, randomEnemy))
+                continue;
+
+            performFightBetweenTwoUnits(distance, unit, randomEnemy);
  
-         performFightBetweenTwoUnits(distance, unit, randomEnemy);
- 
-         if(randomEnemy.getHitPoint()<=0)
-             enemyUnits.remove(randomEnemyIndex);
+            if(randomEnemy.getHitPoint()<=0)
+                enemyUnits.remove(randomEnemyIndex);
         }
  
         removeDeadSelectedUnits();
      }
  
     private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender){
-         deffender.changeHitPoint(attacker.getDamage());
+        deffender.changeHitPoint(attacker.getDamage());
          
-         if(deffender.getAttackRange()>distance)
+        if(Math.ceil(deffender.getAttackRange())>=Math.floor(distance))
              attacker.changeHitPoint(deffender.getDamage());
+
+        attacker.setDidFight(true);
          //TODO: APPLIED DAMAGES SHOULD BE AFFECTED BY GOVERNMENT FEAR AND POPULARITY
     }
  
@@ -143,4 +167,55 @@ public class DataBase {
         currentGovernment.changeFreeWorkers(currentGovernment.getWorkerRate());
     }
 
+    public static void removeDestroyedBuildings(Building building){
+        //TODO: HANDLE STOCKPILES DELETE EFFECT
+            Government owner = building.getOwner();
+            String buildingType=Building.getBuildingCategoryByName(building.getName());
+            
+            owner.getBuildings().remove(building); //NOTE: removing from arraylist probably isnt going to work
+            removeBuildingEffectForPlayer(building, buildingType,owner);
+            selectedMap.removeBuildingFromMap(building);
+    }
+
+    private static void removeBuildingEffectForPlayer(Building building, String buildingType, Government owner){
+        switch (buildingType) {
+            case "Generator":
+            Generator deletedGenerator=(Generator) building;
+            owner.changePopulation(deletedGenerator.getNumberOfWorker());
+            owner.changeFreeWorkers(deletedGenerator.getNumberOfWorker());
+            owner.addToGenerationRate(deletedGenerator.getResourceGenerate().getName(),-deletedGenerator.getGeneratingRate());
+            break;
+
+            case "TownBuilding":
+            TownBuilding deletedTownBuilding=(TownBuilding) building;
+            owner.addToMaxPopulation(-deletedTownBuilding.getCapacity());
+            owner.updateBuildingPopularity();
+            break;
+        
+            default:
+                break;
+        }
+    }
+
+    public static boolean isBuildingFriendly(Government owner, Building building){
+        //TODO: ALSO CHECK ALLIES
+        String ownerUsername=owner.getOwner().getUsername();
+        if(ownerUsername.equals(building.getOwner().getOwner().getUsername()))
+            return true;
+        return false;
+    }
+
+    public static boolean isUnitFriendly(Government owner, Unit unit){
+        //TODO: ALSO CHECK ALLIES
+        String ownerUsername=owner.getOwner().getUsername();
+        if(ownerUsername.equals(unit.getOwner().getOwner().getUsername()))
+            return true;
+        return false;
+    }
+
+    public static boolean areSelectedUnitsRanged(){
+        if(selectedUnit.get(0).getAttackRange()>1)
+            return true;
+        else return false;
+    }
 }

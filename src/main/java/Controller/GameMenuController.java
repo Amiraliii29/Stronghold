@@ -72,20 +72,19 @@ public class GameMenuController {
             if(currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount )
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
         
-
-        currentMap.constructBuilding(targetBuilding, xInNum, yInNum);
-
         currentGovernment.changeMoney(-buildingCost);
 
         if(targetBuilding.getResource()!=null)
             currentGovernment.removeFromStockpile(targetBuilding.getResource(), resourceCount);
 
         constructBuildingForPlayer(buildingType, xInNum, yInNum);
+        currentMap.constructBuilding(targetBuilding, xInNum, yInNum);
+
         return GameMenuMessages.SUCCESS;
     }
 
     private static void constructBuildingForPlayer(String buildingName, int x, int y ){
-        String buildingCategory=getBuildingCategoryByName(buildingName);
+        String buildingCategory=Building.getBuildingCategoryByName(buildingName);
         switch (buildingCategory) {
             case "Generator":
                 Generator generator=Generator.createGenerator(currentGovernment, x, y, buildingName);
@@ -112,25 +111,6 @@ public class GameMenuController {
         }
     }
     
-    private static String getBuildingCategoryByName(String buildingName){
-        for (String name : Generator.getGeneratorsName()) 
-            if(buildingName.equals(name)) return "Generator";
-                
-        for (String name : Barrack.getBarracksName()) 
-            if(buildingName.equals(name)) return "Barrack";
-                
-        for(String name : Defence.getDefencesName())
-            if(buildingName.equals(name)) return "Defence";
-
-        for(String name : TownBuilding.getTownBuildingsName())
-            if(buildingName.equals(name)) return "TownBuilding";
-
-        for(String name : Stockpile.getStockpilesName())
-            if(buildingName.equals(name)) return "Stockpile";
-
-        return null;
-    }
-
     public static GameMenuMessages selectBuildingController(String x, String y) {
 
         if(!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
@@ -422,8 +402,7 @@ public class GameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    public static GameMenuMessages attackController(String enemyX,String enemyY) {
-
+    public static GameMenuMessages attackController(String enemyX,String enemyY) { 
         if( !Orders.isInputInteger(enemyY)|| !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
@@ -433,15 +412,40 @@ public class GameMenuController {
         if(!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        int currentUnitsX=DataBase.getSelectedUnit().get(0).getXCoordinate();
-        int currentUnitsY=DataBase.getSelectedUnit().get(0).getYCoordinate();
+        int targetType=currentMap.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
+        if( targetType==0)
+            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
-        int unitRange=
-        return null;
+        ArrayList<Unit> currentUnits=DataBase.getSelectedUnit();
+        int currentUnitsX=currentUnits.get(0).getXCoordinate();
+        int currentUnitsY=currentUnits.get(0).getYCoordinate();
+        int unitRange=currentUnits.get(0).getAttackRange();
+
+        int unitsZoneFromTarget=Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
+        ArrayList <int[]> squaresOptimalForFight=Map.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
+
+        boolean result=false;
+        for (int[] validCoord : squaresOptimalForFight) {
+            if(moveUnit(validCoord[0],validCoord[1])){
+
+                if(targetType==1){
+                    double distance=Map.getDistance(targetXInNum, targetYInNum, validCoord[0],validCoord[1]);
+                    DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);
+                }
+                else
+                    DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
+
+                result=true;
+                break;
+            }
+        }
+        if(result)
+            return GameMenuMessages.SUCCESS;
+        
+        return GameMenuMessages.NORMALATTACK_TARGET_NOT_IN_RANGE;
     }
 
     public static GameMenuMessages rangedAttackController(String enemyX,String enemyY) {
-
         if( !Orders.isInputInteger(enemyY)|| !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
@@ -450,6 +454,12 @@ public class GameMenuController {
 
         if(!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
+
+        if( !currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
+            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
+
+        if(!DataBase.areSelectedUnitsRanged())
+            return GameMenuMessages.RANGEDATTACK_NON_ARCHER_SELECTION;
 
         int currentUnitsX=DataBase.getSelectedUnit().get(0).getXCoordinate();
         int currentUnitsY=DataBase.getSelectedUnit().get(0).getYCoordinate();
@@ -461,13 +471,13 @@ public class GameMenuController {
             return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
 
         DataBase.attackEnemyByselectedUnits(distance, currentUnitsX, currentUnitsY);
-        
+        return GameMenuMessages.SUCCESS;
     }
 
     public static GameMenuMessages patrolController(String coordinates) {
         return null;
     }
-
+    
     public static GameMenuMessages pourOilController(String direction) {
         if (DataBase.getSelectedUnit().size() == 0)
             return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -517,9 +527,6 @@ public class GameMenuController {
         currentMap=map;
     }
 
-
-
-
     private static ArrayList<String> getBuildingValidLandsByName(String buildingName){
         
         for (Building building : allBuildings) 
@@ -529,7 +536,7 @@ public class GameMenuController {
         return null;
     }
 
-    private static Building getBuildingByName(String buildingName){
+    public static Building getBuildingByName(String buildingName){
         for (Building building : allBuildings) 
             if(building.getName().equals(buildingName))
                 return building;

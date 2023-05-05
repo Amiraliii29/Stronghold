@@ -4,12 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import Model.Buildings.Building;
+import Model.Buildings.Defence;
+import Model.Units.Unit;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class Map {
     // toole mehvar ofogi = length  moalefe ofoghi = x
@@ -74,10 +78,54 @@ public class Map {
         return true;
     }
 
+    public static ArrayList<int[]> getSquaresWithinRange(int centerX,int centerY, double range,int answerCaretsianZone){
+        double distance;
+        int xModifier,yModifier;
+        ArrayList<int[]> answers=new ArrayList<int[]>();
+        switch (answerCaretsianZone) {
+            case 1:
+                xModifier=1;
+                yModifier=1;
+                break;
+            case 2:
+                xModifier=-1;
+                yModifier=1;
+                break;
+            case 3:
+                xModifier=-1;
+                yModifier=-1;
+                break;
+            default:
+                xModifier=1;
+                yModifier=-1;
+                break;
+        }
+
+        for (int i = 0; i < Math.floor(range); i++) 
+            for (int j = 0; j < Math.floor(range); j++) {
+                distance=getDistance(0, 0, i, j);
+                if(distance<range){
+                    int[] viableCoord=new int[2];
+                    viableCoord[0]=centerX+i*xModifier;
+                    viableCoord[1]=centerY+j*yModifier;
+                    answers.add( viableCoord);
+                }  
+            }
+        return answers; 
+    }
+
+
     
     public static double getDistance(int x1,int y1, int x2, int y2){
         double distancepwr2= (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
         return Math.sqrt(distancepwr2);
+    }
+
+    public static int getCartesianZone(int centerX, int centerY, int targetX, int targetY){
+        if(targetX>=centerX && targetY>=centerY) return 1;
+        else if(targetX<=centerX && targetY>=centerY) return 2;
+        else if(targetX<=centerX && targetY<=centerY) return 3;
+        else return 4;
     }
     
     public boolean isCoordinationValid (int x, int y){
@@ -125,4 +173,54 @@ public class Map {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment,int x, int y){
+        Square targetSquare=getSquareFromMap(x, y);
+        ArrayList <Unit> enemyUnits=new ArrayList<Unit>();
+
+        for (Unit unit : targetSquare.getUnits()) 
+            if(!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
+                
+        return enemyUnits;
+    }
+
+    public int getSquareUnfriendlyBelongingsType(Government ownGovernment,int x, int y){
+        //0 for nothing, 1 for troops (prime to buildings, except deffences), 2 for buildings
+        Square targetSquare=getSquareFromMap(x, y);
+        Building targetBuilding=targetSquare.getBuilding();
+
+        if( targetBuilding!= null)
+            if(targetBuilding instanceof Defence && !DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
+                return 2;
+
+        if(doesSquareContainEnemyUnits(x, y, ownGovernment))
+            return 1;
+
+        if  (targetSquare.getBuilding() != null)
+            return 2;
+        return 0;
+    }
+
+    public void removeBuildingFromMap(Building building){
+        int width,length,cornerX,cornerY;
+        width=building.getWidth();
+        length=building.getLength();
+        cornerX=building.getXCoordinateLeft();
+        cornerY=building.getYCoordinateUp();
+
+        for (int i = cornerX; i < width; i++) 
+            for (int j = cornerY; j < length; j++) 
+                getSquareFromMap(i, j).setBuilding(null);
+    }
+
+    public boolean doesSquareContainEnemyUnits(int x, int y, Government owner){
+        Square targetSquare=getSquareFromMap(x, y); 
+
+        for (Unit unit : targetSquare.getUnits()) 
+            if(!DataBase.isUnitFriendly(owner, unit)) return true;
+                
+        return false;
+    }
+
+
 }

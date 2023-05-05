@@ -109,10 +109,6 @@ public class SignUpMenu {
                 Input_Output.outPut("error logging in!");
                 break;
         }
-
-        if (!result.equals(SignUpMenuMessages.SUCCESFUL_LOGIN))
-            SignUpMenuController.setNewPenalty();
-
     }
 
     private static void forgotMyPassWord() throws NoSuchAlgorithmException {

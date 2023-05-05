@@ -60,8 +60,10 @@ public class SignUpMenuController {
         if (targetUser == null)
             return SignUpMenuMessages.LOGIN_INVALID_USERNAME_ERROR;
 
-        if (!passWord.equals(targetUser.getPassword()))
+        if (!passWord.equals(targetUser.getPassword())){
+            setNewPenalty();
             return SignUpMenuMessages.LOGIN_INCORRECT_PASSWORD_ERROR;
+        }
 
 
         if (stayLoggedInoption == true) {

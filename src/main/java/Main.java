@@ -14,19 +14,9 @@ import View.SignUpMenu;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
-        HashMap<String,Integer> hm = new HashMap<>();
+        SignUpMenu.run();
         
-        hm.put("Cricket", 5);
-        hm.put("Football", 8);
-        hm.put("Tennis", 11);
+  
         
-        Iterator keySetIterator = hm.keySet().iterator();
-        
-        while (keySetIterator.hasNext())
-        {
-            String key = keySetIterator.next().toString();
-            
-            System.out.println("Key : "+key+"   Value : "+hm.get(key));
-        }
     }
 }

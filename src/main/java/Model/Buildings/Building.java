@@ -40,6 +40,26 @@ public abstract class Building {
         this.maximumHp=hp;
     }
 
+    public static String getBuildingCategoryByName(String buildingName){
+        for (String name : Generator.getGeneratorsName()) 
+            if(buildingName.equals(name)) return "Generator";
+                
+        for (String name : Barrack.getBarracksName()) 
+            if(buildingName.equals(name)) return "Barrack";
+                
+        for(String name : Defence.getDefencesName())
+            if(buildingName.equals(name)) return "Defence";
+
+        for(String name : TownBuilding.getTownBuildingsName())
+            if(buildingName.equals(name)) return "TownBuilding";
+
+        for(String name : Stockpile.getStockpilesName())
+            if(buildingName.equals(name)) return "Stockpile";
+
+        return null;
+    }
+
+
     public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
         this.xCoordinateLeft = xCoordinateLeft;
         this.yCoordinateUp = yCoordinateUp;

@@ -9,7 +9,7 @@ public enum GameMenuCommands {
     PATRON_UNIT("^\\s*patrol\\s+unit\\s+(?<coordinates>.+)$"),
     SET_STATE("^\\s*set\\s+(?<option>.+)$"),
     ATTACK_GROUND("^\\s*attack\\s+-e\\s+(?<x>\\d+)\\s+(?<y>\\d+)$"),
-    ATTACK_AIR("^\\s*attack\\s+(?<coordinate>.+)$"),
+    ATTACK_AIR("^\\s*ranged\\s+attack\\s+(?<coordinates>.+)"),
     DIG_TUNNEL("^\\s*dig\\s+tunnel\\s+(?<coordinate>.+)$"),
     POUR_OIL("^\\s*pour\\s+oil\\s+-d\\s+(?<direction>.+)$"),
     BUILD_SIEGE("^\\s*build\\s+-q\\s+(?<siegeName>.+)$"),
