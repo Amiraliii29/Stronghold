@@ -19,6 +19,13 @@ public enum GameMenuCommands {
     CREATE_UNIT("\\s*create\\s+unit\\s+(?<unitComponents>.+)"),
     REPAIR_BUILDING("\\s*repair\\s*"),
     ENTER_SHOW_MAP_MENU("^enter\\s*show\\s*map\\s*menu$"),
+    SET_TAX_RATE("^\\s*tax\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
+    SHOW_TAX_RATE("^\\s*tax\\s*rate\\s*show$"),
+    SHOW_POPULARITY_FACTORS("^\\s*show\\s*popularity\\s*factors\\s*$"),
+    SHOW_POPULARITY("^\\s*show\\s*popularity\\s*$"),
+    SHOW_FOOD_LIST("^\\s*show\\s*food\\s*list\\s*$"),
+    SET_FOOD_RATE("^\\s*food\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
+    SET_FEAR_RATE("^\\s*fear\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
     ;
     private String regex;
 

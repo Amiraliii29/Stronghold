@@ -370,4 +370,8 @@ public class Government {
     public HashMap<String, Integer> getResourceGenerationRates() {
         return resourceGenerationRate;
     }
+
+    public int getPopularity() {
+        return popularity;
+    }
 }
