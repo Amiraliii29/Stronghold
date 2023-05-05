@@ -109,7 +109,6 @@ public class User {
         for (User user : users)
             if (user.getUsername().equals(userName))
                 return user;
-
         return null;
     }
 
