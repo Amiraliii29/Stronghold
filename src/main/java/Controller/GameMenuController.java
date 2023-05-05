@@ -194,7 +194,6 @@ public class GameMenuController {
 
         for (int i = 0; i < count; i++) {
             Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addUnit(newTroop);
             addToAllUnits(newTroop);
         }
 
