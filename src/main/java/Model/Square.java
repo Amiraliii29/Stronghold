@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
+    private static HashMap<String, Boolean> canPass;
     private ArrayList<Unit> units;
     private Building building;
     private Land land;
@@ -19,6 +20,10 @@ public class Square {
     private int treeAmount = 0;
     private int x;
     private int y;
+
+    static {
+
+    }
 
     public Square(int x, int y) {
         this.x = x;

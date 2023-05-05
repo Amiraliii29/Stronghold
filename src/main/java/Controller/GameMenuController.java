@@ -21,7 +21,7 @@ public class GameMenuController {
     private static Building selectedBuilding = null;
     private static Map currentMap;
     private static ArrayList<Building> allBuildings;
-    private static ArrayList<Unit> allUnits; //TODO: FILL
+    private static ArrayList<Unit> allUnits;
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> squares;
     private static HashMap<Square, String> buildSiege;
@@ -34,7 +34,7 @@ public class GameMenuController {
         allBuildings = new ArrayList<>();
     }
 
-    public static void nextTurnController() {
+    public static GameMenuMessages nextTurnController() {
         for (HashMap.Entry<Square, String> entry : buildSiege.entrySet()) {
             Siege siege = Siege.createSiege(currentGovernment, entry.getValue(), entry.getKey().getX(), entry.getKey().getY());
             for (int i = 0; i < siege.getEngineerNeed(); i++) {
@@ -62,6 +62,9 @@ public class GameMenuController {
                 break;
             }
         }
+        if(checkForEnd())
+            return GameMenuMessages.END;
+        return GameMenuMessages.SUCCESS;
     }
 
     public static boolean checkForEnd() {

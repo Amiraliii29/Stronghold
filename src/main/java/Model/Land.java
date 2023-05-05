@@ -22,7 +22,7 @@ public enum Land {
     ;
     private String name;
 
-    Land(String name) {
+    private Land(String name) {
         this.name = name;
     }
     public static String getName(Land mainEnum){
