@@ -366,4 +366,8 @@ public class Government {
         Government that = (Government) o;
         return Objects.equals(owner, that.owner);
     }
+
+    public HashMap<String, Integer> getResourceGenerationRates() {
+        return resourceGenerationRate;
+    }
 }

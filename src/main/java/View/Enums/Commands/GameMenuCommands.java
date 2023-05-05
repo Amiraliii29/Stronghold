@@ -18,6 +18,7 @@ public enum GameMenuCommands {
     SELECT_BUILDING("\\s*select\\s+building\\s+(?<buildingComponents>.+)"),
     CREATE_UNIT("\\s*create\\s+unit\\s+(?<unitComponents>.+)"),
     REPAIR_BUILDING("\\s*repair\\s*"),
+    ENTER_SHOW_MAP_MENU("^enter\\s*show\\s*map\\s*menu$"),
     ;
     private String regex;
 

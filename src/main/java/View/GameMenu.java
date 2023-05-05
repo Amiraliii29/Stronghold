@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class GameMenu {
-    public static void run(Scanner scanner) {
+    public static void run() {
         String input;
         Matcher matcher;
         while (true) {
@@ -42,9 +42,16 @@ public class GameMenu {
                 createUnit(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
+                enterShowMapMenu();
             else
                 System.out.println("invalid command");
         }
+    }
+
+    private static void enterShowMapMenu() {
+        Input_Output.outPut("entered show map menu successfully");
+        ShowMapMenu.run();
     }
 
     private static void nextTurn() {
