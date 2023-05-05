@@ -45,7 +45,7 @@ public class ProfileMenuController {
         if(oldPassword==null || newPassword ==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
             
-        oldPassword=UserInfoOperator.encodeStringToSha256(newPassword);
+        oldPassword=UserInfoOperator.encodeStringToSha256(oldPassword);
 
         if(!oldPassword.equals(currentUser.getPassword()))
             return ProfileMenuMessages.INCORRECT_PASSWORD_ERROR;
