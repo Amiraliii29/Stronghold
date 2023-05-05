@@ -29,7 +29,6 @@ public class Government {
     private ArrayList<Stockpile> armoury;
     private ArrayList<Stockpile> granary;
     private HashMap<String , Integer> resourceGenerationRate;
-    private ArrayList<Unit> units;
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
     private ArrayList<TradeRequest> tradeHistory;
@@ -47,7 +46,6 @@ public class Government {
         stockpiles = new ArrayList<>();
         armoury = new ArrayList<>();
         granary = new ArrayList<>();
-        units = new ArrayList<>();
         buildings = new ArrayList<>();
         requestsAskedFromMe = new ArrayList<>();
         tradeHistory = new ArrayList<>();
@@ -178,14 +176,6 @@ public class Government {
 
     public void addGranary(Stockpile granary) {
         this.granary.add(granary);
-    }
-
-    public ArrayList<Unit> getUnits() {
-        return units;
-    }
-
-    public void addUnits(Unit unit) {
-        this.units.add(unit);
     }
 
     public ArrayList<Building> getBuildings() {

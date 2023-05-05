@@ -121,7 +121,7 @@ public class CustomizeMapController {
             Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - 1 , xInt - 1);
             selectedSquare.setLand(Land.DEFAULT);
             selectedSquare.setBuilding(null);
-            selectedSquare.removeAllTroops();
+            selectedSquare.newSelectedUnit();
             return CustomizeMapMessages.CLEAR_TILE_SUCCESS;
 
         }

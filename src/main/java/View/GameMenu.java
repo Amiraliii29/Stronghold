@@ -219,6 +219,7 @@ public class GameMenu {
     }
 
     private static void patrol(Matcher matcher) {
+
     }
 
     private static void setUnitMode(Matcher matcher) {
@@ -253,9 +254,25 @@ public class GameMenu {
     }
 
     private static void buildEquipment(Matcher matcher) {
+        String siegeName = matcher.group("siegeName");
+        GameMenuMessages message = GameMenuController.buildEquipmentController(siegeName);
+        switch (message) {
+            case WRONG_NAME -> System.out.println("there is no siege with this name");
+            case CHOSE_UNIT_FIRST -> System.out.println("choose Engineer first");
+            case UNIT_ISNT_ENGINEER -> System.out.println("unit is not Engineer");
+            case NOT_ENOUGH_ENGINEER -> System.out.println("not enough Engineer");
+            case NOT_ENOUGH_BALANCE -> System.out.println("you dont have enough money");
+            case CANT_BUILD_HERE -> System.out.println("cant build here");
+            case SUCCESS -> System.out.println("siege created");
+        }
     }
 
     private static void disbandUnit() {
+        GameMenuMessages message = GameMenuController.disbandUnitController();
+        switch (message) {
+            case CHOSE_UNIT_FIRST -> System.out.println("choose unit first");
+            case SUCCESS -> System.out.println("unit disbanded");
+        }
     }
 
     private static void dropUnit(Matcher matcher) {
