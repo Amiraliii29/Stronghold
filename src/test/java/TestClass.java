@@ -28,11 +28,16 @@ import java.util.ArrayList;
 
 public class TestClass {
     User user = new User("kiarash", "123", "dahga", "lakh;g;", "afjhgk");
-    Government government = new Government(user, 0);
+    Government government = new Government(0);
     User user1 = new User("ali", "123", "adjgg", "al;khgdjkafg", "agkfhdgkd");
-    Government government1 = new Government(user1, 100);
+    Government government1 = new Government(100);
     Map map = new Map("map1", 100, 100);
 
+    @BeforeAll
+    public void beforeAll(){
+        government.setOwner(user);
+        government1.setOwner(user1);
+    }
 
     @Test
     public void testGovernment() {

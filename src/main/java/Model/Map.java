@@ -30,7 +30,11 @@ public class Map {
         this.width = width;
         this.length = length;
         this.squares = new Square[width][length];
-        //create squares
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < length; j++) {
+                squares[i][j] = new Square(i, j);
+            }
+        }
     }
 
     public void setSquares(Square[][] squares) {
