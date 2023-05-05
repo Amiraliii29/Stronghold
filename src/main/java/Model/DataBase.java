@@ -156,6 +156,7 @@ public class DataBase {
          HashMap<String, Integer> generationRates=currentGovernment.getResourceGenerationRates();
          Iterator keySetIterator =  generationRates.keySet().iterator();
          
+         generateResourcesForCurrentGovernment();
          while (keySetIterator.hasNext()) {
              String resourceName = keySetIterator.next().toString();
              Integer resourceGenerationRate=generationRates.get(resourceName);
