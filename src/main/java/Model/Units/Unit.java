@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public abstract class Unit {
     protected static ArrayList<String> allUnits;
+    protected boolean didFight;
     protected Government owner;
     protected String name;
     protected int xCoordinate;
@@ -38,6 +39,7 @@ public abstract class Unit {
         this.cost = cost;
         this.stateUnits = StateUnits.Stan_Ground;
         this.moveLeft = speed;
+        this.didFight=false;
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
@@ -116,6 +118,14 @@ public abstract class Unit {
 
     public void setMoveLeft(int moveLeft) {
         this.moveLeft = moveLeft;
+    }
+
+    public void setDidFight(boolean value){
+        this.didFight=value;
+    }
+
+    public boolean getDidFight(){
+        return didFight;
     }
 
     @Override
