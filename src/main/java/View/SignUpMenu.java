@@ -45,6 +45,9 @@ public class SignUpMenu {
         String signupComponentsInput = matcher.group("signupComponents");
         SignUpMenuMessages message = SignUpMenuController.runControllerSignupFunction(signupComponentsInput);
 
+        if(Orders.isOrderJunky(signupComponentsInput, true, "-u","-p","-n","-s","--email"))
+            Input_Output.outPut("error: invalid inputs were included");
+
         switch (message) {
 
             case EMPTY_FIELDS_SIGNUP_ERROR:
@@ -90,6 +93,9 @@ public class SignUpMenu {
         String username = Orders.findFlagOption("-u", loginComponents);
         String password = Orders.findFlagOption("-p", loginComponents);
         boolean stayLoggidInFlag = Orders.doesFlagExist("--stay-logged-in", loginComponents);
+
+        if(Orders.isOrderJunky(loginComponents, false, "-u","-p","--stay-logged-in"))
+            Input_Output.outPut("error: invalid inputs were included");
 
         SignUpMenuMessages result = SignUpMenuController.userLoginController(username, password, stayLoggidInFlag);
         switch (result) {

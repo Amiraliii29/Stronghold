@@ -8,14 +8,12 @@ import Model.Buildings.Generator;
 import View.Input_Output;
 import org.json.simple.parser.ParseException;
 
+import Controller.Orders;
 import Model.Buildings.Generator;
 import View.SignUpMenu;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, NoSuchAlgorithmException {
-           HashMap <String , Integer> lol= new HashMap<>();
-           lol.put("guz", 2);
-           lol.put("guz",3);
-           System.out.println(lol.size());
+           SignUpMenu.run();
     }
 }

@@ -42,9 +42,21 @@ public class GameMenu {
                 createUnit(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
+            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TURNS_PASSED) != null)
+                showTurnsPassed();
+            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
+                showCurrentPlayer();
             else
                 System.out.println("invalid command");
         }
+    }
+
+    private static void showCurrentPlayer(){
+        Input_Output.outPut("current player:"+GameMenuController.getCurrentGovernmentUsername());
+    }
+
+    private static void showTurnsPassed(){
+        Input_Output.outPut("turns passed: "+GameMenuController.getTurnsPassed());
     }
 
     private static void nextTurn() {

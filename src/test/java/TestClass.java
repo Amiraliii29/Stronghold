@@ -27,11 +27,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class TestClass {
-    User user = new User("kiarash", "123", "dahga", "lakh;g;", "afjhgk");
-    Government government = new Government(user, 0);
-    User user1 = new User("ali", "123", "adjgg", "al;khgdjkafg", "agkfhdgkd");
-    Government government1 = new Government(user1, 100);
-    Map map = new Map("map1", 100, 100);
+    // User user = new User("kiarash", "123", "dahga", "lakh;g;", "afjhgk");
+    // Government government = new Government(user, 0);
+    // User user1 = new User("ali", "123", "adjgg", "al;khgdjkafg", "agkfhdgkd");
+    // Government government1 = new Government(user1, 100);
+    // Map map = new Map("map1", 100, 100);
 
 
     @Test
@@ -82,14 +82,17 @@ public class TestClass {
 
     @Test
     public void testChangeUsername() throws NoSuchAlgorithmException{
-        SignUpMenuController.userLoginController("test", "@tesT12", false);
-        Assertions.assertEquals(User.getCurrentUser(), User.getUserByUserName("test"));
+        SignUpMenuController.userLoginController("tempUser", "aA@123", false);
+        Assertions.assertEquals(User.getCurrentUser(), User.getUserByUserName("tempUser"));
 
         ProfileMenuController.setCurrentUser(User.getCurrentUser());
         
         ProfileMenuMessages result;
         result=  ProfileMenuController.changeUsername("oi oi");
         Assertions.assertEquals(result, ProfileMenuMessages.INVALID_USERNAME_ERROR);
+
+        ProfileMenuController.changeUsername("testt");
+        Assertions.assertEquals(User.getCurrentUser().getUsername(), "testt");
 
         ProfileMenuController.changeUsername("TERMALL");
         Assertions.assertEquals(User.getCurrentUser().getUsername(), "TERMALL");

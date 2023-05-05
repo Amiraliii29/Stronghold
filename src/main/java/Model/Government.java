@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Buildings.Building;
+import Model.Buildings.Generator;
 import Model.Buildings.Stockpile;
 import Model.Buildings.TownBuilding;
 import Model.Units.Troop;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import Controller.GameMenuController;
 
 public class Government {
     private  User owner;
@@ -92,7 +95,7 @@ public class Government {
         for (Building building : buildings) 
         if(building.getName().equals("Church")){
             TownBuilding church=(TownBuilding) building;
-            popularity+=church.getPopularityRate();
+            faith+=church.getPopularityRate();
             return;
         }
     }
@@ -357,6 +360,27 @@ public class Government {
 
     public void changePopulation(int addedPopulation){
         population+=addedPopulation;
+    }
+
+    public HashMap<String,Integer> getResourceGenerationRates(){
+        return resourceGenerationRate;
+    }
+
+    public int getBuildingCountByName(String buildingName){
+        int Number=0;
+        for (Building building : buildings) 
+            if(building.getName().equals(buildingName))
+                Number++;
+        return Number;
+    }
+
+    public void applyOxEffectOnStoneGeneration(){
+        int cowCount=getBuildingCountByName("StoneCow");
+        int QuarryNumber=getBuildingCountByName("Quarry");
+        if(QuarryNumber*3<cowCount) cowCount=QuarryNumber*3;
+
+        Generator quarry=(Generator)  GameMenuController.getBuildingByName("Quarry");
+        resourceGenerationRate.put(quarry.getResourceGenerate().getName(), quarry.getGeneratingRate()*cowCount/3);
     }
 
     @Override

@@ -152,7 +152,7 @@ public class DataBase {
                  deadUnits.add(unit);
 
          for (Unit unit : deadUnits)
-            GameMenuController.getAllUnits().remove(unit);
+            selectedMap.getSquareFromMap(unit.getXCoordinate(), unit.getYCoordinate()).removeUnit(unit);
 
          for (Unit deadUnit : deadUnits) 
              selectedUnit.remove(deadUnits);
