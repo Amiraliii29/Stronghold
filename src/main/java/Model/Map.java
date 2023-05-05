@@ -249,6 +249,12 @@ public class Map {
         return null;
     }
 
+    public int[] getEnemyClosestBuilding(){
+        Government enemy;
+        
+        
+    }
+
 
     public ArrayList<Government> getGovernmentsInMap() {
         return governmentsInMap;

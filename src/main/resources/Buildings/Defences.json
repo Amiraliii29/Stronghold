@@ -41,7 +41,7 @@
   },
   {
     "range": 5,
-    "capacity": 60,
+    "capacity": 30,
     "name": "Keep",
     "width": 8,
     "length": 8,
