@@ -240,11 +240,7 @@ public class Map {
         return null;
     }
 
-    public int[] getEnemyClosestBuilding(){
-        Government enemy;
-        
-        
-    }
+
 
 
 }

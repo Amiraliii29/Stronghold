@@ -240,4 +240,28 @@ public class DataBase {
             }
         }
     }
+
+    public static int[] getEnemyClosestBuilding(int currentX, int currentY){
+        Government enemy=null;
+        int[] nearestCorner=new int[2];
+        int buildingCornerX,buildingCornerY;
+        double nearestDistance=1000000, distance;
+
+        for (Government government : governments) 
+            if(!government.getOwner().getUsername().equals(currentGovernment.getOwner().getUsername()))
+                enemy=government;
+
+        for (Building building : enemy.getBuildings()) {
+            buildingCornerX=building.getXCoordinateLeft();
+            buildingCornerY=building.getYCoordinateUp();
+            distance=selectedMap.getDistance(currentX, currentY, buildingCornerX, buildingCornerY);
+            if(distance<nearestDistance){
+                nearestDistance=distance;
+                nearestCorner[0]=buildingCornerX;
+                nearestCorner[1]=buildingCornerY;
+            }
+        }
+
+        return nearestCorner;
+    }
 }
