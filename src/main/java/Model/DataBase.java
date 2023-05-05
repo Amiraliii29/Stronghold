@@ -16,7 +16,7 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 
 public class DataBase {
-    private static final ArrayList<Government> governments;
+    private static  ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
     private static Map selectedMap;

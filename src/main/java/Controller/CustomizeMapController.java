@@ -3,8 +3,11 @@ package Controller;
 
 import Model.*;
 import Model.Buildings.Building;
+import Model.Units.Troop;
+import View.CustomizeMap;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
+import View.Input_Output;
 
 import java.util.Random;
 
@@ -28,7 +31,17 @@ public class CustomizeMapController {
 
         else
         {
+            // enter governments count
+            CustomizeMap.printer("enter the number of governments in map");
+            String governmentsCount = Input_Output.getInput();
+            if(CustomizeMapCommands.getMatcher(governmentsCount , CustomizeMapCommands.VALID_NUMBER) == null)
+                return CustomizeMapMessages.INVALID_NUMBER;
+            int governmentsCountInt = Integer.parseInt(governmentsCount);
+            if(governmentsCountInt <= 0 || governmentsCountInt > 8)
+                return CustomizeMapMessages.INVALID_NUMBER;
+            // create map
             Map map = new Map(mapName , widthInt , lengthInt);
+            map.setGovernmentsInMap(governmentsCountInt);
             Map.saveMap(map , mapName);
             return CustomizeMapMessages.CREATE_NEW_MAP_SUCCESS;
         }
@@ -180,42 +193,70 @@ public class CustomizeMapController {
 
     }
 
-    public static CustomizeMapMessages dropBuildingController(String x, String y, String type) {
+    public static CustomizeMapMessages dropBuildingController(String x, String y, String type , String ownerGovernmentNumber) {
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
                 CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
+        if(CustomizeMapCommands.getMatcher(ownerGovernmentNumber , CustomizeMapCommands.VALID_NUMBER) == null)
+            return CustomizeMapMessages.INVALID_NUMBER;
+        if(ownerGovernmentNumber == null)
+            return CustomizeMapMessages.NO_OWNER_GOVERNMENT_NUMBER;
 
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
-        Building building = GameMenuController.getBuildingByName(type);
+        int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
+
+        Building buildingToConstruct = GameMenuController.getBuildingByName(type);
 
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
-        else if ( building == null)
+        else if ( buildingToConstruct == null)
             return CustomizeMapMessages.INVALID_BUILDING_NAME;
+        else if(ownerGovernmentNumberInt <= 0 || ownerGovernmentNumberInt > DataBase.getSelectedMap().getGovernmentsInMap().size())
+            return CustomizeMapMessages.INVALID_GOVERNMENT_NUMBER;
         else{
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
-            if(! GameMenuController.getBuildingValidLandsByName(type).contains(Land.getName(selectedSquare.getLand())))
-                return CustomizeMapMessages.UNSUITABLE_LAND;
-            DataBase.getSelectedMap().constructBuilding(building , xInt , yInt);
+            Map selectedMap = DataBase.getSelectedMap();
+            for (int i = 0 ; i < buildingToConstruct.getWidth() ; i++) {
+                for (int j = 0 ; j < buildingToConstruct.getLength() ; j++) {
+                    Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - j , xInt - i);
+                    if (!GameMenuController.getBuildingValidLandsByName(type).contains(Land.getName(selectedSquare.getLand())))
+                        return CustomizeMapMessages.UNSUITABLE_LAND;
+                }
+            }
+
+            DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
+            GameMenuController.dropBuildingController(x , y , type);
+            if(type.equals("Keep")){
+                Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
+                ownerGovernment.setLord(xInt , yInt);
+                for (int i = 0 ; i < 5 ; i++) {
+                    Troop.createTroop(ownerGovernment, "Archer", xInt, yInt);
+                }
+                for (int i = 0 ; i < 5 ; i++) {
+                    Troop.createTroop(ownerGovernment, "SpearMan", xInt, yInt);
+                }
+            }
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
         }
     }
 
-    public static CustomizeMapMessages dropUnitController(String x, String y, String type, String count) {
+    public static CustomizeMapMessages dropUnitController(String x, String y, String type, String count , String ownerGovernmentNumber) {
         if(x == null || y  == null || count == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
                 CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
+        if(ownerGovernmentNumber == null)
+            return CustomizeMapMessages.NO_OWNER_GOVERNMENT_NUMBER;
 
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
         int countInt = Integer.parseInt(count);
+        int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         Building building = GameMenuController.getBuildingByName(type);
 
@@ -225,15 +266,19 @@ public class CustomizeMapController {
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
         else if(countInt < 0)
             return CustomizeMapMessages.INVALID_COUNT;
+        else if(ownerGovernmentNumberInt <= 0 || ownerGovernmentNumberInt > DataBase.getSelectedMap().getGovernmentsInMap().size())
+            return CustomizeMapMessages.INVALID_GOVERNMENT_NUMBER;
         else{
+            Government ownerGovernment = DataBase.getSelectedMap().getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
             Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
             if(selectedSquare.getLand().equals(Land.SEA) || selectedSquare.getLand().equals(Land.CLIFF)
                     || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
             selectedSquare.getLand().equals(Land.FLAT_ROCK))
                 return CustomizeMapMessages.UNSUITABLE_LAND;
             for(int i = 0 ; i < countInt ; i++) {
-                selectedSquare.addTroop();
+                Troop.createTroop(ownerGovernment  , type , xInt , yInt);
             }
+            return CustomizeMapMessages.DROP_UNIT_SUCCESS;
         }
 
     }

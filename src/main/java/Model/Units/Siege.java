@@ -10,14 +10,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Siege extends Unit {
     private static ArrayList<Siege> sieges;
+    private static ArrayList<String> SiegesName;
     private int engineerNeed;
     private Resource whatTheyThrow;
     private int howManyLeft;
 
     static {
+        SiegesName = new ArrayList<>();
         try {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Siege>>() {
@@ -29,6 +32,7 @@ public class Siege extends Unit {
         }
         for (Siege siege : sieges){
             allUnits.add(siege.name);
+            SiegesName.add(siege.name);
         }
     }
 
@@ -38,6 +42,10 @@ public class Siege extends Unit {
         this.engineerNeed = engineerNeed;
         this.whatTheyThrow = whatTheyThrow;
         this.howManyLeft = howManyLeft;
+    }
+
+    public static ArrayList<String> getSiegesName(){
+        return SiegesName;
     }
 
     public int getEngineerNeed() {
@@ -66,4 +74,5 @@ public class Siege extends Unit {
         }
         return null;
     }
+
 }

@@ -3,6 +3,7 @@ package Model;
 import Model.Buildings.Building;
 import Model.Buildings.Stockpile;
 import Model.Buildings.TownBuilding;
+import Model.Units.Troop;
 import Model.Units.Unit;
 import Model.Resources.Resource;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Government {
-    private final User owner;
+    private  User owner;
     private int popularity;
     private int workerRate;//TODO
     private int maxPopulation;
@@ -25,6 +26,7 @@ public class Government {
     private int faith;
     private int fear;
     private double money;
+    private Troop lord;
     private ArrayList<Stockpile> stockpiles;
     private ArrayList<Stockpile> armoury;
     private ArrayList<Stockpile> granary;
@@ -53,9 +55,20 @@ public class Government {
         resourceGenerationRate= new HashMap <String, Integer> ();
     }
 
-    public Government(User owner, double money) {
-        this.owner = owner;
+    public Troop getLord() {
+        return lord;
+    }
+
+    public void setLord(int x , int y) {
+        Troop lord = Troop.createTroop(this , "Lord" , x , y);
+        this.lord = lord;
+    }
+
+    public Government(double money) {
         this.money = money;
+    }
+    public void setOwner(User owner){
+        this.owner = owner;
     }
 
     public User getOwner() {
