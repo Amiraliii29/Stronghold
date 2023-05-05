@@ -42,10 +42,16 @@ public class GameMenu {
                 createUnit(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
+            else
+                System.out.println("invalid command");
         }
     }
 
     private static void nextTurn() {
+//        GameMenuMessages message = GameMenuController.nextTurnController();
+//
+//        switch (message){
+//        }
     }
 
     private static void userLogout() {

@@ -591,7 +591,7 @@ public class GameMenuController {
         currentMap = map;
     }
 
-    private static ArrayList<String> getBuildingValidLandsByName(String buildingName){
+    public static ArrayList<String> getBuildingValidLandsByName(String buildingName){
         
         for (Building building : allBuildings) 
             if(building.getName().equals(buildingName))

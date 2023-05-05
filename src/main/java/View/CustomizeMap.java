@@ -47,8 +47,40 @@ public class CustomizeMap {
         String y = Orders.findFlagOption("-y" , options);
         String type = Orders.findFlagOption("-t" , options);
         String count = Orders.findFlagOption("-c" , options);
+        String onwerGovernmentNumber = Orders.findFlagOption("-g" , options);
 
-        CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count);
+        CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count , onwerGovernmentNumber);
+
+        switch (message){
+            case INVALID_GOVERNMENT_NUMBER:
+                System.out.println("drop unit error: invalid government number");
+                break;
+            case NO_OWNER_GOVERNMENT_NUMBER:
+                System.out.println("drop unit error: please enter owner government number after " +
+                        " -g flag next time");
+                break;
+            case INVALID_NUMBER:
+                System.out.println("drop unit error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("drop unit error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("drop unit error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("drop unit error: y out of bounds");
+                break;
+            case INVALID_COUNT:
+                System.out.println("drop unit error: invalid count");
+                break;
+            case UNSUITABLE_LAND:
+                System.out.println("drop unit error: unsuitable land to drop unit");
+                break;
+            case DROP_UNIT_SUCCESS:
+                System.out.println("unit dropped successfully");
+                break;
+        }
 
     }
 
@@ -77,6 +109,9 @@ public class CustomizeMap {
                 break;
             case CREATE_NEW_MAP_SUCCESS:
                 System.out.println("new map created successfully");
+                break;
+            case INVALID_NUMBER:
+                System.out.println("create new map error: invalid governments count");
                 break;
         }
     }
@@ -217,8 +252,9 @@ public class CustomizeMap {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
         String type = Orders.findFlagOption("-t", options);
+        String governmentNumber = Orders.findFlagOption("-g" , options);
 
-        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x , y  , type);
+        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x , y  , type , governmentNumber);
 
         switch (message){
             case INVALID_NUMBER:
@@ -242,9 +278,16 @@ public class CustomizeMap {
             case UNSUITABLE_LAND:
                 System.out.println("drop building error: can't place there my lord");
                 break;
+            case INVALID_GOVERNMENT_NUMBER:
+                System.out.println("drop building error: invalid government number");
+                break;
+            case NO_OWNER_GOVERNMENT_NUMBER:
+                System.out.println("drop building error: please enter owner government number after " +
+                        " -g flag next time");
+                break;
         }
     }
-    private static void printer(String toPrint){
+    public static void printer(String toPrint){
         System.out.println(toPrint);
     }
 }

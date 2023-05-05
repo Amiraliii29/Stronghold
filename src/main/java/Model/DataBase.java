@@ -17,7 +17,7 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 
 public class DataBase {
-    private static ArrayList<Government> governments;
+    private static  ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
     private static Map selectedMap;
@@ -146,13 +146,14 @@ public class DataBase {
  
     private static void removeDeadSelectedUnits(){
          ArrayList<Unit> deadUnits=new ArrayList<Unit>();
+ 
          for (Unit unit : selectedUnit) 
              if(unit.getHitPoint()<=0)
                  deadUnits.add(unit);
 
-         for (Unit unit : deadUnits) 
+         for (Unit unit : deadUnits)
             GameMenuController.getAllUnits().remove(unit);
-         
+
          for (Unit deadUnit : deadUnits) 
              selectedUnit.remove(deadUnits);
     }
@@ -230,7 +231,7 @@ public class DataBase {
     public static void handleEndOfTurnFights(){
         for (Unit unit : GameMenuController.getAllUnits()) {
 
-            unit.setDidFight(true);        
+            unit.setDidFight(true);
             int[] targetCoord=selectedMap.getAnEnemyCoordInRange(unit);
             if(targetCoord != null){
                 GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));

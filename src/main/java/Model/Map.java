@@ -21,6 +21,7 @@ public class Map {
     // toole mehvar amoudi = width  moalefe amoudi = y
     private String name;
     private Square[][] squares;
+    private ArrayList<Government> governmentsInMap;
     private int width;
     private int length;
 
@@ -135,7 +136,8 @@ public class Map {
         return true;
     }
 
-    public void constructBuilding(Building building, int x , int y){
+    public void
+    constructBuilding(Building building, int x , int y){
         //amirali: i edited x and y
         for (int i = x; i < x+building.getLength(); i++) {
             for (int j = y; j <y+building.getWidth(); j++) {
@@ -223,18 +225,25 @@ public class Map {
         return false;
     }
 
+    public void setGovernmentsInMap(int count) {
+        this.governmentsInMap = new ArrayList<>();
+        for (int i = 0 ; i < count ; i++){
+            Government government = new Government(2000);
+            governmentsInMap.add(government);
+        }
+    }
     public int[] getAnEnemyCoordInRange(Unit mainUnit){
 
         ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
         int aggressionRange=mainUnit.getAggressionRange();
         int unitX=mainUnit.getXCoordinate(), unitY=mainUnit.getYCoordinate();
 
-        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));  
+        landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));
         landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 2));
         landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 3));
         landsWithinRange=Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 4));
 
-        for (int[] coord : landsWithinRange) 
+        for (int[] coord : landsWithinRange)
             if(doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
                 return coord;
         return null;
@@ -243,4 +252,7 @@ public class Map {
 
 
 
+    public ArrayList<Government> getGovernmentsInMap() {
+        return governmentsInMap;
+    }
 }
