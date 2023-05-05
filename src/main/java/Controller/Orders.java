@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import Model.DataBase;
 import Model.Units.Unit;
 
@@ -78,14 +77,38 @@ public class Orders {
         else return false;
     }
 
-    public static Boolean isOrderNotJunky(String order) {
-        //ToDo
+    public static Boolean isOrderJunky(String order,boolean hasConfirmPass,String ... flags) {
+        
+        if(hasConfirmPass){
+            String password=findFlagOption("-p", order);
+            if(!password.equals("random")){
+                String repeat=findWordAfterFlagSequence("-p",order);
+                order=removeSubstring(order, repeat);
+            }
+        }
 
-        //note: aksare ordera, bayad hameye flag haye valid va optioneshon ke joda shodan az string, 
-        //      kamel khali she va chizi azash namone; vagarna yani vasate dastor
-        //      chize cherto pert vared karde va error bayad begire
+        for (String flag : flags) {
+            String option=findRawFlagOption(flag, order);
+            order=removeSubstring(order, option);
 
-        return null;
+            if(doesFlagExist(flag, order))
+                order=removeSubstring(order, flag);
+        }
+        String emptyRegex="\\s*";
+        Matcher matcher=createMatcher(emptyRegex, order);
+        if(matcher.matches())
+            return false;
+    
+         return true;
+    }
+
+    private static String removeSubstring(String input, String substring){
+        if(substring==null)
+            return input;
+        StringBuffer buffer= new StringBuffer(input);
+        int startIndex=input.indexOf(substring);
+        buffer.replace(startIndex, startIndex+substring.length(), "");
+        return buffer.toString();
     }
 
     private static String trimEndAndStartOfString(String input) {

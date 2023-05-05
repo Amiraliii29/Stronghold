@@ -18,6 +18,7 @@ import java.util.Objects;
 
 public class GameMenuController {
     private static Government currentGovernment;
+    private static int turnsPassed=0;
     private static Building selectedBuilding = null;
     private static Map currentMap;
     private static ArrayList<Building> allBuildings;
@@ -163,6 +164,7 @@ public class GameMenuController {
                 currentGovernment.changePopulation(generator.getNumberOfWorker());
                 currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
                 currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(), generator.getGeneratingRate());
+                currentGovernment.applyOxEffectOnStoneGeneration();
                 break;
 
             case "TownBuilding":
@@ -629,6 +631,14 @@ public class GameMenuController {
 
     public static void setCurrentMap(Map map) {
         currentMap = map;
+    }
+
+    public static int getTurnsPassed(){
+        return turnsPassed;
+    }
+
+    public static String getCurrentGovernmentUsername(){
+        return currentGovernment.getOwner().getUsername();
     }
 
     public static ArrayList<String> getBuildingValidLandsByName(String buildingName){

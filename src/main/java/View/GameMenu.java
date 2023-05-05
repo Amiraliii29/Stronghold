@@ -44,6 +44,10 @@ public class GameMenu {
                 createUnit(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
+            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TURNS_PASSED) != null)
+                showTurnsPassed();
+            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
+                showCurrentPlayer();
             else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
                 enterShowMapMenu();
             else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_TAX_RATE)) != null)
@@ -65,6 +69,14 @@ public class GameMenu {
         }
     }
 
+    private static void showCurrentPlayer(){
+        Input_Output.outPut("current player:"+GameMenuController.getCurrentGovernmentUsername());
+    }
+
+    private static void showTurnsPassed(){
+        Input_Output.outPut("turns passed: "+GameMenuController.getTurnsPassed());
+    }
+    
     private static void setFearRate(Matcher matcher) {
         int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
 
