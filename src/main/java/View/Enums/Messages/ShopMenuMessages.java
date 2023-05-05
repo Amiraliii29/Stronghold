@@ -9,6 +9,7 @@ public enum ShopMenuMessages {
     INVALID_AMOUNT,
     NOT_ENOUGH_ITEM_IN_STOCKPILE,
     SELL_ITEM_NOT_CONFIRMED,
-    SELL_ITEM_SUCCESS;
+    SELL_ITEM_SUCCESS,
+    ;
     
 }

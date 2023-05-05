@@ -10,6 +10,7 @@ public enum LoginMenuCommands {
     ENTER_PROFILE_MENU("\\s*enter\\s+profile\\s+menu\\s*"),
 
     ENTER_MAP_MENU("\\s*enter\\s+map\\s+menu\\s*"),
+    START_GAME("^\\s*start\\s*game\\s*(?<options>.+)$"),
     ;
     private String regex;
 

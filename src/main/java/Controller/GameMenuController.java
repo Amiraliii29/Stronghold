@@ -65,6 +65,43 @@ public class GameMenuController {
         }
     }
 
+    public static boolean checkForEnd() {
+        ArrayList<Government> governments = DataBase.getGovernments();
+        Square[][] allSquares = DataBase.getSelectedMap().getSquares();
+        for (int i = 0; i < governments.size(); i++) {
+            if (governments.get(i).getLord().getHitPoint() <= 0) {
+                //destroy every thing for this government
+                for (int j = 0; j < allSquares.length; j++) {
+                    for (int k = 0; k < allSquares[0].length; k++) {
+                        if (allSquares[j][k].getBuilding().getOwner().equals(governments.get(i))) {
+                            allSquares[j][k].getBuilding().changeHP(-100000);
+                            DataBase.removeDestroyedBuildings(allSquares[j][k].getBuilding());
+                        }
+                        for (int l = 0; l < allSquares[j][k].getUnits().size(); l++) {
+                            if (allSquares[j][k].getUnits().get(l).getOwner().equals(governments.get(i))) {
+                                allSquares[j][k].removeUnit(allSquares[j][k].getUnits().get(l));
+                                l--;
+                            }
+                        }
+                    }
+                }
+                governments.remove(i);
+                i--;
+            }
+        }
+        allUnits = new ArrayList<>();
+        for (int j = 0; j < allSquares.length; j++) {
+            for (int k = 0; k < allSquares[0].length; k++) {
+                for (Unit unit : allSquares[j][k].getUnits()) {
+                    allUnits.add(unit);
+                }
+            }
+        }
+        //if both lord die in one turn !!!
+        if (governments.size() == 1) return true;
+        return false;
+    }
+
     public static void setCurrentGovernment(Government government) {
         currentGovernment = government;
     }
@@ -623,5 +660,48 @@ public class GameMenuController {
 
     public static void addToAllUnits(Unit unit){
         allUnits.add(unit);
+    }
+
+    public static GameMenuMessages setTaxRateController(int rateNumber) {
+        if(rateNumber > 8 || rateNumber < -3 || (rateNumber % 1) != 0)
+            return GameMenuMessages.INVALID_TAX_RATE;
+        else{
+            DataBase.getCurrentGovernment().setTax(rateNumber);
+            return GameMenuMessages.SET_TAX_SUCCESS;
+        }
+    }
+
+    public static String showFoodListController() {
+        Government myGovernment = DataBase.getCurrentGovernment();
+        String toReturn = "";
+        Resource apple = Resource.createResource("Apples");
+        Resource meat = Resource.createResource("Meat");
+        Resource cheese = Resource.createResource("Cheese");
+        Resource bread = Resource.createResource("Bread");
+
+        toReturn += "Apples: " + myGovernment.getResourceInStockpiles(apple) + "\n";
+        toReturn += "Meat: " + myGovernment.getResourceInStockpiles(meat) + "\n";
+        toReturn += "Cheese: " + myGovernment.getResourceInStockpiles(cheese) + "\n";
+        toReturn += "Bread: " + myGovernment.getResourceInStockpiles(bread);
+
+        return toReturn;
+    }
+
+    public static GameMenuMessages setFoodRateController(int rateNumber) {
+        if(rateNumber > 2 || rateNumber < -2 || (rateNumber % 1) != 0)
+            return GameMenuMessages.INVALID_FOOD_RATE;
+        else{
+            DataBase.getCurrentGovernment().setFood(rateNumber);
+            return GameMenuMessages.SET_FOOD_RATE_SUCCESS;
+        }
+    }
+
+    public static GameMenuMessages setFearRateController(int rateNumber) {
+        if(rateNumber > 5 || rateNumber < -5 || (rateNumber % 1) != 0)
+            return GameMenuMessages.INVALID_FEAR_RATE;
+        else{
+            DataBase.getCurrentGovernment().setFear(rateNumber);
+            return GameMenuMessages.SET_FEAR_RATE_SUCCESS;
+        }
     }
 }

@@ -59,6 +59,9 @@ public class DataBase {
     public static void addGovernment(Government government) {
         governments.add(government);
     }
+    public static void newGovernments(){
+        governments = new ArrayList<>();
+    }
 
     public static Building getSelectedBuilding() {
         return selectedBuilding;

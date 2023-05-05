@@ -33,6 +33,11 @@ public class TestClass {
     // Government government1 = new Government(user1, 100);
     // Map map = new Map("map1", 100, 100);
 
+    @BeforeAll
+    public void beforeAll(){
+        government.setOwner(user);
+        government1.setOwner(user1);
+    }
 
     @Test
     public void testGovernment() {

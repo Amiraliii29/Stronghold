@@ -1,34 +1,37 @@
 package View;
 
-import Controller.MapMenuController;
+import Controller.ShowMapMenuController;
 import Controller.Orders;
-import View.Enums.Commands.MapMenuCommands;
+import View.Enums.Commands.ShowMapMenuCommands;
 
-import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class MapMenu {
-    public static void run(Scanner scanner){
+public class ShowMapMenu {
+    public static void run(){
         String input;
         input = Input_Output.getInput();
         Matcher matcher;
 
         while (true){
-            if((matcher = MapMenuCommands.getMatcher(input , MapMenuCommands.SHOW_MAP)) != null)
+            if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_MAP)) != null)
                 showMap(matcher);
-            else if((matcher = MapMenuCommands.getMatcher(input , MapMenuCommands.MOVE_MAP)) != null)
+            else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.MOVE_MAP)) != null)
                 moveMap(matcher);
-            else if((matcher = MapMenuCommands.getMatcher(input , MapMenuCommands.SHOW_DETAILS)) != null)
+            else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_DETAILS)) != null)
                 showMap(matcher);
-            else if(MapMenuCommands.getMatcher(input , MapMenuCommands.EXIT) != null)
-                exit(scanner);
+            else if(ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.EXIT) != null)
+                exit();
         }
     }
     private static void showMap(Matcher matcher){
-        int x = Integer.parseInt(matcher.group("x"));
-        int y = Integer.parseInt("y");
+        String options = matcher.group("options");
 
-        String[][] toPrint = MapMenuController.showMapController(x , y);
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+
+
+
+        String[][] toPrint = ShowMapMenuController.showMapController(x , y);
 
         for (int i = 0 ; i < 20 ; i++){
             for (int j = 0 ; j < 20 ; j++){
@@ -43,7 +46,7 @@ public class MapMenu {
         String direction2 = matcher.group("direction2");
         String amount = matcher.group("amount");
 
-        String[][] toPrint = MapMenuController.moveMapController(direction , direction2 , amount);
+        String[][] toPrint = ShowMapMenuController.moveMapController(direction , direction2 , amount);
 
         for (int i = 0 ; i < 20 ; i++){
             for (int j = 0 ; j < 20 ; j++){
@@ -57,13 +60,12 @@ public class MapMenu {
         String x = Orders.findFlagOption("-x" , matcher.group("options"));
         String y = Orders.findFlagOption("-y" , matcher.group("options"));
 
-        String toPrint = MapMenuController.showDetailsController(x , y);
+        String toPrint = ShowMapMenuController.showDetailsController(x , y);
 
         System.out.print(toPrint);
     }
-    private static void exit(Scanner scanner){
-        System.out.println("returned back to main menu");
-        GameMenu runner = new GameMenu();
-        runner.run(scanner);
+    private static void exit(){
+        Input_Output.outPut("returned back to main menu");
+        GameMenu.run();
     }
 }

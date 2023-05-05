@@ -2,6 +2,8 @@ package View;
 
 import Controller.GameMenuController;
 import Controller.Orders;
+import Model.DataBase;
+import Model.Government;
 import View.Enums.Commands.GameMenuCommands;
 import View.Enums.Messages.GameMenuMessages;
 
@@ -9,7 +11,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class GameMenu {
-    public static void run(Scanner scanner) {
+    public static void run() {
         String input;
         Matcher matcher;
         while (true) {
@@ -46,6 +48,22 @@ public class GameMenu {
                 showTurnsPassed();
             else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
                 showCurrentPlayer();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
+                enterShowMapMenu();
+            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_TAX_RATE)) != null)
+                setTaxRate(matcher);
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_TAX_RATE) != null)
+                showTaxRate();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_POPULARITY_FACTORS) != null)
+                showPopularityFactors();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_POPULARITY) != null)
+                showPopularity();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_FOOD_LIST) != null)
+                showFoodList();
+            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_FOOD_RATE)) != null)
+                setFoodRate(matcher);
+            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_FEAR_RATE)) != null)
+                setFearRate(matcher);
             else
                 System.out.println("invalid command");
         }
@@ -57,6 +75,84 @@ public class GameMenu {
 
     private static void showTurnsPassed(){
         Input_Output.outPut("turns passed: "+GameMenuController.getTurnsPassed());
+    private static void setFearRate(Matcher matcher) {
+        int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
+
+        GameMenuMessages message = GameMenuController.setFearRateController(rateNumber);
+        switch (message){
+            case INVALID_FEAR_RATE:
+                Input_Output.outPut("set fear error: invalid rate number");
+                break;
+            case SET_FEAR_RATE_SUCCESS:
+                Input_Output.outPut("fear rate set successfully");
+                break;
+        }
+    }
+
+    private static void setFoodRate(Matcher matcher) {
+        int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
+
+        GameMenuMessages message = GameMenuController.setFoodRateController(rateNumber);
+
+        switch (message){
+            case SET_FOOD_RATE_SUCCESS:
+                Input_Output.outPut("food rate set successfully");
+                break;
+            case INVALID_FOOD_RATE:
+                System.out.println("set food rate error: invalid food rate");
+                break;
+        }
+    }
+
+    private static void showFoodList() {
+        String toPrint = GameMenuController.showFoodListController();
+
+        Input_Output.outPut(toPrint);
+    }
+
+    private static void showPopularity() {
+        Government government = DataBase.getCurrentGovernment();
+        government.updatePopularity();
+
+        Input_Output.outPut("popularity: " + government.getPopularity());
+    }
+
+    private static void showPopularityFactors() {
+        Government myGovernment = DataBase.getCurrentGovernment();
+        String toPrint = "";
+        toPrint += "tax rate: " + myGovernment.getTax() + "\n";
+        toPrint += "food rate: " + myGovernment.getFood() + "\n";
+        toPrint += "food types: " + myGovernment.getFoodType() + "\n";
+        toPrint += "fear rate: " + myGovernment.getFear() + "\n";
+        toPrint += "faith amount: " + myGovernment.getFaith();
+
+        Input_Output.outPut(toPrint);
+    }
+
+    private static void showTaxRate() {
+        int taxRate = DataBase.getCurrentGovernment().getTax();
+
+        Input_Output.outPut("you tax rate: " + taxRate);
+    }
+
+    private static void setTaxRate(Matcher matcher) {
+        int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
+
+        GameMenuMessages message = GameMenuController.setTaxRateController(rateNumber);
+
+        switch (message){
+            case INVALID_TAX_RATE:
+                Input_Output.outPut("invalid tax amount");
+                break;
+            case SET_TAX_SUCCESS:
+                Input_Output.outPut("tax rate set successfully");
+                break;
+        }
+    }
+
+    private static void enterShowMapMenu() {
+        Input_Output.outPut("entered show map menu successfully");
+        ShowMapMenu.run();
     }
 
     private static void nextTurn() {
@@ -366,8 +462,5 @@ public class GameMenu {
     }
 
     private static void dropUnit(Matcher matcher) {
-    }
-
-    private static void showMap(Matcher matcher) {
     }
 }

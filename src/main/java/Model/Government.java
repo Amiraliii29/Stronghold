@@ -16,7 +16,7 @@ import java.util.Objects;
 import Controller.GameMenuController;
 
 public class Government {
-    private  User owner;
+    private User owner;
     private int popularity;
     private int workerRate;//TODO
     private int maxPopulation;
@@ -33,12 +33,12 @@ public class Government {
     private ArrayList<Stockpile> stockpiles;
     private ArrayList<Stockpile> armoury;
     private ArrayList<Stockpile> granary;
-    private HashMap<String , Integer> resourceGenerationRate;
+    private HashMap<String, Integer> resourceGenerationRate;
     private ArrayList<Building> buildings;
     private ArrayList<TradeRequest> requestsAskedFromMe;
     private ArrayList<TradeRequest> tradeHistory;
     private ArrayList<TradeRequest> requestNotifications;
-    
+
 
     {
         this.food = 0;
@@ -55,29 +55,31 @@ public class Government {
         requestsAskedFromMe = new ArrayList<>();
         tradeHistory = new ArrayList<>();
         requestNotifications = new ArrayList<>();
-        resourceGenerationRate= new HashMap <String, Integer> ();
+        resourceGenerationRate = new HashMap<String, Integer>();
     }
 
     public Troop getLord() {
         return lord;
     }
 
-    public void setLord(int x , int y) {
-        Troop lord = Troop.createTroop(this , "Lord" , x , y);
+    public void setLord(int x, int y) {
+        Troop lord = Troop.createTroop(this, "Lord", x, y);
         this.lord = lord;
     }
 
     public Government(double money) {
         this.money = money;
     }
-    public void setOwner(User owner){
+
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
     public User getOwner() {
         return owner;
     }
-    public void updatePopularity(){
+
+    public void updatePopularity() {
         setFoodFactors();
         popularity = 0;
         popularity += food * 4;
@@ -198,18 +200,18 @@ public class Government {
         return buildings;
     }
 
-    
-    public void addToMaxPopulation(int addValue){
-        maxPopulation+=addValue;
+
+    public void addToMaxPopulation(int addValue) {
+        maxPopulation += addValue;
     }
 
-    
-    public void addToGenerationRate(String resourceType, int addedGenerationValue){
-        int previousValue=0;
-       if( resourceGenerationRate.containsKey(resourceType) )
-        previousValue=resourceGenerationRate.get(resourceType);
 
-        resourceGenerationRate.put(resourceType, previousValue+addedGenerationValue);
+    public void addToGenerationRate(String resourceType, int addedGenerationValue) {
+        int previousValue = 0;
+        if (resourceGenerationRate.containsKey(resourceType))
+            previousValue = resourceGenerationRate.get(resourceType);
+
+        resourceGenerationRate.put(resourceType, previousValue + addedGenerationValue);
     }
 
 
@@ -259,7 +261,7 @@ public class Government {
 
     private void removeFood(double numberForRemove) {
         for (int i = 0; i < numberForRemove; i++) {
-            if (!removeFromStockpile(Resource.createResource(Resource.getFoodsName().get(i%4)), 1)) numberForRemove++;
+            if (!removeFromStockpile(Resource.createResource(Resource.getFoodsName().get(i % 4)), 1)) numberForRemove++;
             //need to be checked//TODO
         }
     }
@@ -354,12 +356,12 @@ public class Government {
         requestNotifications.clear();
     }
 
-    public void changeFreeWorkers(int addedWorkers){
-        freeWorker+=addedWorkers;
+    public void changeFreeWorkers(int addedWorkers) {
+        freeWorker += addedWorkers;
     }
 
-    public void changePopulation(int addedPopulation){
-        population+=addedPopulation;
+    public void changePopulation(int addedPopulation) {
+        population += addedPopulation;
     }
 
     public HashMap<String,Integer> getResourceGenerationRates(){
@@ -389,5 +391,13 @@ public class Government {
         if (o == null || getClass() != o.getClass()) return false;
         Government that = (Government) o;
         return Objects.equals(owner, that.owner);
+    }
+
+    public HashMap<String, Integer> getResourceGenerationRates() {
+        return resourceGenerationRate;
+    }
+
+    public int getPopularity() {
+        return popularity;
     }
 }

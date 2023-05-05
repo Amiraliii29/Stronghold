@@ -1,6 +1,6 @@
 package View.Enums.Messages;
 
-public enum MapMenuMessages {
+public enum ShowMapMenuMessages {
     INVALID_X,
     INVALID_Y;
 

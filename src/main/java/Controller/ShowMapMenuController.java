@@ -2,38 +2,49 @@ package Controller;
 
 import Model.DataBase;
 import Model.Square;
-import Model.Units.Troop;
 import Model.Units.Unit;
+import View.Enums.Commands.ShowMapMenuCommands;
 
 import java.util.HashMap;
 
-public class MapMenuController {
+public class ShowMapMenuController {
     private static int xLocationOnMap;
     private static int yLocationOnMap;
-    public static String[][] showMapController(int x , int y){
-        xLocationOnMap = x;
-        yLocationOnMap = y;
-
+    public static String[][] showMapController(String x , String  y){
         String[][] mapToShow = new String[20][20];
 
-        if(x > DataBase.getSelectedMap().getWidth() || x <= 0)
+        if(x == null || y == null){
+            mapToShow[0][0] = "show map error: please enter both x and y components of location you want to see";
+            return mapToShow;
+        }
+        else if(ShowMapMenuCommands.getMatcher(x , ShowMapMenuCommands.VALID_NUMBER) == null ||
+        ShowMapMenuCommands.getMatcher(y , ShowMapMenuCommands.VALID_NUMBER) == null){
+            mapToShow[0][0] = "show map error: please enter number for x and y";
+            return mapToShow;
+        }
+
+        xLocationOnMap = Integer.parseInt(x);
+        yLocationOnMap = Integer.parseInt(y);
+
+
+        if(xLocationOnMap > DataBase.getSelectedMap().getWidth() || xLocationOnMap <= 0)
              mapToShow[0][0] = "show map error: invalid x amount\n";
-        else if(y > DataBase.getSelectedMap().getLength() || y <= 0)
+        else if(yLocationOnMap > DataBase.getSelectedMap().getLength() || yLocationOnMap <= 0)
             mapToShow[0][0] = "show map error: invalid y amount\n";
         else{
             for (int i = -10 ; i < 10 ; i++){
                 for (int j = -10 ; j < 10 ; j++){
-                    if(x+i < 0  || y + j < 0 || x + i > DataBase.getSelectedMap().getLength()
-                            || y + j > DataBase.getSelectedMap().getWidth() )
+                    if(xLocationOnMap+i < 0  || yLocationOnMap + j < 0 || xLocationOnMap + i > DataBase.getSelectedMap().getLength()
+                            || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
                         mapToShow[j+10][i+10] = "0 |";
-                    else if(DataBase.getSelectedMap().getSquareFromMap( y + j, x+i ).getUnits().size() != 0)
+                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
                         mapToShow[j+10][i+10] = "S|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(y+j , x + i).getBuilding() != null)
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
                         mapToShow[j+10][i+10] = "B|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap( y+j , x + i).getResource() != null){
-                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(x+i , y+j).
+                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
+                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
                                 getResource().getName().toCharArray();
-                        mapToShow[j+10][i+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
+                        mapToShow[j+10][i+10] = resourceName[0] + resourceName[2] + "|";
                     }
                 }
             }
@@ -75,7 +86,7 @@ public class MapMenuController {
                 xLocationOnMap -= amountInt;
                 break;
         }
-        return showMapController(xLocationOnMap , yLocationOnMap);
+        return showMapController(Integer.toString(xLocationOnMap) , Integer.toString(yLocationOnMap));
     }
     public static String showDetailsController(String  x, String y){
         String toReturn = "";
