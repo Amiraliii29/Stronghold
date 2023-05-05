@@ -12,8 +12,6 @@ import java.util.HashMap;
 
 public class TradeMenuController {
     private static final ArrayList<TradeRequest> allRequests = new ArrayList<>();
-     //ideal trade request string: <resource under trade> <amount> <want to give or recieve> "<message written>";
-
 
     public static String tradeListController(){
         String toReturn = "";
@@ -147,5 +145,41 @@ public class TradeMenuController {
         return toReturn;
     }
 
-   
+
+    public static TradeMenuMessages donateController(String resourceName, String amount, String message,
+                                                     String governmentName) {
+        if(resourceName == null || amount == null || message == null || governmentName == null)
+            return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
+
+        Resource resourceToTrade = null;
+
+        for (Resource allResource : Resource.getAllResources()) {
+            if(allResource.getName().equals(resourceName)) {
+                resourceToTrade = allResource;
+                break;
+            }
+        }
+
+        int amountInt = Integer.parseInt(amount);
+
+        if(resourceToTrade == null)
+            return TradeMenuMessages.INVALID_RESOURCE_TYPE;
+        else if(amountInt <= 0)
+            return TradeMenuMessages.INVALID_AMOUNT;
+        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(resourceToTrade) < amountInt)
+            return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
+        else{
+            Government governmentHasBeenDonated = DataBase.getGovernmentByUserName(governmentName);
+            TradeRequest tradeRequest = new TradeRequest(resourceToTrade , amountInt , 0 , message ,
+                    governmentHasBeenDonated , allRequests.size() + 1)
+
+            // remove from my stockpile and add to theirs
+            DataBase.getCurrentGovernment().removeFromStockpile(resourceToTrade , amountInt);
+            governmentHasBeenDonated.addToStockpile(resourceToTrade , amountInt);
+
+            //
+
+            return TradeMenuMessages.DONATE_SUCCESS;
+        }
+    }
 }

@@ -9,7 +9,9 @@ public enum TradeMenuCommands {
     TRADE_LIST("^\\s*trade\\s*list\\s*$"),
     ACCEPT_TRADE("^\\s*trade\\s+accept\\s*(?<options>.+)\\s*$"),
     TRADE_HISTORY("^\\s*trade\\s*history\\s*$"),
-    TRADE_REJECT("^\\s*trade\\s*reject\\s*-i\\s+(?<id>\\S+)\\s*$");
+    TRADE_REJECT("^\\s*trade\\s*reject\\s*-i\\s+(?<id>\\S+)\\s*$"),
+    DONATE("^\\s*donate\\s*(?<options>.+)$"),
+    ;
 
     private String regex;
 
