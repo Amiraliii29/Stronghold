@@ -239,6 +239,9 @@ public class CustomizeMap {
             case DROP_BUILDING_SUCCESS:
                 System.out.println("building dropped successfully");
                 break;
+            case UNSUITABLE_LAND:
+                System.out.println("drop building error: can't place there my lord");
+                break;
         }
     }
     private static void printer(String toPrint){

@@ -24,7 +24,6 @@ public class DataBase {
     private static ArrayList<Unit> selectedUnit;
     private static SecureRandom randomGenerator=new SecureRandom();
 
-
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
         governments = new ArrayList<>();

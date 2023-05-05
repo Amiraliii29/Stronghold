@@ -23,6 +23,7 @@ public enum CustomizeMapMessages {
     INVALID_BUILDING_NAME,
     DROP_BUILDING_SUCCESS,
     INVALID_COUNT,
+    UNSUITABLE_LAND,
     ;
 
 }
