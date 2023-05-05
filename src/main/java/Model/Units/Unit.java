@@ -128,6 +128,10 @@ public abstract class Unit {
         return didFight;
     }
 
+    public int getAggressionRange(){
+        
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Model.DataBase;
+import Model.Units.Unit;
 
 import java.security.SecureRandom;
 
@@ -94,4 +95,11 @@ public class Orders {
         }
         return output;
     }
+
+    public static ArrayList<int[]> concatCoords(ArrayList<int[]> coords1,ArrayList<int[]> coords2 ){
+        for (int[] coord : coords2) 
+            coords1.add( coord);
+        
+        return coords1;
+    } 
 }

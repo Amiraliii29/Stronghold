@@ -21,6 +21,7 @@ public class GameMenuController {
     private static Building selectedBuilding = null;
     private static Map currentMap;
     private static ArrayList<Building> allBuildings = new ArrayList<Building>();
+    private static ArrayList<Unit> allUnits= new ArrayList<Unit>(); //TODO: FILL
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> squares;
     private static HashMap<Square, String> buildSiege;
@@ -30,8 +31,7 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages nextTurnController() {
-        //removeAllTroop
-        return null;
+        
     }
 
     public static void setCurrentGovernment(Government government) {
@@ -195,6 +195,7 @@ public class GameMenuController {
         for (int i = 0; i < count; i++) {
             Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
             currentMap.getSquareFromMap(barrackX + 2 + i % 3, barrackY + 2 + (i + 1) % 3).addUnit(newTroop);
+            addToAllUnits(newTroop);
         }
 
         currentGovernment.changeFreeWorkers(-count);
@@ -411,6 +412,7 @@ public class GameMenuController {
             return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
         ArrayList<Unit> currentUnits=DataBase.getSelectedUnit();
+        //TODO: HANDLE EMPTY SELECTION
         int currentUnitsX=currentUnits.get(0).getXCoordinate();
         int currentUnitsY=currentUnits.get(0).getYCoordinate();
         int unitRange=currentUnits.get(0).getAttackRange();
@@ -556,5 +558,13 @@ public class GameMenuController {
             if(building.getName().equals(buildingName))
                 return building;
         return null;
+    }
+
+    public static ArrayList<Unit> getAllUnits(){
+        return allUnits;
+    }
+
+    public static void addToAllUnits(Unit unit){
+        allUnits.add(unit);
     }
 }

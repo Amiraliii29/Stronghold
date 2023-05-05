@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import Controller.GameMenuController;
 import Controller.JsonConverter;
 import Model.Units.Troop;
 import Model.Units.Unit;
@@ -140,10 +141,12 @@ public class DataBase {
  
     private static void removeDeadSelectedUnits(){
          ArrayList<Unit> deadUnits=new ArrayList<Unit>();
- 
          for (Unit unit : selectedUnit) 
              if(unit.getHitPoint()<=0)
                  deadUnits.add(unit);
+
+         for (Unit unit : deadUnits) 
+            GameMenuController.getAllUnits().remove(unit);
          
          for (Unit deadUnit : deadUnits) 
              selectedUnit.remove(deadUnits);
@@ -216,5 +219,23 @@ public class DataBase {
         if(selectedUnit.get(0).getAttackRange()>1)
             return true;
         else return false;
+    }
+
+    public static ArrayList<Government> getGovernments(){
+        return governments;
+    }
+
+    public static void handleEndOfTurnFights(){
+        for (Unit unit : GameMenuController.getAllUnits()) {
+
+            unit.setDidFight(true);        
+            int[] targetCoord=selectedMap.getAnEnemyCoordInRange(unit);
+            if(targetCoord != null){
+                GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
+                selectedUnit.clear();
+                selectedUnit.add(unit);
+                unit.setDidFight(true);
+            }
+        }
     }
 }
