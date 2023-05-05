@@ -17,7 +17,7 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 
 public class DataBase {
-    private static final ArrayList<Government> governments;
+    private static ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
     private static Map selectedMap;
@@ -40,6 +40,8 @@ public class DataBase {
 
     public static void setCurrentGovernment(Government currentGovernment) {
         DataBase.currentGovernment = currentGovernment;
+        selectedUnit = new ArrayList<>();
+        selectedBuilding = null;
     }
 
     public static Government getGovernmentByUserName(String userName) {
@@ -50,6 +52,9 @@ public class DataBase {
         return null;
     }
 
+    public static ArrayList<Government> getGovernments() {
+        return governments;
+    }
 
     public static void addGovernment(Government government) {
         governments.add(government);
@@ -152,8 +157,8 @@ public class DataBase {
              selectedUnit.remove(deadUnits);
     }
  
-    private static void generateResourcesForCurrentGovernment(){
-         HashMap<String, Integer> generationRates=currentGovernment.getResourceGenerationRates();
+    public static void generateResourcesForCurrentGovernment(){
+         HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
          Iterator keySetIterator =  generationRates.keySet().iterator();
          
          generateResourcesForCurrentGovernment();
@@ -220,10 +225,6 @@ public class DataBase {
         if(selectedUnit.get(0).getAttackRange()>1)
             return true;
         else return false;
-    }
-
-    public static ArrayList<Government> getGovernments(){
-        return governments;
     }
 
     public static void handleEndOfTurnFights(){

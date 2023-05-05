@@ -302,5 +302,20 @@
     "attackRange": 10,
     "state": "Stan_Ground",
     "cost": 100
+  },
+  {
+    "climbLadder": false,
+    "digMoat": false,
+    "needHorse": false,
+    "weapons": [],
+    "name": "Lord",
+    "xCoordinate": 0,
+    "yCoordinate": 0,
+    "speed": 3,
+    "hitPoint": 1000,
+    "damage": 60,
+    "attackRange": 1,
+    "state": "Stan_Ground",
+    "cost": 0
   }
 ]
