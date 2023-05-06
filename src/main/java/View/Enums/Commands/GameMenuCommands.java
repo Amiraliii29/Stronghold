@@ -28,6 +28,7 @@ public enum GameMenuCommands {
     SHOW_FOOD_LIST("^\\s*show\\s*food\\s*list\\s*$"),
     SET_FOOD_RATE("^\\s*food\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
     SET_FEAR_RATE("^\\s*fear\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
+    NEXT_TURN("^\\s*next\\s*turn\\s*$")
     ;
     private String regex;
 

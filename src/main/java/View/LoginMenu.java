@@ -5,6 +5,8 @@ import java.util.regex.Matcher;
 
 import Controller.LoginMenuController;
 import Controller.Orders;
+import Controller.UserInfoOperator;
+import Model.User;
 import View.Enums.Commands.LoginMenuCommands;
 import View.Enums.Messages.LoginMenuMessages;
 
@@ -12,27 +14,24 @@ public class LoginMenu {
     public static void run() throws NoSuchAlgorithmException {
         Matcher matcher;
         Input_Output.outPut("MAIN MENU:");
-        LoginMenuCommands menuEntry = null;
         String input;
-        while (menuEntry == null) {
+        while (true) {
             input = Input_Output.getInput();
 
-            if ((matcher = LoginMenuCommands.getMatcher(input, LoginMenuCommands.LOGOUT)) != null)
-                menuEntry = LoginMenuCommands.LOGOUT;
-            else if ((matcher = LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU)) != null)
-                menuEntry = LoginMenuCommands.ENTER_MAP_MENU;
-            else if ((matcher = LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_PROFILE_MENU)) != null)
-                menuEntry = LoginMenuCommands.ENTER_PROFILE_MENU;
+            if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.LOGOUT) != null) {
+                User.getCurrentUser().setStayLoggedIn(false);
+                UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
+                User.setCurrentUser(null);
+                break;
+            }
+            else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU) != null)
+                CustomizeMap.run();
+            else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_PROFILE_MENU) != null)
+                ProfileMenu.run();
             else if ((matcher = LoginMenuCommands.getMatcher(input, LoginMenuCommands.START_GAME)) != null)
                 startGame(matcher);
-
             else Input_Output.outPut("error: invalid command!");
-
-
         }
-        LoginMenuController.prepareMenuByType(menuEntry);
-        enterMenuByType(menuEntry);
-
     }
 
     private static void startGame(Matcher matcher) {
@@ -54,22 +53,6 @@ public class LoginMenu {
             case START_GAME_SUCCESS:
                 System.out.println("game started successfully");
                 GameMenu.run();
-                break;
-        }
-    }
-
-    private static void enterMenuByType(LoginMenuCommands menuName) throws NoSuchAlgorithmException {
-        switch (menuName) {
-            case LOGOUT:
-                SignUpMenu.run();
-                break;
-            case ENTER_PROFILE_MENU:
-                ProfileMenu.run();
-                break;
-            case ENTER_MAP_MENU:
-                CustomizeMap.run();
-                break;
-            default:
                 break;
         }
     }

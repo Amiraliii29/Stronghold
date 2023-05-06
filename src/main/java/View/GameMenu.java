@@ -43,44 +43,46 @@ public class GameMenu {
                 createUnit(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
-            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TURNS_PASSED) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TURNS_PASSED) != null)
                 showTurnsPassed();
-            else if(GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
                 showCurrentPlayer();
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
                 enterShowMapMenu();
-            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_TAX_RATE)) != null)
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
                 setTaxRate(matcher);
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_TAX_RATE) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TAX_RATE) != null)
                 showTaxRate();
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_POPULARITY_FACTORS) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_POPULARITY_FACTORS) != null)
                 showPopularityFactors();
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_POPULARITY) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_POPULARITY) != null)
                 showPopularity();
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.SHOW_FOOD_LIST) != null)
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_FOOD_LIST) != null)
                 showFoodList();
-            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_FOOD_RATE)) != null)
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_FOOD_RATE)) != null)
                 setFoodRate(matcher);
-            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.SET_FEAR_RATE)) != null)
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_FEAR_RATE)) != null)
                 setFearRate(matcher);
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.NEXT_TURN) != null)
+                nextTurn();
             else
                 System.out.println("invalid command");
         }
     }
 
-    private static void showCurrentPlayer(){
-        Input_Output.outPut("current player:"+GameMenuController.getCurrentGovernmentUsername());
+    private static void showCurrentPlayer() {
+        Input_Output.outPut("current player:" + GameMenuController.getCurrentGovernmentUsername());
     }
 
-    private static void showTurnsPassed(){
-        Input_Output.outPut("turns passed: "+GameMenuController.getTurnsPassed());
+    private static void showTurnsPassed() {
+        Input_Output.outPut("turns passed: " + GameMenuController.getTurnsPassed());
     }
-    
+
     private static void setFearRate(Matcher matcher) {
         int rateNumber = Integer.parseInt(matcher.group("rateNumber"));
 
         GameMenuMessages message = GameMenuController.setFearRateController(rateNumber);
-        switch (message){
+        switch (message) {
             case INVALID_FEAR_RATE:
                 Input_Output.outPut("set fear error: invalid rate number");
                 break;
@@ -95,7 +97,7 @@ public class GameMenu {
 
         GameMenuMessages message = GameMenuController.setFoodRateController(rateNumber);
 
-        switch (message){
+        switch (message) {
             case SET_FOOD_RATE_SUCCESS:
                 Input_Output.outPut("food rate set successfully");
                 break;
@@ -141,7 +143,7 @@ public class GameMenu {
 
         GameMenuMessages message = GameMenuController.setTaxRateController(rateNumber);
 
-        switch (message){
+        switch (message) {
             case INVALID_TAX_RATE:
                 Input_Output.outPut("invalid tax amount");
                 break;
@@ -157,28 +159,55 @@ public class GameMenu {
     }
 
     private static void nextTurn() {
-//        GameMenuMessages message = GameMenuController.nextTurnController();
-//
-//        switch (message){
-//        }
+        GameMenuMessages message = GameMenuController.nextTurnController();
+        switch (message) {
+            case END ->
+                    Input_Output.outPut("Game ended!\n" + "player " + DataBase.getGovernments().get(0).getOwner().getUsername() + "Won");
+            case SUCCESS ->
+                    Input_Output.outPut("now is " + DataBase.getCurrentGovernment().getOwner().getUsername() + "Turn");
+        }
     }
 
     private static void userLogout() {
     }
 
- 
     private static void dropBuilding(Matcher matcher) {
-        String buildingComponents=matcher.group("buildingComponents");
-        String x=Orders.findFlagOption("-x", buildingComponents);
-        String y=Orders.findFlagOption("-y", buildingComponents);
-        String buildingName=Orders.findFlagOption("-type", buildingComponents);
+        String buildingComponents = matcher.group("buildingComponents");
+        String x = Orders.findFlagOption("-x", buildingComponents);
+        String y = Orders.findFlagOption("-y", buildingComponents);
+        String buildingName = Orders.findFlagOption("-type", buildingComponents);
 
-        if(x==null || y==null || buildingName==null){
+        if (x == null || y == null || buildingName == null) {
             Input_Output.outPut("error: empty necessary fields!");
             return;
         }
 
-        GameMenuMessages result=GameMenuController.dropBuildingController(x, y, buildingName);
+        GameMenuMessages result = GameMenuController.dropBuildingController(x, y, buildingName);
+        switch (result) {
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
+            case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of maps' bounds!");
+            case DROPBUILDING_INVALID_BUILDINGNAME ->
+                    Input_Output.outPut("error: there is no building with such name!");
+            case DROPBUILDING_INVALID_PLACE ->
+                    Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
+            case INSUFFICIENT_GOLD -> Input_Output.outPut("error: you don't have enough gold for this operation!");
+            case INSUFFICIENT_RESOURCES ->
+                    Input_Output.outPut("error: you don't have enough resources for this building!");
+            default -> Input_Output.outPut("the building was succesfully built!");
+        }
+    }
+
+    private static void selectBuilding(Matcher matcher) {
+        String buildingComponents = matcher.group("buildingComponents");
+        String x = Orders.findFlagOption("-x", buildingComponents);
+        String y = Orders.findFlagOption("-y", buildingComponents);
+
+        if (x == null || y == null) {
+            Input_Output.outPut("error: empty necessary fields!");
+            return;
+        }
+
+        GameMenuMessages result = GameMenuController.selectBuildingController(x, y);
         switch (result) {
             case WRONG_FORMAT_COORDINATE:
                 Input_Output.outPut("error: coordination format is invalid!");
@@ -188,103 +217,44 @@ public class GameMenu {
                 Input_Output.outPut("error: coordination is out of maps' bounds!");
                 break;
 
-            case DROPBUILDING_INVALID_BUILDINGNAME:
-                Input_Output.outPut("error: there is no building with such name!");
-                break;
-
-            case DROPBUILDING_INVALID_PLACE:
-                Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
-                break;
-
-            case INSUFFICIENT_GOLD:
-                Input_Output.outPut("error: you don't have enough gold for this operation!");
-                break;
-
-            case INSUFFICIENT_RESOURCES:
-                Input_Output.outPut("error: you don't have enough resources for this building!");
-                break;
-            
-        
-            default:
-                Input_Output.outPut("the building was succesfully built!");
-                break;
-        }
-    }
-
-    private static void selectBuilding(Matcher matcher) {
-        String buildingComponents=matcher.group("buildingComponents");
-        String x=Orders.findFlagOption("-x", buildingComponents);
-        String y=Orders.findFlagOption("-y", buildingComponents);
-
-        if(x==null || y==null){
-            Input_Output.outPut("error: empty necessary fields!");
-            return;
-        }
-
-        GameMenuMessages result=GameMenuController.selectBuildingController(x, y);
-        switch (result) {
-            case WRONG_FORMAT_COORDINATE:
-            Input_Output.outPut("error: coordination format is invalid!");
-            break;
-
-            case INVALID_COORDINATE:
-            Input_Output.outPut("error: coordination is out of maps' bounds!");
-            break;
-
             case SELECTBUILDING_EMPTY_SQUARE:
-            Input_Output.outPut("error: the selected square doesn't have a building!");
-            break;
+                Input_Output.outPut("error: the selected square doesn't have a building!");
+                break;
 
             case SELECTBUILDING_UNOWNED_BUILDING:
-            Input_Output.outPut("error: the building you want to select is not yours!");
-            break;
-        
+                Input_Output.outPut("error: the building you want to select is not yours!");
+                break;
+
             default:
-            Input_Output.outPut("succesfully selected the building!");
-            break;
+                Input_Output.outPut("succesfully selected the building!");
+                break;
         }
-        
+
 
     }
 
     private static void createUnit(Matcher matcher) {
-        String inputComponents=matcher.group("unitComponents");
-        String type=Orders.findFlagOption("-t", inputComponents);
-        String count=Orders.findFlagOption("-c", inputComponents);
-        
-        if(type==null || count==null){
+        String inputComponents = matcher.group("unitComponents");
+        String type = Orders.findFlagOption("-t", inputComponents);
+        String count = Orders.findFlagOption("-c", inputComponents);
+
+        if (type == null || count == null) {
             Input_Output.outPut("error: empty necessary fields!");
             return;
         }
-        GameMenuMessages result=GameMenuController.createUnitController(type, count);
+        GameMenuMessages result = GameMenuController.createUnitController(type, count);
         switch (result) {
-            case CREATE_UNIT_WRONG_SELECTED_BUILDING:
-                Input_Output.outPut("error: the selected building is not a barracks!");
-                break;
-
-            case CREATEUNIT_WRONG_NUMBERFORMAT:
-                Input_Output.outPut("error: invalid format or number of units!");
-                break;
-
-            case CREATEUNIT_UNMATCHING_BARRACK:
-                Input_Output.outPut("error: the selected barracks can't build such unit!");
-                break;
-        
-            case INSUFFICIENT_GOLD:
-                Input_Output.outPut("error: you don't have enough gold for this operation!");
-                break;
-
-            case INSUFFICIENT_RESOURCES:
-                Input_Output.outPut("error: you don't have enough weapons for the trainings!");
-                break;
-
-            case CREATEUNIT_INSUFFICIENT_FREEPOP:
-                Input_Output.outPut("error: you don't have enough population of free workers!");
-                break;
-
-            default:
-                Input_Output.outPut("succesfully trained the troops!");
-                break;
+            case CREATE_UNIT_WRONG_SELECTED_BUILDING ->
+                    Input_Output.outPut("error: the selected building is not a barracks!");
+            case CREATEUNIT_WRONG_NUMBERFORMAT -> Input_Output.outPut("error: invalid format or number of units!");
+            case CREATEUNIT_UNMATCHING_BARRACK ->
+                    Input_Output.outPut("error: the selected barracks can't build such unit!");
+            case INSUFFICIENT_GOLD -> Input_Output.outPut("error: you don't have enough gold for this operation!");
+            case INSUFFICIENT_RESOURCES ->
+                    Input_Output.outPut("error: you don't have enough weapons for the trainings!");
+            case CREATEUNIT_INSUFFICIENT_FREEPOP ->
+                    Input_Output.outPut("error: you don't have enough population of free workers!");
+            default -> Input_Output.outPut("succesfully trained the troops!");
         }
 
     }
@@ -292,21 +262,11 @@ public class GameMenu {
     private static void repair() {
         GameMenuMessages message = GameMenuController.repairController();
         switch (message) {
-            case REPAIR_UNREPAIRABLE_SELECTED_BUILDING:
-                Input_Output.outPut("error: the selected building is not repairable!");
-                break;
-
-            case EMPTY_INPUT_FIELDS_ERROR:
-                Input_Output.outPut("error: nothing is selected!");
-                break;
-        
-            case INSUFFICIENT_RESOURCES:
-                Input_Output.outPut("error: insufficient stone to continue the repairing!");
-                break;
-
-            default:
-                Input_Output.outPut("building is now fully repaired!");
-                break;
+            case REPAIR_UNREPAIRABLE_SELECTED_BUILDING ->
+                    Input_Output.outPut("error: the selected building is not repairable!");
+            case EMPTY_INPUT_FIELDS_ERROR -> Input_Output.outPut("error: nothing is selected!");
+            case INSUFFICIENT_RESOURCES -> Input_Output.outPut("error: insufficient stone to continue the repairing!");
+            default -> Input_Output.outPut("building is now fully repaired!");
         }
     }
 
@@ -349,80 +309,51 @@ public class GameMenu {
     }
 
     private static void attackAir(Matcher matcher) {
-        String input=matcher.group("coordinates");
-        String targetX=Orders.findFlagOption("-x", input);
-        String targetY=Orders.findFlagOption("-y", input);
+        String input = matcher.group("coordinates");
+        String targetX = Orders.findFlagOption("-x", input);
+        String targetY = Orders.findFlagOption("-y", input);
 
-        if(targetX==null || targetY==null){
+        if (targetX == null || targetY == null) {
             Input_Output.outPut("error: empty coordination fields!");
             return;
         }
 
-        GameMenuMessages result=GameMenuController.rangedAttackController(targetX, targetY);
+        GameMenuMessages result = GameMenuController.rangedAttackController(targetX, targetY);
         switch (result) {
-            case SUCCESS:
-                Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
-                break;
-
-            case WRONG_FORMAT_COORDINATE:
-                Input_Output.outPut("error: coordination format is invalid!");
-                break;
-            
-            case INVALID_COORDINATE:
-                Input_Output.outPut("error: coordination is out of map's bounds!");
-                break;
-
-            case ATTACK_NO_ENEMY_IN_AREA:
-                Input_Output.outPut("error: the selected square doesn't have a building!");
-                break;
-
-            case RANGEDATTACK_NON_ARCHER_SELECTION:
-                Input_Output.outPut("error: the selected units are not archers!");
-                break;
-
-            case RANGEDATTACK_TARGET_NOT_IN_RANGE:
-                Input_Output.outPut("error: the target square is not in the range of archers!");
-                break;
-            
-            default:
-                break;
+            case SUCCESS ->
+                    Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
+            case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of map's bounds!");
+            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have a building!");
+            case RANGEDATTACK_NON_ARCHER_SELECTION -> Input_Output.outPut("error: the selected units are not archers!");
+            case RANGEDATTACK_TARGET_NOT_IN_RANGE ->
+                    Input_Output.outPut("error: the target square is not in the range of archers!");
+            default -> {
+            }
         }
     }
 
     private static void attack(Matcher matcher) {
-        String input=matcher.group("coordinates");
-        String targetX=Orders.findFlagOption("-x", input);
-        String targetY=Orders.findFlagOption("-y", input);
+        String input = matcher.group("coordinates");
+        String targetX = Orders.findFlagOption("-x", input);
+        String targetY = Orders.findFlagOption("-y", input);
 
-        if(targetX==null || targetY==null){
+        if (targetX == null || targetY == null) {
             Input_Output.outPut("error: empty coordination fields!");
             return;
         }
 
-        GameMenuMessages result=GameMenuController.attackController(targetX, targetY);
+        GameMenuMessages result = GameMenuController.attackController(targetX, targetY);
         switch (result) {
-            case SUCCESS:
-                Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
-                break;
-
-            case WRONG_FORMAT_COORDINATE:
-                Input_Output.outPut("error: coordination format is invalid!");
-                break;
-            
-            case INVALID_COORDINATE:
-                Input_Output.outPut("error: coordination is out of map's bounds!");
-                break;
-
-            case ATTACK_NO_ENEMY_IN_AREA:
-                Input_Output.outPut("error: the selected square doesn't have a building!");
-                break;
-
-            case NORMALATTACK_TARGET_NOT_IN_RANGE:
-                Input_Output.outPut("error: the units are not able to reach the target to perform attack!");
-                break;
-
-            default:
-            break;
+            case SUCCESS ->
+                    Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
+            case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of map's bounds!");
+            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have a building!");
+            case NORMALATTACK_TARGET_NOT_IN_RANGE ->
+                    Input_Output.outPut("error: the units are not able to reach the target to perform attack!");
+            default -> {
+            }
         }
     }
 

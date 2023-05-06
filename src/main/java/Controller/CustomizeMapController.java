@@ -1,6 +1,5 @@
 package Controller;
 
-
 import Model.*;
 import Model.Buildings.Building;
 import Model.Units.Troop;
@@ -234,7 +233,10 @@ public class CustomizeMapController {
             }
 
             DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
-            GameMenuController.dropBuildingController(x , y , type);
+            if (!selectedMap.canConstructBuildingInPlace(buildingToConstruct, xInt, yInt))
+                return CustomizeMapMessages.DROPBUILDING_INVALID_PLACE;
+            GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
+            selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
             if(type.equals("Keep")){
                 Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
                 ownerGovernment.setLord(xInt , yInt);

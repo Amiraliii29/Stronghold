@@ -2,6 +2,8 @@ package View;
 
 import Controller.CustomizeMapController;
 import Controller.Orders;
+import Model.DataBase;
+import Model.Map;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
@@ -19,8 +21,10 @@ public class CustomizeMap {
 
         while(true){
             input = Input_Output.getInput();
-            if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null)
+            if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null) {
+                Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
                 break;
+            }
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)
                 createNewMap(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.SELECT_MAP)) != null)
@@ -117,11 +121,10 @@ public class CustomizeMap {
                 break;
         }
     }
+
     private static void selectMap(Matcher matcher){
         String mapName = matcher.group("mapName");
-
         CustomizeMapMessages message =  CustomizeMapController.selectMapController(mapName);
-
         switch (message){
             case SELECT_MAP_SUCCESS:
                 System.out.println("map selected successfully");
@@ -131,6 +134,7 @@ public class CustomizeMap {
                 break;
         }
     }
+
     private static void setTexture(Matcher matcher){
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
@@ -143,52 +147,32 @@ public class CustomizeMap {
 
         CustomizeMapMessages message = CustomizeMapController.setTextureController(x , y , x1 , y1 , x2 , y2 , type);
 
-        switch (message){
-            case INVALID_OPTIONS:
-                System.out.println("settexture error: invalid options please enter x and y components");
-                break;
-            case INVALID_NUMBER:
-                System.out.println("settexture error: invalid number");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("settexture error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("settexture error: y out of bounds");
-                break;
-            case INVALID_TYPE:
-                System.out.println("settexture error: invalid type");
-                break;
-            case SET_TEXTURE_SUCCESS:
-                System.out.println("settexture success :)");
-                break;
+        switch (message) {
+            case INVALID_OPTIONS ->
+                    System.out.println("settexture error: invalid options please enter x and y components");
+            case INVALID_NUMBER -> System.out.println("settexture error: invalid number");
+            case X_OUT_OF_BOUNDS -> System.out.println("settexture error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("settexture error: y out of bounds");
+            case INVALID_TYPE -> System.out.println("settexture error: invalid type");
+            case SET_TEXTURE_SUCCESS -> System.out.println("settexture success :)");
         }
     }
+
     private static void clear(Matcher matcher){
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
-
         CustomizeMapMessages message = CustomizeMapController.clearController(x , y);
 
-        switch (message){
-            case INVALID_NUMBER:
-                System.out.println("clear tile error: invalid number");
-                break;
-            case INVALID_OPTIONS:
-                System.out.println("clear tile error: please enter x and y component");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("clear tile error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("clear tile error: y out of bounds");
-                break;
-            case CLEAR_TILE_SUCCESS:
-                System.out.println("tile cleared successfully");
-                break;
+        switch (message) {
+            case INVALID_NUMBER -> System.out.println("clear tile error: invalid number");
+            case INVALID_OPTIONS -> System.out.println("clear tile error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> System.out.println("clear tile error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("clear tile error: y out of bounds");
+            case CLEAR_TILE_SUCCESS -> System.out.println("tile cleared successfully");
         }
     }
+
     private static void dropRock(Matcher matcher){
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
@@ -197,28 +181,16 @@ public class CustomizeMap {
 
         CustomizeMapMessages message = CustomizeMapController.dropRockController(x , y ,direction);
 
-        switch (message){
-            case INVALID_NUMBER:
-                System.out.println("drop rock error: invalid number");
-                break;
-            case INVALID_OPTIONS:
-                System.out.println("drop rock error: please enter x and y component");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("drop rock error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("drop rock error: y out of bounds");
-                break;
-            case INVALID_DIRECTION:
-                System.out.println("drop rock error: invalid direction");
-                break;
-            case DROP_ROCK_SUCCESS:
-                System.out.println("rock dropped successfully :)");
-                break;
-
+        switch (message) {
+            case INVALID_NUMBER -> System.out.println("drop rock error: invalid number");
+            case INVALID_OPTIONS -> System.out.println("drop rock error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> System.out.println("drop rock error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("drop rock error: y out of bounds");
+            case INVALID_DIRECTION -> System.out.println("drop rock error: invalid direction");
+            case DROP_ROCK_SUCCESS -> System.out.println("rock dropped successfully :)");
         }
     }
+
     private static void dropTree(Matcher matcher){
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
@@ -227,28 +199,17 @@ public class CustomizeMap {
 
         CustomizeMapMessages message = CustomizeMapController.dropTreeController(x , y , type);
 
-        switch (message){
-            case INVALID_NUMBER:
-                System.out.println("drop tree error: invalid number");
-                break;
-            case INVALID_OPTIONS:
-                System.out.println("drop tree error: please enter x and y component");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("drop tree error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("drop tree error: y out of bounds");
-                break;
-            case DROP_TREE_SUCCESS:
-                System.out.println("tree dropped successfully");
-                break;
-            case INVALID_TREE_NAME:
-                System.out.println("drop tree error: invalid tree name");
-                break;
+        switch (message) {
+            case INVALID_NUMBER -> System.out.println("drop tree error: invalid number");
+            case INVALID_OPTIONS -> System.out.println("drop tree error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> System.out.println("drop tree error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("drop tree error: y out of bounds");
+            case DROP_TREE_SUCCESS -> System.out.println("tree dropped successfully");
+            case INVALID_TREE_NAME -> System.out.println("drop tree error: invalid tree name");
         }
 
     }
+
     private static void dropBuilding(Matcher matcher){
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
@@ -258,37 +219,22 @@ public class CustomizeMap {
 
         CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x , y  , type , governmentNumber);
 
-        switch (message){
-            case INVALID_NUMBER:
-                System.out.println("drop building error: invalid number");
-                break;
-            case INVALID_OPTIONS:
-                System.out.println("drop building error: please enter x and y component");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("drop building error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("drop building error: y out of bounds");
-                break;
-            case INVALID_BUILDING_NAME:
-                System.out.println("drop building error: invalid building name");
-                break;
-            case DROP_BUILDING_SUCCESS:
-                System.out.println("building dropped successfully");
-                break;
-            case UNSUITABLE_LAND:
-                System.out.println("drop building error: can't place there my lord");
-                break;
-            case INVALID_GOVERNMENT_NUMBER:
-                System.out.println("drop building error: invalid government number");
-                break;
-            case NO_OWNER_GOVERNMENT_NUMBER:
-                System.out.println("drop building error: please enter owner government number after " +
-                        " -g flag next time");
-                break;
+        switch (message) {
+            case INVALID_NUMBER -> System.out.println("drop building error: invalid number");
+            case INVALID_OPTIONS -> System.out.println("drop building error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> System.out.println("drop building error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("drop building error: y out of bounds");
+            case INVALID_BUILDING_NAME -> System.out.println("drop building error: invalid building name");
+            case DROP_BUILDING_SUCCESS -> System.out.println("building dropped successfully");
+            case UNSUITABLE_LAND -> System.out.println("drop building error: can't place there my lord");
+            case INVALID_GOVERNMENT_NUMBER -> System.out.println("drop building error: invalid government number");
+            case NO_OWNER_GOVERNMENT_NUMBER ->
+                    System.out.println("drop building error: please enter owner government number after " +
+                            " -g flag next time");
+            case DROPBUILDING_INVALID_PLACE -> Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
         }
     }
+
     public static void printer(String toPrint){
         System.out.println(toPrint);
     }

@@ -154,7 +154,7 @@ public class GameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    private static void constructBuildingForPlayer(String buildingName, int x, int y ){
+    public static void constructBuildingForPlayer(String buildingName, int x, int y ){
         String buildingCategory=Building.getBuildingCategoryByName(buildingName);
         switch (buildingCategory) {
             case "Generator":
