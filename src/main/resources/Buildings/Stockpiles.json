@@ -1,0 +1,79 @@
+[
+  {
+    "resourcesStored": [
+      "Bread",
+      "Meat",
+      "Apples",
+      "Cheese"
+    ],
+    "capacity": 40,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Granary",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["default","plain","grass"],
+    "hp": 300,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "resourcesStored": [
+      "Sword",
+      "Spear",
+      "Pike",
+      "MetalArmor",
+      "Bow",
+      "CrossBow",
+      "Mace",
+      "LeatherArmor"
+    ],
+    "capacity": 40,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "name": "Armoury",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["default","plain","grass"],
+    "hp": 300,
+    "numberOfResource": 5,
+    "cost": 0,
+    "canPass": false
+  },
+  {
+    "resourcesStored": [
+      "Wood",
+      "Iron",
+      "Flour",
+      "Hops",
+      "Ale",
+      "Stone",
+      "Wheat",
+      "Pitch"
+    ],
+    "capacity": 40,
+    "name": "Stockpile",
+    "width": 6,
+    "length": 6,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["default","plain"],
+    "hp": 300,
+    "numberOfResource": 0,
+    "cost": 0,
+    "canPass": false
+  }
+]
