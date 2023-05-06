@@ -13,6 +13,7 @@ import java.util.Random;
 
 public class CustomizeMapController {
     private static String[] randomDirection = {"n" , "s" , "e" , "w"};
+
     public static CustomizeMapMessages createNewMapController(String mapName , String length , String width) {
         if (mapName == null)
             return CustomizeMapMessages.NO_NAME;
@@ -55,6 +56,7 @@ public class CustomizeMapController {
         else
             return CustomizeMapMessages.SELECT_MAP_SUCCESS;
     }
+
     public static CustomizeMapMessages setTextureController(String x , String y , String x1 , String y1 ,
                                                             String x2 , String y2 , String type){
         if(x != null && y != null){
@@ -115,6 +117,7 @@ public class CustomizeMapController {
             return CustomizeMapMessages.INVALID_OPTIONS;
         }
     }
+
     public static CustomizeMapMessages clearController(String x , String y){
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
@@ -139,6 +142,7 @@ public class CustomizeMapController {
 
         }
     }
+
     public static CustomizeMapMessages dropRockController(String x , String y , String direction){
         if(x == null || y  == null || direction == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
@@ -168,6 +172,7 @@ public class CustomizeMapController {
             return CustomizeMapMessages.DROP_ROCK_SUCCESS;
         }
     }
+
     public static CustomizeMapMessages dropTreeController(String x , String y , String type){
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;

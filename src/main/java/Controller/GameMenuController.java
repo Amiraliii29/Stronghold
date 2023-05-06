@@ -118,7 +118,6 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages dropBuildingController(String x, String y, String buildingType) {
-
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
@@ -128,7 +127,6 @@ public class GameMenuController {
 
         if (!currentMap.isCoordinationValid(xInNum, yInNum))
             return GameMenuMessages.INVALID_COORDINATE;
-
 
         if (targetBuilding == null)
             return GameMenuMessages.DROPBUILDING_INVALID_BUILDINGNAME;
