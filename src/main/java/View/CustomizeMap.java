@@ -19,7 +19,9 @@ public class CustomizeMap {
 
         while(true){
             input = Input_Output.getInput();
-            if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)
+            if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null)
+                break;
+            else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)
                 createNewMap(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.SELECT_MAP)) != null)
                 selectMap(matcher);

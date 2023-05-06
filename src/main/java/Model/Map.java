@@ -33,7 +33,7 @@ public class Map {
         this.squares = new Square[width][length];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < length; j++) {
-                squares[i][j] = new Square(width, length);
+                squares[i][j] = new Square(i, j);
             }
         }
     }

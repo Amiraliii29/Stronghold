@@ -222,7 +222,7 @@ public class CustomizeMapController {
             Map selectedMap = DataBase.getSelectedMap();
             for (int i = 0 ; i < buildingToConstruct.getWidth() ; i++) {
                 for (int j = 0 ; j < buildingToConstruct.getLength() ; j++) {
-                    Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - j , xInt - i);
+                    Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt + j , xInt + i);
                     if (!GameMenuController.getBuildingValidLandsByName(type).contains(Land.getName(selectedSquare.getLand())))
                         return CustomizeMapMessages.UNSUITABLE_LAND;
                 }
