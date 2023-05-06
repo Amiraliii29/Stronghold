@@ -21,7 +21,15 @@ public class Square {
 
     static {
         canPass = new HashMap<>();
-        canPass.put("", false);
+        for (Land land : Land.values()) {
+            if (land.name().equals("rock") || land.name().equals("lowDepthWater")
+                    || land.name().equals("river") || land.name().equals("smallLake")
+                    || land.name().equals("bigLake") || land.name().equals("sea")
+                    || land.name().equals("cliff"))
+                canPass.put(land.name(), false);
+            else
+                canPass.put(land.name(), true);
+        }
     }
 
     public Square(int x, int y) {
@@ -93,8 +101,7 @@ public class Square {
     }
 
     public boolean canPass() {
-        //TODO
-        return false;
+        return canPass.get(land.name());
     }
 
     public void setLand(Land land) {

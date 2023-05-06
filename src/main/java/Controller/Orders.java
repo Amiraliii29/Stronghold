@@ -1,13 +1,8 @@
 package Controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import Model.DataBase;
-import Model.Units.Unit;
-
-import java.security.SecureRandom;
 
 public class Orders {
     public static Matcher createMatcher(String regex, String input) {

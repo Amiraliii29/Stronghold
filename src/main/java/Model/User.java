@@ -21,7 +21,7 @@ public class User {
 
     static {
         users = new ArrayList<>();
-        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
+        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
     }
 
     public User(String username, String password, String nickname,String email, String slogan) {

@@ -230,7 +230,7 @@ public class CustomizeMapController {
 
             DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
             GameMenuController.dropBuildingController(x , y , type);
-            if(type.equals("Keep")){`
+            if(type.equals("Keep")){
                 Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
                 ownerGovernment.setLord(xInt , yInt);
                 for (int i = 0 ; i < 5 ; i++) {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class TradeMenuController {
     private static final ArrayList<TradeRequest> allRequests = new ArrayList<>();
 
-    public static String tradeListController(){
+    public static String tradeListController() {
         String toReturn = "";
         int counter = 1;
         for (TradeRequest tradeRequest : DataBase.getCurrentGovernment().getRequestsAskedFromMe()) {
@@ -23,9 +23,9 @@ public class TradeMenuController {
 
         }
         return toReturn;
-    } 
+    }
 
-    public static String  showTradeHistory(){
+    public static String showTradeHistory() {
         String toReturn = "";
         int counter = 1;
 
@@ -42,16 +42,16 @@ public class TradeMenuController {
         return toReturn;
     }
 
-    public static TradeMenuMessages sendTradeRequestController(String resourceName , String  amount , String price
-            , String message  , String governmentName){
-        if(resourceName == null || amount == null || price == null
+    public static TradeMenuMessages sendTradeRequestController(String resourceName, String amount, String price
+            , String message, String governmentName) {
+        if (resourceName == null || amount == null || price == null
                 || price == null || message == null || governmentName == null)
             return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
 
         Resource resourceToTrade = null;
 
         for (Resource allResource : Resource.getAllResources()) {
-            if(allResource.getName().equals(resourceName)) {
+            if (allResource.getName().equals(resourceName)) {
                 resourceToTrade = allResource;
                 break;
             }
@@ -59,16 +59,16 @@ public class TradeMenuController {
         int amountInt = Integer.parseInt(amount);
         int priceInt = Integer.parseInt(price);
 
-        if(resourceToTrade == null)
+        if (resourceToTrade == null)
             return TradeMenuMessages.INVALID_RESOURCE_TYPE;
-        else if(amountInt <= 0)
+        else if (amountInt <= 0)
             return TradeMenuMessages.INVALID_AMOUNT;
-        else if(priceInt < 0)
+        else if (priceInt < 0)
             return TradeMenuMessages.INVALID_PRICE;
-        else{
+        else {
             Government governmentAskedFrom = DataBase.getGovernmentByUserName(governmentName);
-            TradeRequest tradeRequest = new TradeRequest(resourceToTrade , amountInt , priceInt
-                    , message , governmentAskedFrom , allRequests.size() + 1);
+            TradeRequest tradeRequest = new TradeRequest(resourceToTrade, amountInt, priceInt
+                    , message, governmentAskedFrom, allRequests.size() + 1);
             governmentAskedFrom.addToRequestsAskedFromMe(tradeRequest);
             tradeRequest.getGovernmentThatRequested().addToTradeHistory(tradeRequest);
             tradeRequest.getGovernmentThatHasBeenAsked().addToRequestNotification(tradeRequest);
@@ -77,22 +77,22 @@ public class TradeMenuController {
         }
     }
 
-    public static TradeMenuMessages acceptTradeByRequest(String id , String acceptanceMessage){
+    public static TradeMenuMessages acceptTradeByRequest(String id, String acceptanceMessage) {
         int idInt = Integer.parseInt(id);
         TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestById(idInt);
-        if(tradeRequest == null)
+        if (tradeRequest == null)
             return TradeMenuMessages.INVALID_REQUEST_ID;
-        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(tradeRequest.getResource())
+        else if (DataBase.getCurrentGovernment().getResourceInStockpiles(tradeRequest.getResource())
                 < tradeRequest.getAmount())
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
-        else if(tradeRequest.getGovernmentThatRequested().freeStockpileSpace(tradeRequest.getResource())
+        else if (tradeRequest.getGovernmentThatRequested().freeStockpileSpace(tradeRequest.getResource())
                 < tradeRequest.getAmount())
             return TradeMenuMessages.NOT_ENOUGH_FREE_SPACE;
-        else if(tradeRequest.getGovernmentThatRequested().getMoney() < tradeRequest.getPrice() * tradeRequest.getAmount())
+        else if (tradeRequest.getGovernmentThatRequested().getMoney() < tradeRequest.getPrice() * tradeRequest.getAmount())
             return TradeMenuMessages.NOT_ENOUGH_MONEY;
-        else{
+        else {
             //change stockpile and money
-            DataBase.getCurrentGovernment().removeFromStockpile(tradeRequest.getResource() , tradeRequest.getAmount());
+            DataBase.getCurrentGovernment().removeFromStockpile(tradeRequest.getResource(), tradeRequest.getAmount());
             tradeRequest.getGovernmentThatRequested().changeMoney(tradeRequest.getPrice() * tradeRequest.getAmount());
             //add to trade history and delete from tradeList
             DataBase.getCurrentGovernment().addToTradeHistory(tradeRequest);
@@ -109,31 +109,31 @@ public class TradeMenuController {
 
     }
 
-    public static TradeMenuMessages rejectTradeByRequest(String id){
+    public static TradeMenuMessages rejectTradeByRequest(String id) {
         TradeRequest tradeRequest = null;
         int idInt = Integer.parseInt(id);
 
         tradeRequest = DataBase.getCurrentGovernment().getRequestById(idInt);
-        if(tradeRequest == null)
+        if (tradeRequest == null)
             return TradeMenuMessages.INVALID_REQUEST_ID;
-        else{
+        else {
             DataBase.getCurrentGovernment().removeFromRequestsAskedFromMe(tradeRequest);
             allRequests.remove(tradeRequest);
             return TradeMenuMessages.TRADE_REQUEST_REJECTED_SUCCESSFULLY;
         }
     }
-    public static String showNotificationsController(){
+
+    public static String showNotificationsController() {
         String toReturn = "new trade request notifications:\n";
         int counter = 1;
 
         for (TradeRequest requestNotification : DataBase.getCurrentGovernment().getRequestNotifications()) {
-            if(requestNotification.getGovernmentThatRequested().equals(DataBase.getCurrentGovernment())){
+            if (requestNotification.getGovernmentThatRequested().equals(DataBase.getCurrentGovernment())) {
                 toReturn += counter + ". " + requestNotification.getGovernmentThatHasBeenAsked().getOwner().getUsername()
                         + " has accepted your request for " + requestNotification.getResource().getName() +
                         " and has a message for you: " + requestNotification.getAcceptanceMessage() + "\n";
                 counter++;
-            }
-            else if(requestNotification.getGovernmentThatHasBeenAsked().equals(DataBase.getCurrentGovernment())){
+            } else if (requestNotification.getGovernmentThatHasBeenAsked().equals(DataBase.getCurrentGovernment())) {
                 toReturn += counter + ". " + requestNotification.getGovernmentThatRequested().getOwner().getUsername() +
                         " has requested you for " + requestNotification.getAmount() + " of " +
                         requestNotification.getResource().getName() + " for price " + requestNotification.getPrice() +
@@ -146,13 +146,13 @@ public class TradeMenuController {
 
     public static TradeMenuMessages donateController(String resourceName, String amount, String message,
                                                      String governmentName) {
-        if(resourceName == null || amount == null || message == null || governmentName == null)
+        if (resourceName == null || amount == null || message == null || governmentName == null)
             return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
 
         Resource resourceToTrade = null;
 
         for (Resource allResource : Resource.getAllResources()) {
-            if(allResource.getName().equals(resourceName)) {
+            if (allResource.getName().equals(resourceName)) {
                 resourceToTrade = allResource;
                 break;
             }
@@ -160,20 +160,20 @@ public class TradeMenuController {
 
         int amountInt = Integer.parseInt(amount);
 
-        if(resourceToTrade == null)
+        if (resourceToTrade == null)
             return TradeMenuMessages.INVALID_RESOURCE_TYPE;
-        else if(amountInt <= 0)
+        else if (amountInt <= 0)
             return TradeMenuMessages.INVALID_AMOUNT;
-        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(resourceToTrade) < amountInt)
+        else if (DataBase.getCurrentGovernment().getResourceInStockpiles(resourceToTrade) < amountInt)
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
-        else{
+        else {
             Government governmentHasBeenDonated = DataBase.getGovernmentByUserName(governmentName);
-            TradeRequest tradeRequest = new TradeRequest(resourceToTrade , amountInt , 0 , message ,
-                    governmentHasBeenDonated , allRequests.size() + 1)
+            TradeRequest tradeRequest = new TradeRequest(resourceToTrade, amountInt, 0, message,
+                    governmentHasBeenDonated, allRequests.size() + 1);
 
             // remove from my stockpile and add to theirs
-            DataBase.getCurrentGovernment().removeFromStockpile(resourceToTrade , amountInt);
-            governmentHasBeenDonated.addToStockpile(resourceToTrade , amountInt);
+            DataBase.getCurrentGovernment().removeFromStockpile(resourceToTrade, amountInt);
+            governmentHasBeenDonated.addToStockpile(resourceToTrade, amountInt);
 
             //
 
