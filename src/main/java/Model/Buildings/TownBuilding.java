@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ public class TownBuilding extends Building {
         townBuildingsName = new ArrayList<>();
         for (TownBuilding townBuilding : townBuildings) {
             townBuildingsName.add(townBuilding.name);
+            GameMenuController.addToGameBuildings(townBuilding);
         }
     }
 

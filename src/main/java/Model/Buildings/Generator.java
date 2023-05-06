@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class Generator extends Building {
         generatorsName = new ArrayList<>();
         for (Generator generator : generators) {
             generatorsName.add(generator.name);
+            GameMenuController.addToGameBuildings(generator);
         }
     }
 

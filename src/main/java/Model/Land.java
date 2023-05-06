@@ -1,7 +1,6 @@
 package Model;
 
 public enum Land {
-    //
     DEFAULT("default"),
     GRAVEL("gravel"),
     FLAT_ROCK("flatRock"),
@@ -25,10 +24,16 @@ public enum Land {
     private Land(String name) {
         this.name = name;
     }
+
     public static String getName(Land mainEnum){
         return mainEnum.name;
     }
+
     public static Land getLandByName(String name){
-        return Land.valueOf(name);
+        for (Land land : Land.values()) {
+            if (land.name.equals(name)) return land;
+        }
+        return null;
     }
+
 }

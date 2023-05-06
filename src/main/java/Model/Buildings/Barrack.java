@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resources.Resource;
 import Model.Units.Troop;
@@ -30,6 +31,7 @@ public class Barrack extends Building {
         barracksName = new ArrayList<>();
         for (Barrack barrack : barracks) {
             barracksName.add(barrack.name);
+            GameMenuController.addToGameBuildings(barrack);
         }
     }
 

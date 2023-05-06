@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resources.Resource;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class Stockpile extends Building {
         stockpilesName = new ArrayList<>();
         for (Stockpile stockpile: stockpiles) {
             stockpilesName.add(stockpile.name);
+            GameMenuController.addToGameBuildings(stockpile);
         }
     }
 

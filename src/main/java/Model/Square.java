@@ -22,7 +22,8 @@ public class Square {
     private int y;
 
     static {
-
+        canPass = new HashMap<>();
+        canPass.put("", false);
     }
 
     public Square(int x, int y) {

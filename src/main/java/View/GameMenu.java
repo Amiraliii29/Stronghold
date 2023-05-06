@@ -7,7 +7,6 @@ import Model.Government;
 import View.Enums.Commands.GameMenuCommands;
 import View.Enums.Messages.GameMenuMessages;
 
-import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class GameMenu {

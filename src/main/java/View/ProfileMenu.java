@@ -194,7 +194,7 @@ public class ProfileMenu {
                 break;
 
             default:
-                Input_Output.outPut("error changing password!");
+                Input_Output.outPut("error: incorrect old password!");
                 break;
         }
     }

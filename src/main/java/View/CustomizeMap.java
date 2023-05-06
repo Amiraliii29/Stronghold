@@ -13,7 +13,7 @@ import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 
 public class CustomizeMap {
-    public static void run(Scanner scanner){
+    public static void run(){
         String input;
         Matcher matcher;
 

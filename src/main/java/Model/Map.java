@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.GameMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,7 +33,7 @@ public class Map {
         this.squares = new Square[width][length];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < length; j++) {
-                squares[i][j] = new Square(i, j);
+                squares[i][j] = new Square(width, length);
             }
         }
     }
@@ -171,10 +172,14 @@ public class Map {
             Type type = new TypeToken<Map>(){}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             File f = new File(fileAddress);
-            if(f.exists() && !f.isDirectory())
+            if(f.exists() && !f.isDirectory()) {
                 DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
-            else
+                GameMenuController.setCurrentMap(DataBase.getSelectedMap());
+            }
+            else {
                 DataBase.setSelectedMap(null);
+                GameMenuController.setCurrentMap(null);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

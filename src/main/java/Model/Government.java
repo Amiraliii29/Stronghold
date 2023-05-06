@@ -393,10 +393,6 @@ public class Government {
         return Objects.equals(owner, that.owner);
     }
 
-    public HashMap<String, Integer> getResourceGenerationRates() {
-        return resourceGenerationRate;
-    }
-
     public int getPopularity() {
         return popularity;
     }
