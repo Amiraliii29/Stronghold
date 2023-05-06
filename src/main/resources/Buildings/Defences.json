@@ -47,7 +47,7 @@
     "length": 8,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": ["default","plain"],
+    "lands": ["default","plain","sand"],
     "hp": 1000,
     "numberOfResource": 0,
     "cost": 0,

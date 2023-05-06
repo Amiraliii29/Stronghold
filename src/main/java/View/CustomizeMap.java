@@ -23,6 +23,7 @@ public class CustomizeMap {
             input = Input_Output.getInput();
             if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null) {
                 Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
+                Input_Output.outPut("MAIN MENU:");
                 break;
             }
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)

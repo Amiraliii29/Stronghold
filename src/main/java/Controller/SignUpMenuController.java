@@ -68,7 +68,7 @@ public class SignUpMenuController {
 
         if (stayLoggedInoption == true) {
             targetUser.setStayLoggedIn(true);
-            UserInfoOperator.storeUserDataInJson(targetUser, "src/main/java/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
         }
 
         User.setCurrentUser(targetUser);

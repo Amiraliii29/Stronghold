@@ -14,26 +14,21 @@ public class SignUpMenu {
 
     public static void run() throws NoSuchAlgorithmException {
         String input;
+        Matcher matcher;
         Input_Output.outPut("SIGNUP MENU:");
 
         while (User.getCurrentUser() == null) {
-            Matcher matcher;
             input = Input_Output.getInput();
 
-            if (input.equals("exit")) break;
-
+            if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.EXIT) != null) break;
             if (SignUpMenuController.getPenalty() > 0)
                 Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
-
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) != null)
                 createUser(matcher);
-
-            else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD)) != null)
+            else if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD) != null)
                 forgotMyPassWord();
-
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.LOGIN)) != null)
                 userLogin(matcher);
-
             else Input_Output.outPut("error: invalid command!");
         }
         handleLoginProcess();
