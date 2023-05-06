@@ -42,6 +42,8 @@ public class CustomizeMap {
                 dropBuilding(matcher);
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_UNIT)) != null)
                 dropUnit(matcher);
+            else if(CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.SHOW_MAP) != null)
+                ShowMapMenu.run();
             else{
                 System.out.println("invalid command");
             }

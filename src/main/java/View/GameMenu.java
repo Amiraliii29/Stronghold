@@ -47,8 +47,10 @@ public class GameMenu {
                 showTurnsPassed();
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
                 showCurrentPlayer();
-            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null)
-                enterShowMapMenu();
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
+                Input_Output.outPut("entered show map menu successfully");
+                ShowMapMenu.run();
+            }
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
                 setTaxRate(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TAX_RATE) != null)
@@ -151,11 +153,6 @@ public class GameMenu {
                 Input_Output.outPut("tax rate set successfully");
                 break;
         }
-    }
-
-    private static void enterShowMapMenu() {
-        Input_Output.outPut("entered show map menu successfully");
-        ShowMapMenu.run();
     }
 
     private static void nextTurn() {
