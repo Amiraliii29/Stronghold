@@ -12,7 +12,7 @@ public enum SignUpMenuCommands {
     LOGIN("\\s*user\\s+login\\s+(?<loginComponents>.+)"),
 
     FORGOT_PASSWORD("\\s*forgot\\s+my\\s+password"),
-    ;
+    EXIT("^\\s*exit\\s*&");
     private String regex;
 
     private SignUpMenuCommands(String regex) {

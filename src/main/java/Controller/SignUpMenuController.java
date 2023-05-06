@@ -45,7 +45,7 @@ public class SignUpMenuController {
 
         SignUpMenu.chooseSecurityQuestionForUser(newUser);
 
-        UserInfoOperator.storeUserDataInJson(newUser, "src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(newUser, "src/main/resources/jsonData/Users.json");
         User.addUser(newUser);
         return SignUpMenuMessages.SUCCESFUL_SIGNUP_STEP;
     }
@@ -68,7 +68,7 @@ public class SignUpMenuController {
 
         if (stayLoggedInoption == true) {
             targetUser.setStayLoggedIn(true);
-            UserInfoOperator.storeUserDataInJson(targetUser, "src/main/java/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
         }
 
         User.setCurrentUser(targetUser);
@@ -87,7 +87,7 @@ public class SignUpMenuController {
         newPassword = UserInfoOperator.encodeStringToSha256(newPassword);
 
         targetUser.setPassword(newPassword);
-        UserInfoOperator.storeUserDataInJson(targetUser, "src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
         return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
     }
 

@@ -12,10 +12,10 @@ public class Square {
     private ArrayList<Unit> units;
     private Building building;
     private Land land;
-    private String cliffDirection = null;
+    private String cliffDirection;
     private Resource resource;
-    private Trees tree = null;
-    private int treeAmount = 0;
+    private Trees tree;
+    private int treeAmount;
     private int x;
     private int y;
 
@@ -37,6 +37,10 @@ public class Square {
         this.y = y;
         units = new ArrayList<>();
         this.land = Land.DEFAULT;
+        this.building = null;
+        this.tree = null;
+        this.cliffDirection = null;
+        this.treeAmount = 0;
     }
 
     public ArrayList<Unit> getUnits() {

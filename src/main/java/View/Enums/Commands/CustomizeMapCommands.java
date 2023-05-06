@@ -14,6 +14,7 @@ public enum CustomizeMapCommands {
     DROP_BUILDING("^\\s*drop\\s*building\\s*(?<options>.+)$"),
     DROP_UNIT("^\\s*drop\\s*unit\\s*(?<options>.+)$"),
     BACK("^\\s*back\\s*$"),
+    SHOW_MAP("^\\s*enter\\s*show\\s*map\\s*menu\\s*$")
     ;
     private String regex;
 

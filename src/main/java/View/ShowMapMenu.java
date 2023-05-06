@@ -9,18 +9,22 @@ import java.util.regex.Matcher;
 public class ShowMapMenu {
     public static void run(){
         String input;
-        input = Input_Output.getInput();
         Matcher matcher;
+        Input_Output.outPut("Show Map Menu:");
 
         while (true){
+            input = Input_Output.getInput();
             if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_MAP)) != null)
                 showMap(matcher);
             else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.MOVE_MAP)) != null)
                 moveMap(matcher);
             else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_DETAILS)) != null)
                 showMap(matcher);
-            else if(ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.EXIT) != null)
-                exit();
+            else if(ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.EXIT) != null) {
+                Input_Output.outPut("returned back to main menu");
+                break;
+            } else Input_Output.outPut("Invalid command!");
+
         }
     }
     private static void showMap(Matcher matcher){
@@ -28,8 +32,6 @@ public class ShowMapMenu {
 
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
-
-
 
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
 
@@ -63,9 +65,5 @@ public class ShowMapMenu {
         String toPrint = ShowMapMenuController.showDetailsController(x , y);
 
         System.out.print(toPrint);
-    }
-    private static void exit(){
-        Input_Output.outPut("returned back to main menu");
-        GameMenu.run();
     }
 }

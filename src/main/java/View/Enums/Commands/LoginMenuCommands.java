@@ -11,7 +11,7 @@ public enum LoginMenuCommands {
 
     ENTER_MAP_MENU("\\s*enter\\s+map\\s+menu\\s*"),
     START_GAME("^\\s*start\\s*game\\s*(?<options>.+)$"),
-    ;
+    EXIT("^\\s*exit\\s*&");
     private String regex;
 
     private LoginMenuCommands(String regex) {
