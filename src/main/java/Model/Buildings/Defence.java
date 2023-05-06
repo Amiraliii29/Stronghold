@@ -58,7 +58,7 @@ public class Defence extends Building {
                 Defence newDefence = new Defence(owner, defence.name, defence.width, defence.length, xCoordinateLeft,
                         yCoordinateUp, defence.lands, defence.hp, defence.resource, defence.numberOfResource, defence.cost,
                         defence.canPass, defence.range, defence.capacity);
-                owner.addBuildings(newDefence);
+                if (owner != null) owner.addBuildings(newDefence);
                 return newDefence;
             }
         }

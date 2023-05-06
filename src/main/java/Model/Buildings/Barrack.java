@@ -35,7 +35,7 @@ public class Barrack extends Building {
         }
     }
 
-    public Barrack(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
+    private Barrack(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
                    int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> troops) {
         super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.troops = troops;
@@ -59,7 +59,7 @@ public class Barrack extends Building {
     public boolean canBuildTroopByName(String targetTroopName){
         for (String troopName : troops) {
             if(troopName.equals(targetTroopName))
-            return true;
+                return true;
         }
         return false;
     }
@@ -78,8 +78,7 @@ public class Barrack extends Building {
                 Barrack newBarrack = new Barrack(owner, barrack.name, barrack.width, barrack.length, xCoordinateLeft,
                         yCoordinateUp, barrack.lands, barrack.hp, barrack.resource, barrack.numberOfResource, barrack.cost,
                         barrack.canPass, barrack.troops);
-                owner.addBuildings(newBarrack);
-                //add to squares//TODO
+                if (owner != null) owner.addBuildings(newBarrack);
                 return barrack;
             }
         }

@@ -41,14 +41,6 @@ public class TownBuilding extends Building {
         this.popularityRate = popularityRate;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setPopularityRate(int popularityRate) {
-        this.popularityRate = popularityRate;
-    }
-
     public int getCapacity() {
         return capacity;
     }
@@ -67,8 +59,7 @@ public class TownBuilding extends Building {
                 TownBuilding newTownBuilding = new TownBuilding(owner, townBuilding.name, townBuilding.width, townBuilding.length, xCoordinateLeft,
                         yCoordinateUp, townBuilding.lands, townBuilding.hp, townBuilding.resource, townBuilding.numberOfResource, townBuilding.cost,
                         townBuilding.canPass, townBuilding.capacity, townBuilding.popularityRate);
-                owner.addBuildings(newTownBuilding);
-                //add to square//TODO
+                if (owner != null) owner.addBuildings(newTownBuilding);
                 return newTownBuilding;
             }
         }

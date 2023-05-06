@@ -143,11 +143,11 @@ public class Stockpile extends Building {
                 Stockpile newStockpile = new Stockpile(owner, stockpile.name, stockpile.width, stockpile.length, xCoordinateLeft,
                         yCoordinateUp, stockpile.lands, stockpile.hp, stockpile.resource, stockpile.numberOfResource, stockpile.cost,
                         stockpile.canPass, stockpile.resourcesStored, stockpile.capacity);
-                if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
-                else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
-                else owner.addStockpiles(newStockpile);
-
-                //add to squares//TODO
+                if (owner != null) {
+                    if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
+                    else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
+                    else owner.addStockpiles(newStockpile);
+                }
                 return newStockpile;
             }
         }

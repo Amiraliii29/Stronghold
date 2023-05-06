@@ -47,18 +47,6 @@ public class Generator extends Building {
         this.numberOfWorker = numberOfWorker;
     }
 
-    public void setResourceGenerate(Resource resourceGenerate) {
-        this.resourceGenerate = resourceGenerate;
-    }
-
-    public void setResourceNeed(Resource resourceNeed) {
-        this.resourceNeed = resourceNeed;
-    }
-
-    public void setNumberOfWorker(int numberOfWorker) {
-        this.numberOfWorker = numberOfWorker;
-    }
-
     public int getUsingRate() {
         return usingRate;
     }
@@ -89,8 +77,7 @@ public class Generator extends Building {
                 Generator newGenerator = new Generator(owner, generator.name, generator.width, generator.length, xCoordinateLeft, yCoordinateUp,
                         generator.lands, generator.hp, generator.resource, generator.numberOfResource, generator.cost, generator.canPass,
                         generator.usingRate, generator.generatingRate, generator.resourceGenerate, generator.resourceNeed, generator.numberOfWorker);
-                owner.addBuildings(newGenerator);
-                //add to square//TODO
+                if (owner != null) owner.addBuildings(newGenerator);
                 return newGenerator;
             }
         }

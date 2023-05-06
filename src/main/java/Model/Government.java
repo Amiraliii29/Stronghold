@@ -93,13 +93,13 @@ public class Government {
         updateBuildingPopularity();
     }
 
-    public void updateBuildingPopularity(){
-        for (Building building : buildings) 
-        if(building.getName().equals("Church")){
-            TownBuilding church=(TownBuilding) building;
-            faith+=church.getPopularityRate();
-            return;
-        }
+    public void updateBuildingPopularity() {
+        for (Building building : buildings)
+            if (building.getName().equals("Church")) {
+                TownBuilding church = (TownBuilding) building;
+                faith += church.getPopularityRate();
+                return;
+            }
     }
 
     public void setFood(int food) {
@@ -364,25 +364,25 @@ public class Government {
         population += addedPopulation;
     }
 
-    public HashMap<String,Integer> getResourceGenerationRates(){
+    public HashMap<String, Integer> getResourceGenerationRates() {
         return resourceGenerationRate;
     }
 
-    public int getBuildingCountByName(String buildingName){
-        int Number=0;
-        for (Building building : buildings) 
-            if(building.getName().equals(buildingName))
+    public int getBuildingCountByName(String buildingName) {
+        int Number = 0;
+        for (Building building : buildings)
+            if (building.getName().equals(buildingName))
                 Number++;
         return Number;
     }
 
-    public void applyOxEffectOnStoneGeneration(){
-        int cowCount=getBuildingCountByName("StoneCow");
-        int QuarryNumber=getBuildingCountByName("Quarry");
-        if(QuarryNumber*3<cowCount) cowCount=QuarryNumber*3;
+    public void applyOxEffectOnStoneGeneration() {
+        int cowCount = getBuildingCountByName("StoneCow");
+        int QuarryNumber = getBuildingCountByName("Quarry");
+        if (QuarryNumber * 3 < cowCount) cowCount = QuarryNumber * 3;
 
-        Generator quarry=(Generator)  GameMenuController.getBuildingByName("Quarry");
-        resourceGenerationRate.put(quarry.getResourceGenerate().getName(), quarry.getGeneratingRate()*cowCount/3);
+        Generator quarry = (Generator) GameMenuController.getBuildingByName("Quarry");
+        resourceGenerationRate.put(quarry.getResourceGenerate().getName(), quarry.getGeneratingRate() * cowCount / 3);
     }
 
     @Override
