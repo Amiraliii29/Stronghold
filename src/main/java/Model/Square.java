@@ -22,13 +22,13 @@ public class Square {
     static {
         canPass = new HashMap<>();
         for (Land land : Land.values()) {
-            if (land.name().equals("rock") || land.name().equals("lowDepthWater")
-                    || land.name().equals("river") || land.name().equals("smallLake")
-                    || land.name().equals("bigLake") || land.name().equals("sea")
-                    || land.name().equals("cliff"))
-                canPass.put(land.name(), false);
+            if (Land.getName(land).equals("rock") || Land.getName(land).equals("lowDepthWater")
+                    || Land.getName(land).equals("river") || Land.getName(land).equals("smallLake")
+                    || Land.getName(land).equals("bigLake") || Land.getName(land).equals("sea")
+                    || Land.getName(land).equals("cliff"))
+                canPass.put(Land.getName(land), false);
             else
-                canPass.put(land.name(), true);
+                canPass.put(Land.getName(land), true);
         }
     }
 
