@@ -65,7 +65,7 @@ public class ProfileMenuController {
             return ProfileMenuMessages.INCORRECT_PASSWORD_VERIFICATION_ERROR;
         
         currentUser.setPassword(newPassword);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_PASSWORD;
             
     }
@@ -85,7 +85,7 @@ public class ProfileMenuController {
 
         
         currentUser.setUsername(newUsername);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME;
     }
 
@@ -104,7 +104,7 @@ public class ProfileMenuController {
             return ProfileMenuMessages.DUPLICATE_EMAIL_ERROR;
         
         currentUser.setEmail(newEmail);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL;
     }
 
@@ -116,7 +116,7 @@ public class ProfileMenuController {
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
 
         currentUser.setNickName(newNickname);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME;
     }
 
@@ -128,13 +128,13 @@ public class ProfileMenuController {
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
         
         currentUser.setSlogan(newSlogan);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_SLOGAN;
     }
 
     public static ProfileMenuMessages removeSlogan() throws NoSuchAlgorithmException {
         currentUser.setSlogan("");
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/java/jsonData/Users.json");
+        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_REMOVE_SLOGAN;
     }
 }
