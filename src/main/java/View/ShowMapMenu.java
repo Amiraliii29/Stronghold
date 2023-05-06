@@ -37,10 +37,11 @@ public class ShowMapMenu {
 
         for (int i = 0 ; i < 20 ; i++){
             for (int j = 0 ; j < 20 ; j++){
-                if(toPrint == null)
-                    break;
-                System.out.println(toPrint[i][j]);
+                if(toPrint[i][j] == null)
+                    continue;
+                System.out.print(toPrint[i][j]);
             }
+            System.out.println("");
         }
     }
     private static void moveMap(Matcher matcher){
