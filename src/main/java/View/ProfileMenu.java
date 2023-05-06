@@ -171,6 +171,11 @@ public class ProfileMenu {
         String components=matcher.group("changePasswordComponents");
         String oldPassword=Orders.findFlagOption("-op", components);
         String newPassword=Orders.findFlagOption("-np", components);
+        if(Orders.isOrderJunky(components ,false, "-op", "-np")){
+            Input_Output.outPut("error: invalid input fields");
+            return ;
+        }
+
 
         ProfileMenuMessages result=ProfileMenuController.changePassword(oldPassword, newPassword);
         switch (result) {

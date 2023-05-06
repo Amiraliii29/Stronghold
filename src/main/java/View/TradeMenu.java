@@ -28,9 +28,22 @@ public class TradeMenu {
                 tradeHistory();
             else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.TRADE_REJECT)) != null)
                 rejectTrade(matcher);
+            else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.DONATE)) != null)
+                donate(matcher);
             else
                 System.out.println("invalid command");
         }
+    }
+
+    private static void donate(Matcher matcher) {
+        String options = matcher.group("options");
+        String resourceName = Orders.findFlagOption("-t" , options);
+        String amount = Orders.findFlagOption("-a" , options);
+        String message = Orders.findFlagOption("-m" , options);
+        String governmentNameThatHasBeenDonated = Orders.findFlagOption("-u" , options);
+
+        TradeMenuMessages controllerMessage = TradeMenuController.donateController(resourceName , amount , message ,
+                governmentNameThatHasBeenDonated);
     }
 
     private static void sendTradeRequest(Matcher matcher) {
