@@ -36,7 +36,7 @@ public class ShowMapMenuController {
                 for (int j = -10 ; j < 10 ; j++){
                     if(xLocationOnMap+i < 0  || yLocationOnMap + j < 0 || xLocationOnMap + i > DataBase.getSelectedMap().getLength()
                             || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
-                        mapToShow[j+10][i+10] = "0 |";
+                        mapToShow[j+10][i+10] = "0|";
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
                         mapToShow[j+10][i+10] = "S|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)

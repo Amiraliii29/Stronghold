@@ -21,6 +21,7 @@ public class CustomizeMap {
 
         while(true){
             input = Input_Output.getInput();
+            Input_Output.outPut("MAP MENU:");
             if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null) {
                 Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
                 Input_Output.outPut("MAIN MENU:");
