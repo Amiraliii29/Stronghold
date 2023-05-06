@@ -77,7 +77,7 @@ public class CustomizeMapController {
                 return CustomizeMapMessages.INVALID_TYPE;
 
             DataBase.getSelectedMap().getSquareFromMap(xInt , yInt).setLand(land);
-
+            Map.saveMap(DataBase.getSelectedMap() , DataBase.getSelectedMap().getName());
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
 
         }
