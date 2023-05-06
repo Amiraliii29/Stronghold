@@ -1,8 +1,7 @@
 package Model.Buildings;
 
-import Model.DataBase;
 import Model.Government;
-import Model.Resources.Resource;
+import Model.Resource;
 
 import java.util.ArrayList;
 
@@ -20,8 +19,6 @@ public abstract class Building {
     protected int numberOfResource;
     protected int cost;
     protected boolean canPass;
-
-    // add each kind of building to users arraylist in database ! //TODO
 
 
     public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
@@ -58,13 +55,6 @@ public abstract class Building {
             if(buildingName.equals(name)) return "Stockpile";
 
         return null;
-    }
-
-
-    public void setCoordinate(int xCoordinateLeft, int yCoordinateUp) {
-        this.xCoordinateLeft = xCoordinateLeft;
-        this.yCoordinateUp = yCoordinateUp;
-        //add building to square and remove last coordinate//TODO
     }
 
     public int getMaximumHp(){
@@ -122,5 +112,13 @@ public abstract class Building {
 
     public boolean getCanPass() {
         return canPass;
+    }
+
+    public static void readBuildingsFromFile() {
+        Defence.createDefence(null, -1, -1, "");
+        Generator.createGenerator(null, -1, -1, "");
+        Barrack.createBarrack(null, -1, -1, "");
+        Stockpile.createStockpile(null, -1, -1, "");
+        TownBuilding.createTownBuilding(null, -1, -1, "");
     }
 }

@@ -2,7 +2,7 @@ package Model.Units;
 
 import Model.DataBase;
 import Model.Government;
-import Model.Resources.Resource;
+import Model.Resource;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

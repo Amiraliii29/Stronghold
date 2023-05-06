@@ -138,6 +138,10 @@ public abstract class Unit {
             return (int) (Math.floor((speed+attackRange)*0.8));
     }
 
+    public static void readUnitsFromFile() {
+        return;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

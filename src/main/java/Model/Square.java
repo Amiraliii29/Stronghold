@@ -1,9 +1,7 @@
 package Model;
 
 import Model.Buildings.Building;
-import Model.Resources.Resource;
 
-import Model.Units.Troop;
 import Model.Units.Unit;
 
 import java.util.ArrayList;

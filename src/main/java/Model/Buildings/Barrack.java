@@ -2,7 +2,7 @@ package Model.Buildings;
 
 import Controller.GameMenuController;
 import Model.Government;
-import Model.Resources.Resource;
+import Model.Resource;
 import Model.Units.Troop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

@@ -8,7 +8,7 @@ import Model.Government;
 import Model.Map;
 import Model.Square;
 import Model.Buildings.*;
-import Model.Resources.Resource;
+import Model.Resource;
 import Model.Units.Troop;
 import Model.Units.*;
 import View.Enums.Messages.GameMenuMessages;

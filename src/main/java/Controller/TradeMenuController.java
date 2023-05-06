@@ -2,13 +2,11 @@ package Controller;
 
 import Model.DataBase;
 import Model.Government;
-import Model.Resources.Resource;
+import Model.Resource;
 import Model.TradeRequest;
-import Model.User;
 import View.Enums.Messages.TradeMenuMessages;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class TradeMenuController {
     private static final ArrayList<TradeRequest> allRequests = new ArrayList<>();

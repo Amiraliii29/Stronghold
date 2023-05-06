@@ -5,8 +5,6 @@ import Model.Buildings.Generator;
 import Model.Buildings.Stockpile;
 import Model.Buildings.TownBuilding;
 import Model.Units.Troop;
-import Model.Units.Unit;
-import Model.Resources.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;

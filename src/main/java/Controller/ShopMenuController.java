@@ -1,15 +1,12 @@
 package Controller;
 
 import Model.DataBase;
-import Model.Resources.Resource;
+import Model.Resource;
 import Model.User;
 import View.Enums.Messages.ShopMenuMessages;
 import View.ShopMenu;
 
-import javax.xml.crypto.Data;
-import java.lang.module.Configuration;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -26,11 +23,10 @@ public class ShopMenuController {
         items = new ArrayList<Resource>();
         itemsBuyingPrice = new HashMap<>();
         itemsSellingPrice = new HashMap<>();
-        fillShopItems();
     }
 
-    private static void fillShopItems() {
-
+    public static void addItem(Resource resource) {
+        items.add(resource);
     }
 
     public static void setNewPrices() {

@@ -1,7 +1,5 @@
 package Model;
 
-import Model.Resources.Resource;
-
 public class TradeRequest {
     private Resource resource;
     private int amount;

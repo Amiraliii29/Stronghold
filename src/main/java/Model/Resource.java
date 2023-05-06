@@ -1,6 +1,6 @@
-package Model.Resources;
+package Model;
 
-import Model.Units.Troop;
+import Controller.ShopMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,14 +42,17 @@ public class Resource {
         for (Resource resource : resources) {
             resourcesName.add(resource.getName());
             allResources.add(resource);
+            ShopMenuController.addItem(resource);
         }
         for (Resource food : foods) {
             foodsName.add(food.getName());
             allResources.add(food);
+            ShopMenuController.addItem(food);
         }
         for (Resource weapon : weapons) {
             weaponsName.add(weapon.getName());
             allResources.add(weapon);
+            ShopMenuController.addItem(weapon);
         }
     }
 
@@ -129,6 +132,10 @@ public class Resource {
                 return resource;
         }
         return null;
+    }
+
+    public static void readResourcesFromFile() {
+        return;
     }
 
     @Override
