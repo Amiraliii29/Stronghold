@@ -384,35 +384,39 @@ public class GameMenuController {
     }
 
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
+        //conditions
+        if (!map.getSquareFromMap(x, y).canPass()) return false;
+        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
+            if (map.getSquareFromMap(x, y).getBuilding() != null)
+                if (!map.getSquareFromMap(x, y).getBuilding().getCanPass()
+                        || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
+                    return false;
+        } else if (!unit.getName().equals("Assassin")) {
+            if (map.getSquareFromMap(x, y).getBuilding() != null) {
+                if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                        || map.getSquareFromMap(x, y).getBuilding().getCanPass()))
+                    return false;
+
+                LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
+                if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")) up = !up;
+                else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
+                        && unit instanceof Troop
+                        && ((Troop) unit).isClimbLadder()) up = !up;
+
+                if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
+
+                if (!up && (map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                        && !map.getSquareFromMap(x, y).getBuilding().getCanPass()))
+                    return false;
+            }
+        }
+
         if (speed >= 0 && x == xFin && y == yFin) {
             allWays.add(squares);
             return true;
         }
         if (speed == 0) return false;
 
-        //conditions
-        if (!map.getSquareFromMap(x, y).canPass()) return false;
-        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
-            if (!map.getSquareFromMap(x, y).getBuilding().getCanPass()
-                    || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
-                return false;
-        } else if (!unit.getName().equals("Assassin")) {
-            if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                    || map.getSquareFromMap(x, y).getBuilding().getCanPass()))
-                return false;
-
-            LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
-            if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")) up = !up;
-            else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
-                    && unit instanceof Troop
-                    && ((Troop) unit).isClimbLadder()) up = !up;
-
-            if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
-
-            if (!up && (map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                    && !map.getSquareFromMap(x, y).getBuilding().getCanPass()))
-                return false;
-        }
 
         squares.add(map.getSquareFromMap(x + 1, y));
         move(unit, map, x + 1, y, xFin, yFin, speed - 1, up);

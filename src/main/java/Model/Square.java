@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
-    private static HashMap<String, Boolean> canPass;
+    private static final HashMap<String, Boolean> canPass;
     private ArrayList<Unit> units;
     private Building building;
     private Land land;
@@ -16,8 +16,8 @@ public class Square {
     private Resource resource;
     private Trees tree;
     private int treeAmount;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     static {
         canPass = new HashMap<>();
@@ -52,7 +52,12 @@ public class Square {
     }
 
     public void removeUnit(Unit unit) {
-        this.units.remove(unit);
+        for (int i = 0; i < units.size(); i++) {
+            if (units.get(i).equals(unit) && unit.getHitPoint() == units.get(i).getHitPoint()){
+                units.remove(i);
+                break;
+            }
+        }
     }
 
     public void removeAllUnit(Unit unit) {
@@ -96,7 +101,7 @@ public class Square {
     public HashMap<Unit, Integer> getUnitsTypeAndCount() {
         HashMap<Unit, Integer> troopsTypeAndCount = new HashMap<>();
         for (Unit unit : units) {
-            if (!troopsTypeAndCount.keySet().contains(unit))
+            if (!troopsTypeAndCount.containsKey(unit))
                 troopsTypeAndCount.put(unit, 1);
             else
                 troopsTypeAndCount.put(unit, troopsTypeAndCount.get(unit) + 1);
@@ -105,7 +110,7 @@ public class Square {
     }
 
     public boolean canPass() {
-        return canPass.get(land.name());
+        return canPass.get(land);
     }
 
     public void setLand(Land land) {

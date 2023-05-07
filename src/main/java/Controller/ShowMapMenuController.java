@@ -38,9 +38,9 @@ public class ShowMapMenuController {
                             || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
                         mapToShow[i+10][j+10] = null;
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
-                        mapToShow[i+10][j+10] = "S|";
+                        mapToShow[i+10][j+10] = "SS|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
-                        mapToShow[i+10][j+10] = "B|";
+                        mapToShow[i+10][j+10] = "BB|";
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
                         char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
                                 getResource().getName().toCharArray();

@@ -149,6 +149,7 @@ public class Map {
         try {
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             FileWriter file = new FileWriter(fileAddress);
+            file.flush();
             Gson gson = new Gson();
             gson.toJson(map, file);
             file.close();
@@ -160,8 +161,7 @@ public class Map {
     public static void loadMap(String fileName) {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<Map>() {
-            }.getType();
+            Type type = new TypeToken<Map>() {}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             File f = new File(fileAddress);
             if (f.exists() && !f.isDirectory()) {
