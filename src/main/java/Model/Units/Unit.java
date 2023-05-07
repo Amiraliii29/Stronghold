@@ -1,8 +1,10 @@
 package Model.Units;
+import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.DataBase;
 import Model.Government;
-import Model.Map;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -94,7 +96,11 @@ public abstract class Unit {
     }
 
     public int getAttackRange() {
-        return attackRange;
+        Building building = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
+        if (building instanceof Defence && this.attackRange > 5) {
+            return this.attackRange + ((Defence) building).getRange();
+        }
+        return this.attackRange;
     }
 
     public void changeState(StateUnits stateUnits) {

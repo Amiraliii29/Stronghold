@@ -386,13 +386,12 @@ public class GameMenuController {
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
         //conditions
         if (!map.getSquareFromMap(x, y).canPass()) return false;
-        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
-            if (map.getSquareFromMap(x, y).getBuilding() != null)
+        if (map.getSquareFromMap(x, y).getBuilding() != null) {
+            if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
                 if (!map.getSquareFromMap(x, y).getBuilding().getCanPass()
                         || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
                     return false;
-        } else if (!unit.getName().equals("Assassin")) {
-            if (map.getSquareFromMap(x, y).getBuilding() != null) {
+            } else if (!unit.getName().equals("Assassin")) {
                 if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
                         || map.getSquareFromMap(x, y).getBuilding().getCanPass()))
                     return false;
@@ -412,6 +411,10 @@ public class GameMenuController {
         }
 
         if (speed >= 0 && x == xFin && y == yFin) {
+            if (map.getSquareFromMap(x, y).getBuilding() != null
+                    && map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                    && map.getSquareFromMap(x, y).getUnits().size() >= ((Defence) map.getSquareFromMap(x, y).getBuilding()).getCapacity())
+                return false;
             allWays.add(squares);
             return true;
         }

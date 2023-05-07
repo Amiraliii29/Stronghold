@@ -19,7 +19,7 @@ public class ShowMapMenu {
             else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.MOVE_MAP)) != null)
                 moveMap(matcher);
             else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_DETAILS)) != null)
-                showMap(matcher);
+                showDetails(matcher);
             else if(ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.EXIT) != null) {
                 Input_Output.outPut("returned back to main menu");
                 break;
