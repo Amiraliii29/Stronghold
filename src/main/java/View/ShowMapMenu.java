@@ -21,7 +21,7 @@ public class ShowMapMenu {
             else if((matcher = ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.SHOW_DETAILS)) != null)
                 showDetails(matcher);
             else if(ShowMapMenuCommands.getMatcher(input , ShowMapMenuCommands.EXIT) != null) {
-                Input_Output.outPut("returned back to main menu");
+                Input_Output.outPut("out of Show Map Menu");
                 break;
             } else Input_Output.outPut("Invalid command!");
 

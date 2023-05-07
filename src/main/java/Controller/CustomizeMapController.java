@@ -247,7 +247,7 @@ public class CustomizeMapController {
             DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
             if (!selectedMap.canConstructBuildingInPlace(buildingToConstruct, xInt, yInt))
                 return CustomizeMapMessages.DROPBUILDING_INVALID_PLACE;
-            if(type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null){
+            if(type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() == null){
                 GameMenu.addKeepCnt();
                 GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
                 selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
@@ -259,7 +259,7 @@ public class CustomizeMapController {
                 for (int i = 0 ; i < 5 ; i++) {
                     Troop.createTroop(ownerGovernment, "SpearMan", xInt, yInt);
                 }
-            } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() == null)
+            } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null)
                 return CustomizeMapMessages.THIS_GOVERNMENT_HAS_KEEP;
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
         }

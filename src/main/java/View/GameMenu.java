@@ -17,6 +17,7 @@ public class GameMenu {
         keepCnt = 0;
         String input;
         Matcher matcher;
+        Input_Output.outPut("please put each player's keep");
         while (keepCnt < DataBase.getGovernments().size()) {
             input = Input_Output.getInput();
             if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
@@ -27,6 +28,7 @@ public class GameMenu {
                 dropBuildingTest(matcher);
             else Input_Output.outPut("invalid command");
         }
+        Input_Output.outPut("game started!");
         while (true) {
             input = Input_Output.getInput();
             if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_UNIT)) != null)
