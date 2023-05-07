@@ -36,12 +36,15 @@ public class ShowMapMenu {
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
 
         for (int i = 0 ; i < 20 ; i++){
+            int enterFlag = 0;
             for (int j = 0 ; j < 20 ; j++){
                 if(toPrint[i][j] == null)
                     continue;
+                enterFlag = 1;
                 System.out.print(toPrint[i][j]);
             }
-            System.out.println("");
+            if(enterFlag == 1)
+                System.out.println("");
         }
     }
     private static void moveMap(Matcher matcher){

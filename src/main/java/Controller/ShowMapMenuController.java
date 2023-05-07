@@ -36,15 +36,20 @@ public class ShowMapMenuController {
                 for (int j = -10 ; j < 10 ; j++){
                     if(xLocationOnMap+i < 0  || yLocationOnMap + j < 0 || xLocationOnMap + i > DataBase.getSelectedMap().getLength()
                             || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
-                        mapToShow[j+10][i+10] = "0|";
+                        mapToShow[i+10][j+10] = null;
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
-                        mapToShow[j+10][i+10] = "S|";
+                        mapToShow[i+10][j+10] = "S|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
-                        mapToShow[j+10][i+10] = "B|";
+                        mapToShow[i+10][j+10] = "B|";
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
                         char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
                                 getResource().getName().toCharArray();
-                        mapToShow[j+10][i+10] = resourceName[0] + resourceName[2] + "|";
+                        mapToShow[i+10][j+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
+                    }
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getLand() != null){
+                        char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).
+                                getLand().name().toCharArray();
+                        mapToShow[i+10][j+10] = String.valueOf(landName[0])+ String.valueOf(landName[2]) + "|" ;
                     }
                 }
             }
