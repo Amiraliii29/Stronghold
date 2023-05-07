@@ -51,7 +51,6 @@ public class CustomizeMapController {
         Map.loadMap(mapName);
         if(DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.MAP_NOT_FOUND;
-
         else
             return CustomizeMapMessages.SELECT_MAP_SUCCESS;
     }

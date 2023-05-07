@@ -91,6 +91,8 @@ public class ShowMapMenuController {
                 xLocationOnMap -= amountInt;
                 break;
         }
+        if (xLocationOnMap <= 0) xLocationOnMap = 1;
+        if (yLocationOnMap <= 0) yLocationOnMap = 1;
         return showMapController(Integer.toString(xLocationOnMap) , Integer.toString(yLocationOnMap));
     }
     public static String showDetailsController(String  x, String y){

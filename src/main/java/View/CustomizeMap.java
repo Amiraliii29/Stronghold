@@ -7,11 +7,6 @@ import Model.Map;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 
-import javax.print.attribute.standard.MediaSize;
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 
 public class CustomizeMap {
@@ -39,7 +34,7 @@ public class CustomizeMap {
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.DROP_CLIFF)) != null)
                 dropRock(matcher);
             else if(CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.SHOW_MAP) != null)
-                ShowMapMenu.run();
+                showMap();
             else{
                 System.out.println("invalid command");
             }
@@ -172,5 +167,10 @@ public class CustomizeMap {
 
     public static void printer(String toPrint){
         System.out.println(toPrint);
+    }
+
+    private static void showMap() {
+        if (DataBase.getSelectedMap() == null) Input_Output.outPut("select map first");
+        else ShowMapMenu.run();
     }
 }
