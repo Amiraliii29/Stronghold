@@ -1,10 +1,12 @@
 package View;
 
+import Controller.CustomizeMapController;
 import Controller.GameMenuController;
 import Controller.Orders;
 import Model.DataBase;
 import Model.Government;
 import View.Enums.Commands.GameMenuCommands;
+import View.Enums.Messages.CustomizeMapMessages;
 import View.Enums.Messages.GameMenuMessages;
 
 import java.util.regex.Matcher;
@@ -50,8 +52,7 @@ public class GameMenu {
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
                 Input_Output.outPut("entered show map menu successfully");
                 ShowMapMenu.run();
-            }
-            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
+            } else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
                 setTaxRate(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TAX_RATE) != null)
                 showTaxRate();
@@ -67,6 +68,10 @@ public class GameMenu {
                 setFearRate(matcher);
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.NEXT_TURN) != null)
                 nextTurn();
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_BUILDING_FOR_CUSTOMIZE)) != null)
+                dropBuildingTest(matcher);
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_UNIT)) != null)
+                dropUnit(matcher);
             else
                 System.out.println("invalid command");
         }
@@ -391,5 +396,73 @@ public class GameMenu {
     }
 
     private static void dropUnit(Matcher matcher) {
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+        String type = Orders.findFlagOption("-t" , options);
+        String count = Orders.findFlagOption("-c" , options);
+        String onwerGovernmentNumber = Orders.findFlagOption("-g" , options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count , onwerGovernmentNumber);
+
+        switch (message){
+            case INVALID_GOVERNMENT_NUMBER:
+                System.out.println("drop unit error: invalid government number");
+                break;
+            case NO_OWNER_GOVERNMENT_NUMBER:
+                System.out.println("drop unit error: please enter owner government number after " +
+                        " -g flag next time");
+                break;
+            case INVALID_NUMBER:
+                System.out.println("drop unit error: invalid number");
+                break;
+            case INVALID_OPTIONS:
+                System.out.println("drop unit error: please enter x and y component");
+                break;
+            case X_OUT_OF_BOUNDS:
+                System.out.println("drop unit error: x out of bounds");
+                break;
+            case Y_OUT_OF_BOUNDS:
+                System.out.println("drop unit error: y out of bounds");
+                break;
+            case INVALID_COUNT:
+                System.out.println("drop unit error: invalid count");
+                break;
+            case UNSUITABLE_LAND:
+                System.out.println("drop unit error: unsuitable land to drop unit");
+                break;
+            case DROP_UNIT_SUCCESS:
+                System.out.println("unit dropped successfully");
+                break;
+            case NO_MAP_SELECTED:
+                System.out.println("drop unit error: please first select your map");
+                break;
+        }
+    }
+
+    private static void dropBuildingTest(Matcher matcher) {
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x", options);
+        String y = Orders.findFlagOption("-y", options);
+        String type = Orders.findFlagOption("-t", options);
+        String governmentNumber = Orders.findFlagOption("-g", options);
+
+        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x, y, type, governmentNumber);
+
+        switch (message) {
+            case INVALID_NUMBER -> Input_Output.outPut("drop building error: invalid number");
+            case INVALID_OPTIONS -> Input_Output.outPut("drop building error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: y out of bounds");
+            case INVALID_BUILDING_NAME -> Input_Output.outPut("drop building error: invalid building name");
+            case DROP_BUILDING_SUCCESS -> Input_Output.outPut("building dropped successfully");
+            case UNSUITABLE_LAND -> Input_Output.outPut("drop building error: can't place there my lord");
+            case INVALID_GOVERNMENT_NUMBER -> Input_Output.outPut("drop building error: invalid government number");
+            case NO_OWNER_GOVERNMENT_NUMBER ->
+                    Input_Output.outPut("drop building error: please enter owner government number after -g flag next time");
+            case DROPBUILDING_INVALID_PLACE ->
+                    Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
+            case NO_MAP_SELECTED -> Input_Output.outPut("drop building error: please first select your map");
+        }
     }
 }
