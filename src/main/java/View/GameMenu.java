@@ -12,9 +12,21 @@ import View.Enums.Messages.GameMenuMessages;
 import java.util.regex.Matcher;
 
 public class GameMenu {
+    private static int keepCnt;
     public static void run() {
+        keepCnt = 0;
         String input;
         Matcher matcher;
+        while (keepCnt < DataBase.getGovernments().size()) {
+            input = Input_Output.getInput();
+            if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
+                Input_Output.outPut("entered show map menu successfully");
+                ShowMapMenu.run();
+            }
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_BUILDING_FOR_CUSTOMIZE)) != null)
+                dropBuildingTest(matcher);
+            else Input_Output.outPut("invalid command");
+        }
         while (true) {
             input = Input_Output.getInput();
             if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_UNIT)) != null)
@@ -72,8 +84,7 @@ public class GameMenu {
                 dropBuildingTest(matcher);
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_UNIT)) != null)
                 dropUnit(matcher);
-            else
-                System.out.println("invalid command");
+            else Input_Output.outPut("invalid command");
         }
     }
 
@@ -458,11 +469,16 @@ public class GameMenu {
             case DROP_BUILDING_SUCCESS -> Input_Output.outPut("building dropped successfully");
             case UNSUITABLE_LAND -> Input_Output.outPut("drop building error: can't place there my lord");
             case INVALID_GOVERNMENT_NUMBER -> Input_Output.outPut("drop building error: invalid government number");
+            case THIS_GOVERNMENT_HAS_KEEP -> Input_Output.outPut("this government has keep");
             case NO_OWNER_GOVERNMENT_NUMBER ->
                     Input_Output.outPut("drop building error: please enter owner government number after -g flag next time");
             case DROPBUILDING_INVALID_PLACE ->
                     Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
             case NO_MAP_SELECTED -> Input_Output.outPut("drop building error: please first select your map");
         }
+    }
+
+    public static void addKeepCnt() {
+        keepCnt++;
     }
 }

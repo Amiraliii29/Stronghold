@@ -1,12 +1,9 @@
 package Controller;
 
-import java.security.NoSuchAlgorithmException;
-
 import Model.DataBase;
 import Model.Government;
 import Model.Map;
 import Model.User;
-import View.Enums.Commands.LoginMenuCommands;
 import View.Enums.Messages.LoginMenuMessages;
 import View.Input_Output;
 
@@ -22,11 +19,13 @@ public class LoginMenuController {
         else{
             int usersCount = selectedMap.getGovernmentsInMap().size();
             for (int i = 0 ; i < usersCount ; i++){
-                Input_Output.outPut("please enter payer number" + i + "\'s name:");
+                Input_Output.outPut("please enter payer number" + i + "'s name:");
                 String userName = Input_Output.getInput();
-                if(User.getUserByUserName(userName) == null)
-                    return LoginMenuMessages.INVALID_USERNAME;
-                selectedMap.getGovernmentsInMap().get(i).setOwner(User.getUserByUserName(userName));
+                if(User.getUserByUserName(userName) == null) {
+                    Input_Output.outPut("Invalid username");
+                    i--;
+                } else
+                    selectedMap.getGovernmentsInMap().get(i).setOwner(User.getUserByUserName(userName));
             }
             DataBase.newGovernments();
             for (Government government : selectedMap.getGovernmentsInMap()) {

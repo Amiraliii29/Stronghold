@@ -234,7 +234,6 @@ public class Map {
     }
 
     public int[] getAnEnemyCoordInRange(Unit mainUnit) {
-
         ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
         int aggressionRange = mainUnit.getAggressionRange();
         int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();

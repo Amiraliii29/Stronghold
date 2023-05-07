@@ -29,6 +29,6 @@ public enum CustomizeMapMessages {
     DROP_UNIT_SUCCESS,
     DROPBUILDING_INVALID_PLACE,
     NO_MAP_SELECTED,
-    ;
+    THIS_GOVERNMENT_HAS_KEEP;
 
 }

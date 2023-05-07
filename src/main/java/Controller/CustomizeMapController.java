@@ -6,6 +6,7 @@ import Model.Units.Troop;
 import View.CustomizeMap;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
+import View.GameMenu;
 import View.Input_Output;
 
 import java.util.Random;
@@ -246,9 +247,10 @@ public class CustomizeMapController {
             DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
             if (!selectedMap.canConstructBuildingInPlace(buildingToConstruct, xInt, yInt))
                 return CustomizeMapMessages.DROPBUILDING_INVALID_PLACE;
-            GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
-            selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
-            if(type.equals("Keep")){
+            if(type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null){
+                GameMenu.addKeepCnt();
+                GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
+                selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
                 Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
                 ownerGovernment.setLord(xInt , yInt);
                 for (int i = 0 ; i < 5 ; i++) {
@@ -257,7 +259,8 @@ public class CustomizeMapController {
                 for (int i = 0 ; i < 5 ; i++) {
                     Troop.createTroop(ownerGovernment, "SpearMan", xInt, yInt);
                 }
-            }
+            } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() == null)
+                return CustomizeMapMessages.THIS_GOVERNMENT_HAS_KEEP;
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
         }
     }
