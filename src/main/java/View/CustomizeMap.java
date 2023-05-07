@@ -89,6 +89,9 @@ public class CustomizeMap {
             case DROP_UNIT_SUCCESS:
                 System.out.println("unit dropped successfully");
                 break;
+            case NO_MAP_SELECTED:
+                System.out.println("drop unit error: please first select your map");
+                break;
         }
 
     }
@@ -152,12 +155,13 @@ public class CustomizeMap {
 
         switch (message) {
             case INVALID_OPTIONS ->
-                    System.out.println("settexture error: invalid options please enter x and y components");
-            case INVALID_NUMBER -> System.out.println("settexture error: invalid number");
-            case X_OUT_OF_BOUNDS -> System.out.println("settexture error: x out of bounds");
-            case Y_OUT_OF_BOUNDS -> System.out.println("settexture error: y out of bounds");
-            case INVALID_TYPE -> System.out.println("settexture error: invalid type");
-            case SET_TEXTURE_SUCCESS -> System.out.println("settexture success :)");
+                    System.out.println("set texture error: invalid options please enter x and y components");
+            case INVALID_NUMBER -> System.out.println("set texture error: invalid number");
+            case X_OUT_OF_BOUNDS -> System.out.println("set texture error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("set texture error: y out of bounds");
+            case INVALID_TYPE -> System.out.println("set texture error: invalid type");
+            case SET_TEXTURE_SUCCESS -> System.out.println("set texture success :)");
+            case NO_MAP_SELECTED -> System.out.println("set texture error: please first select your map");
         }
     }
 
@@ -173,6 +177,7 @@ public class CustomizeMap {
             case X_OUT_OF_BOUNDS -> System.out.println("clear tile error: x out of bounds");
             case Y_OUT_OF_BOUNDS -> System.out.println("clear tile error: y out of bounds");
             case CLEAR_TILE_SUCCESS -> System.out.println("tile cleared successfully");
+            case NO_MAP_SELECTED -> System.out.println("clear tile error: please first select your map");
         }
     }
 
@@ -191,6 +196,7 @@ public class CustomizeMap {
             case Y_OUT_OF_BOUNDS -> System.out.println("drop rock error: y out of bounds");
             case INVALID_DIRECTION -> System.out.println("drop rock error: invalid direction");
             case DROP_ROCK_SUCCESS -> System.out.println("rock dropped successfully :)");
+            case NO_MAP_SELECTED -> System.out.println("drop rock error: please first select your map");
         }
     }
 
@@ -209,6 +215,7 @@ public class CustomizeMap {
             case Y_OUT_OF_BOUNDS -> System.out.println("drop tree error: y out of bounds");
             case DROP_TREE_SUCCESS -> System.out.println("tree dropped successfully");
             case INVALID_TREE_NAME -> System.out.println("drop tree error: invalid tree name");
+            case NO_MAP_SELECTED -> System.out.println("drop tree error: please first select your map");
         }
 
     }
@@ -235,6 +242,7 @@ public class CustomizeMap {
                     System.out.println("drop building error: please enter owner government number after " +
                             " -g flag next time");
             case DROPBUILDING_INVALID_PLACE -> Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
+            case NO_MAP_SELECTED -> System.out.println("drop building error: please first select your map");
         }
     }
 

@@ -76,7 +76,7 @@ public class CustomizeMapController {
             if(land == null)
                 return CustomizeMapMessages.INVALID_TYPE;
 
-            DataBase.getSelectedMap().getSquareFromMap(xInt , yInt).setLand(land);
+            DataBase.getSelectedMap().getSquareFromMap(xInt -1  , yInt -1 ).setLand(land);
             Map.saveMap(DataBase.getSelectedMap() , DataBase.getSelectedMap().getName());
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
 
@@ -93,7 +93,10 @@ public class CustomizeMapController {
             int x2Int = Integer.parseInt(x2);
             int y2Int = Integer.parseInt(y2);
 
-            if(x1Int <= 0 || x1Int > DataBase.getSelectedMap().getLength() ||x2Int <= 0
+
+            if (DataBase.getSelectedMap() == null)
+                return CustomizeMapMessages.NO_MAP_SELECTED;
+            else if(x1Int <= 0 || x1Int > DataBase.getSelectedMap().getLength() ||x2Int <= 0
                     || x2Int > DataBase.getSelectedMap().getLength())
                 return CustomizeMapMessages.X_OUT_OF_BOUNDS;
             else if(y1Int <= 0 || y1Int > DataBase.getSelectedMap().getWidth() || y2Int <= 0 ||
@@ -105,9 +108,9 @@ public class CustomizeMapController {
             if(land == null)
                 return CustomizeMapMessages.INVALID_TYPE;
 
-            for (int j = y1Int - 1 ; j >= y2Int - 1 ; j--){
+            for (int j = y2Int - 1 ; j >= y1Int - 1 ; j--){
                 for (int i = x1Int - 1 ; i <= x2Int - 1 ; i++){
-                    DataBase.getSelectedMap().getSquareFromMap(j , i).setLand(land);
+                    DataBase.getSelectedMap().getSquareFromMap(i , j).setLand(land);
                 }
             }
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
@@ -126,6 +129,9 @@ public class CustomizeMapController {
 
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
 
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
@@ -151,6 +157,9 @@ public class CustomizeMapController {
 
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
 
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
@@ -182,6 +191,8 @@ public class CustomizeMapController {
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
 
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
@@ -213,7 +224,8 @@ public class CustomizeMapController {
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         Building buildingToConstruct = GameMenuController.getBuildingByName(type);
-
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
@@ -266,7 +278,8 @@ public class CustomizeMapController {
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         Building building = GameMenuController.getBuildingByName(type);
-
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
