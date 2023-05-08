@@ -66,8 +66,6 @@ public class ShowMapMenu {
         String x = Orders.findFlagOption("-x" , matcher.group("options"));
         String y = Orders.findFlagOption("-y" , matcher.group("options"));
 
-        String toPrint = ShowMapMenuController.showDetailsController(x , y);
-
-        System.out.print(toPrint);
+        Input_Output.outPut(ShowMapMenuController.showDetailsController(x , y));
     }
 }

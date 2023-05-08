@@ -110,7 +110,7 @@ public class Square {
     }
 
     public boolean canPass() {
-        return canPass.get(land);
+        return canPass.get(Land.getName(land));
     }
 
     public void setLand(Land land) {

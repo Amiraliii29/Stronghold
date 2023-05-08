@@ -41,11 +41,11 @@ public class ShowMapMenuController {
                         mapToShow[i+10][j+10] = "SS|";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
                         mapToShow[i+10][j+10] = "BB|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
-                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
-                                getResource().getName().toCharArray();
-                        mapToShow[i+10][j+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
-                    }
+//                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
+//                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
+//                                getResource().getName().toCharArray();
+//                        mapToShow[i+10][j+10] = String.valueOf(resourceName[0]) + String.valueOf(resourceName[2]) + "|";
+//                    }
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getLand() != null){
                         char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).
                                 getLand().name().toCharArray();
@@ -106,8 +106,9 @@ public class ShowMapMenuController {
             int xInt = Integer.parseInt(x);
             int yInt = Integer.parseInt(y);
             Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
-            toReturn += "Land type: " + square.getLand() + "\nresource: " + square.getResource().getName()
-                    + "\nTroops: ";
+//            toReturn += "Land type: " + square.getLand() + "\nresource: " + square.getResource().getName()
+//                    + "\nTroops: ";
+            toReturn += "Land type: " + square.getLand() + "\nTroops: ";
             HashMap<Unit,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
             for (Unit unit : unitsTypeAndCount.keySet()) {
                 toReturn += unit.getName() + " (" + unitsTypeAndCount.get(unit) + ")\n";

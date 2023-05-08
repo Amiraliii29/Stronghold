@@ -331,7 +331,8 @@ public class GameMenuController {
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
         int xCoordinate = Integer.parseInt(x);
         int yCoordinate = Integer.parseInt(y);
-        if (DataBase.getSelectedMap().getLength() < xCoordinate || DataBase.getSelectedMap().getWidth() < yCoordinate)
+        if (DataBase.getSelectedMap().getLength() <= xCoordinate || DataBase.getSelectedMap().getWidth() <= yCoordinate
+                || xCoordinate < 0 || yCoordinate < 0)
             return GameMenuMessages.INVALID_COORDINATE;
 
         if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -385,15 +386,16 @@ public class GameMenuController {
 
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
         //conditions
+        if (x < 0 || y < 0 || x >= map.getLength() || y >= map.getWidth()) return false;
         if (!map.getSquareFromMap(x, y).canPass()) return false;
         if (map.getSquareFromMap(x, y).getBuilding() != null) {
             if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
-                if (!map.getSquareFromMap(x, y).getBuilding().getCanPass()
+                if (!map.getSquareFromMap(x, y).getBuilding().getCanPass(up)
                         || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
                     return false;
             } else if (!unit.getName().equals("Assassin")) {
                 if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                        || map.getSquareFromMap(x, y).getBuilding().getCanPass()))
+                        || map.getSquareFromMap(x, y).getBuilding().getCanPass(up)))
                     return false;
 
                 LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
@@ -405,11 +407,10 @@ public class GameMenuController {
                 if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
 
                 if (!up && (map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                        && !map.getSquareFromMap(x, y).getBuilding().getCanPass()))
+                        && !map.getSquareFromMap(x, y).getBuilding().getCanPass(false)))
                     return false;
             }
         }
-
         if (speed >= 0 && x == xFin && y == yFin) {
             if (map.getSquareFromMap(x, y).getBuilding() != null
                     && map.getSquareFromMap(x, y).getBuilding() instanceof Defence
@@ -420,22 +421,26 @@ public class GameMenuController {
         }
         if (speed == 0) return false;
 
-
-        squares.add(map.getSquareFromMap(x + 1, y));
-        move(unit, map, x + 1, y, xFin, yFin, speed - 1, up);
-        squares.remove(map.getSquareFromMap(x + 1, y));
-
-        squares.add(map.getSquareFromMap(x - 1, y));
-        move(unit, map, x - 1, y, xFin, yFin, speed - 1, up);
-        squares.remove(map.getSquareFromMap(x - 1, y));
-
-        squares.add(map.getSquareFromMap(x, y + 1));
-        move(unit, map, x, y + 1, xFin, yFin, speed - 1, up);
-        squares.remove(map.getSquareFromMap(x, y + 1));
-
-        squares.add(map.getSquareFromMap(x, y - 1));
-        move(unit, map, x, y - 1, xFin, yFin, speed - 1, up);
-        squares.remove(map.getSquareFromMap(x, y - 1));
+        if (x < map.getLength() - 1) {
+            squares.add(map.getSquareFromMap(x + 1, y));
+            move(unit, map, x + 1, y, xFin, yFin, speed - 1, up);
+            squares.remove(map.getSquareFromMap(x + 1, y));
+        }
+        if (x > 0) {
+            squares.add(map.getSquareFromMap(x - 1, y));
+            move(unit, map, x - 1, y, xFin, yFin, speed - 1, up);
+            squares.remove(map.getSquareFromMap(x - 1, y));
+        }
+        if (y < map.getWidth() - 1) {
+            squares.add(map.getSquareFromMap(x, y + 1));
+            move(unit, map, x, y + 1, xFin, yFin, speed - 1, up);
+            squares.remove(map.getSquareFromMap(x, y + 1));
+        }
+        if (y > 0) {
+            squares.add(map.getSquareFromMap(x, y - 1));
+            move(unit, map, x, y - 1, xFin, yFin, speed - 1, up);
+            squares.remove(map.getSquareFromMap(x, y - 1));
+        }
 
         return allWays.size() != 0;
     }

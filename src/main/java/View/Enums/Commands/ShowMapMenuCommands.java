@@ -7,7 +7,7 @@ public enum ShowMapMenuCommands {
 
     SHOW_MAP("^\\s*show\\s*map\\s*(?<options>.+)$"),
     MOVE_MAP("^\\s*map\\s*(?<direction>\\S+)\\s*(?<direction2>\\S+)?\\s*(?<amount>\\d+)?\\s*$"),
-    SHOW_DETAILS("^\\s*show\\s*details(?<options>\\.+)\\s*$"),
+    SHOW_DETAILS("^\\s*show\\s*details(?<options>.+)\\s*$"),
     EXIT("^\\s*exit\\s*$"),
     VALID_NUMBER("^\\s*\\d+\\s*$"),
     ;

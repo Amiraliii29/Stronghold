@@ -110,8 +110,9 @@ public abstract class Building {
         return cost;
     }
 
-    public boolean getCanPass() {
-        return canPass;
+    public boolean getCanPass(Boolean up) {
+        if (!up) return canPass;
+        return true;
     }
 
     public static void readBuildingsFromFile() {

@@ -289,7 +289,7 @@ public class GameMenu {
         String option = matcher.group("option");
         GameMenuMessages message = GameMenuController.selectUnitController(option);
         switch (message) {
-            case SUCCESS -> Input_Output.outPut("unit moved");
+            case SUCCESS -> Input_Output.outPut("unit selected");
             case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate!");
             case INVALID_TROOP_TYPE -> Input_Output.outPut("we don't have a unit with this name");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("coordinate is invalid!");
