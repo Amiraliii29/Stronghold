@@ -13,7 +13,6 @@ public class Square {
     private Building building;
     private Land land;
     private String cliffDirection;
-    private Resource resource;
     private Trees tree;
     private int treeAmount;
     private final int x;
@@ -76,14 +75,6 @@ public class Square {
 
     public void setBuilding(Building building) {
         this.building = building;
-    }
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
     }
 
     public int getX() {

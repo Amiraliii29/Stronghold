@@ -352,7 +352,7 @@ public class GameMenuController {
         int firstX = unit.get(0).getXCoordinate();
         int firstY = unit.get(0).getYCoordinate();
         boolean up = false;
-        // define up
+
         squares = new ArrayList<>();
         allWays = new ArrayList<>();
         if (move(unit.get(0), map, firstX, firstY, x, y, speed, up)) {
@@ -375,7 +375,7 @@ public class GameMenuController {
             }
 
             for (Unit unitSelected : unit) {
-                if (unitSelected.getMoveLeft() >= allWays.size()) {
+                if (unitSelected.getMoveLeft() >= size) {
                     unitSelected.setMoveLeft(speed - size);
                     unitSelected.setCoordinate(x, y);
                 }
