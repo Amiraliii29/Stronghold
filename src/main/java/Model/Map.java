@@ -82,7 +82,7 @@ public class Map {
     public static ArrayList<int[]> getSquaresWithinRange(int centerX, int centerY, double range, int answerCaretsianZone) {
         double distance;
         int xModifier, yModifier;
-        ArrayList<int[]> answers = new ArrayList<int[]>();
+        ArrayList<int[]> answers = new ArrayList<>();
         switch (answerCaretsianZone) {
             case 1 -> {
                 xModifier = 1;
@@ -178,7 +178,7 @@ public class Map {
 
     public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment, int x, int y) {
         Square targetSquare = getSquareFromMap(x, y);
-        ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
+        ArrayList<Unit> enemyUnits = new ArrayList<>();
 
         for (Unit unit : targetSquare.getUnits())
             if (!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
@@ -233,7 +233,7 @@ public class Map {
     }
 
     public int[] getAnEnemyCoordInRange(Unit mainUnit) {
-        ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
+        ArrayList<int[]> landsWithinRange = new ArrayList<>();
         int aggressionRange = mainUnit.getAggressionRange();
         int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();
 

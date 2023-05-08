@@ -28,6 +28,7 @@ public class GameMenu {
                 dropBuildingTest(matcher);
             else Input_Output.outPut("invalid command");
         }
+        DataBase.setCurrentGovernment(GameMenuController.getCurrentGovernment());
         Input_Output.outPut("game started!");
         while (true) {
             input = Input_Output.getInput();

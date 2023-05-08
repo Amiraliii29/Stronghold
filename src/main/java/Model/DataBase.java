@@ -116,47 +116,55 @@ public class DataBase {
         int randomEnemyIndex;
 
         for (Unit unit : selectedUnit) {
-
+            if (enemyUnits.size() == 0) break;
             if (unit.getDidFight())
                 continue;
 
             randomEnemyIndex = randomGenerator.nextInt(enemyUnits.size());
             randomEnemy = enemyUnits.get(randomEnemyIndex);
 
-            if (isUnitFriendly(currentGovernment, randomEnemy))
-                continue;
-
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
 
-            if (randomEnemy.getHitPoint() <= 0)
+            if (randomEnemy.getHitPoint() <= 0) {
+                selectedMap.getSquareFromMap(randomEnemy.getXCoordinate(), randomEnemy.getYCoordinate()).removeUnit(randomEnemy);
                 enemyUnits.remove(randomEnemyIndex);
+            }
         }
 
         removeDeadSelectedUnits();
     }
 
     private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender) {
-        deffender.changeHitPoint(attacker.getDamage());
 
-        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance))
+        deffender.changeHitPoint(attacker.getDamage());
+        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance) && !deffender.getDidFight()) {
             attacker.changeHitPoint(deffender.getDamage());
+            deffender.setDidFight(true);
+        }
 
         attacker.setDidFight(true);
-        //TODO: APPLIED DAMAGES SHOULD BE AFFECTED BY GOVERNMENT FEAR AND POPULARITY
     }
 
     private static void removeDeadSelectedUnits() {
-        ArrayList<Unit> deadUnits = new ArrayList<Unit>();
+        ArrayList<Unit> deadUnits = new ArrayList<>();
 
         for (Unit unit : selectedUnit)
             if (unit.getHitPoint() <= 0)
                 deadUnits.add(unit);
 
-        for (Unit unit : deadUnits)
-            selectedMap.getSquareFromMap(unit.getXCoordinate(), unit.getYCoordinate()).removeUnit(unit);
+        for (Unit unit : deadUnits) {
+            selectedMap.getSquareFromMap(selectedUnit.get(0).getXCoordinate(), selectedUnit.get(0).getYCoordinate()).removeUnit(unit);
+            removeUnit(unit);
+        }
+    }
 
-        for (Unit deadUnit : deadUnits)
-            selectedUnit.remove(deadUnits);
+    private static void removeUnit(Unit unit) {
+        for (int i = 0; i < selectedUnit.size(); i++) {
+            if (selectedUnit.get(i).equals(unit) && unit.getHitPoint() == selectedUnit.get(i).getHitPoint()){
+                selectedUnit.remove(i);
+                break;
+            }
+        }
     }
 
     public static void generateResourcesForCurrentGovernment() {
@@ -216,10 +224,7 @@ public class DataBase {
 
     public static boolean isUnitFriendly(Government owner, Unit unit) {
         //TODO: ALSO CHECK ALLIES
-        String ownerUsername = owner.getOwner().getUsername();
-        if (ownerUsername.equals(unit.getOwner().getOwner().getUsername()))
-            return true;
-        return false;
+        return owner.equals(unit.getOwner());
     }
 
     public static boolean areSelectedUnitsRanged() {
@@ -230,14 +235,15 @@ public class DataBase {
 
     public static void handleEndOfTurnFights() {
         for (Unit unit : GameMenuController.getAllUnits()) {
-
-            unit.setDidFight(true);
-            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
-            if (targetCoord != null) {
-                GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
-                selectedUnit.clear();
-                selectedUnit.add(unit);
-                unit.setDidFight(true);
+            if (!unit.getDidFight()) {
+                int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+                if (targetCoord != null) {
+                    selectedUnit.clear();
+                    selectedUnit.add(unit);
+                    GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
+                    selectedUnit.clear();
+                    unit.setDidFight(true);
+                }
             }
         }
     }

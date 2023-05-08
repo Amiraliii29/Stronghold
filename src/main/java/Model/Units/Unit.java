@@ -59,9 +59,8 @@ public abstract class Unit {
         this.stateUnits = stateUnits;
     }
 
-    public int changeHitPoint(int damage) {
+    public void changeHitPoint(int damage) {
         hitPoint -= damage;
-        return hitPoint;
     }
 
     public Government getOwner() {

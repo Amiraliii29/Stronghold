@@ -32,6 +32,7 @@ public class LoginMenuController {
                 DataBase.addGovernment(government);
             }
             GameMenuController.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(0));
+            DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(0));
             return LoginMenuMessages.START_GAME_SUCCESS;
         }
     }

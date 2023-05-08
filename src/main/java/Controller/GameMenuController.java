@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class GameMenuController {
     private static Government currentGovernment;
-    private static int turnsPassed=0;
+    private static int turnsPassed = 0;
     private static Building selectedBuilding = null;
     private static Map currentMap;
     private static ArrayList<Building> allBuildings;
@@ -31,7 +31,7 @@ public class GameMenuController {
         buildSiege = new HashMap<>();
         allWays = new ArrayList<>();
         squares = new ArrayList<>();
-        allUnits= new ArrayList<>();
+        allUnits = new ArrayList<>();
         allBuildings = new ArrayList<>();
     }
 
@@ -46,13 +46,13 @@ public class GameMenuController {
         }
 
         ArrayList<Government> governments = DataBase.getGovernments();
-        if (governments.indexOf(currentGovernment) == governments.size()-1)
+        if (governments.indexOf(currentGovernment) == governments.size() - 1)
             DataBase.handleEndOfTurnFights();
 
         if (governments.indexOf(currentGovernment) == governments.size() - 1)
             currentGovernment = governments.get(0);
         else
-            currentGovernment = governments.get(governments.indexOf(currentGovernment)+1);
+            currentGovernment = governments.get(governments.indexOf(currentGovernment) + 1);
 
         DataBase.setCurrentGovernment(currentGovernment);
         selectedBuilding = null;
@@ -65,7 +65,7 @@ public class GameMenuController {
         squares = new ArrayList<>();
         buildSiege = new HashMap<>();
 
-        if(checkForEnd())
+        if (checkForEnd())
             return GameMenuMessages.END;
         return GameMenuMessages.SUCCESS;
     }
@@ -156,8 +156,8 @@ public class GameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    public static void constructBuildingForPlayer(String buildingName, int x, int y ){
-        String buildingCategory=Building.getBuildingCategoryByName(buildingName);
+    public static void constructBuildingForPlayer(String buildingName, int x, int y) {
+        String buildingCategory = Building.getBuildingCategoryByName(buildingName);
         switch (buildingCategory) {
             case "Generator":
                 Generator generator = Generator.createGenerator(currentGovernment, x, y, buildingName);
@@ -184,7 +184,7 @@ public class GameMenuController {
                 break;
         }
     }
-    
+
     public static GameMenuMessages selectBuildingController(String x, String y) {
 
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
@@ -490,41 +490,40 @@ public class GameMenuController {
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        int targetType=currentMap.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
-        if( targetType==0)
+        int targetType = currentMap.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
+        if (targetType == 0)
             return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
-        ArrayList<Unit> currentUnits=DataBase.getSelectedUnit();
-        int currentUnitsX=currentUnits.get(0).getXCoordinate();
-        int currentUnitsY=currentUnits.get(0).getYCoordinate();
-        int unitRange=currentUnits.get(0).getAttackRange();
+        ArrayList<Unit> currentUnits = DataBase.getSelectedUnit();
+        int currentUnitsX = currentUnits.get(0).getXCoordinate();
+        int currentUnitsY = currentUnits.get(0).getYCoordinate();
+        int unitRange = currentUnits.get(0).getAttackRange();
 
-        int unitsZoneFromTarget=Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        ArrayList <int[]> squaresOptimalForFight=Map.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
+        int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
+        ArrayList<int[]> squaresOptimalForFight = Map.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
 
-        boolean result=false;
+        boolean result = false;
         for (int[] validCoord : squaresOptimalForFight) {
-            if(moveUnit(validCoord[0],validCoord[1])){
+            if (moveUnit(validCoord[0], validCoord[1])) {
 
-                if(targetType==1){
-                    double distance=Map.getDistance(targetXInNum, targetYInNum, validCoord[0],validCoord[1]);
+                if (targetType == 1) {
+                    double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
                     DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);
-                }
-                else
+                } else
                     DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
 
-                result=true;
+                result = true;
                 break;
             }
         }
-        if(result)
+        if (result)
             return GameMenuMessages.SUCCESS;
-        
+
         return GameMenuMessages.NORMALATTACK_TARGET_NOT_IN_RANGE;
     }
 
-    public static GameMenuMessages rangedAttackController(String enemyX,String enemyY) {
-        if( !Orders.isInputInteger(enemyY)|| !Orders.isInputInteger(enemyX))
+    public static GameMenuMessages rangedAttackController(String enemyX, String enemyY) {
+        if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
         int targetXInNum = Integer.parseInt(enemyX);
@@ -536,14 +535,14 @@ public class GameMenuController {
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        if( !currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
+        if (!currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
             return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
-        if(!DataBase.areSelectedUnitsRanged())
+        if (!DataBase.areSelectedUnitsRanged())
             return GameMenuMessages.RANGEDATTACK_NON_ARCHER_SELECTION;
 
-        int currentUnitsX=DataBase.getSelectedUnit().get(0).getXCoordinate();
-        int currentUnitsY=DataBase.getSelectedUnit().get(0).getYCoordinate();
+        int currentUnitsX = DataBase.getSelectedUnit().get(0).getXCoordinate();
+        int currentUnitsY = DataBase.getSelectedUnit().get(0).getYCoordinate();
 
         double distance = Map.getDistance(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
         int unitRange = DataBase.getSelectedUnit().get(0).getAttackRange();
@@ -551,14 +550,14 @@ public class GameMenuController {
         if (unitRange < distance)
             return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
 
-        DataBase.attackEnemyByselectedUnits(distance, currentUnitsX, currentUnitsY);
+        DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);
         return GameMenuMessages.SUCCESS;
     }
 
     public static GameMenuMessages patrolController(String coordinates) {
         return null;
     }
-    
+
     public static GameMenuMessages pourOilController(String direction) {
         if (DataBase.getSelectedUnit().size() == 0)
             return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -584,21 +583,21 @@ public class GameMenuController {
             return GameMenuMessages.CANT_GO_THERE;
 
         if (moveUnit(xCoordinate, yCoordinate)) {
-            int[] coord=DataBase.getEnemyClosestBuilding(xCoordinate, yCoordinate);
-            Building targetBuilding =currentMap.getSquareFromMap(coord[0], coord[1]).getBuilding();
+            int[] coord = DataBase.getEnemyClosestBuilding(xCoordinate, yCoordinate);
+            Building targetBuilding = currentMap.getSquareFromMap(coord[0], coord[1]).getBuilding();
             switch (targetBuilding.getName()) {
                 case "Keep":
                     break;
-                
+
                 case "CircularTower":
                     break;
-                
+
                 case "SquareTower":
                     break;
 
                 case "BigStoneGate":
                     break;
-            
+
                 default:
                     targetBuilding.changeHP(999999);
                     DataBase.removeDestroyedBuildings(targetBuilding);
@@ -619,7 +618,8 @@ public class GameMenuController {
 
         int xCoordinate = DataBase.getSelectedUnit().get(0).getXCoordinate();
         int yCoordinate = DataBase.getSelectedUnit().get(0).getYCoordinate();
-        if (DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding() == null) return GameMenuMessages.CANT_BUILD_HERE;
+        if (DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding() == null)
+            return GameMenuMessages.CANT_BUILD_HERE;
 
         currentGovernment.changeMoney(siege.getCost());
         Defence siegeTent = Defence.createDefence(currentGovernment, xCoordinate, yCoordinate, "SiegeTent");
@@ -648,42 +648,42 @@ public class GameMenuController {
         currentMap = map;
     }
 
-    public static int getTurnsPassed(){
+    public static int getTurnsPassed() {
         return turnsPassed;
     }
 
-    public static String getCurrentGovernmentUsername(){
+    public static String getCurrentGovernmentUsername() {
         return currentGovernment.getOwner().getUsername();
     }
 
-    public static ArrayList<String> getBuildingValidLandsByName(String buildingName){
-        
-        for (Building building : allBuildings) 
-            if(building.getName().equals(buildingName))
+    public static ArrayList<String> getBuildingValidLandsByName(String buildingName) {
+
+        for (Building building : allBuildings)
+            if (building.getName().equals(buildingName))
                 return building.getLands();
 
         return null;
     }
 
-    public static Building getBuildingByName(String buildingName){
-        for (Building building : allBuildings) 
-            if(building.getName().equals(buildingName))
+    public static Building getBuildingByName(String buildingName) {
+        for (Building building : allBuildings)
+            if (building.getName().equals(buildingName))
                 return building;
         return null;
     }
 
-    public static ArrayList<Unit> getAllUnits(){
+    public static ArrayList<Unit> getAllUnits() {
         return allUnits;
     }
 
-    public static void addToAllUnits(Unit unit){
+    public static void addToAllUnits(Unit unit) {
         allUnits.add(unit);
     }
 
     public static GameMenuMessages setTaxRateController(int rateNumber) {
-        if(rateNumber > 8 || rateNumber < -3 || (rateNumber % 1) != 0)
+        if (rateNumber > 8 || rateNumber < -3 || (rateNumber % 1) != 0)
             return GameMenuMessages.INVALID_TAX_RATE;
-        else{
+        else {
             DataBase.getCurrentGovernment().setTax(rateNumber);
             return GameMenuMessages.SET_TAX_SUCCESS;
         }
@@ -706,20 +706,24 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages setFoodRateController(int rateNumber) {
-        if(rateNumber > 2 || rateNumber < -2 || (rateNumber % 1) != 0)
+        if (rateNumber > 2 || rateNumber < -2 || (rateNumber % 1) != 0)
             return GameMenuMessages.INVALID_FOOD_RATE;
-        else{
+        else {
             DataBase.getCurrentGovernment().setFood(rateNumber);
             return GameMenuMessages.SET_FOOD_RATE_SUCCESS;
         }
     }
 
     public static GameMenuMessages setFearRateController(int rateNumber) {
-        if(rateNumber > 5 || rateNumber < -5 || (rateNumber % 1) != 0)
+        if (rateNumber > 5 || rateNumber < -5 || (rateNumber % 1) != 0)
             return GameMenuMessages.INVALID_FEAR_RATE;
-        else{
+        else {
             DataBase.getCurrentGovernment().setFear(rateNumber);
             return GameMenuMessages.SET_FEAR_RATE_SUCCESS;
         }
+    }
+
+    public static Government getCurrentGovernment() {
+        return currentGovernment;
     }
 }
