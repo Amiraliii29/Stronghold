@@ -9,8 +9,8 @@ import View.Input_Output;
 import java.util.HashMap;
 
 public class ShowMapMenuController {
-    private static int xLocationOnMap;
-    private static int yLocationOnMap;
+    public static int xLocationOnMap;
+    public static int yLocationOnMap;
     public static String[][] showMapController(String x , String  y){
         String[][] mapToShow = new String[20][20];
 
@@ -61,10 +61,10 @@ public class ShowMapMenuController {
 
         switch (direction){
             case "up":
-                yLocationOnMap += amountInt;
+                yLocationOnMap -= amountInt;
                 break;
             case "down":
-                yLocationOnMap -= amountInt;
+                yLocationOnMap += amountInt;
                 break;
             case "right":
                 xLocationOnMap += amountInt;
@@ -73,19 +73,21 @@ public class ShowMapMenuController {
                 xLocationOnMap -= amountInt;
                 break;
         }
-        switch (direction2){
-            case "up":
-                yLocationOnMap += amountInt;
-                break;
-            case "down":
-                yLocationOnMap -= amountInt;
-                break;
-            case "right":
-                xLocationOnMap += amountInt;
-                break;
-            case "left":
-                xLocationOnMap -= amountInt;
-                break;
+        if(direction2 != null) {
+            switch (direction2) {
+                case "up":
+                    yLocationOnMap -= amountInt;
+                    break;
+                case "down":
+                    yLocationOnMap += amountInt;
+                    break;
+                case "right":
+                    xLocationOnMap += amountInt;
+                    break;
+                case "left":
+                    xLocationOnMap -= amountInt;
+                    break;
+            }
         }
         if (xLocationOnMap <= 0) xLocationOnMap = 1;
         if (yLocationOnMap <= 0) yLocationOnMap = 1;

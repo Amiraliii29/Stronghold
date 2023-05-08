@@ -34,6 +34,7 @@ public class ShowMapMenu {
         String y = Orders.findFlagOption("-y" , options);
 
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
+
         int xINt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
 
@@ -54,6 +55,10 @@ public class ShowMapMenu {
             }
             if(enterFlag == 1)
                 System.out.println("(" + (yInt + i - 9) + ")");
+            for (int j = 0 ; j < 105 ; j++) {
+                System.out.print("-");
+            }
+            System.out.println("");
         }
     }
     private static void moveMap(Matcher matcher){
@@ -63,13 +68,32 @@ public class ShowMapMenu {
 
         String[][] toPrint = ShowMapMenuController.moveMapController(direction , direction2 , amount);
 
-        for (int i = 0 ; i < 20 ; i++){
-            for (int j = 0 ; j < 20 ; j++){
-                if(toPrint == null)
-                    break;
-                System.out.println(toPrint[i][j]);
-            }
+        int xINt = ShowMapMenuController.xLocationOnMap;
+        int yInt = ShowMapMenuController.yLocationOnMap;
+
+        for (int i = -10 ; i < 10 ; i++) {
+            System.out.printf( "(%3d)" , xINt + i + 1);
         }
+        System.out.println();
+
+
+        for (int i = 0 ; i < 20 ; i++){
+            int enterFlag = 0;
+
+            for (int j = 0 ; j < 20 ; j++){
+                if(toPrint[i][j] == null)
+                    continue;
+                enterFlag = 1;
+                System.out.print(toPrint[i][j]);
+            }
+            if(enterFlag == 1)
+                System.out.println("(" + (yInt + i - 9) + ")");
+            for (int j = 0 ; j < 105 ; j++) {
+                System.out.print("-");
+            }
+            System.out.println("");
+        }
+
     }
     private static void showDetails(Matcher matcher){
         String x = Orders.findFlagOption("-x" , matcher.group("options"));
