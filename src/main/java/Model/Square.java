@@ -89,13 +89,13 @@ public class Square {
         return land;
     }
 
-    public HashMap<Unit, Integer> getUnitsTypeAndCount() {
-        HashMap<Unit, Integer> troopsTypeAndCount = new HashMap<>();
+    public HashMap<String, Integer> getUnitsTypeAndCount() {
+        HashMap<String, Integer> troopsTypeAndCount = new HashMap<>();
         for (Unit unit : units) {
-            if (!troopsTypeAndCount.containsKey(unit))
-                troopsTypeAndCount.put(unit, 1);
+            if (!troopsTypeAndCount.containsKey(unit.getName()))
+                troopsTypeAndCount.put(unit.getName(), 1);
             else
-                troopsTypeAndCount.put(unit, troopsTypeAndCount.get(unit) + 1);
+                troopsTypeAndCount.put(unit.getName(), troopsTypeAndCount.get(unit.getName()) + 1);
         }
         return troopsTypeAndCount;
     }

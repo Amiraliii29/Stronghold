@@ -98,17 +98,17 @@ public class ShowMapMenuController {
             return "show map details error: please enter y next time\n";
 
 
-            int xInt = Integer.parseInt(x);
-            int yInt = Integer.parseInt(y);
-            Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
 
-            toReturn += "Land type: " + square.getLand() + "\nTroops: ";
-            HashMap<Unit,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
-            for (Unit unit : unitsTypeAndCount.keySet()) {
-                toReturn += unit.getName() + " (" + unitsTypeAndCount.get(unit) + ")\n";
-            }
-            toReturn += "building: " + square.getBuilding().getName();
-            return toReturn;
+        toReturn += "Land type: \n" + square.getLand() + "\n------------------\n";
+        toReturn += "building: \n" + square.getBuilding().getName() + "\n------------------\nTroops: \n";
+        HashMap<String,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
+        for (String unitName : unitsTypeAndCount.keySet()) {
+            toReturn += unitName + " (" + unitsTypeAndCount.get(unitName) + ")\n";
+        }
+        return toReturn;
     }
 }
 
