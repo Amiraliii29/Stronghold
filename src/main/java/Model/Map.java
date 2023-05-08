@@ -108,7 +108,11 @@ public class Map {
                 if (distance < range) {
                     int[] viableCoord = new int[2];
                     viableCoord[0] = centerX + i * xModifier;
+                    if(viableCoord[0]<0) continue;
+
                     viableCoord[1] = centerY + j * yModifier;
+                    if(viableCoord[1]<0) continue;
+
                     answers.add(viableCoord);
                 }
             }
@@ -236,7 +240,6 @@ public class Map {
         ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
         int aggressionRange = mainUnit.getAggressionRange();
         int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();
-
         landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));
         landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 2));
         landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 3));
