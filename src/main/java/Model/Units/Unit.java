@@ -4,7 +4,6 @@ import Model.Buildings.Defence;
 import Model.DataBase;
 import Model.Government;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 

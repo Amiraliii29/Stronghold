@@ -62,7 +62,7 @@ public class Troop extends Unit{
     public static Troop getTroopByName(String troopName){
         for (Troop troop : troops) {
             if(troop.getName().equals(troopName))
-            return troop;
+                return troop;
         }
         return null;
     }

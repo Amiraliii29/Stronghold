@@ -46,23 +46,25 @@ public class GameMenuController {
         }
 
         ArrayList<Government> governments = DataBase.getGovernments();
-        for (Government government : governments) {
-            if (governments.indexOf(government) == governments.size()-1)
-                DataBase.handleEndOfTurnFights();
-            if (DataBase.getCurrentGovernment().equals(government)) {
-                currentGovernment = governments.get(governments.indexOf(government)+1);
-                DataBase.setCurrentGovernment(currentGovernment);
-                selectedBuilding = null;
-                //call for resources
-                currentGovernment.addAndRemoveFromGovernment();
-                DataBase.generateResourcesForCurrentGovernment();
+        if (governments.indexOf(currentGovernment) == governments.size()-1)
+            DataBase.handleEndOfTurnFights();
 
-                allWays = new ArrayList<>();
-                squares = new ArrayList<>();
-                buildSiege = new HashMap<>();
-                break;
-            }
-        }
+        if (governments.indexOf(currentGovernment) == governments.size() - 1)
+            currentGovernment = governments.get(0);
+        else
+            currentGovernment = governments.get(governments.indexOf(currentGovernment)+1);
+
+        DataBase.setCurrentGovernment(currentGovernment);
+        selectedBuilding = null;
+        //call for resources
+        currentGovernment.addAndRemoveFromGovernment();
+        DataBase.generateResourcesForCurrentGovernment();
+        DataBase.setSelectedUnit(new ArrayList<>());
+
+        allWays = new ArrayList<>();
+        squares = new ArrayList<>();
+        buildSiege = new HashMap<>();
+
         if(checkForEnd())
             return GameMenuMessages.END;
         return GameMenuMessages.SUCCESS;
@@ -314,7 +316,7 @@ public class GameMenuController {
         Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
         ArrayList<Unit> selectedUnit = new ArrayList<>();
         for (Unit unit : square.getUnits()) {
-            if (unit.getName().equals(type)) {
+            if (unit.getName().equals(type) && unit.getOwner().equals(currentGovernment)) {
                 selectedUnit.add(unit);
             }
         }
@@ -527,6 +529,9 @@ public class GameMenuController {
 
         int targetXInNum = Integer.parseInt(enemyX);
         int targetYInNum = Integer.parseInt(enemyY);
+
+        if (DataBase.getSelectedUnit().size() == 0)
+            return GameMenuMessages.CHOSE_UNIT_FIRST;
 
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;

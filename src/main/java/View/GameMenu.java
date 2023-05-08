@@ -224,25 +224,13 @@ public class GameMenu {
 
         GameMenuMessages result = GameMenuController.selectBuildingController(x, y);
         switch (result) {
-            case WRONG_FORMAT_COORDINATE:
-                Input_Output.outPut("error: coordination format is invalid!");
-                break;
-
-            case INVALID_COORDINATE:
-                Input_Output.outPut("error: coordination is out of maps' bounds!");
-                break;
-
-            case SELECTBUILDING_EMPTY_SQUARE:
-                Input_Output.outPut("error: the selected square doesn't have a building!");
-                break;
-
-            case SELECTBUILDING_UNOWNED_BUILDING:
-                Input_Output.outPut("error: the building you want to select is not yours!");
-                break;
-
-            default:
-                Input_Output.outPut("succesfully selected the building!");
-                break;
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
+            case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of maps' bounds!");
+            case SELECTBUILDING_EMPTY_SQUARE ->
+                    Input_Output.outPut("error: the selected square doesn't have a building!");
+            case SELECTBUILDING_UNOWNED_BUILDING ->
+                    Input_Output.outPut("error: the building you want to select is not yours!");
+            default -> Input_Output.outPut("succesfully selected the building!");
         }
 
 
@@ -293,7 +281,7 @@ public class GameMenu {
             case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate!");
             case INVALID_TROOP_TYPE -> Input_Output.outPut("we don't have a unit with this name");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("coordinate is invalid!");
-            case THERE_IS_NO_UNIT -> Input_Output.outPut("there is no unit with this name here");
+            case THERE_IS_NO_UNIT -> Input_Output.outPut("you dont have any unit with this name here");
         }
     }
 
@@ -336,10 +324,11 @@ public class GameMenu {
         GameMenuMessages result = GameMenuController.rangedAttackController(targetX, targetY);
         switch (result) {
             case SUCCESS ->
-                    Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+                    Input_Output.outPut("the selected units performed a ranged attack on the target units successfully!");
+            case CHOSE_UNIT_FIRST -> Input_Output.outPut("chose a unit first");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
             case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of map's bounds!");
-            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have a building!");
+            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have enemy!");
             case RANGEDATTACK_NON_ARCHER_SELECTION -> Input_Output.outPut("error: the selected units are not archers!");
             case RANGEDATTACK_TARGET_NOT_IN_RANGE ->
                     Input_Output.outPut("error: the target square is not in the range of archers!");

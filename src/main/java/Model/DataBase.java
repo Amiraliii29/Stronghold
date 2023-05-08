@@ -15,13 +15,13 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 
 public class DataBase {
-    private static  ArrayList<Government> governments;
+    private static ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
     private static Map selectedMap;
     private static Building selectedBuilding;
     private static ArrayList<Unit> selectedUnit;
-    private static SecureRandom randomGenerator=new SecureRandom();
+    private static SecureRandom randomGenerator = new SecureRandom();
 
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
@@ -29,7 +29,6 @@ public class DataBase {
         maps = new ArrayList<>();
         selectedUnit = new ArrayList<>();
     }
-
 
 
     public static Government getCurrentGovernment() {
@@ -43,7 +42,7 @@ public class DataBase {
     }
 
     public static Government getGovernmentByUserName(String userName) {
-        for (Government government:governments)
+        for (Government government : governments)
             if (government.getOwner().getUsername().equals(userName))
                 return government;
 
@@ -57,7 +56,8 @@ public class DataBase {
     public static void addGovernment(Government government) {
         governments.add(government);
     }
-    public static void newGovernments(){
+
+    public static void newGovernments() {
         governments = new ArrayList<>();
     }
 
@@ -97,144 +97,143 @@ public class DataBase {
         DataBase.selectedMap = selectedMap;
     }
 
-    public static void attackBuildingBySelectedUnits(int xUnderAttack,int yUnderAttack){
+    public static void attackBuildingBySelectedUnits(int xUnderAttack, int yUnderAttack) {
 
-        Building buildingUnderAttack=selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getBuilding();
+        Building buildingUnderAttack = selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getBuilding();
 
-        if(isBuildingFriendly(currentGovernment, buildingUnderAttack))
-                return ;
+        if (isBuildingFriendly(currentGovernment, buildingUnderAttack))
+            return;
 
-        for (Unit unit : selectedUnit) 
+        for (Unit unit : selectedUnit)
             buildingUnderAttack.changeHP(unit.getDamage());
-        if(buildingUnderAttack.getHp()<=0)
+        if (buildingUnderAttack.getHp() <= 0)
             removeDestroyedBuildings(buildingUnderAttack);
     }
 
-    public static void attackEnemyByselectedUnits(Double distance,int xUnderAttack,int yUnderAttack){
-        ArrayList<Unit> enemyUnits= selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
+    public static void attackEnemyByselectedUnits(Double distance, int xUnderAttack, int yUnderAttack) {
+        ArrayList<Unit> enemyUnits = selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
         Unit randomEnemy;
         int randomEnemyIndex;
- 
+
         for (Unit unit : selectedUnit) {
-            
-            if(unit.getDidFight()) 
+
+            if (unit.getDidFight())
                 continue;
-            
-            randomEnemyIndex=randomGenerator.nextInt(enemyUnits.size());
-            randomEnemy=enemyUnits.get(randomEnemyIndex);
- 
-            if(isUnitFriendly(currentGovernment, randomEnemy))
+
+            randomEnemyIndex = randomGenerator.nextInt(enemyUnits.size());
+            randomEnemy = enemyUnits.get(randomEnemyIndex);
+
+            if (isUnitFriendly(currentGovernment, randomEnemy))
                 continue;
 
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
- 
-            if(randomEnemy.getHitPoint()<=0)
+
+            if (randomEnemy.getHitPoint() <= 0)
                 enemyUnits.remove(randomEnemyIndex);
         }
- 
+
         removeDeadSelectedUnits();
-     }
- 
-    private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender){
+    }
+
+    private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender) {
         deffender.changeHitPoint(attacker.getDamage());
-         
-        if(Math.ceil(deffender.getAttackRange())>=Math.floor(distance))
-             attacker.changeHitPoint(deffender.getDamage());
+
+        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance))
+            attacker.changeHitPoint(deffender.getDamage());
 
         attacker.setDidFight(true);
-         //TODO: APPLIED DAMAGES SHOULD BE AFFECTED BY GOVERNMENT FEAR AND POPULARITY
+        //TODO: APPLIED DAMAGES SHOULD BE AFFECTED BY GOVERNMENT FEAR AND POPULARITY
     }
- 
-    private static void removeDeadSelectedUnits(){
-         ArrayList<Unit> deadUnits=new ArrayList<Unit>();
- 
-         for (Unit unit : selectedUnit) 
-             if(unit.getHitPoint()<=0)
-                 deadUnits.add(unit);
 
-         for (Unit unit : deadUnits)
+    private static void removeDeadSelectedUnits() {
+        ArrayList<Unit> deadUnits = new ArrayList<Unit>();
+
+        for (Unit unit : selectedUnit)
+            if (unit.getHitPoint() <= 0)
+                deadUnits.add(unit);
+
+        for (Unit unit : deadUnits)
             selectedMap.getSquareFromMap(unit.getXCoordinate(), unit.getYCoordinate()).removeUnit(unit);
 
-         for (Unit deadUnit : deadUnits) 
-             selectedUnit.remove(deadUnits);
-    }
- 
-    public static void generateResourcesForCurrentGovernment(){
-         HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
-         Iterator keySetIterator =  generationRates.keySet().iterator();
-         
-         generateResourcesForCurrentGovernment();
-         while (keySetIterator.hasNext()) {
-             String resourceName = keySetIterator.next().toString();
-             Integer resourceGenerationRate=generationRates.get(resourceName);
- 
-             Resource targetResource=Resource.getResourceByName(resourceName);
-             currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
-         }
+        for (Unit deadUnit : deadUnits)
+            selectedUnit.remove(deadUnits);
     }
 
-    private static void generatePopulationForCurrentGovernment(){
+    public static void generateResourcesForCurrentGovernment() {
+        HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
+        Iterator keySetIterator = generationRates.keySet().iterator();
+
+        while (keySetIterator.hasNext()) {
+            String resourceName = keySetIterator.next().toString();
+            Integer resourceGenerationRate = generationRates.get(resourceName);
+
+            Resource targetResource = Resource.getResourceByName(resourceName);
+            currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
+        }
+    }
+
+    private static void generatePopulationForCurrentGovernment() {
         currentGovernment.changeFreeWorkers(currentGovernment.getWorkerRate());
     }
 
-    public static void removeDestroyedBuildings(Building building){
+    public static void removeDestroyedBuildings(Building building) {
         //TODO: HANDLE STOCKPILES DELETE EFFECT
-            Government owner = building.getOwner();
-            String buildingType=Building.getBuildingCategoryByName(building.getName());
-            
-            owner.getBuildings().remove(building); //NOTE: removing from arraylist probably isnt going to work
-            removeBuildingEffectForPlayer(building, buildingType,owner);
-            selectedMap.removeBuildingFromMap(building);
+        Government owner = building.getOwner();
+        String buildingType = Building.getBuildingCategoryByName(building.getName());
+
+        owner.getBuildings().remove(building); //NOTE: removing from arraylist probably isnt going to work
+        removeBuildingEffectForPlayer(building, buildingType, owner);
+        selectedMap.removeBuildingFromMap(building);
     }
 
-    private static void removeBuildingEffectForPlayer(Building building, String buildingType, Government owner){
+    private static void removeBuildingEffectForPlayer(Building building, String buildingType, Government owner) {
         switch (buildingType) {
             case "Generator":
-            Generator deletedGenerator=(Generator) building;
-            owner.changePopulation(deletedGenerator.getNumberOfWorker());
-            owner.changeFreeWorkers(deletedGenerator.getNumberOfWorker());
-            owner.addToGenerationRate(deletedGenerator.getResourceGenerate().getName(),-deletedGenerator.getGeneratingRate());
-            break;
+                Generator deletedGenerator = (Generator) building;
+                owner.changePopulation(deletedGenerator.getNumberOfWorker());
+                owner.changeFreeWorkers(deletedGenerator.getNumberOfWorker());
+                owner.addToGenerationRate(deletedGenerator.getResourceGenerate().getName(), -deletedGenerator.getGeneratingRate());
+                break;
 
             case "TownBuilding":
-            TownBuilding deletedTownBuilding=(TownBuilding) building;
-            owner.addToMaxPopulation(-deletedTownBuilding.getCapacity());
-            owner.updateBuildingPopularity();
-            break;
-        
+                TownBuilding deletedTownBuilding = (TownBuilding) building;
+                owner.addToMaxPopulation(-deletedTownBuilding.getCapacity());
+                owner.updateBuildingPopularity();
+                break;
+
             default:
                 break;
         }
     }
 
-    public static boolean isBuildingFriendly(Government owner, Building building){
+    public static boolean isBuildingFriendly(Government owner, Building building) {
         //TODO: ALSO CHECK ALLIES
-        String ownerUsername=owner.getOwner().getUsername();
-        if(ownerUsername.equals(building.getOwner().getOwner().getUsername()))
+        String ownerUsername = owner.getOwner().getUsername();
+        if (ownerUsername.equals(building.getOwner().getOwner().getUsername()))
             return true;
         return false;
     }
 
-    public static boolean isUnitFriendly(Government owner, Unit unit){
+    public static boolean isUnitFriendly(Government owner, Unit unit) {
         //TODO: ALSO CHECK ALLIES
-        String ownerUsername=owner.getOwner().getUsername();
-        if(ownerUsername.equals(unit.getOwner().getOwner().getUsername()))
+        String ownerUsername = owner.getOwner().getUsername();
+        if (ownerUsername.equals(unit.getOwner().getOwner().getUsername()))
             return true;
         return false;
     }
 
-    public static boolean areSelectedUnitsRanged(){
-        if(selectedUnit.get(0).getAttackRange()>1)
+    public static boolean areSelectedUnitsRanged() {
+        if (selectedUnit.get(0).getAttackRange() > 1)
             return true;
         else return false;
     }
 
-    public static void handleEndOfTurnFights(){
+    public static void handleEndOfTurnFights() {
         for (Unit unit : GameMenuController.getAllUnits()) {
 
             unit.setDidFight(true);
-            int[] targetCoord=selectedMap.getAnEnemyCoordInRange(unit);
-            if(targetCoord != null){
+            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+            if (targetCoord != null) {
                 GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
                 selectedUnit.clear();
                 selectedUnit.add(unit);
@@ -243,24 +242,24 @@ public class DataBase {
         }
     }
 
-    public static int[] getEnemyClosestBuilding(int currentX, int currentY){
-        Government enemy=null;
-        int[] nearestCorner=new int[2];
-        int buildingCornerX,buildingCornerY;
-        double nearestDistance=1000000, distance;
+    public static int[] getEnemyClosestBuilding(int currentX, int currentY) {
+        Government enemy = null;
+        int[] nearestCorner = new int[2];
+        int buildingCornerX, buildingCornerY;
+        double nearestDistance = 1000000, distance;
 
-        for (Government government : governments) 
-            if(!government.getOwner().getUsername().equals(currentGovernment.getOwner().getUsername()))
-                enemy=government;
+        for (Government government : governments)
+            if (!government.getOwner().getUsername().equals(currentGovernment.getOwner().getUsername()))
+                enemy = government;
 
         for (Building building : enemy.getBuildings()) {
-            buildingCornerX=building.getXCoordinateLeft();
-            buildingCornerY=building.getYCoordinateUp();
-            distance=selectedMap.getDistance(currentX, currentY, buildingCornerX, buildingCornerY);
-            if(distance<nearestDistance){
-                nearestDistance=distance;
-                nearestCorner[0]=buildingCornerX;
-                nearestCorner[1]=buildingCornerY;
+            buildingCornerX = building.getXCoordinateLeft();
+            buildingCornerY = building.getYCoordinateUp();
+            distance = selectedMap.getDistance(currentX, currentY, buildingCornerX, buildingCornerY);
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestCorner[0] = buildingCornerX;
+                nearestCorner[1] = buildingCornerY;
             }
         }
 
