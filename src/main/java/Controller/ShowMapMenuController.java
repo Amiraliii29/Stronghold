@@ -39,13 +39,13 @@ public class ShowMapMenuController {
                             || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
                         mapToShow[i+10][j+10] = null;
                     else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
-                        mapToShow[i+10][j+10] = "SS|";
+                        mapToShow[i+10][j+10] = " SS |";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
-                        mapToShow[i+10][j+10] = "BB|";
+                        mapToShow[i+10][j+10] = " BB |";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getLand() != null){
                         char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).
                                 getLand().name().toCharArray();
-                        mapToShow[i+10][j+10] = String.valueOf(landName[0])+ String.valueOf(landName[2]) + "|" ;
+                        mapToShow[i+10][j+10] = " " + String.valueOf(landName[0])+ String.valueOf(landName[2]) + " |" ;
                     }
                 }
             }

@@ -34,9 +34,18 @@ public class ShowMapMenu {
         String y = Orders.findFlagOption("-y" , options);
 
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
+        int xINt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        for (int i = -10 ; i < 10 ; i++) {
+            System.out.printf( "(%3d)" , xINt + i + 1);
+        }
+        System.out.println();
+
 
         for (int i = 0 ; i < 20 ; i++){
             int enterFlag = 0;
+
             for (int j = 0 ; j < 20 ; j++){
                 if(toPrint[i][j] == null)
                     continue;
@@ -44,7 +53,7 @@ public class ShowMapMenu {
                 System.out.print(toPrint[i][j]);
             }
             if(enterFlag == 1)
-                System.out.println("");
+                System.out.println("(" + (yInt + i - 9) + ")");
         }
     }
     private static void moveMap(Matcher matcher){
