@@ -20,6 +20,8 @@ public class GameMenu {
         Input_Output.outPut("please put each player's keep");
         while (keepCnt < DataBase.getGovernments().size()) {
             input = Input_Output.getInput();
+            input = input.trim();
+
             if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
                 Input_Output.outPut("entered show map menu successfully");
                 ShowMapMenu.run();
@@ -32,6 +34,8 @@ public class GameMenu {
         Input_Output.outPut("game started!");
         while (true) {
             input = Input_Output.getInput();
+            input = input.trim();
+
             if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_UNIT)) != null)
                 selectUnit(matcher);
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.MOVE_UNIT)) != null)
@@ -339,22 +343,17 @@ public class GameMenu {
     }
 
     private static void attack(Matcher matcher) {
-        String input = matcher.group("coordinates");
-        String targetX = Orders.findFlagOption("-x", input);
-        String targetY = Orders.findFlagOption("-y", input);
-
-        if (targetX == null || targetY == null) {
-            Input_Output.outPut("error: empty coordination fields!");
-            return;
-        }
+        String targetX = matcher.group("x");
+        String targetY = matcher.group("y");
 
         GameMenuMessages result = GameMenuController.attackController(targetX, targetY);
         switch (result) {
             case SUCCESS ->
-                    Input_Output.outPut("the selected units performed a ranged attack on the target units succesfully!");
+                    Input_Output.outPut("the selected units performed a ranged attack on the target units successfully!");
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
+            case CHOSE_UNIT_FIRST -> Input_Output.outPut("chose a unit first");
             case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of map's bounds!");
-            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have a building!");
+            case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: there is no enemy there!");
             case NORMALATTACK_TARGET_NOT_IN_RANGE ->
                     Input_Output.outPut("error: the units are not able to reach the target to perform attack!");
             default -> {

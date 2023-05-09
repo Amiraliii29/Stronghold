@@ -195,15 +195,13 @@ public class Map {
         Square targetSquare = getSquareFromMap(x, y);
         Building targetBuilding = targetSquare.getBuilding();
 
-        if (targetBuilding != null)
-            if (targetBuilding instanceof Defence && !DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
-                return 2;
-
         if (doesSquareContainEnemyUnits(x, y, ownGovernment))
             return 1;
 
-        if (targetSquare.getBuilding() != null)
-            return 2;
+        if (targetBuilding != null)
+            if (!DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
+                return 2;
+
         return 0;
     }
 

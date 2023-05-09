@@ -375,14 +375,15 @@ public class GameMenuController {
                     square.setBuilding(null);
                 }
             }
-
+            boolean check = false;
             for (Unit unitSelected : unit) {
                 if (unitSelected.getMoveLeft() >= size) {
                     unitSelected.setMoveLeft(speed - size);
                     unitSelected.setCoordinate(x, y);
+                    check = true;
                 }
             }
-            return true;
+            return check;
         } else return false;
     }
 
@@ -484,6 +485,8 @@ public class GameMenuController {
         if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
+        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
+
         int targetXInNum = Integer.parseInt(enemyX);
         int targetYInNum = Integer.parseInt(enemyY);
 
@@ -505,7 +508,6 @@ public class GameMenuController {
         boolean result = false;
         for (int[] validCoord : squaresOptimalForFight) {
             if (moveUnit(validCoord[0], validCoord[1])) {
-
                 if (targetType == 1) {
                     double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
                     DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);

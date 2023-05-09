@@ -117,7 +117,7 @@ public class DataBase {
 
         for (Unit unit : selectedUnit) {
             if (enemyUnits.size() == 0) break;
-            if (unit.getDidFight())
+            if (unit.getDidFight() || unit.getAttackRange() < (int) Math.floor(distance))
                 continue;
 
             randomEnemyIndex = randomGenerator.nextInt(enemyUnits.size());
