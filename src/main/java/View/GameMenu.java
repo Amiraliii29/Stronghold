@@ -215,9 +215,6 @@ public class GameMenu {
         }
     }
 
-    private static void userLogout() {
-    }
-
     private static void putBuilding(Matcher matcher) {
         String buildingComponents = matcher.group("buildingComponents");
         String x = Orders.findFlagOption("-x", buildingComponents);
@@ -399,7 +396,14 @@ public class GameMenu {
     private static void digTunnel(Matcher matcher) {
         String coordinate = matcher.group("coordinate");
         GameMenuMessages message = GameMenuController.digTunnelController(coordinate);
-
+        switch (message) {
+            case SUCCESS -> Input_Output.outPut("successful");
+            case INVALID_COORDINATE -> Input_Output.outPut("invalid coordinate");
+            case CHOSE_UNIT_FIRST -> Input_Output.outPut("choose unit first");
+            case NOT_TUNNELER -> Input_Output.outPut("unit is not tunneler");
+            case CANT_GO_THERE -> Input_Output.outPut("cant go there");
+            case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("wrong format for password");
+        }
     }
 
     private static void buildEquipment(Matcher matcher) {

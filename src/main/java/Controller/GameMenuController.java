@@ -588,23 +588,10 @@ public class GameMenuController {
         if (moveUnit(xCoordinate, yCoordinate)) {
             int[] coord = DataBase.getEnemyClosestBuilding(xCoordinate, yCoordinate);
             Building targetBuilding = currentMap.getSquareFromMap(coord[0], coord[1]).getBuilding();
-            switch (targetBuilding.getName()) {
-                case "Keep":
-                    break;
-
-                case "CircularTower":
-                    break;
-
-                case "SquareTower":
-                    break;
-
-                case "BigStoneGate":
-                    break;
-
-                default:
-                    targetBuilding.changeHP(999999);
-                    DataBase.removeDestroyedBuildings(targetBuilding);
-                    break;
+            if (!targetBuilding.getName().equals("Keep") && !targetBuilding.getName().equals("SquareTower")
+                    && !targetBuilding.getName().equals("CircularTower") && !targetBuilding.getName().equals("BigStoneGate")) {
+                targetBuilding.changeHP(999999);
+                DataBase.removeDestroyedBuildings(targetBuilding);
             }
             return GameMenuMessages.SUCCESS;
         } else return GameMenuMessages.CANT_GO_THERE;
