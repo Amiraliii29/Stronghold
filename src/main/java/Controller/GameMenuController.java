@@ -143,7 +143,7 @@ public class GameMenuController {
 
         int resourceCount = targetBuilding.getNumberOfResource();
         if (targetBuilding.getResource() != null)
-            if (currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount)
+            if (currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) <= resourceCount)
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
 
         currentGovernment.changeMoney(-buildingCost);

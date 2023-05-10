@@ -38,59 +38,86 @@ public class GameMenu {
 
             if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_UNIT)) != null)
                 selectUnit(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.MOVE_UNIT)) != null)
                 moveUnit(matcher);
+
             else if (((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.PATRON_UNIT)) != null))
                 patrol(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_STATE)) != null)
                 setUnitMode(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.ATTACK_GROUND)) != null)
                 attack(matcher);
+
             else if (((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.ATTACK_AIR)) != null))
                 attackAir(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DIG_TUNNEL)) != null)
                 digTunnel(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.POUR_OIL)) != null)
                 pourOil(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.BUILD_SIEGE)) != null)
                 buildEquipment(matcher);
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.DISBAND) != null)
                 disbandUnit();
-            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_BUILDING) != null)
-                dropBuilding(matcher);
-            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_BUILDING) != null)
+
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.PUT_BUILDING)) != null)
+                putBuilding(matcher);
+
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SELECT_BUILDING)) != null)
                 selectBuilding(matcher);
-            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.CREATE_UNIT) != null)
+
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.CREATE_UNIT)) != null)
                 createUnit(matcher);
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.REPAIR_BUILDING) != null)
                 repair();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TURNS_PASSED) != null)
                 showTurnsPassed();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_CURRENT_GOVERNMENT) != null)
                 showCurrentPlayer();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
                 Input_Output.outPut("entered show map menu successfully");
                 ShowMapMenu.run();
+
             } else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
                 setTaxRate(matcher);
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_TAX_RATE) != null)
                 showTaxRate();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_POPULARITY_FACTORS) != null)
                 showPopularityFactors();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_POPULARITY) != null)
                 showPopularity();
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_FOOD_LIST) != null)
                 showFoodList();
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_FOOD_RATE)) != null)
                 setFoodRate(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_FEAR_RATE)) != null)
                 setFearRate(matcher);
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.NEXT_TURN) != null)
                 nextTurn();
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_BUILDING_FOR_CUSTOMIZE)) != null)
                 dropBuildingTest(matcher);
+
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_UNIT)) != null)
                 dropUnit(matcher);
+
             else Input_Output.outPut("invalid command");
         }
     }
@@ -191,7 +218,7 @@ public class GameMenu {
     private static void userLogout() {
     }
 
-    private static void dropBuilding(Matcher matcher) {
+    private static void putBuilding(Matcher matcher) {
         String buildingComponents = matcher.group("buildingComponents");
         String x = Orders.findFlagOption("-x", buildingComponents);
         String y = Orders.findFlagOption("-y", buildingComponents);
