@@ -249,9 +249,9 @@ public class Government {
         foodCount = 0;
         ArrayList<String> names = new ArrayList<>();
         for (Stockpile granary : this.granary) {
-            for (Map.Entry<Resource, Integer> set : granary.getResources().entrySet()) {
+            for (Map.Entry<String, Integer> set : granary.getResources().entrySet()) {
                 foodCount += set.getValue();
-                names.add(granary.getName());
+                names.add(set.getKey());
             }
         }
         foodType = names.size();

@@ -226,7 +226,7 @@ public class GameMenu {
             return;
         }
 
-        GameMenuMessages result = GameMenuController.dropBuildingController(x, y, buildingName);
+        GameMenuMessages result = GameMenuController.putBuildingController(x, y, buildingName);
         switch (result) {
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
             case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of maps' bounds!");
