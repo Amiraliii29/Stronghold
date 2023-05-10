@@ -63,8 +63,10 @@ public class Map {
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
         boolean check = false;
-
-        for (int i = x; i < x + building.getLength(); i++) {
+        int length = 0;
+        if (building.getName().equals("Keep")) length = building.getLength()  + 4;
+        else length = building.getLength();
+        for (int i = x; i < x + length; i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
                 for (String validLand : building.getLands()) {
                     if (Land.getName(squares[i][j].getLand()).equals(validLand))

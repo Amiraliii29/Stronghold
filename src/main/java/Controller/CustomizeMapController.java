@@ -2,6 +2,8 @@ package Controller;
 
 import Model.*;
 import Model.Buildings.Building;
+import Model.Buildings.Generator;
+import Model.Buildings.Stockpile;
 import Model.Units.Troop;
 import View.CustomizeMap;
 import View.Enums.Commands.CustomizeMapCommands;
@@ -243,24 +245,42 @@ public class CustomizeMapController {
                         return CustomizeMapMessages.UNSUITABLE_LAND;
                 }
             }
-
+            Government government = DataBase.getCurrentGovernment();
             DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1));
+
             if (!selectedMap.canConstructBuildingInPlace(buildingToConstruct, xInt, yInt))
                 return CustomizeMapMessages.DROPBUILDING_INVALID_PLACE;
+
             if(type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() == null){
                 GameMenu.addKeepCnt();
-                GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
+
+                buildingToConstruct = GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
+                Stockpile stockpile = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt, "Stockpile");
+                Stockpile granary = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt + 4, "Granary");
+
                 selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
+                selectedMap.constructBuilding(stockpile, xInt + 8, yInt);
+                selectedMap.constructBuilding(granary, xInt + 8, yInt + 4);
+
                 Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
                 ownerGovernment.setLord(xInt , yInt);
+
                 for (int i = 0 ; i < 5 ; i++) {
                     Troop.createTroop(ownerGovernment, "Archer", xInt, yInt);
                 }
                 for (int i = 0 ; i < 5 ; i++) {
                     Troop.createTroop(ownerGovernment, "SpearMan", xInt, yInt);
                 }
-            } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null)
+
+                DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Bread"), 80);
+                DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Wood"), 80);
+                DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Stone"), 80);
+
+            } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null) {
+                DataBase.setCurrentGovernment(government);
                 return CustomizeMapMessages.THIS_GOVERNMENT_HAS_KEEP;
+            }
+            DataBase.setCurrentGovernment(government);
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
         }
     }

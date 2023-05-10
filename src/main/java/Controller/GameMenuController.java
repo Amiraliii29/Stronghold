@@ -78,7 +78,8 @@ public class GameMenuController {
                 //destroy every thing for this government
                 for (int j = 0; j < allSquares.length; j++) {
                     for (int k = 0; k < allSquares[0].length; k++) {
-                        if (allSquares[j][k].getBuilding().getOwner().equals(governments.get(i))) {
+                        if (allSquares[j][k].getBuilding() != null
+                                && allSquares[j][k].getBuilding().getOwner().equals(governments.get(i))) {
                             allSquares[j][k].getBuilding().changeHP(-100000);
                             DataBase.removeDestroyedBuildings(allSquares[j][k].getBuilding());
                         }
@@ -150,38 +151,38 @@ public class GameMenuController {
         if (targetBuilding.getResource() != null)
             currentGovernment.removeFromStockpile(targetBuilding.getResource(), resourceCount);
 
-        constructBuildingForPlayer(buildingType, xInNum, yInNum);
+        targetBuilding = constructBuildingForPlayer(buildingType, xInNum, yInNum);
         currentMap.constructBuilding(targetBuilding, xInNum, yInNum);
 
         return GameMenuMessages.SUCCESS;
     }
 
-    public static void constructBuildingForPlayer(String buildingName, int x, int y) {
+    public static Building constructBuildingForPlayer(String buildingName, int x, int y) {
         String buildingCategory = Building.getBuildingCategoryByName(buildingName);
         switch (buildingCategory) {
-            case "Generator":
+            case "Generator" -> {
                 Generator generator = Generator.createGenerator(currentGovernment, x, y, buildingName);
                 currentGovernment.changePopulation(generator.getNumberOfWorker());
                 currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
                 currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(), generator.getGeneratingRate());
                 currentGovernment.applyOxEffectOnStoneGeneration();
-                break;
-
-            case "TownBuilding":
+                return generator;
+            }
+            case "TownBuilding" -> {
                 TownBuilding townBuilding = TownBuilding.createTownBuilding(currentGovernment, x, y, buildingName);
                 currentGovernment.addToMaxPopulation(townBuilding.getCapacity());
                 currentGovernment.updateBuildingPopularity();
-                break;
-
-            case "Stockpile":
-                Stockpile stockpile = Stockpile.createStockpile(currentGovernment, x, y, buildingName);
-
-            case "Barrack":
-                Barrack barrack = Barrack.createBarrack(currentGovernment, x, y, buildingName);
-
-            default:
-                Defence defence = Defence.createDefence(currentGovernment, x, y, buildingName);
-                break;
+                return townBuilding;
+            }
+            case "Stockpile" -> {
+                return Stockpile.createStockpile(currentGovernment, x, y, buildingName);
+            }
+            case "Barrack" -> {
+                return Barrack.createBarrack(currentGovernment, x, y, buildingName);
+            }
+            default -> {
+                return Defence.createDefence(currentGovernment, x, y, buildingName);
+            }
         }
     }
 

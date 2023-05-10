@@ -182,9 +182,9 @@ public class GameMenu {
         GameMenuMessages message = GameMenuController.nextTurnController();
         switch (message) {
             case END ->
-                    Input_Output.outPut("Game ended!\n" + "player " + DataBase.getGovernments().get(0).getOwner().getUsername() + "Won");
+                    Input_Output.outPut("Game ended!\n" + "player " + DataBase.getGovernments().get(0).getOwner().getUsername() + " Won");
             case SUCCESS ->
-                    Input_Output.outPut("now is " + DataBase.getCurrentGovernment().getOwner().getUsername() + "Turn");
+                    Input_Output.outPut("now is " + DataBase.getCurrentGovernment().getOwner().getUsername() + " Turn");
         }
     }
 

@@ -118,7 +118,10 @@ public class Stockpile extends Building {
     }
 
     public void addToHashMap(Resource resource, int number) {
-        resources.put(resource, resources.get(resource)+number);
+        if (resources.containsKey(resource))
+            resources.put(resource, resources.get(resource)+number);
+        else
+            resources.put(resource, number);
     }
 
     public void removeFromHashMap(Resource resource, int number) {
@@ -148,6 +151,7 @@ public class Stockpile extends Building {
                     else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
                     else owner.addStockpiles(newStockpile);
                 }
+                newStockpile.resources = new HashMap<>();
                 return newStockpile;
             }
         }
