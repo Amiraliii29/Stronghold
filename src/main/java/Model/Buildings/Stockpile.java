@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Stockpile extends Building {
@@ -94,8 +95,7 @@ public class Stockpile extends Building {
                 }
             }
         }
-        if (number == 0) return true;
-        return false;
+        return number == 0;
     }
 
     public static boolean removeResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
@@ -111,9 +111,9 @@ public class Stockpile extends Building {
                     }
                 }
             }
+            stockpile.resources.entrySet().removeIf(entry -> entry.getValue() == 0);
         }
-        if (number == 0) return true;
-        return false;
+        return number == 0;
     }
 
     public int getCapacity() {
@@ -128,10 +128,7 @@ public class Stockpile extends Building {
     }
 
     public void removeFromHashMap(String resource, int number) {
-        if (resources.get(resource) == number)
-            resources.remove(resource, number);
-        else
-            resources.put(resource, resources.get(resource)-number);
+        resources.put(resource, resources.get(resource)-number);
     }
 
     public static ArrayList<String> getStockpilesName() {

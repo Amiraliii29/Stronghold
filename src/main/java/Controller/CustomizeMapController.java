@@ -273,7 +273,7 @@ public class CustomizeMapController {
                 }
 
                 DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Bread"), 80);
-                DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Wood"), 80);
+                DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Wood"), 3);
                 DataBase.getCurrentGovernment().addToStockpile(Resource.createResource("Stone"), 80);
 
             } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null) {
