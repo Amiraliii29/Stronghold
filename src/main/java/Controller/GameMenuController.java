@@ -36,6 +36,7 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages nextTurnController() {
+        //remove tent and add sieges
         for (HashMap.Entry<Square, String> entry : buildSiege.entrySet()) {
             Siege siege = Siege.createSiege(currentGovernment, entry.getValue(), entry.getKey().getX(), entry.getKey().getY());
             for (int i = 0; i < siege.getEngineerNeed(); i++) {
@@ -44,11 +45,11 @@ public class GameMenuController {
             entry.getKey().getBuilding().changeHP(-10000);
             DataBase.removeDestroyedBuildings(entry.getKey().getBuilding());
         }
-
+        //automatic fights
         ArrayList<Government> governments = DataBase.getGovernments();
         if (governments.indexOf(currentGovernment) == governments.size() - 1)
             DataBase.handleEndOfTurnFights();
-
+        //change government
         if (governments.indexOf(currentGovernment) == governments.size() - 1)
             currentGovernment = governments.get(0);
         else
@@ -56,7 +57,7 @@ public class GameMenuController {
 
         DataBase.setCurrentGovernment(currentGovernment);
         selectedBuilding = null;
-        //call for resources
+        //work with government
         currentGovernment.addAndRemoveFromGovernment();
         DataBase.generateResourcesForCurrentGovernment();
         DataBase.setSelectedUnit(new ArrayList<>());
@@ -145,6 +146,8 @@ public class GameMenuController {
         if (targetBuilding.getResource() != null)
             if (currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount)
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
+        if (targetBuilding instanceof Generator && ((Generator) targetBuilding).getNumberOfWorker() > currentGovernment.getFreeWorker())
+            return GameMenuMessages.NOT_ENOUGH_FREE_WORKER;
 
         currentGovernment.changeMoney(-buildingCost);
 

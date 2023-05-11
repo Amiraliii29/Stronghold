@@ -18,7 +18,9 @@ public class CustomizeMap {
         while(true){
             input = Input_Output.getInput();
             if (CustomizeMapCommands.getMatcher(input, CustomizeMapCommands.BACK) != null) {
-                Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
+                if (DataBase.getSelectedMap() != null)
+                    Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
+                Input_Output.outPut("out of customize menu");
                 break;
             }
             else if((matcher = CustomizeMapCommands.getMatcher(input , CustomizeMapCommands.CREATE_NEW_MAP)) != null)

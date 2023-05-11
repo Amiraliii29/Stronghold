@@ -118,6 +118,9 @@ public class GameMenu {
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_UNIT)) != null)
                 dropUnit(matcher);
 
+            else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_MONEY) != null)
+                showMoney();
+
             else Input_Output.outPut("invalid command");
         }
     }
@@ -237,7 +240,8 @@ public class GameMenu {
             case INSUFFICIENT_GOLD -> Input_Output.outPut("error: you don't have enough gold for this operation!");
             case INSUFFICIENT_RESOURCES ->
                     Input_Output.outPut("error: you don't have enough resources for this building!");
-            default -> Input_Output.outPut("the building was succesfully built!");
+            case NOT_ENOUGH_FREE_WORKER -> Input_Output.outPut("not enough free worker");
+            default -> Input_Output.outPut("the building was successfully built!");
         }
     }
 
@@ -498,6 +502,10 @@ public class GameMenu {
                     Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
             case NO_MAP_SELECTED -> Input_Output.outPut("drop building error: please first select your map");
         }
+    }
+
+    private static void showMoney() {
+        Input_Output.outPut("money : " + DataBase.getCurrentGovernment().getMoney());
     }
 
     public static void addKeepCnt() {

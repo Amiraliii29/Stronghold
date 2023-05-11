@@ -169,19 +169,14 @@ public class DataBase {
 
     public static void generateResourcesForCurrentGovernment() {
         HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
-        Iterator keySetIterator = generationRates.keySet().iterator();
 
-        while (keySetIterator.hasNext()) {
-            String resourceName = keySetIterator.next().toString();
+        for (String s : generationRates.keySet()) {
+            String resourceName = s.toString();
             Integer resourceGenerationRate = generationRates.get(resourceName);
 
             Resource targetResource = Resource.getResourceByName(resourceName);
             currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
         }
-    }
-
-    private static void generatePopulationForCurrentGovernment() {
-        currentGovernment.changeFreeWorkers(currentGovernment.getWorkerRate());
     }
 
     public static void removeDestroyedBuildings(Building building) {
@@ -215,7 +210,6 @@ public class DataBase {
     }
 
     public static boolean isBuildingFriendly(Government owner, Building building) {
-        //TODO: ALSO CHECK ALLIES
         String ownerUsername = owner.getOwner().getUsername();
         if (ownerUsername.equals(building.getOwner().getOwner().getUsername()))
             return true;

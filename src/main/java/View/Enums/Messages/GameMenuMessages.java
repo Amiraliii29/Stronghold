@@ -38,5 +38,5 @@ public enum GameMenuMessages {
     SET_FOOD_RATE_SUCCESS,
     INVALID_FEAR_RATE,
     SET_FEAR_RATE_SUCCESS,
-    END;
+    END, NOT_ENOUGH_FREE_WORKER;
 }
