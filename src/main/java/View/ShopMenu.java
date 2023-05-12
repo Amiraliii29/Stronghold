@@ -43,6 +43,11 @@ public class ShopMenu {
         String itemName = Orders.findFlagOption("-i" , options);
         String amount = Orders.findFlagOption("-a" , options);
 
+        if(Orders.isOrderJunky(options , false , "-i" , "-a")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         ShopMenuMessages message = ShopMenuController.buyItemByNameController(itemName , amount);
 
         switch (message){
@@ -70,6 +75,12 @@ public class ShopMenu {
         String options = matcher.group("options");
         String itemName = Orders.findFlagOption("-i" , options);
         String amount = Orders.findFlagOption("-a" , options);
+
+        if(Orders.isOrderJunky(options , false , "-i" , "-a")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         ShopMenuMessages message = ShopMenuController.sellItemByNameController(itemName , amount);
 
         switch (message){

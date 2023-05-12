@@ -34,6 +34,11 @@ public class ShowMapMenu {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
 
+        if(Orders.isOrderJunky(options , false , "-x" , "-y")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
         int xInt = 1;
         int yInt = 1;
@@ -77,6 +82,7 @@ public class ShowMapMenu {
         String direction2 = matcher.group("direction2");
         String amount = matcher.group("amount");
 
+
         String[][] toPrint = ShowMapMenuController.moveMapController(direction , direction2 , amount);
 
         int xInt = ShowMapMenuController.xLocationOnMap;
@@ -108,8 +114,14 @@ public class ShowMapMenu {
     }
 
     private static void showDetails(Matcher matcher){
+        String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , matcher.group("options"));
         String y = Orders.findFlagOption("-y" , matcher.group("options"));
+
+        if(Orders.isOrderJunky(options , false , "-x" , "-y")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
 
         Input_Output.outPut(ShowMapMenuController.showDetailsController(y , x));
     }

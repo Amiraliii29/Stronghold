@@ -50,6 +50,11 @@ public class TradeMenu {
         String message = Orders.findFlagOption("-m" , options);
         String governmentNameThatHasBeenDonated = Orders.findFlagOption("-u" , options);
 
+        if(Orders.isOrderJunky(options , false , "-t" , "-a" , "-m" , "-u")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         TradeMenuMessages controllerMessage = TradeMenuController.donateController(resourceName , amount , message ,
                 governmentNameThatHasBeenDonated);
 
@@ -71,6 +76,11 @@ public class TradeMenu {
         String  price = Orders.findFlagOption("-p" , options);
         String message = Orders.findFlagOption("-m" , options);
         String governmentNameThatHasBeenAsked = Orders.findFlagOption("-u" , options);
+
+        if(Orders.isOrderJunky(options , false , "-t" , "-a" , "-p" , "-m" , "-u")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
 
         TradeMenuMessages menuMessages = TradeMenuController.sendTradeRequestController(resourceName , amount , price ,
                 message , governmentNameThatHasBeenAsked);
@@ -101,6 +111,11 @@ public class TradeMenu {
         String options = matcher.group("options");
         String id = Orders.findFlagOption("-i" , options);
         String message = Orders.findFlagOption("-m" , options);
+
+        if(Orders.isOrderJunky(options , false , "-i" , "-m")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
 
         TradeMenuMessages menuMessage = TradeMenuController.acceptTradeByRequest(id , message);
 

@@ -48,6 +48,11 @@ public class CustomizeMap {
         String name = Orders.findFlagOption("-n" , options);
         String width = Orders.findFlagOption("-w" , options);
         String length = Orders.findFlagOption("-l" , options);
+
+        if(Orders.isOrderJunky(options , false , "-n" , "-w" , "-l")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
         CustomizeMapMessages message = CustomizeMapController.createNewMapController(name , length , width);
 
         switch (message){
@@ -98,6 +103,11 @@ public class CustomizeMap {
         String x2 = Orders.findFlagOption("-x2" , options);
         String y2 = Orders.findFlagOption("-y2" , options);
 
+        if(Orders.isOrderJunky(options , false , "-x" , "-y" , "-x1" , "-y1" , "-x2" , "-y2" , "-t")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         CustomizeMapMessages message = CustomizeMapController.setTextureController(x , y , x1 , y1 , x2 , y2 , type);
 
         switch (message) {
@@ -116,6 +126,12 @@ public class CustomizeMap {
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
+
+        if(Orders.isOrderJunky(options , false , "-x" , "-y")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
         CustomizeMapMessages message = CustomizeMapController.clearController(x , y);
 
         switch (message) {
@@ -133,6 +149,11 @@ public class CustomizeMap {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
         String direction = Orders.findFlagOption("-d" , options);
+
+        if(Orders.isOrderJunky(options , false , "-x" , "-y" , "-d")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
 
         CustomizeMapMessages message = CustomizeMapController.dropRockController(x , y ,direction);
 
@@ -152,6 +173,11 @@ public class CustomizeMap {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
         String type = Orders .findFlagOption("-t" , options);
+
+        if(Orders.isOrderJunky(options , false , "-x" , "-y" , "-t")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
 
         CustomizeMapMessages message = CustomizeMapController.dropTreeController(x , y , type);
 
