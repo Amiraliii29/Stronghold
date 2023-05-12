@@ -70,19 +70,12 @@ public class ShowMapMenu {
                 if (enterFlag == 1)
                     System.out.println("(" + (yInt + i - 10) + ")");
             }
-//            if(toPrint[i] != null && yInt + i - 9 > 0 && yInt + i - 9 < DataBase.getSelectedMap().getWidth()) {
-//                for (int j = 0; j < (xInt + 10) * 5; j++) {
-//                    System.out.print("-");
-//                }
-//                System.out.println("");
-//            }
         }
     }
     private static void moveMap(Matcher matcher){
         String direction = matcher.group("direction");
         String direction2 = matcher.group("direction2");
         String amount = matcher.group("amount");
-        //System.out.println("**** direction: " + direction + "**** direction2: " + direction2 + "** amount : " + amount);
 
         String[][] toPrint = ShowMapMenuController.moveMapController(direction , direction2 , amount);
 
@@ -111,19 +104,13 @@ public class ShowMapMenu {
                 if (enterFlag == 1)
                     System.out.println("(" + (yInt + i - 10) + ")");
             }
-//            if(toPrint[i] != null && yInt + i - 9 > 0 && yInt + i - 9 < DataBase.getSelectedMap().getWidth()) {
-//                for (int j = 0; j < (xInt + 10) * 5; j++) {
-//                    System.out.print("-");
-//                }
-//                System.out.println("");
-//            }
         }
-
     }
+
     private static void showDetails(Matcher matcher){
         String x = Orders.findFlagOption("-x" , matcher.group("options"));
         String y = Orders.findFlagOption("-y" , matcher.group("options"));
 
-        Input_Output.outPut(ShowMapMenuController.showDetailsController(x , y));
+        Input_Output.outPut(ShowMapMenuController.showDetailsController(y , x));
     }
 }

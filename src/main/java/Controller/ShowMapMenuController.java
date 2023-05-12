@@ -48,12 +48,12 @@ public class ShowMapMenuController {
                     if(xLocationOnMap + j <= 0  || yLocationOnMap + i <= 0 || xLocationOnMap + j > DataBase.getSelectedMap().getLength()
                             || yLocationOnMap + i > DataBase.getSelectedMap().getWidth() )
                         mapToShow[i+10][j+10] = null;
-                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + i - 1, xLocationOnMap + j - 1 ).getUnits().size() != 0)
+                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + i, xLocationOnMap + j).getUnits().size() != 0)
                         mapToShow[i+10][j+10] = " SS |";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i - 1 , xLocationOnMap + j - 1).getBuilding() != null)
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getBuilding() != null)
                         mapToShow[i+10][j+10] = " BB |";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i - 1 , xLocationOnMap + j - 1).getLand() != null){
-                        char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i - 1 , xLocationOnMap + j - 1).
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getLand() != null){
+                        char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).
                                 getLand().name().toCharArray();
                         mapToShow[i+10][j+10] = " " + String.valueOf(landName[0])+ String.valueOf(landName[2]) + " |" ;
                     }
@@ -115,7 +115,7 @@ public class ShowMapMenuController {
         int yInt = Integer.parseInt(y);
         if (xInt <= 0 || yInt <= 0 || xInt > DataBase.getSelectedMap().getLength() || yInt > DataBase.getSelectedMap().getWidth())
             return "wrong coordinate";
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt-1 , yInt-1);
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
 
         toReturn += "Land type: \n" + square.getLand() + "\n------------------\n";
         if (square.getBuilding() != null) toReturn += "building: \n" + square.getBuilding().getName() + "\n------------------\n";

@@ -46,7 +46,7 @@ public class Map {
     }
 
     public Square getSquareFromMap(int y, int x) {
-        return squares[y][x];
+        return squares[y-1][x-1];
     }
 
     public int getWidth() {
@@ -132,7 +132,7 @@ public class Map {
     }
 
     public boolean isCoordinationValid(int x, int y) {
-        if (x > width || x < 0 || y < 0 || y > width)
+        if (x > length || x <= 0 || y <= 0 || y > width)
             return false;
         return true;
     }
@@ -141,7 +141,7 @@ public class Map {
         //amirali: i edited x and y
         for (int i = x; i < x + building.getLength(); i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
-                squares[j][i].setBuilding(building);
+                squares[j-1][i-1].setBuilding(building);
             }
         }
     }
@@ -237,7 +237,8 @@ public class Map {
     public int[] getAnEnemyCoordInRange(Unit mainUnit) {
         ArrayList<int[]> landsWithinRange = new ArrayList<>();
         int aggressionRange = mainUnit.getAggressionRange();
-        int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();
+        int unitX = mainUnit.getXCoordinate();
+        int unitY = mainUnit.getYCoordinate();
 
         for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++) 
             landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));

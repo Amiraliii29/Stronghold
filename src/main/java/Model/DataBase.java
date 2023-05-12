@@ -127,7 +127,7 @@ public class DataBase {
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
 
             if (randomEnemy.getHitPoint() <= 0) {
-                selectedMap.getSquareFromMap(randomEnemy.getXCoordinate(), randomEnemy.getYCoordinate()).removeUnit(randomEnemy);
+                selectedMap.getSquareFromMap(randomEnemy.getYCoordinate(), randomEnemy.getXCoordinate()).removeUnit(randomEnemy);
                 enemyUnits.remove(randomEnemyIndex);
             }
         }
@@ -248,14 +248,13 @@ public class DataBase {
         for (Unit unit : GameMenuController.getAllUnits()) {
             GameMenuController.setCurrentGovernment(unit.getOwner());
             currentGovernment = unit.getOwner();
-                int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
-                if (targetCoord != null) {
-                    unit.setDidFight(false);
-                    selectedUnit.clear();
-                    selectedUnit.add(unit);
-                    GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
-                    unit.setDidFight(true);
-                }
+            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+            if (targetCoord != null) {
+                selectedUnit.clear();
+                selectedUnit.add(unit);
+                GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
+                unit.setDidFight(true);
+            }
         }
     }
 

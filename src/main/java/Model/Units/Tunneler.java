@@ -21,8 +21,8 @@ public class Tunneler extends Unit{
         Tunneler newTunneler = new Tunneler(owner);
         newTunneler.xCoordinate = xCoordinate;
         newTunneler.yCoordinate = yCoordinate;
-        if (xCoordinate > 0 && yCoordinate > 0)
-            DataBase.getSelectedMap().getSquareFromMap(xCoordinate-1, yCoordinate-1).addUnit(newTunneler);
+        if (xCoordinate >= 0 && yCoordinate >= 0)
+            DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newTunneler);
         return newTunneler;
     }
 }
