@@ -49,13 +49,14 @@ public class GameMenuController {
             return GameMenuMessages.END;
         //automatic fights
         ArrayList<Government> governments = DataBase.getGovernments();
-        if (governments.indexOf(currentGovernment) == governments.size() - 1)
+        int index = governments.indexOf(currentGovernment);
+        if (index == governments.size() - 1)
             DataBase.handleEndOfTurnFights();
         //change government
-        if (governments.indexOf(currentGovernment) == governments.size() - 1)
+        if (index == governments.size() - 1)
             currentGovernment = governments.get(0);
         else
-            currentGovernment = governments.get(governments.indexOf(currentGovernment) + 1);
+            currentGovernment = governments.get(index + 1);
 
         DataBase.setCurrentGovernment(currentGovernment);
         selectedBuilding = null;
@@ -515,8 +516,13 @@ public class GameMenuController {
         int currentUnitsY = currentUnits.get(0).getYCoordinate();
         int unitRange = currentUnits.get(0).getAttackRange();
 
+        if( unitRange> currentMap.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
+            rangedAttackController(enemyX, enemyY);
+            return GameMenuMessages.SUCCESS;
+        }
+
         int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        ArrayList<int[]> squaresOptimalForFight = Map.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
+        ArrayList<int[]> squaresOptimalForFight = currentMap.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
 
         boolean result = false;
         for (int[] validCoord : squaresOptimalForFight) {
@@ -714,6 +720,28 @@ public class GameMenuController {
             DataBase.getCurrentGovernment().setFood(rateNumber);
             return GameMenuMessages.SET_FOOD_RATE_SUCCESS;
         }
+    }
+
+    public static GameMenuMessages modifyGates(String openState){
+        if(openState==null)
+            return GameMenuMessages.EMPTY_INPUT_FIELDS_ERROR;
+
+        if(selectedBuilding==null)
+            return GameMenuMessages.MODIFYGATES_UNMATCHING_BUILDING;
+
+        if(!selectedBuilding.getName().equals("BigStoneGate")||
+            selectedBuilding.getName().equals("SmallStoneGate"))
+                return GameMenuMessages.MODIFYGATES_UNMATCHING_BUILDING;
+            
+        if(openState.equals("open")){
+            selectedBuilding.changeCanPass(true);
+            return GameMenuMessages.SUCCESS;
+        }
+        else if(openState.equals("close")){
+            selectedBuilding.changeCanPass(false);
+            return GameMenuMessages.SUCCESS;
+        }
+        else return GameMenuMessages.INVALID_STATE;
     }
 
     public static GameMenuMessages setFearRateController(int rateNumber) {

@@ -143,4 +143,8 @@ public class Square {
     public String getCliffDirection() {
         return cliffDirection;
     }
+
+    public void changeCanPass(boolean state){
+        this.canPass=state;
+    }
 }

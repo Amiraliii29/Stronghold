@@ -246,16 +246,16 @@ public class DataBase {
 
     public static void handleEndOfTurnFights() {
         for (Unit unit : GameMenuController.getAllUnits()) {
-            if (!unit.getDidFight()) {
+            GameMenuController.setCurrentGovernment(unit.getOwner());
+            currentGovernment = unit.getOwner();
                 int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
                 if (targetCoord != null) {
+                    unit.setDidFight(false);
                     selectedUnit.clear();
                     selectedUnit.add(unit);
                     GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
-                    selectedUnit.clear();
                     unit.setDidFight(true);
                 }
-            }
         }
     }
 

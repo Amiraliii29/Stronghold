@@ -45,8 +45,8 @@ public class Map {
         return squares;
     }
 
-    public Square getSquareFromMap(int x, int y) {
-        return squares[x][y];
+    public Square getSquareFromMap(int y, int x) {
+        return squares[y][x];
     }
 
     public int getWidth() {
@@ -81,7 +81,7 @@ public class Map {
         return true;
     }
 
-    public static ArrayList<int[]> getSquaresWithinRange(int centerX, int centerY, double range, int answerCaretsianZone) {
+    public ArrayList<int[]> getSquaresWithinRange(int centerX, int centerY, double range, int answerCaretsianZone) {
         double distance;
         int xModifier, yModifier;
         ArrayList<int[]> answers = new ArrayList<>();
@@ -107,13 +107,11 @@ public class Map {
         for (int i = 0; i < Math.floor(range); i++)
             for (int j = 0; j < Math.floor(range); j++) {
                 distance = getDistance(0, 0, i, j);
-                if (distance < range) {
+                if (distance <= range) {
                     int[] viableCoord = new int[2];
                     viableCoord[0] = centerX + i * xModifier;
-                    if(viableCoord[0]<0) continue;
-
                     viableCoord[1] = centerY + j * yModifier;
-                    if(viableCoord[1]<0) continue;
+                    if(!isCoordinationValid(viableCoord[0], viableCoord[1])) continue;
 
                     answers.add(viableCoord);
                 }
@@ -240,17 +238,15 @@ public class Map {
         ArrayList<int[]> landsWithinRange = new ArrayList<>();
         int aggressionRange = mainUnit.getAggressionRange();
         int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 2));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 3));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 4));
 
+        for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++) 
+            landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
+        
         for (int[] coord : landsWithinRange)
             if (doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
                 return coord;
         return null;
     }
-
 
     public ArrayList<Government> getGovernmentsInMap() {
         return governmentsInMap;

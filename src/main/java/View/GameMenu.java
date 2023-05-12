@@ -118,10 +118,36 @@ public class GameMenu {
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_UNIT)) != null)
                 dropUnit(matcher);
 
+            else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.MODIFY_GATES)) != null)
+                modifyGate(matcher);
+
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_MONEY) != null)
                 showMoney();
 
             else Input_Output.outPut("invalid command");
+        }
+    }
+
+
+    private static void modifyGate(Matcher matcher){
+        String state=matcher.group("state");
+        GameMenuMessages result=GameMenuController.modifyGates(state);
+        switch (result) {
+            case EMPTY_INPUT_FIELDS_ERROR:
+                Input_Output.outPut("error: empty necessary fields!");
+                break;
+
+            case MODIFYGATES_UNMATCHING_BUILDING:
+                Input_Output.outPut("error: there are no gates selected!");
+                break;
+
+            case INVALID_STATE:
+                Input_Output.outPut("error: invalid state for gate: only open or close!");
+                break;
+        
+            default:
+                Input_Output.outPut("the gate is modified succesfully!");
+                break;
         }
     }
 

@@ -135,11 +135,11 @@ public abstract class Unit {
 
     public int getAggressionRange(){
         if (stateUnits.equals(StateUnits.Aggressive))
-            return (int) (Math.floor((speed+attackRange)*1.2));
+            return (int) (Math.floor(attackRange+speed));
         else if (stateUnits.equals(StateUnits.Defensive))
-            return (int) (Math.floor(speed+attackRange));
+            return (int) (Math.floor(attackRange));
         else
-            return (int) (Math.floor((speed+attackRange)*0.8));
+            return (int) (Math.floor(attackRange+speed*0.5));
     }
 
     public static void readUnitsFromFile() {
