@@ -45,8 +45,8 @@ public class Map {
         return squares;
     }
 
-    public Square getSquareFromMap(int x, int y) {
-        return squares[x][y];
+    public Square getSquareFromMap(int y, int x) {
+        return squares[y][x];
     }
 
     public int getWidth() {

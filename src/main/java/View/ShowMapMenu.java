@@ -2,6 +2,7 @@ package View;
 
 import Controller.ShowMapMenuController;
 import Controller.Orders;
+import Model.DataBase;
 import View.Enums.Commands.ShowMapMenuCommands;
 
 import java.util.regex.Matcher;
@@ -34,14 +35,26 @@ public class ShowMapMenu {
         String y = Orders.findFlagOption("-y" , options);
 
         String[][] toPrint = ShowMapMenuController.showMapController(x , y);
+        int xInt = 1;
+        int yInt = 1;
 
-        int xINt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
-
-        for (int i = -10 ; i < 10 ; i++) {
-            System.out.printf( "(%3d)" , xINt + i + 1);
+        if( x != null && y != null && ShowMapMenuCommands.getMatcher(x , ShowMapMenuCommands.VALID_NUMBER) != null &&
+        ShowMapMenuCommands.getMatcher(y  , ShowMapMenuCommands.VALID_NUMBER) != null) {
+            xInt = Integer.parseInt(x);
+            yInt = Integer.parseInt(y);
         }
-        System.out.println();
+        else{
+            System.out.println("show map error: please enter number in x and y option");
+            return;
+        }
+
+        if(ShowMapMenuController.errorInShowMapFlag == 0) {
+            for (int i = -10; i < 10; i++) {
+                if (xInt + i > 0 && xInt + i <= DataBase.getSelectedMap().getLength())
+                    System.out.printf("(%3d)", xInt + i);
+            }
+            System.out.println();
+        }
 
 
         for (int i = 0 ; i < 20 ; i++){
@@ -53,28 +66,36 @@ public class ShowMapMenu {
                 enterFlag = 1;
                 System.out.print(toPrint[i][j]);
             }
-            if(enterFlag == 1)
-                System.out.println("(" + (yInt + i - 9) + ")");
-            for (int j = 0 ; j < 105 ; j++) {
-                System.out.print("-");
+            if(ShowMapMenuController.errorInShowMapFlag == 0) {
+                if (enterFlag == 1)
+                    System.out.println("(" + (yInt + i - 10) + ")");
             }
-            System.out.println("");
+//            if(toPrint[i] != null && yInt + i - 9 > 0 && yInt + i - 9 < DataBase.getSelectedMap().getWidth()) {
+//                for (int j = 0; j < (xInt + 10) * 5; j++) {
+//                    System.out.print("-");
+//                }
+//                System.out.println("");
+//            }
         }
     }
     private static void moveMap(Matcher matcher){
         String direction = matcher.group("direction");
         String direction2 = matcher.group("direction2");
         String amount = matcher.group("amount");
+        //System.out.println("**** direction: " + direction + "**** direction2: " + direction2 + "** amount : " + amount);
 
         String[][] toPrint = ShowMapMenuController.moveMapController(direction , direction2 , amount);
 
-        int xINt = ShowMapMenuController.xLocationOnMap;
+        int xInt = ShowMapMenuController.xLocationOnMap;
         int yInt = ShowMapMenuController.yLocationOnMap;
 
-        for (int i = -10 ; i < 10 ; i++) {
-            System.out.printf( "(%3d)" , xINt + i + 1);
+        if(ShowMapMenuController.errorInShowMapFlag == 0) {
+            for (int i = -10; i < 10; i++) {
+                if (xInt + i > 0 && xInt + i <= DataBase.getSelectedMap().getLength())
+                    System.out.printf("(%3d)", xInt + i);
+            }
+            System.out.println();
         }
-        System.out.println();
 
 
         for (int i = 0 ; i < 20 ; i++){
@@ -86,12 +107,16 @@ public class ShowMapMenu {
                 enterFlag = 1;
                 System.out.print(toPrint[i][j]);
             }
-            if(enterFlag == 1)
-                System.out.println("(" + (yInt + i - 9) + ")");
-            for (int j = 0 ; j < 105 ; j++) {
-                System.out.print("-");
+            if(ShowMapMenuController.errorInShowMapFlag == 0) {
+                if (enterFlag == 1)
+                    System.out.println("(" + (yInt + i - 10) + ")");
             }
-            System.out.println("");
+//            if(toPrint[i] != null && yInt + i - 9 > 0 && yInt + i - 9 < DataBase.getSelectedMap().getWidth()) {
+//                for (int j = 0; j < (xInt + 10) * 5; j++) {
+//                    System.out.print("-");
+//                }
+//                System.out.println("");
+//            }
         }
 
     }
