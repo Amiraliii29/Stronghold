@@ -181,7 +181,7 @@ public class Map {
     }
 
     public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment, int x, int y) {
-        Square targetSquare = getSquareFromMap(x, y);
+        Square targetSquare = getSquareFromMap(y, x);
         ArrayList<Unit> enemyUnits = new ArrayList<>();
 
         for (Unit unit : targetSquare.getUnits())
@@ -192,10 +192,10 @@ public class Map {
 
     public int getSquareUnfriendlyBelongingsType(Government ownGovernment, int x, int y) {
         //0 for nothing, 1 for troops (prime to buildings, except deffences), 2 for buildings
-        Square targetSquare = getSquareFromMap(x, y);
+        Square targetSquare = getSquareFromMap(y, x);
         Building targetBuilding = targetSquare.getBuilding();
 
-        if (doesSquareContainEnemyUnits(x, y, ownGovernment))
+        if (doesSquareContainEnemyUnits(y, x, ownGovernment))
             return 1;
 
         if (targetBuilding != null)

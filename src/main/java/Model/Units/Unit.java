@@ -95,7 +95,7 @@ public abstract class Unit {
 
     public int getAttackRange() {
         Building building = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
-        if (building instanceof Defence && this.attackRange > 5) {
+        if (building != null && building instanceof Defence && this.attackRange > 5) {
             return this.attackRange + ((Defence) building).getRange();
         }
         return this.attackRange;

@@ -321,7 +321,7 @@ public class GameMenuController {
                 || DataBase.getSelectedMap().getWidth() < yCoordinate)
             return GameMenuMessages.INVALID_COORDINATE;
 
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
+        Square square = DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate);
         ArrayList<Unit> selectedUnit = new ArrayList<>();
 
         for (Unit unit : square.getUnits()) {
@@ -511,7 +511,7 @@ public class GameMenuController {
         int currentUnitsY = currentUnits.get(0).getYCoordinate();
         int unitRange = currentUnits.get(0).getAttackRange();
 
-        if( unitRange> currentMap.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
+        if(unitRange > currentMap.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
             rangedAttackController(enemyX, enemyY);
             return GameMenuMessages.SUCCESS;
         }
