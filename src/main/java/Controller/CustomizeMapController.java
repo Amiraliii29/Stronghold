@@ -302,7 +302,6 @@ public class CustomizeMapController {
         int countInt = Integer.parseInt(count);
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
-        Building building = GameMenuController.getBuildingByName(type);
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
 
