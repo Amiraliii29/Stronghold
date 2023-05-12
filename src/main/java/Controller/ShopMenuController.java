@@ -38,12 +38,13 @@ public class ShopMenuController {
         int itemsCounter = 1;
         for (Resource item : items) {
             toReturn += itemsCounter + ". " + item.getName() + " = " + item.getBuyPrice()  + " (gold)\n";
+            itemsCounter++;
         }
         return toReturn;
     }
 
 
-    public static ShopMenuMessages buyItemByNameController(String name, int amount , Scanner scanner) {
+    public static ShopMenuMessages buyItemByNameController(String name, String amount) {
         Resource itemToBuy = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -51,22 +52,24 @@ public class ShopMenuController {
                 break;
             }
         }
-
+        if(amount == null)
+            return ShopMenuMessages.NO_AMOUNT;
+        int amountInt = Integer.parseInt(amount);
         if(itemToBuy == null)
             return ShopMenuMessages.INVALID_ITEM_NAME;
-        else if(amount <= 0)
+        else if(amountInt <= 0)
             return ShopMenuMessages.INVALID_AMOUNT;
-        else if(DataBase.getCurrentGovernment().getMoney() < itemToBuy.getBuyPrice() * amount)
+        else if(DataBase.getCurrentGovernment().getMoney() < itemToBuy.getBuyPrice() * amountInt)
             return ShopMenuMessages.NOT_ENOUGH_BALANCE;
-        else if(DataBase.getCurrentGovernment().freeStockpileSpace(itemToBuy) < amount)
+        else if(DataBase.getCurrentGovernment().freeStockpileSpace(itemToBuy) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE;
         else{
             while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy (scanner , "buy" , name , amount);
+                String confirmation = ShopMenu.confirmSellOrBuy ("buy" , name , amountInt);
 
                 if(confirmation.toUpperCase().equals("YES")){
-                    DataBase.getCurrentGovernment().changeMoney(-1 * amount * itemToBuy.getBuyPrice());
-                    DataBase.getCurrentGovernment().addToStockpile(itemToBuy , amount);
+                    DataBase.getCurrentGovernment().changeMoney(-1 * amountInt * itemToBuy.getBuyPrice());
+                    DataBase.getCurrentGovernment().addToStockpile(itemToBuy , amountInt);
                     return ShopMenuMessages.BUY_ITEM_SUCCESS;
                 }
                 else if(confirmation.toUpperCase().equals("NO")){
@@ -77,7 +80,7 @@ public class ShopMenuController {
 
     }
 
-    public static ShopMenuMessages sellItemByNameController(String name, int amount , Scanner scanner) {
+    public static ShopMenuMessages sellItemByNameController(String name, String amount) {
             Resource itemToSell = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -85,20 +88,22 @@ public class ShopMenuController {
                 break;
             }
         }
-
+        if(amount == null)
+            return ShopMenuMessages.NO_AMOUNT;
+        int amountInt = Integer.parseInt(amount);
         if(itemToSell == null)
             return ShopMenuMessages.INVALID_ITEM_NAME;
-        else if(amount <= 0)
+        else if(amountInt <= 0)
             return ShopMenuMessages.INVALID_AMOUNT;
-        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(itemToSell) < amount)
+        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(itemToSell) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_ITEM_IN_STOCKPILE;
         else{
             while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy(scanner, "sell", name, amount);
+                String confirmation = ShopMenu.confirmSellOrBuy("sell", name, amountInt);
 
                 if (confirmation.toUpperCase().equals("YES")) {
-                    DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amount);
-                    DataBase.getCurrentGovernment().changeMoney(itemToSell.getSellPrice() * amount);
+                    DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amountInt);
+                    DataBase.getCurrentGovernment().changeMoney(itemToSell.getSellPrice() * amountInt);
                     return ShopMenuMessages.SELL_ITEM_SUCCESS;
                 }
                 else if (confirmation.toUpperCase().equals("NO")) {

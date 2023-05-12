@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Stockpile extends Building {
     private static ArrayList<Stockpile> stockpiles;
     private static ArrayList<String> stockpilesName;
-    private HashMap<Resource, Integer> resources;
+    private HashMap<String, Integer> resources;
     private ArrayList<String> resourcesStored;
     private final int capacity;//how many resource in one slot of stockpile
 
@@ -44,15 +45,15 @@ public class Stockpile extends Building {
         resources = new HashMap<>();
     }
 
-    public HashMap<Resource, Integer> getResources() {
+    public HashMap<String, Integer> getResources() {
         return resources;
     }
 
     public static int getResourceCount(ArrayList<Stockpile> stockpiles, Resource resource) {
         int count = 0;
         for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<Resource, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource)) count += set.getValue();
+            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
+                if (set.getKey().equals(resource.getName())) count += set.getValue();
             }
         }
         return count;
@@ -61,8 +62,8 @@ public class Stockpile extends Building {
     public static int freeSpaceForResource(ArrayList<Stockpile> stockpiles, Resource resource) {
         int freeSpace = 0;
         for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<Resource, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource)) freeSpace += stockpile.capacity - set.getValue();
+            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
+                if (set.getKey().equals(resource.getName())) freeSpace += stockpile.capacity - set.getValue();
             }
             for (int i = 0; i < (4 - stockpile.getResources().keySet().size()); i++) {
                 freeSpace += stockpile.capacity;
@@ -73,60 +74,61 @@ public class Stockpile extends Building {
 
     public static boolean addResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
         for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<Resource, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource)) {
-                    if (set.getValue() < stockpile.capacity && number >= (stockpile.capacity - set.getValue())) {
-                        stockpile.addToHashMap(resource, (stockpile.capacity - set.getValue()));
+            for (Map.Entry<String, Integer> set : stockpile.resources.entrySet()) {
+                if (set.getKey().equals(resource.getName()) && set.getValue() < stockpile.capacity) {
+                    if (number >= (stockpile.capacity - set.getValue())) {
+                        stockpile.addToHashMap(resource.getName(), (stockpile.capacity - set.getValue()));
                         number -= (stockpile.capacity - set.getValue());
+                    } else {
+                        stockpile.addToHashMap(resource.getName(), number);
+                        number -= number;
                     }
                 }
             }
-            while (stockpile.getResources().keySet().size() < 4 && number > 0) {
+            while (stockpile.getFreeSlot() < 4 && number > 0) {
                 if (number >= stockpile.getCapacity()) {
-                    stockpile.addToHashMap(resource, stockpile.getCapacity());
+                    stockpile.addToHashMap(resource.getName(), stockpile.capacity);
                     number -= stockpile.getCapacity();
                 } else {
-                    stockpile.addToHashMap(resource, number);
+                    stockpile.addToHashMap(resource.getName(), number);
                     number -= number;
                 }
             }
         }
-        if (number == 0) return true;
-        return false;
+        return number == 0;
     }
 
     public static boolean removeResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
         for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<Resource, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource) && number > 0) {
+            for (Map.Entry<String, Integer> set : stockpile.resources.entrySet()) {
+                if (set.getKey().equals(resource.getName()) && number > 0) {
                     if (set.getValue() >= number) {
-                        stockpile.removeFromHashMap(resource, number);
+                        stockpile.removeFromHashMap(resource.getName(), number);
                         number -= number;
                     } else {
-                        stockpile.removeFromHashMap(resource, set.getValue());
+                        stockpile.removeFromHashMap(resource.getName(), set.getValue());
                         number -= set.getValue();
                     }
                 }
             }
+            stockpile.resources.entrySet().removeIf(entry -> entry.getValue() == 0);
         }
-        if (number == 0) return true;
-        return false;
+        return number == 0;
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public void addToHashMap(Resource resource, int number) {
-        resources.put(resource, resources.get(resource)+number);
+    public void addToHashMap(String resource, int number) {
+        if (resources.containsKey(resource))
+            resources.put(resource, resources.get(resource)+number);
+        else
+            resources.put(resource, number);
     }
 
-    public void removeFromHashMap(Resource resource, int number) {
-        if (resources.get(resource) == number) {
-            resources.remove(resource, number);
-        } else {
-            resources.put(resource, resources.get(resource)-number);
-        }
+    public void removeFromHashMap(String resource, int number) {
+        resources.put(resource, resources.get(resource)-number);
     }
 
     public static ArrayList<String> getStockpilesName() {
@@ -135,6 +137,21 @@ public class Stockpile extends Building {
 
     public ArrayList<String> getResourcesStored() {
         return resourcesStored;
+    }
+
+    private int getFreeSlot() {
+        if (resources.keySet().size() == 4) return 4;
+        else {
+            int slot = resources.keySet().size();
+            for (Map.Entry<String, Integer> set : resources.entrySet()) {
+                int val = set.getValue();
+                while (val > capacity) {
+                    slot++;
+                    val -= capacity;
+                }
+            }
+            return slot;
+        }
     }
 
     public static Stockpile createStockpile(Government owner, int xCoordinateLeft, int yCoordinateUp, String stockpileName) {
@@ -148,6 +165,7 @@ public class Stockpile extends Building {
                     else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
                     else owner.addStockpiles(newStockpile);
                 }
+                newStockpile.resources = new HashMap<>();
                 return newStockpile;
             }
         }

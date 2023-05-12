@@ -4,22 +4,27 @@ import Model.DataBase;
 import Model.Square;
 import Model.Units.Unit;
 import View.Enums.Commands.ShowMapMenuCommands;
+import View.Input_Output;
 
 import java.util.HashMap;
 
 public class ShowMapMenuController {
-    private static int xLocationOnMap;
-    private static int yLocationOnMap;
+    public static int xLocationOnMap;
+    public static int yLocationOnMap;
+    public static int errorInShowMapFlag = 0;
     public static String[][] showMapController(String x , String  y){
         String[][] mapToShow = new String[20][20];
+        errorInShowMapFlag = 0;
 
         if(x == null || y == null){
             mapToShow[0][0] = "show map error: please enter both x and y components of location you want to see";
+            errorInShowMapFlag = 1;
             return mapToShow;
         }
         else if(ShowMapMenuCommands.getMatcher(x , ShowMapMenuCommands.VALID_NUMBER) == null ||
         ShowMapMenuCommands.getMatcher(y , ShowMapMenuCommands.VALID_NUMBER) == null){
             mapToShow[0][0] = "show map error: please enter number for x and y";
+            errorInShowMapFlag = 1;
             return mapToShow;
         }
 
@@ -27,24 +32,30 @@ public class ShowMapMenuController {
         yLocationOnMap = Integer.parseInt(y);
 
 
-        if(xLocationOnMap > DataBase.getSelectedMap().getWidth() || xLocationOnMap <= 0)
-             mapToShow[0][0] = "show map error: invalid x amount\n";
-        else if(yLocationOnMap > DataBase.getSelectedMap().getLength() || yLocationOnMap <= 0)
+        if(xLocationOnMap > DataBase.getSelectedMap().getLength() || xLocationOnMap <= 0) {
+            mapToShow[0][0] = "show map error: invalid x amount\n";
+            errorInShowMapFlag = 1;
+            return mapToShow;
+        }
+        else if(yLocationOnMap > DataBase.getSelectedMap().getWidth() || yLocationOnMap <= 0) {
             mapToShow[0][0] = "show map error: invalid y amount\n";
+            errorInShowMapFlag = 1;
+            return mapToShow;
+        }
         else{
             for (int i = -10 ; i < 10 ; i++){
                 for (int j = -10 ; j < 10 ; j++){
-                    if(xLocationOnMap+i < 0  || yLocationOnMap + j < 0 || xLocationOnMap + i > DataBase.getSelectedMap().getLength()
-                            || yLocationOnMap + j > DataBase.getSelectedMap().getWidth() )
-                        mapToShow[j+10][i+10] = "0 |";
-                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j, xLocationOnMap + i ).getUnits().size() != 0)
-                        mapToShow[j+10][i+10] = "S|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + j , xLocationOnMap + i).getBuilding() != null)
-                        mapToShow[j+10][i+10] = "B|";
-                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + j , xLocationOnMap + i).getResource() != null){
-                        char[] resourceName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i , xLocationOnMap+j).
-                                getResource().getName().toCharArray();
-                        mapToShow[j+10][i+10] = resourceName[0] + resourceName[2] + "|";
+                    if(xLocationOnMap + j <= 0  || yLocationOnMap + i <= 0 || xLocationOnMap + j > DataBase.getSelectedMap().getLength()
+                            || yLocationOnMap + i > DataBase.getSelectedMap().getWidth() )
+                        mapToShow[i+10][j+10] = null;
+                    else if(DataBase.getSelectedMap().getSquareFromMap( yLocationOnMap + i, xLocationOnMap + j).getUnits().size() != 0)
+                        mapToShow[i+10][j+10] = " SS |";
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getBuilding() != null)
+                        mapToShow[i+10][j+10] = " BB |";
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getLand() != null){
+                        char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).
+                                getLand().name().toCharArray();
+                        mapToShow[i+10][j+10] = " " + String.valueOf(landName[0])+ String.valueOf(landName[2]) + " |" ;
                     }
                 }
             }
@@ -60,10 +71,10 @@ public class ShowMapMenuController {
 
         switch (direction){
             case "up":
-                yLocationOnMap += amountInt;
+                yLocationOnMap -= amountInt;
                 break;
             case "down":
-                yLocationOnMap -= amountInt;
+                yLocationOnMap += amountInt;
                 break;
             case "right":
                 xLocationOnMap += amountInt;
@@ -72,20 +83,25 @@ public class ShowMapMenuController {
                 xLocationOnMap -= amountInt;
                 break;
         }
-        switch (direction2){
-            case "up":
-                yLocationOnMap += amountInt;
-                break;
-            case "down":
-                yLocationOnMap -= amountInt;
-                break;
-            case "right":
-                xLocationOnMap += amountInt;
-                break;
-            case "left":
-                xLocationOnMap -= amountInt;
-                break;
+        if(direction2 != null) {
+            switch (direction2) {
+                case "up":
+                    yLocationOnMap -= amountInt;
+                    break;
+                case "down":
+                    yLocationOnMap += amountInt;
+                    break;
+                case "right":
+                    xLocationOnMap += amountInt;
+                    break;
+                case "left":
+                    xLocationOnMap -= amountInt;
+                    break;
+            }
         }
+        if (xLocationOnMap <= 0) xLocationOnMap = 1;
+        if (yLocationOnMap <= 0) yLocationOnMap = 1;
+        //System.out.println("******x: " + xLocationOnMap + " ** y: " +  yLocationOnMap);
         return showMapController(Integer.toString(xLocationOnMap) , Integer.toString(yLocationOnMap));
     }
     public static String showDetailsController(String  x, String y){
@@ -95,18 +111,19 @@ public class ShowMapMenuController {
         else if(y == null)
             return "show map details error: please enter y next time\n";
 
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+        if (xInt <= 0 || yInt <= 0 || xInt > DataBase.getSelectedMap().getLength() || yInt > DataBase.getSelectedMap().getWidth())
+            return "wrong coordinate";
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
 
-            int xInt = Integer.parseInt(x);
-            int yInt = Integer.parseInt(y);
-            Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
-            toReturn += "Land type: " + square.getLand() + "\nresource: " + square.getResource().getName()
-                    + "\nTroops: ";
-            HashMap<Unit,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
-            for (Unit unit : unitsTypeAndCount.keySet()) {
-                toReturn += unit.getName() + " (" + unitsTypeAndCount.get(unit) + ")\n";
-            }
-            toReturn += "building: " + square.getBuilding().getName();
-            return toReturn;
+        toReturn += "Land type: \n" + square.getLand() + "\n------------------\n";
+        if (square.getBuilding() != null) toReturn += "building: \n" + square.getBuilding().getName() + "\n------------------\n";
+        toReturn += "Units : \n";
+        HashMap<String,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
+        for (String unitName : unitsTypeAndCount.keySet()) {
+            toReturn += unitName + " (" + unitsTypeAndCount.get(unitName) + ")\n";
+        }
+        return toReturn;
     }
 }
-

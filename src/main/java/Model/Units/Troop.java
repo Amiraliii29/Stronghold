@@ -62,7 +62,7 @@ public class Troop extends Unit{
     public static Troop getTroopByName(String troopName){
         for (Troop troop : troops) {
             if(troop.getName().equals(troopName))
-            return troop;
+                return troop;
         }
         return null;
     }
@@ -77,7 +77,7 @@ public class Troop extends Unit{
                 newTroop.xCoordinate = xCoordinate;
                 newTroop.yCoordinate = yCoordinate;
                 if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTroop);
+                    DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newTroop);
                 return newTroop;
             }
         }

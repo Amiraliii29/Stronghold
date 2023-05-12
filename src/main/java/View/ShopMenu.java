@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Orders;
 import Controller.ShopMenuController;
 import View.Enums.Commands.ShopMenuCommands;
 import View.Enums.Messages.ShopMenuMessages;
@@ -9,17 +10,25 @@ import java.util.regex.Matcher;
 
 public class ShopMenu {
 
-    public static void run(Scanner scanner){
+    public static void run(){
         String input;
         Matcher matcher;
+        Input_Output.outPut("SHOP MENU: ");
         while (true) {
-            input = scanner.nextLine();
+            input = Input_Output.getInput();
             if (ShopMenuCommands.getMatcher(input, ShopMenuCommands.SHOW_PRICE_LIST) != null)
                 showItems();
             else if((matcher = ShopMenuCommands.getMatcher(input , ShopMenuCommands.BUY_ITEM)) != null)
-                buyItemByName(matcher , scanner);
+                buyItemByName(matcher);
             else if((matcher = ShopMenuCommands.getMatcher(input , ShopMenuCommands.SELL_ITEM)) != null)
-                sellItemByName(matcher , scanner);
+                sellItemByName(matcher);
+            else if(ShopMenuCommands.getMatcher(input , ShopMenuCommands.EXIT) != null){
+                Input_Output.outPut("returned back to game menu");
+                return;
+            }
+            else
+                Input_Output.outPut("invalid command");
+
         }
     };
 
@@ -29,10 +38,17 @@ public class ShopMenu {
         System.out.print(toPrint);
     }
 
-    private static void buyItemByName(Matcher matcher , Scanner scanner){
-        String itemName = matcher.group("name");
-        int amount = Integer.parseInt(matcher.group("amount"));
-        ShopMenuMessages message = ShopMenuController.buyItemByNameController(itemName , amount , scanner);
+    private static void buyItemByName(Matcher matcher){
+        String options = matcher.group("options");
+        String itemName = Orders.findFlagOption("-i" , options);
+        String amount = Orders.findFlagOption("-a" , options);
+
+        if(Orders.isOrderJunky(options , false , "-i" , "-a")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
+        ShopMenuMessages message = ShopMenuController.buyItemByNameController(itemName , amount);
 
         switch (message){
             case INVALID_ITEM_NAME:
@@ -55,17 +71,27 @@ public class ShopMenu {
         }
     }
 
-    private static void sellItemByName(Matcher matcher , Scanner scanner){
-        String itemName = matcher.group("name");
-        int amount = Integer.parseInt(matcher.group("amount"));
-        ShopMenuMessages message = ShopMenuController.sellItemByNameController(itemName , amount , scanner);
+    private static void sellItemByName(Matcher matcher){
+        String options = matcher.group("options");
+        String itemName = Orders.findFlagOption("-i" , options);
+        String amount = Orders.findFlagOption("-a" , options);
+
+        if(Orders.isOrderJunky(options , false , "-i" , "-a")){
+            Input_Output.outPut("unmatching inputs for this function!");
+            return;
+        }
+
+        ShopMenuMessages message = ShopMenuController.sellItemByNameController(itemName , amount);
 
         switch (message){
             case INVALID_ITEM_NAME:
                 System.out.println("sell item error: invalid item name");
                 break;
+            case NO_AMOUNT:
+                System.out.println("sell item error : please enter amount");
+                break;
             case NOT_ENOUGH_ITEM_IN_STOCKPILE:
-                System.out.println("sell item error: not enough item in stockPile you sold just " + amount + " of " + itemName);
+                System.out.println("sell item error: not enough item in stockPile");
                 break;
             case INVALID_AMOUNT:
                 System.out.println("sell item error: invalid amount");
@@ -78,11 +104,13 @@ public class ShopMenu {
                 break;
         }
     }
-    public static String confirmSellOrBuy(Scanner scanner , String operationType , String name , int amount){
+    public static String confirmSellOrBuy( String operationType , String name , int amount){
         System.out.println("Do you confirm to " + operationType + " " + name + " for the amount: " + amount + " (please enter YES or NO)");
         String confirm;
-        confirm = scanner.nextLine();
+        confirm = Input_Output.getInput();
+
         return confirm;
+
     }
 
 

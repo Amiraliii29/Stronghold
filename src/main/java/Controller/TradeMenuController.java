@@ -5,6 +5,7 @@ import Model.Government;
 import Model.Resource;
 import Model.TradeRequest;
 import View.Enums.Messages.TradeMenuMessages;
+import com.sun.security.auth.UnixNumericUserPrincipal;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class TradeMenuController {
         for (TradeRequest tradeRequest : DataBase.getCurrentGovernment().getRequestsAskedFromMe()) {
             toReturn += counter + ". " + tradeRequest.getResource().getName() + ", amount: " + tradeRequest.getAmount()
                     + " , price: " + tradeRequest.getPrice() + " , government that requested: " +
-                    tradeRequest.getGovernmentThatRequested() + " , message: " + tradeRequest.getMessage() +
+                    tradeRequest.getGovernmentThatRequested().getOwner().getUsername() + " , message: " + tradeRequest.getMessage() +
                     " , id: " + tradeRequest.getId() + "\n";
             counter++;
 
@@ -65,8 +66,10 @@ public class TradeMenuController {
             return TradeMenuMessages.INVALID_AMOUNT;
         else if (priceInt < 0)
             return TradeMenuMessages.INVALID_PRICE;
+        Government governmentAskedFrom = DataBase.getGovernmentByUserName(governmentName);
+        if(governmentAskedFrom == null)
+            return TradeMenuMessages.INVALID_GOVERNMENT_NAME;
         else {
-            Government governmentAskedFrom = DataBase.getGovernmentByUserName(governmentName);
             TradeRequest tradeRequest = new TradeRequest(resourceToTrade, amountInt, priceInt
                     , message, governmentAskedFrom, allRequests.size() + 1);
             governmentAskedFrom.addToRequestsAskedFromMe(tradeRequest);
@@ -138,11 +141,12 @@ public class TradeMenuController {
                         " has requested you for " + requestNotification.getAmount() + " of " +
                         requestNotification.getResource().getName() + " for price " + requestNotification.getPrice() +
                         " , message: " + requestNotification.getMessage() + "\n";
+                counter++;
             }
         }
+        DataBase.getCurrentGovernment().getRequestNotifications().clear();
         return toReturn;
     }
-
 
     public static TradeMenuMessages donateController(String resourceName, String amount, String message,
                                                      String governmentName) {
@@ -150,6 +154,7 @@ public class TradeMenuController {
             return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
 
         Resource resourceToTrade = null;
+        Government governmentHasBeenDonated = DataBase.getGovernmentByUserName(governmentName);
 
         for (Resource allResource : Resource.getAllResources()) {
             if (allResource.getName().equals(resourceName)) {
@@ -166,16 +171,19 @@ public class TradeMenuController {
             return TradeMenuMessages.INVALID_AMOUNT;
         else if (DataBase.getCurrentGovernment().getResourceInStockpiles(resourceToTrade) < amountInt)
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
+        else if(governmentHasBeenDonated == null)
+            return TradeMenuMessages.INVALID_GOVERNMENT_NAME;
         else {
-            Government governmentHasBeenDonated = DataBase.getGovernmentByUserName(governmentName);
             TradeRequest tradeRequest = new TradeRequest(resourceToTrade, amountInt, 0, message,
                     governmentHasBeenDonated, allRequests.size() + 1);
 
             // remove from my stockpile and add to theirs
             DataBase.getCurrentGovernment().removeFromStockpile(resourceToTrade, amountInt);
             governmentHasBeenDonated.addToStockpile(resourceToTrade, amountInt);
-
-            //
+            // add to trade history
+            DataBase.getCurrentGovernment().addToTradeHistory(tradeRequest);
+            governmentHasBeenDonated.addToTradeHistory(tradeRequest);
+            governmentHasBeenDonated.addToRequestNotification(tradeRequest);
 
             return TradeMenuMessages.DONATE_SUCCESS;
         }

@@ -1,7 +1,8 @@
 package Model.Units;
+import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.DataBase;
 import Model.Government;
-import Model.Map;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -44,10 +45,10 @@ public abstract class Unit {
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
-        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(this.yCoordinate, this.xCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
@@ -58,9 +59,8 @@ public abstract class Unit {
         this.stateUnits = stateUnits;
     }
 
-    public int changeHitPoint(int damage) {
+    public void changeHitPoint(int damage) {
         hitPoint -= damage;
-        return hitPoint;
     }
 
     public Government getOwner() {
@@ -94,7 +94,11 @@ public abstract class Unit {
     }
 
     public int getAttackRange() {
-        return attackRange;
+        Building building = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
+        if (building != null && building instanceof Defence && this.attackRange > 5) {
+            return this.attackRange + ((Defence) building).getRange();
+        }
+        return this.attackRange;
     }
 
     public void changeState(StateUnits stateUnits) {
@@ -131,11 +135,11 @@ public abstract class Unit {
 
     public int getAggressionRange(){
         if (stateUnits.equals(StateUnits.Aggressive))
-            return (int) (Math.floor((speed+attackRange)*1.2));
+            return (int) (Math.floor(attackRange+speed));
         else if (stateUnits.equals(StateUnits.Defensive))
-            return (int) (Math.floor(speed+attackRange));
+            return (int) (Math.floor(attackRange));
         else
-            return (int) (Math.floor((speed+attackRange)*0.8));
+            return (int) (Math.floor(attackRange+speed*0.5));
     }
 
     public static void readUnitsFromFile() {

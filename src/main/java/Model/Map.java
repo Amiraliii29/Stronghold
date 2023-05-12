@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -46,8 +45,8 @@ public class Map {
         return squares;
     }
 
-    public Square getSquareFromMap(int x, int y) {
-        return squares[x][y];
+    public Square getSquareFromMap(int y, int x) {
+        return squares[y-1][x-1];
     }
 
     public int getWidth() {
@@ -64,27 +63,28 @@ public class Map {
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
         boolean check = false;
-
-        for (int i = x; i < x + building.getLength(); i++) {
+        int length = 0;
+        if (building.getName().equals("Keep")) length = building.getLength()  + 4;
+        else length = building.getLength();
+        for (int i = x; i < x + length; i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
                 for (String validLand : building.getLands()) {
-                    if (squares[i][j].getLand().name().equals(validLand))
+                    if (Land.getName(squares[i][j].getLand()).equals(validLand))
                         check = true;
-                    if (squares[i][j].getBuilding() != null)
+                    if (squares[i][j].getBuilding() != null || squares[i][j].getTree() != null)
                         return false;
                 }
-
                 if (!check) return false;
-                else check = false;
+                check = false;
             }
         }
         return true;
     }
 
-    public static ArrayList<int[]> getSquaresWithinRange(int centerX, int centerY, double range, int answerCaretsianZone) {
+    public ArrayList<int[]> getSquaresWithinRange(int centerX, int centerY, double range, int answerCaretsianZone) {
         double distance;
         int xModifier, yModifier;
-        ArrayList<int[]> answers = new ArrayList<int[]>();
+        ArrayList<int[]> answers = new ArrayList<>();
         switch (answerCaretsianZone) {
             case 1 -> {
                 xModifier = 1;
@@ -107,10 +107,12 @@ public class Map {
         for (int i = 0; i < Math.floor(range); i++)
             for (int j = 0; j < Math.floor(range); j++) {
                 distance = getDistance(0, 0, i, j);
-                if (distance < range) {
+                if (distance <= range) {
                     int[] viableCoord = new int[2];
                     viableCoord[0] = centerX + i * xModifier;
                     viableCoord[1] = centerY + j * yModifier;
+                    if(!isCoordinationValid(viableCoord[0], viableCoord[1])) continue;
+
                     answers.add(viableCoord);
                 }
             }
@@ -130,7 +132,7 @@ public class Map {
     }
 
     public boolean isCoordinationValid(int x, int y) {
-        if (x > width || x < 0 || y < 0 || y > width)
+        if (x > length || x <= 0 || y <= 0 || y > width)
             return false;
         return true;
     }
@@ -139,7 +141,7 @@ public class Map {
         //amirali: i edited x and y
         for (int i = x; i < x + building.getLength(); i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
-                squares[j][i].setBuilding(building);
+                squares[j-1][i-1].setBuilding(building);
             }
         }
     }
@@ -150,6 +152,7 @@ public class Map {
         try {
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             FileWriter file = new FileWriter(fileAddress);
+            file.flush();
             Gson gson = new Gson();
             gson.toJson(map, file);
             file.close();
@@ -161,8 +164,7 @@ public class Map {
     public static void loadMap(String fileName) {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<Map>() {
-            }.getType();
+            Type type = new TypeToken<Map>() {}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             File f = new File(fileAddress);
             if (f.exists() && !f.isDirectory()) {
@@ -179,8 +181,8 @@ public class Map {
     }
 
     public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment, int x, int y) {
-        Square targetSquare = getSquareFromMap(x, y);
-        ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
+        Square targetSquare = getSquareFromMap(y, x);
+        ArrayList<Unit> enemyUnits = new ArrayList<>();
 
         for (Unit unit : targetSquare.getUnits())
             if (!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
@@ -190,18 +192,16 @@ public class Map {
 
     public int getSquareUnfriendlyBelongingsType(Government ownGovernment, int x, int y) {
         //0 for nothing, 1 for troops (prime to buildings, except deffences), 2 for buildings
-        Square targetSquare = getSquareFromMap(x, y);
+        Square targetSquare = getSquareFromMap(y, x);
         Building targetBuilding = targetSquare.getBuilding();
 
-        if (targetBuilding != null)
-            if (targetBuilding instanceof Defence && !DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
-                return 2;
-
-        if (doesSquareContainEnemyUnits(x, y, ownGovernment))
+        if (doesSquareContainEnemyUnits(y, x, ownGovernment))
             return 1;
 
-        if (targetSquare.getBuilding() != null)
-            return 2;
+        if (targetBuilding != null)
+            if (!DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
+                return 2;
+
         return 0;
     }
 
@@ -235,22 +235,19 @@ public class Map {
     }
 
     public int[] getAnEnemyCoordInRange(Unit mainUnit) {
-
-        ArrayList<int[]> landsWithinRange = new ArrayList<int[]>();
+        ArrayList<int[]> landsWithinRange = new ArrayList<>();
         int aggressionRange = mainUnit.getAggressionRange();
-        int unitX = mainUnit.getXCoordinate(), unitY = mainUnit.getYCoordinate();
+        int unitX = mainUnit.getXCoordinate();
+        int unitY = mainUnit.getYCoordinate();
 
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 1));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 2));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 3));
-        landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, 4));
-
+        for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++) 
+            landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
+        
         for (int[] coord : landsWithinRange)
-            if (doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
+            if (doesSquareContainEnemyUnits(coord[1], coord[0], mainUnit.getOwner()))
                 return coord;
         return null;
     }
-
 
     public ArrayList<Government> getGovernmentsInMap() {
         return governmentsInMap;

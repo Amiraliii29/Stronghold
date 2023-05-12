@@ -8,27 +8,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
-    private static HashMap<String, Boolean> canPass;
+    private static final HashMap<String, Boolean> canPass;
     private ArrayList<Unit> units;
     private Building building;
     private Land land;
     private String cliffDirection;
-    private Resource resource;
     private Trees tree;
     private int treeAmount;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     static {
         canPass = new HashMap<>();
         for (Land land : Land.values()) {
-            if (land.name().equals("rock") || land.name().equals("lowDepthWater")
-                    || land.name().equals("river") || land.name().equals("smallLake")
-                    || land.name().equals("bigLake") || land.name().equals("sea")
-                    || land.name().equals("cliff"))
-                canPass.put(land.name(), false);
+            if (Land.getName(land).equals("rock") || Land.getName(land).equals("ditch")
+                    || Land.getName(land).equals("river") || Land.getName(land).equals("smallLake")
+                    || Land.getName(land).equals("bigLake") || Land.getName(land).equals("sea")
+                    || Land.getName(land).equals("cliff"))
+                canPass.put(Land.getName(land), false);
             else
-                canPass.put(land.name(), true);
+                canPass.put(Land.getName(land), true);
         }
     }
 
@@ -52,7 +51,12 @@ public class Square {
     }
 
     public void removeUnit(Unit unit) {
-        this.units.remove(unit);
+        for (int i = 0; i < units.size(); i++) {
+            if (units.get(i).equals(unit) && unit.getHitPoint() == units.get(i).getHitPoint()){
+                units.remove(i);
+                break;
+            }
+        }
     }
 
     public void removeAllUnit(Unit unit) {
@@ -73,14 +77,6 @@ public class Square {
         this.building = building;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     public int getX() {
         return x;
     }
@@ -93,19 +89,19 @@ public class Square {
         return land;
     }
 
-    public HashMap<Unit, Integer> getUnitsTypeAndCount() {
-        HashMap<Unit, Integer> troopsTypeAndCount = new HashMap<>();
+    public HashMap<String, Integer> getUnitsTypeAndCount() {
+        HashMap<String, Integer> troopsTypeAndCount = new HashMap<>();
         for (Unit unit : units) {
-            if (!troopsTypeAndCount.keySet().contains(unit))
-                troopsTypeAndCount.put(unit, 1);
+            if (!troopsTypeAndCount.containsKey(unit.getName()))
+                troopsTypeAndCount.put(unit.getName(), 1);
             else
-                troopsTypeAndCount.put(unit, troopsTypeAndCount.get(unit) + 1);
+                troopsTypeAndCount.put(unit.getName(), troopsTypeAndCount.get(unit.getName()) + 1);
         }
         return troopsTypeAndCount;
     }
 
     public boolean canPass() {
-        return canPass.get(land.name());
+        return canPass.get(Land.getName(land));
     }
 
     public void setLand(Land land) {
@@ -129,7 +125,15 @@ public class Square {
     }
 
     public void changeTreeAmount(int amount) {
-        treeAmount += amount;
+        treeAmount -= amount;
+        if (treeAmount <= 0) {
+            treeAmount = 0;
+            tree = null;
+        }
+    }
+
+    public int getTreeAmount() {
+        return treeAmount;
     }
 
     public void setCliffDirection(String cliffDirection) {

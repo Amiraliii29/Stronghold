@@ -16,10 +16,9 @@ import Controller.GameMenuController;
 public class Government {
     private User owner;
     private int popularity;
-    private int workerRate;//TODO
     private int maxPopulation;
-    private int population;//TODO
-    private int freeWorker;//TODO
+    private int population;
+    private int freeWorker;
     private int food;
     private int foodType;
     private int foodCount;
@@ -37,25 +36,6 @@ public class Government {
     private ArrayList<TradeRequest> tradeHistory;
     private ArrayList<TradeRequest> requestNotifications;
 
-
-    {
-        this.food = 0;
-        this.popularity = 0;
-        this.tax = 0;
-        this.fear = 0;
-        this.faith = 0;
-        this.population = 0;
-        this.freeWorker = 0;
-        stockpiles = new ArrayList<>();
-        armoury = new ArrayList<>();
-        granary = new ArrayList<>();
-        buildings = new ArrayList<>();
-        requestsAskedFromMe = new ArrayList<>();
-        tradeHistory = new ArrayList<>();
-        requestNotifications = new ArrayList<>();
-        resourceGenerationRate = new HashMap<String, Integer>();
-    }
-
     public Troop getLord() {
         return lord;
     }
@@ -67,6 +47,22 @@ public class Government {
 
     public Government(double money) {
         this.money = money;
+        this.food = 0;
+        this.popularity = 0;
+        this.tax = 0;
+        this.fear = 0;
+        this.faith = 0;
+        this.population = 32;
+        this.maxPopulation = 40;
+        this.freeWorker = 20;
+        stockpiles = new ArrayList<>();
+        armoury = new ArrayList<>();
+        granary = new ArrayList<>();
+        buildings = new ArrayList<>();
+        requestsAskedFromMe = new ArrayList<>();
+        tradeHistory = new ArrayList<>();
+        requestNotifications = new ArrayList<>();
+        resourceGenerationRate = new HashMap<String, Integer>();
     }
 
     public void setOwner(User owner) {
@@ -126,10 +122,6 @@ public class Government {
 
     public void changeMoney(double money) {
         this.money += money;
-    }
-
-    public int getWorkerRate() {
-        return workerRate;
     }
 
     public int getFood() {
@@ -198,11 +190,9 @@ public class Government {
         return buildings;
     }
 
-
     public void addToMaxPopulation(int addValue) {
         maxPopulation += addValue;
     }
-
 
     public void addToGenerationRate(String resourceType, int addedGenerationValue) {
         int previousValue = 0;
@@ -211,7 +201,6 @@ public class Government {
 
         resourceGenerationRate.put(resourceType, previousValue + addedGenerationValue);
     }
-
 
     public void addBuildings(Building building) {
         this.buildings.add(building);
@@ -226,14 +215,13 @@ public class Government {
     }
 
     public void addAndRemoveFromGovernment() {
-        // call in next turn //TODO
         setFoodFactors();
-        if (this.population * ((this.food * 0.5) + 1) >= this.foodCount) {
+        if (this.population * ((this.food * 0.5) + 1) <= this.foodCount) {
             removeFood(this.population * ((this.food * 0.5) + 1));
         } else {
             this.food--;
             while (this.food >= -2) {
-                if (this.population * ((this.food * 0.5) + 1) >= this.foodCount) {
+                if (this.population * ((this.food * 0.5) + 1) <= this.foodCount) {
                     removeFood(this.population * ((this.food * 0.5) + 1));
                     break;
                 }
@@ -241,17 +229,17 @@ public class Government {
             }
         }
         doTaxes();
-
-        //add worker //TODO
+        updatePopularity();
+        changeFreeWorkers(popularity * 3);
     }
 
     private void setFoodFactors() {
         foodCount = 0;
         ArrayList<String> names = new ArrayList<>();
         for (Stockpile granary : this.granary) {
-            for (Map.Entry<Resource, Integer> set : granary.getResources().entrySet()) {
+            for (Map.Entry<String, Integer> set : granary.getResources().entrySet()) {
                 foodCount += set.getValue();
-                names.add(granary.getName());
+                names.add(set.getKey());
             }
         }
         foodType = names.size();
@@ -356,10 +344,13 @@ public class Government {
 
     public void changeFreeWorkers(int addedWorkers) {
         freeWorker += addedWorkers;
+        if (freeWorker > 32) freeWorker = 32;
+        if (freeWorker < 0) freeWorker = 0;
     }
 
     public void changePopulation(int addedPopulation) {
         population += addedPopulation;
+        if (population > maxPopulation) population = maxPopulation;
     }
 
     public HashMap<String, Integer> getResourceGenerationRates() {
@@ -392,6 +383,7 @@ public class Government {
     }
 
     public int getPopularity() {
+        updatePopularity();
         return popularity;
     }
 }

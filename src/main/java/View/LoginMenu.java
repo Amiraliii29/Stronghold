@@ -46,19 +46,13 @@ public class LoginMenu {
         LoginMenuMessages message = LoginMenuController.startGameController(mapName);
 
         switch (message) {
-            case INVALID_MAP_NAME:
-                Input_Output.outPut("start game error: invalid map name");
-                break;
-            case NO_MAP_NAME:
-                Input_Output.outPut("start game error: please enter map name");
-                break;
-            case NO_USERS_COUNT:
-                Input_Output.outPut("start game error: please enter users count");
-                break;
-            case START_GAME_SUCCESS:
+            case INVALID_MAP_NAME -> Input_Output.outPut("start game error: invalid map name");
+            case NO_MAP_NAME -> Input_Output.outPut("start game error: please enter map name");
+            case NO_USERS_COUNT -> Input_Output.outPut("start game error: please enter users count");
+            case START_GAME_SUCCESS -> {
                 System.out.println("game started successfully");
                 GameMenu.run();
-                break;
+            }
         }
     }
 }
