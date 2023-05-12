@@ -21,7 +21,7 @@ public class Square {
     static {
         canPass = new HashMap<>();
         for (Land land : Land.values()) {
-            if (Land.getName(land).equals("rock") || Land.getName(land).equals("lowDepthWater")
+            if (Land.getName(land).equals("rock") || Land.getName(land).equals("ditch")
                     || Land.getName(land).equals("river") || Land.getName(land).equals("smallLake")
                     || Land.getName(land).equals("bigLake") || Land.getName(land).equals("sea")
                     || Land.getName(land).equals("cliff"))
@@ -125,7 +125,15 @@ public class Square {
     }
 
     public void changeTreeAmount(int amount) {
-        treeAmount += amount;
+        treeAmount -= amount;
+        if (treeAmount <= 0) {
+            treeAmount = 0;
+            tree = null;
+        }
+    }
+
+    public int getTreeAmount() {
+        return treeAmount;
     }
 
     public void setCliffDirection(String cliffDirection) {
@@ -134,9 +142,5 @@ public class Square {
 
     public String getCliffDirection() {
         return cliffDirection;
-    }
-
-    public void changeCanPass(boolean state){
-        this.canPass=state;
     }
 }

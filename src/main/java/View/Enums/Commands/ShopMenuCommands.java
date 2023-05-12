@@ -6,7 +6,9 @@ import java.util.regex.Pattern;
 public enum ShopMenuCommands {
     SHOW_PRICE_LIST("^\\s*show\\s*price\\s*list\\s*$"),
     BUY_ITEM("^buy\\s*[(?<nameOption>-i (?<name>.+))(?<amountOption>-a (?<amount>.+))]{2}$"),
-    SELL_ITEM("^sell\\s*[(?<nameOption>-i (?<name>.+))(?<amountOption>-a (?<amount>.+))]{2}$");
+    SELL_ITEM("^sell\\s*[(?<nameOption>-i (?<name>.+))(?<amountOption>-a (?<amount>.+))]{2}$"),
+    EXIT("^\\s*exit\\s*$"),
+    ;
     private String regex;
 
     private ShopMenuCommands(String regex) {
