@@ -260,7 +260,6 @@ public class CustomizeMapController {
                 buildingToConstruct = GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
                 Stockpile stockpile = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt, "Stockpile");
                 Stockpile granary = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt + 4, "Granary");
-
                 selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
                 selectedMap.constructBuilding(stockpile, xInt + 8, yInt);
                 selectedMap.constructBuilding(granary, xInt + 8, yInt + 4);
@@ -282,6 +281,9 @@ public class CustomizeMapController {
             } else if (type.equals("Keep") && selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1).getLord() != null) {
                 DataBase.setCurrentGovernment(government);
                 return CustomizeMapMessages.THIS_GOVERNMENT_HAS_KEEP;
+            } else {
+                buildingToConstruct = GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
+                selectedMap.constructBuilding(buildingToConstruct, xInt, yInt);
             }
             DataBase.setCurrentGovernment(government);
             return CustomizeMapMessages.DROP_BUILDING_SUCCESS;
