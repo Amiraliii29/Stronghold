@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Orders;
 import Controller.ShopMenuController;
 import View.Enums.Commands.ShopMenuCommands;
 import View.Enums.Messages.ShopMenuMessages;
@@ -12,6 +13,7 @@ public class ShopMenu {
     public static void run(){
         String input;
         Matcher matcher;
+        Input_Output.outPut("SHOP MENU: ");
         while (true) {
             input = Input_Output.getInput();
             if (ShopMenuCommands.getMatcher(input, ShopMenuCommands.SHOW_PRICE_LIST) != null)
@@ -37,8 +39,10 @@ public class ShopMenu {
     }
 
     private static void buyItemByName(Matcher matcher){
-        String itemName = matcher.group("name");
-        int amount = Integer.parseInt(matcher.group("amount"));
+        String options = matcher.group("options");
+        String itemName = Orders.findFlagOption("-i" , options);
+        String amount = Orders.findFlagOption("-a" , options);
+
         ShopMenuMessages message = ShopMenuController.buyItemByNameController(itemName , amount);
 
         switch (message){
@@ -63,16 +67,20 @@ public class ShopMenu {
     }
 
     private static void sellItemByName(Matcher matcher){
-        String itemName = matcher.group("name");
-        int amount = Integer.parseInt(matcher.group("amount"));
+        String options = matcher.group("options");
+        String itemName = Orders.findFlagOption("-i" , options);
+        String amount = Orders.findFlagOption("-a" , options);
         ShopMenuMessages message = ShopMenuController.sellItemByNameController(itemName , amount);
 
         switch (message){
             case INVALID_ITEM_NAME:
                 System.out.println("sell item error: invalid item name");
                 break;
+            case NO_AMOUNT:
+                System.out.println("sell item error : please enter amount");
+                break;
             case NOT_ENOUGH_ITEM_IN_STOCKPILE:
-                System.out.println("sell item error: not enough item in stockPile you sold just " + amount + " of " + itemName);
+                System.out.println("sell item error: not enough item in stockPile");
                 break;
             case INVALID_AMOUNT:
                 System.out.println("sell item error: invalid amount");
