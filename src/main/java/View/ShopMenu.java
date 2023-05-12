@@ -97,7 +97,9 @@ public class ShopMenu {
         System.out.println("Do you confirm to " + operationType + " " + name + " for the amount: " + amount + " (please enter YES or NO)");
         String confirm;
         confirm = Input_Output.getInput();
+
         return confirm;
+
     }
 
 
