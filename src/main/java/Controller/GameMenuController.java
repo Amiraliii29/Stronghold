@@ -274,7 +274,6 @@ public class GameMenuController {
         }
 
         currentGovernment.changeFreeWorkers(-count);
-        currentGovernment.changePopulation(count);
     }
 
     public static GameMenuMessages repairController() {

@@ -13,6 +13,8 @@ import View.Input_Output;
 
 import java.util.Random;
 
+import javax.transaction.xa.Xid;
+
 public class CustomizeMapController {
     private static String[] randomDirection = {"n" , "s" , "e" , "w"};
 
@@ -322,7 +324,7 @@ public class CustomizeMapController {
 
         else{
             Government ownerGovernment = DataBase.getSelectedMap().getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt-1 , xInt-1);
             if(selectedSquare.getLand().equals(Land.SEA) || selectedSquare.getLand().equals(Land.CLIFF)
                     || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
             selectedSquare.getLand().equals(Land.FLAT_ROCK))
