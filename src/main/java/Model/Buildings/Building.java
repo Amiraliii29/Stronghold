@@ -115,6 +115,10 @@ public abstract class Building {
         return true;
     }
 
+    public void changeCanPass(boolean state){
+        this.canPass=state;
+    }
+
     public static void readBuildingsFromFile() {
         Defence.createDefence(null, -1, -1, "");
         Generator.createGenerator(null, -1, -1, "");

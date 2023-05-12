@@ -29,6 +29,7 @@ public enum GameMenuCommands {
     SET_FOOD_RATE("^\\s*food\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
     SET_FEAR_RATE("^\\s*fear\\s*rate\\s*-r\\s*(?<rateNumber>\\d+)\\s*$"),
     DROP_BUILDING_FOR_CUSTOMIZE("^\\s*drop\\s*building\\s*(?<options>.+)$"),
+    MODIFY_GATES("^\\s*modify\\s+gate\\s+(?<state>.+)\\s*"),
     DROP_UNIT("^\\s*drop\\s*unit\\s*(?<options>.+)$"),
     NEXT_TURN("^\\s*next\\s*turn\\s*$"),
     SHOW_MONEY("^\\s*show\\s*money\\s*$");

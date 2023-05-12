@@ -148,7 +148,7 @@
     "name": "SwordMan",
     "xCoordinate": 0,
     "yCoordinate": 0,
-    "speed": 1,
+    "speed": 2,
     "hitPoint": 110,
     "damage": 60,
     "attackRange": 1,
