@@ -115,6 +115,7 @@ public class CustomizeMapController {
                     DataBase.getSelectedMap().getSquareFromMap(i , j).setLand(land);
                 }
             }
+            Map.saveMap(DataBase.getSelectedMap() , DataBase.getSelectedMap().getName());
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
         }
         else{
