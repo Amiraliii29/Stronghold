@@ -2,13 +2,9 @@ package Controller;
 
 import java.util.ArrayList;
 
+import Model.*;
 import Model.Buildings.Defence;
-import Model.DataBase;
-import Model.Government;
-import Model.Map;
-import Model.Square;
 import Model.Buildings.*;
-import Model.Resource;
 import Model.Units.Troop;
 import Model.Units.*;
 import View.Enums.Messages.GameMenuMessages;
@@ -746,5 +742,57 @@ public class GameMenuController {
 
     public static Government getCurrentGovernment() {
         return currentGovernment;
+    }
+
+    public static GameMenuMessages digDitchController(String x, String y) {
+        if(x == null || y == null)
+            return GameMenuMessages.NO_OPTIONS;
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        if(xInt > DataBase.getSelectedMap().getLength() || xInt <= 0)
+            return GameMenuMessages.INVALID_X;
+        if(yInt > DataBase.getSelectedMap().getWidth() || yInt <= 0)
+            return GameMenuMessages.INVALID_Y;
+
+        if(DataBase.getSelectedUnit() == null)
+            return GameMenuMessages.NO_UNIT_SELECTED;
+        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop)){
+            return GameMenuMessages.CANNOT_DIG_DITCH;
+        }
+        else{
+            Troop selectedTroop = (Troop) DataBase.getSelectedUnit().get(0);
+            if(selectedTroop.isDigMoat() == false)
+                return GameMenuMessages.CANNOT_DIG_DITCH;
+
+            DataBase.getSelectedMap().getSquareFromMap(yInt , xInt).setLand(Land.DITCH);
+            return GameMenuMessages.DIG_DITCH_SUCCESS;
+        }
+    }
+
+    public static GameMenuMessages fillDitchController(String x, String y) {
+        if(x == null || y == null)
+            return GameMenuMessages.NO_OPTIONS;
+        int xInt = Integer.parseInt(x);
+        int yInt = Integer.parseInt(y);
+
+        if(xInt > DataBase.getSelectedMap().getLength() || xInt <= 0)
+            return GameMenuMessages.INVALID_X;
+        if(yInt > DataBase.getSelectedMap().getWidth() || yInt <= 0)
+            return GameMenuMessages.INVALID_Y;
+
+        if(DataBase.getSelectedUnit() == null)
+            return GameMenuMessages.NO_UNIT_SELECTED;
+        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop)){
+            return GameMenuMessages.CANNOT_DIG_DITCH;
+        }
+        else{
+            Troop selectedTroop = (Troop) DataBase.getSelectedUnit().get(0);
+            if(selectedTroop.isDigMoat() == false)
+                return GameMenuMessages.CANNOT_DIG_DITCH;
+
+            DataBase.getSelectedMap().getSquareFromMap(yInt , xInt).setLand(Land.DITCH);
+            return GameMenuMessages.FILL_DITCH_SUCCESS;
+        }
     }
 }

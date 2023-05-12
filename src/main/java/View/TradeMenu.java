@@ -2,16 +2,20 @@ package View;
 
 import Controller.Orders;
 import Controller.TradeMenuController;
+import View.Enums.Commands.GameMenuCommands;
 import View.Enums.Commands.TradeMenuCommands;
 import View.Enums.Messages.TradeMenuMessages;
 
+import java.io.CharArrayReader;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class TradeMenu {
-    public static void run(Scanner scanner) {
+    public static void run() {
         String input;
         Matcher matcher;
+
+        System.out.println("TRADE MENU:");
 
         showNotifications();
 
@@ -30,6 +34,10 @@ public class TradeMenu {
                 rejectTrade(matcher);
             else if((matcher = TradeMenuCommands.getMatcher(input , TradeMenuCommands.DONATE)) != null)
                 donate(matcher);
+            else if(TradeMenuCommands.getMatcher(input , TradeMenuCommands.EXIT) != null) {
+                System.out.println("returned back to game menu");
+                return;
+            }
             else
                 System.out.println("invalid command");
         }
@@ -44,6 +52,15 @@ public class TradeMenu {
 
         TradeMenuMessages controllerMessage = TradeMenuController.donateController(resourceName , amount , message ,
                 governmentNameThatHasBeenDonated);
+
+        switch (controllerMessage){
+            case NOT_ENOUGH_OPTIONS -> Input_Output.outPut("donate error: please all required options");
+            case INVALID_RESOURCE_TYPE -> Input_Output.outPut("donate error: invalid resource type");
+            case INVALID_AMOUNT -> Input_Output.outPut("donate error: invalid amount");
+            case NOT_ENOUGH_RESOURCE_IN_STOCKPILE -> Input_Output.outPut("donate error: not enough resource in stockpile");
+            case INVALID_GOVERNMENT_NAME -> Input_Output.outPut("donate error: invalid government name");
+            case DONATE_SUCCESS -> Input_Output.outPut("donate success");
+        }
     }
 
     private static void sendTradeRequest(Matcher matcher) {
@@ -70,6 +87,9 @@ public class TradeMenu {
                 break;
             case INVALID_PRICE:
                 System.out.println("send trade request error: invalid price");
+                break;
+            case INVALID_GOVERNMENT_NAME:
+                System.out.println("send trade request error: invalid government name");
                 break;
             case SEND_REQUEST_SUCCESS:
                 System.out.println("trade request sent successfully");

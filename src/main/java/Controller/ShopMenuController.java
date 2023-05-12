@@ -38,12 +38,13 @@ public class ShopMenuController {
         int itemsCounter = 1;
         for (Resource item : items) {
             toReturn += itemsCounter + ". " + item.getName() + " = " + item.getBuyPrice()  + " (gold)\n";
+            itemsCounter++;
         }
         return toReturn;
     }
 
 
-    public static ShopMenuMessages buyItemByNameController(String name, int amount , Scanner scanner) {
+    public static ShopMenuMessages buyItemByNameController(String name, int amount) {
         Resource itemToBuy = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -62,7 +63,7 @@ public class ShopMenuController {
             return ShopMenuMessages.NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE;
         else{
             while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy (scanner , "buy" , name , amount);
+                String confirmation = ShopMenu.confirmSellOrBuy ("buy" , name , amount);
 
                 if(confirmation.toUpperCase().equals("YES")){
                     DataBase.getCurrentGovernment().changeMoney(-1 * amount * itemToBuy.getBuyPrice());
@@ -77,7 +78,7 @@ public class ShopMenuController {
 
     }
 
-    public static ShopMenuMessages sellItemByNameController(String name, int amount , Scanner scanner) {
+    public static ShopMenuMessages sellItemByNameController(String name, int amount) {
             Resource itemToSell = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -94,7 +95,7 @@ public class ShopMenuController {
             return ShopMenuMessages.NOT_ENOUGH_ITEM_IN_STOCKPILE;
         else{
             while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy(scanner, "sell", name, amount);
+                String confirmation = ShopMenu.confirmSellOrBuy("sell", name, amount);
 
                 if (confirmation.toUpperCase().equals("YES")) {
                     DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amount);

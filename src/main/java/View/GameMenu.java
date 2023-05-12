@@ -123,6 +123,14 @@ public class GameMenu {
 
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.SHOW_MONEY) != null)
                 showMoney();
+            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.DIG_DITCH)) != null)
+                digDitch(matcher);
+            else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.FILL_DITCH)) != null)
+                fillDitch(matcher);
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_TRADE_MENU) != null)
+                TradeMenu.run();
+            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOP_MENU) != null)
+                ShopMenu.run();
 
             else Input_Output.outPut("invalid command");
         }
@@ -147,6 +155,64 @@ public class GameMenu {
         
             default:
                 Input_Output.outPut("the gate is modified succesfully!");
+                break;
+        }
+    }
+
+    private static void fillDitch(Matcher matcher) {
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+
+        GameMenuMessages  message = GameMenuController.fillDitchController(x , y);
+
+        switch (message){
+            case NO_UNIT_SELECTED:
+                System.out.println("fill ditch error: no unit selected to dig ditch");
+                break;
+            case CANNOT_DIG_DITCH:
+                System.out.println("fill ditch error: selected unit cannot dig ditch");
+                break;
+            case NO_OPTIONS:
+                System.out.println("fill ditch error: please enter x and y");
+                break;
+            case INVALID_X:
+                System.out.println("fill ditch error:  invalid x");
+                break;
+            case INVALID_Y:
+                System.out.println("fill ditch error: invalid y");
+                break;
+            case FILL_DITCH_SUCCESS:
+                System.out.println("ditch filled successfully");
+                break;
+        }
+    }
+
+    private static void digDitch(Matcher matcher) {
+        String options = matcher.group("options");
+        String x = Orders.findFlagOption("-x" , options);
+        String y = Orders.findFlagOption("-y" , options);
+
+        GameMenuMessages  message = GameMenuController.digDitchController(x , y);
+
+        switch (message){
+            case NO_UNIT_SELECTED:
+                System.out.println("dig ditch error: no unit selected to dig ditch");
+                break;
+            case CANNOT_DIG_DITCH:
+                System.out.println("dig ditch error: selected unit cannot dig ditch");
+                break;
+            case NO_OPTIONS:
+                System.out.println("dig ditch error: please enter x and y");
+                break;
+            case INVALID_X:
+                System.out.println("dig ditch error:  invalid x");
+                break;
+            case INVALID_Y:
+                System.out.println("dig ditch error: invalid y");
+                break;
+            case DIG_DITCH_SUCCESS:
+                System.out.println("ditch dug successfully");
                 break;
         }
     }
