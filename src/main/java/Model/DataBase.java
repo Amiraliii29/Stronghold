@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Buildings.TownBuilding;
 
@@ -135,14 +136,12 @@ public class DataBase {
     }
 
     private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender) {
-
         deffender.changeHitPoint(attacker.getDamage());
+        attacker.setDidFight(true);
         if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance) && !deffender.getDidFight()) {
             attacker.changeHitPoint(deffender.getDamage());
             deffender.setDidFight(true);
         }
-
-        attacker.setDidFight(true);
     }
 
     private static void removeDeadSelectedUnits() {
@@ -171,11 +170,30 @@ public class DataBase {
         HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
 
         for (String s : generationRates.keySet()) {
-            String resourceName = s.toString();
-            Integer resourceGenerationRate = generationRates.get(resourceName);
-
-            Resource targetResource = Resource.getResourceByName(resourceName);
-            currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
+            if (s.equals("Wood")) {
+                Square[][] squares = selectedMap.getSquares();
+                int changeAmount = generationRates.get(s);
+                outer:
+                for (int i = 0; i < selectedMap.getLength(); i++) {
+                    for (int j = 0; j < selectedMap.getWidth(); j++) {
+                        if (changeAmount < 0)
+                            break outer;
+                        if (changeAmount > squares[i][j].getTreeAmount()) {
+                            squares[i][j].changeTreeAmount(squares[i][j].getTreeAmount());
+                            currentGovernment.addToStockpile(Resource.createResource("Wood"), squares[i][j].getTreeAmount());
+                            changeAmount -= squares[i][j].getTreeAmount();
+                        } else {
+                            squares[i][j].changeTreeAmount(changeAmount);
+                            currentGovernment.addToStockpile(Resource.createResource("Wood"), changeAmount);
+                            changeAmount = 0;
+                        }
+                    }
+                }
+            } else {
+                Integer resourceGenerationRate = generationRates.get(s);
+                Resource targetResource = Resource.getResourceByName(s);
+                currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
+            }
         }
     }
 
@@ -217,7 +235,6 @@ public class DataBase {
     }
 
     public static boolean isUnitFriendly(Government owner, Unit unit) {
-        //TODO: ALSO CHECK ALLIES
         return owner.equals(unit.getOwner());
     }
 

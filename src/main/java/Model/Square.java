@@ -125,7 +125,15 @@ public class Square {
     }
 
     public void changeTreeAmount(int amount) {
-        treeAmount += amount;
+        treeAmount -= amount;
+        if (treeAmount <= 0) {
+            treeAmount = 0;
+            tree = null;
+        }
+    }
+
+    public int getTreeAmount() {
+        return treeAmount;
     }
 
     public void setCliffDirection(String cliffDirection) {
