@@ -18,6 +18,7 @@ public enum Land {
     OIL("oil"),
     SEA("sea"),
     CLIFF("cliff"),
+    DITCH("ditch"),
     ;
     private String name;
 

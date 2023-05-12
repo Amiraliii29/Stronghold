@@ -21,7 +21,7 @@ public class Square {
     static {
         canPass = new HashMap<>();
         for (Land land : Land.values()) {
-            if (Land.getName(land).equals("rock") || Land.getName(land).equals("lowDepthWater")
+            if (Land.getName(land).equals("rock") || Land.getName(land).equals("ditch")
                     || Land.getName(land).equals("river") || Land.getName(land).equals("smallLake")
                     || Land.getName(land).equals("bigLake") || Land.getName(land).equals("sea")
                     || Land.getName(land).equals("cliff"))

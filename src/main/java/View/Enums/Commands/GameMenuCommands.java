@@ -32,7 +32,13 @@ public enum GameMenuCommands {
     MODIFY_GATES("^\\s*modify\\s+gate\\s+(?<state>.+)\\s*"),
     DROP_UNIT("^\\s*drop\\s*unit\\s*(?<options>.+)$"),
     NEXT_TURN("^\\s*next\\s*turn\\s*$"),
-    SHOW_MONEY("^\\s*show\\s*money\\s*$");
+    SHOW_MONEY("^\\s*show\\s*money\\s*$"),
+    DIG_DITCH("^\\s*dig\\s*ditch\\s*(?<options>.+)$"),
+    FILL_DITCH("^\\s*fill\\s*ditch\\s*(?<options>.+)$"),
+    ENTER_TRADE_MENU("^\\s*enter\\s*trade\\s*menu\\s*$"),
+    ENTER_SHOP_MENU("^\\s*enter\\s*shop\\s*menu\\s*$"),
+    ;
+    ;
     private String regex;
 
     private GameMenuCommands(String regex) {
