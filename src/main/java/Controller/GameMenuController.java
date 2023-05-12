@@ -45,6 +45,8 @@ public class GameMenuController {
             entry.getKey().getBuilding().changeHP(-10000);
             DataBase.removeDestroyedBuildings(entry.getKey().getBuilding());
         }
+        if (checkForEnd())
+            return GameMenuMessages.END;
         //automatic fights
         ArrayList<Government> governments = DataBase.getGovernments();
         if (governments.indexOf(currentGovernment) == governments.size() - 1)
@@ -101,6 +103,7 @@ public class GameMenuController {
             for (int k = 0; k < allSquares[0].length; k++) {
                 for (Unit unit : allSquares[j][k].getUnits()) {
                     allUnits.add(unit);
+                    unit.setDidFight(false);
                 }
             }
         }
@@ -492,7 +495,6 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages attackController(String enemyX, String enemyY) {
-
         if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
