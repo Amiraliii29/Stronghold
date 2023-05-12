@@ -107,7 +107,7 @@
     "length": 1,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
-    "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
+    "lands": ["default","grass","plain","sand","meadow","highDensityMeadow","flatRock"],
     "hp": 100,
     "numberOfResource": 5,
     "cost": 0,
@@ -160,6 +160,7 @@
     "width": 5,
     "length": 5,
     "xCoordinateLeft": 0,
+    
     "yCoordinateUp": 0,
     "lands": ["flatRock"],
     "hp": 400,

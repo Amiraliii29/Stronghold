@@ -54,7 +54,7 @@ public class Government {
         this.faith = 0;
         this.population = 32;
         this.maxPopulation = 40;
-        this.freeWorker = 0;
+        this.freeWorker = 20;
         stockpiles = new ArrayList<>();
         armoury = new ArrayList<>();
         granary = new ArrayList<>();

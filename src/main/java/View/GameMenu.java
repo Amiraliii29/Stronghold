@@ -164,6 +164,11 @@ public class GameMenu {
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
 
+        if(Orders.isOrderJunky(options, false, "-x","-y")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
+
         GameMenuMessages  message = GameMenuController.fillDitchController(x , y);
 
         switch (message){
@@ -192,6 +197,11 @@ public class GameMenu {
         String options = matcher.group("options");
         String x = Orders.findFlagOption("-x" , options);
         String y = Orders.findFlagOption("-y" , options);
+
+        if(Orders.isOrderJunky(options, false, "-x","-y")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
 
         GameMenuMessages  message = GameMenuController.digDitchController(x , y);
 
@@ -314,7 +324,12 @@ public class GameMenu {
         String buildingComponents = matcher.group("buildingComponents");
         String x = Orders.findFlagOption("-x", buildingComponents);
         String y = Orders.findFlagOption("-y", buildingComponents);
-        String buildingName = Orders.findFlagOption("-type", buildingComponents);
+        String buildingName = Orders.findFlagOption("-t", buildingComponents);
+
+        if(Orders.isOrderJunky(buildingComponents, false, "-x","-y","-t")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
 
         if (x == null || y == null || buildingName == null) {
             Input_Output.outPut("error: empty necessary fields!");
@@ -342,6 +357,11 @@ public class GameMenu {
         String x = Orders.findFlagOption("-x", buildingComponents);
         String y = Orders.findFlagOption("-y", buildingComponents);
 
+        if(Orders.isOrderJunky(buildingComponents, false, "-x","-y")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
+
         if (x == null || y == null) {
             Input_Output.outPut("error: empty necessary fields!");
             return;
@@ -365,6 +385,11 @@ public class GameMenu {
         String inputComponents = matcher.group("unitComponents");
         String type = Orders.findFlagOption("-t", inputComponents);
         String count = Orders.findFlagOption("-c", inputComponents);
+
+        if(Orders.isOrderJunky(inputComponents, false, "-t","-c")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
 
         if (type == null || count == null) {
             Input_Output.outPut("error: empty necessary fields!");
@@ -440,6 +465,11 @@ public class GameMenu {
         String input = matcher.group("coordinates");
         String targetX = Orders.findFlagOption("-x", input);
         String targetY = Orders.findFlagOption("-y", input);
+
+        if(Orders.isOrderJunky(input, false, "-x","-y")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
 
         if (targetX == null || targetY == null) {
             Input_Output.outPut("error: empty coordination fields!");
@@ -530,6 +560,11 @@ public class GameMenu {
         String count = Orders.findFlagOption("-c" , options);
         String onwerGovernmentNumber = Orders.findFlagOption("-g" , options);
 
+        if(Orders.isOrderJunky(options, false, "-x","-y","-t","-c","-g")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
+
         CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count , onwerGovernmentNumber);
 
         switch (message) {
@@ -556,6 +591,10 @@ public class GameMenu {
         String type = Orders.findFlagOption("-t", options);
         String governmentNumber = Orders.findFlagOption("-g", options);
 
+        if(Orders.isOrderJunky(options, false, "-x","-y","-t","-g")){
+            Input_Output.outPut("error: unmatching inputs for this order!");
+            return;
+        }
         CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x, y, type, governmentNumber);
 
         switch (message) {

@@ -79,7 +79,7 @@ public class Barrack extends Building {
                         yCoordinateUp, barrack.lands, barrack.hp, barrack.resource, barrack.numberOfResource, barrack.cost,
                         barrack.canPass, barrack.troops);
                 if (owner != null) owner.addBuildings(newBarrack);
-                return barrack;
+                return newBarrack;
             }
         }
         return null;
