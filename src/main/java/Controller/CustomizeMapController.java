@@ -80,7 +80,7 @@ public class CustomizeMapController {
             if(land == null)
                 return CustomizeMapMessages.INVALID_TYPE;
 
-            DataBase.getSelectedMap().getSquareFromMap(xInt -1  , yInt -1 ).setLand(land);
+            DataBase.getSelectedMap().getSquareFromMap(yInt   , xInt).setLand(land);
             Map.saveMap(DataBase.getSelectedMap() , DataBase.getSelectedMap().getName());
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
 
@@ -112,9 +112,9 @@ public class CustomizeMapController {
             if(land == null)
                 return CustomizeMapMessages.INVALID_TYPE;
 
-            for (int j = y2Int - 1 ; j >= y1Int - 1 ; j--){
-                for (int i = x1Int - 1 ; i <= x2Int - 1 ; i++){
-                    DataBase.getSelectedMap().getSquareFromMap(i , j).setLand(land);
+            for (int j = y2Int  ; j >= y1Int  ; j--){
+                for (int i = x1Int ; i <= x2Int ; i++){
+                    DataBase.getSelectedMap().getSquareFromMap(j , i).setLand(land);
                 }
             }
             Map.saveMap(DataBase.getSelectedMap() , DataBase.getSelectedMap().getName());
