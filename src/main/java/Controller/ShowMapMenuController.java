@@ -111,11 +111,10 @@ public class ShowMapMenuController {
         else if(y == null)
             return "show map details error: please enter y next time\n";
 
+
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
-        if (xInt <= 0 || yInt <= 0 || xInt > DataBase.getSelectedMap().getLength() || yInt > DataBase.getSelectedMap().getWidth())
-            return "wrong coordinate";
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt-1 , yInt-1);
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xInt , yInt);
 
         toReturn += "Land type: \n" + square.getLand() + "\n------------------\n";
         if (square.getBuilding() != null) toReturn += "building: \n" + square.getBuilding().getName() + "\n------------------\n";
