@@ -143,7 +143,6 @@ public class TradeMenuController {
         return toReturn;
     }
 
-
     public static TradeMenuMessages donateController(String resourceName, String amount, String message,
                                                      String governmentName) {
         if (resourceName == null || amount == null || message == null || governmentName == null)
