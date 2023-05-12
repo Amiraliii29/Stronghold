@@ -551,7 +551,7 @@ public class GameMenuController {
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        if (!currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
+        if (!currentMap.doesSquareContainEnemyUnits(targetYInNum, targetXInNum, currentGovernment))
             return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
         if (!DataBase.areSelectedUnitsRanged())
