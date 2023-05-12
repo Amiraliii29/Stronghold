@@ -71,7 +71,7 @@ public class Map {
                 for (String validLand : building.getLands()) {
                     if (Land.getName(squares[i][j].getLand()).equals(validLand))
                         check = true;
-                    if (squares[i][j].getBuilding() != null)
+                    if (squares[i][j].getBuilding() != null || squares[i][j].getTree() != null)
                         return false;
                 }
                 if (!check) return false;
