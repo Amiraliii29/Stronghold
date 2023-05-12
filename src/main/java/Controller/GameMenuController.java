@@ -307,23 +307,30 @@ public class GameMenuController {
         String x = Orders.findFlagOption("-x", option);
         String y = Orders.findFlagOption("-y", option);
         String type = Orders.findFlagOption("-type", option);
+
         assert x != null;
         if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+
         if (!Unit.getAllUnits().contains(type))
             return GameMenuMessages.INVALID_TROOP_TYPE;
+
         int xCoordinate = Integer.parseInt(x);
         int yCoordinate = Integer.parseInt(y);
+
         if (DataBase.getSelectedMap().getLength() < xCoordinate
                 || DataBase.getSelectedMap().getWidth() < yCoordinate)
             return GameMenuMessages.INVALID_COORDINATE;
+
         Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
         ArrayList<Unit> selectedUnit = new ArrayList<>();
+
         for (Unit unit : square.getUnits()) {
             if (unit.getName().equals(type) && unit.getOwner().equals(currentGovernment)) {
                 selectedUnit.add(unit);
             }
         }
+
         if (selectedUnit.size() == 0) return GameMenuMessages.THERE_IS_NO_UNIT;
         DataBase.setSelectedUnit(selectedUnit);
         return GameMenuMessages.SUCCESS;

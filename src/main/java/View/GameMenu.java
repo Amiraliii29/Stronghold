@@ -362,11 +362,9 @@ public class GameMenu {
             case WRONG_FORMAT_COORDINATE -> Input_Output.outPut("error: coordination format is invalid!");
             case INVALID_COORDINATE -> Input_Output.outPut("error: coordination is out of map's bounds!");
             case ATTACK_NO_ENEMY_IN_AREA -> Input_Output.outPut("error: the selected square doesn't have enemy!");
-            case RANGEDATTACK_NON_ARCHER_SELECTION -> Input_Output.outPut("error: the selected units are not archers!");
+            case RANGEDATTACK_NON_ARCHER_SELECTION -> Input_Output.outPut("error: the selected units can hit far enemies!");
             case RANGEDATTACK_TARGET_NOT_IN_RANGE ->
-                    Input_Output.outPut("error: the target square is not in the range of archers!");
-            default -> {
-            }
+                    Input_Output.outPut("error: the target square is not in the range!");
         }
     }
 
@@ -442,38 +440,20 @@ public class GameMenu {
 
         CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count , onwerGovernmentNumber);
 
-        switch (message){
-            case INVALID_GOVERNMENT_NUMBER:
-                System.out.println("drop unit error: invalid government number");
-                break;
-            case NO_OWNER_GOVERNMENT_NUMBER:
-                System.out.println("drop unit error: please enter owner government number after " +
-                        " -g flag next time");
-                break;
-            case INVALID_NUMBER:
-                System.out.println("drop unit error: invalid number");
-                break;
-            case INVALID_OPTIONS:
-                System.out.println("drop unit error: please enter x and y component");
-                break;
-            case X_OUT_OF_BOUNDS:
-                System.out.println("drop unit error: x out of bounds");
-                break;
-            case Y_OUT_OF_BOUNDS:
-                System.out.println("drop unit error: y out of bounds");
-                break;
-            case INVALID_COUNT:
-                System.out.println("drop unit error: invalid count");
-                break;
-            case UNSUITABLE_LAND:
-                System.out.println("drop unit error: unsuitable land to drop unit");
-                break;
-            case DROP_UNIT_SUCCESS:
-                System.out.println("unit dropped successfully");
-                break;
-            case NO_MAP_SELECTED:
-                System.out.println("drop unit error: please first select your map");
-                break;
+        switch (message) {
+            case INVALID_GOVERNMENT_NUMBER -> System.out.println("drop unit error: invalid government number");
+            case NO_OWNER_GOVERNMENT_NUMBER ->
+                    System.out.println("drop unit error: please enter owner government number after " +
+                            " -g flag next time");
+            case INVALID_NUMBER -> System.out.println("drop unit error: invalid number");
+            case INVALID_OPTIONS -> System.out.println("drop unit error: please enter x and y component");
+            case X_OUT_OF_BOUNDS -> System.out.println("drop unit error: x out of bounds");
+            case Y_OUT_OF_BOUNDS -> System.out.println("drop unit error: y out of bounds");
+            case INVALID_COUNT -> System.out.println("drop unit error: invalid count");
+            case UNSUITABLE_LAND -> System.out.println("drop unit error: unsuitable land to drop unit");
+            case DROP_UNIT_SUCCESS -> System.out.println("unit dropped successfully");
+            case NO_MAP_SELECTED -> System.out.println("drop unit error: please first select your map");
+            case No_UNIT_WITH_THIS_NAME -> Input_Output.outPut("there is no unit with this name");
         }
     }
 

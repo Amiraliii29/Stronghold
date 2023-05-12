@@ -4,7 +4,7 @@ import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Generator;
 import Model.Buildings.Stockpile;
-import Model.Units.Troop;
+import Model.Units.*;
 import View.CustomizeMap;
 import View.Enums.Commands.CustomizeMapCommands;
 import View.Enums.Messages.CustomizeMapMessages;
@@ -288,9 +288,11 @@ public class CustomizeMapController {
     public static CustomizeMapMessages dropUnitController(String x, String y, String type, String count , String ownerGovernmentNumber) {
         if(x == null || y  == null || count == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
+
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
                 CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
+
         if(ownerGovernmentNumber == null)
             return CustomizeMapMessages.NO_OWNER_GOVERNMENT_NUMBER;
 
@@ -302,14 +304,22 @@ public class CustomizeMapController {
         Building building = GameMenuController.getBuildingByName(type);
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
+
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
+
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
+
         else if(countInt < 0)
             return CustomizeMapMessages.INVALID_COUNT;
+
         else if(ownerGovernmentNumberInt <= 0 || ownerGovernmentNumberInt > DataBase.getSelectedMap().getGovernmentsInMap().size())
             return CustomizeMapMessages.INVALID_GOVERNMENT_NUMBER;
+
+        else if (!Unit.getAllUnits().contains(type))
+            return CustomizeMapMessages.No_UNIT_WITH_THIS_NAME;
+
         else{
             Government ownerGovernment = DataBase.getSelectedMap().getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
             Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
@@ -317,9 +327,22 @@ public class CustomizeMapController {
                     || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
             selectedSquare.getLand().equals(Land.FLAT_ROCK))
                 return CustomizeMapMessages.UNSUITABLE_LAND;
-            for(int i = 0 ; i < countInt ; i++) {
-                Troop.createTroop(ownerGovernment  , type , xInt , yInt);
-            }
+            if (Troop.getTroopByName(type) != null) {
+                for (int i = 0; i < countInt; i++)
+                    Troop.createTroop(ownerGovernment, type, xInt, yInt);
+            } else if (Siege.getSiegesName().contains(type)) {
+                for (int i = 0; i < countInt; i++)
+                    Siege.createSiege(ownerGovernment, type, xInt, yInt);
+            } else if (type.equals("Engineer")) {
+                for (int i = 0; i < countInt; i++)
+                    Engineer.createEngineer(ownerGovernment, xInt, yInt);
+            } else if (type.equals("Tunneler")) {
+                for (int i = 0; i < countInt; i++)
+                    Tunneler.createTunneler(ownerGovernment, xInt, yInt);
+            } else if (type.equals("LadderMan")) {
+                for (int i = 0; i < countInt; i++)
+                    LadderMan.createLadderMan(ownerGovernment, xInt, yInt);
+            } else return CustomizeMapMessages.No_UNIT_WITH_THIS_NAME;
             return CustomizeMapMessages.DROP_UNIT_SUCCESS;
         }
 
