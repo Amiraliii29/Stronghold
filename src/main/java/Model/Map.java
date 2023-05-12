@@ -244,7 +244,7 @@ public class Map {
             landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
         
         for (int[] coord : landsWithinRange)
-            if (doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
+            if (doesSquareContainEnemyUnits(coord[1], coord[0], mainUnit.getOwner()))
                 return coord;
         return null;
     }
