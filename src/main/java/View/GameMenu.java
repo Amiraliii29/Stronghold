@@ -407,7 +407,7 @@ public class GameMenu {
                     Input_Output.outPut("error: you don't have enough weapons for the trainings!");
             case CREATEUNIT_INSUFFICIENT_FREEPOP ->
                     Input_Output.outPut("error: you don't have enough population of free workers!");
-            default -> Input_Output.outPut("succesfully trained the troops!");
+            default -> Input_Output.outPut("successfully trained the troops!");
         }
 
     }

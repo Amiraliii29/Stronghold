@@ -65,6 +65,7 @@ public class CustomizeMapController {
 
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
+
         if(x != null && y != null){
             if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
             CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
