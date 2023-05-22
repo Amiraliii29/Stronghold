@@ -231,9 +231,9 @@ public class CustomizeMapController {
         Building buildingToConstruct = GameMenuController.getBuildingByName(type);
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
-        if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+        if(xInt <= 0 || xInt  +buildingToConstruct.getLength()> DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-        else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+        else if(yInt <= 0 || yInt +buildingToConstruct.getWidth() > DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
         else if ( buildingToConstruct == null)
             return CustomizeMapMessages.INVALID_BUILDING_NAME;

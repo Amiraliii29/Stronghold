@@ -69,9 +69,9 @@ public class Map {
         for (int i = x; i < x + length; i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
                 for (String validLand : building.getLands()) {
-                    if (Land.getName(squares[i][j].getLand()).equals(validLand))
+                    if (Land.getName(squares[j-1][i-1].getLand()).equals(validLand))
                         check = true;
-                    if (squares[i][j].getBuilding() != null || squares[i][j].getTree() != null)
+                    if (squares[j-1][i-1].getBuilding() != null || squares[j-1][i-1].getTree() != null)
                         return false;
                 }
                 if (!check) return false;
