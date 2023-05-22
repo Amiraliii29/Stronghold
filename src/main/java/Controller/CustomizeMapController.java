@@ -62,6 +62,9 @@ public class CustomizeMapController {
 
     public static CustomizeMapMessages setTextureController(String x , String y , String x1 , String y1 ,
                                                             String x2 , String y2 , String type){
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(x != null && y != null){
             if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
             CustomizeMapCommands.getMatcher(y , CustomizeMapCommands.VALID_NUMBER) == null)
@@ -97,10 +100,7 @@ public class CustomizeMapController {
             int x2Int = Integer.parseInt(x2);
             int y2Int = Integer.parseInt(y2);
 
-
-            if (DataBase.getSelectedMap() == null)
-                return CustomizeMapMessages.NO_MAP_SELECTED;
-            else if(x1Int <= 0 || x1Int > DataBase.getSelectedMap().getLength() ||x2Int <= 0
+            if(x1Int <= 0 || x1Int > DataBase.getSelectedMap().getLength() ||x2Int <= 0
                     || x2Int > DataBase.getSelectedMap().getLength())
                 return CustomizeMapMessages.X_OUT_OF_BOUNDS;
             else if(y1Int <= 0 || y1Int > DataBase.getSelectedMap().getWidth() || y2Int <= 0 ||
@@ -126,6 +126,9 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages clearController(String x , String y){
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
@@ -163,8 +166,6 @@ public class CustomizeMapController {
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
 
-        if (DataBase.getSelectedMap() == null)
-            return CustomizeMapMessages.NO_MAP_SELECTED;
 
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
@@ -187,6 +188,10 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages dropTreeController(String x , String y , String type){
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
+
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
@@ -196,8 +201,6 @@ public class CustomizeMapController {
         int xInt = Integer.parseInt(x);
         int yInt = Integer.parseInt(y);
 
-        if (DataBase.getSelectedMap() == null)
-            return CustomizeMapMessages.NO_MAP_SELECTED;
         if(xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
@@ -214,6 +217,10 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages dropBuildingController(String x, String y, String type , String ownerGovernmentNumber) {
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
+
         if(x == null || y  == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
         if(CustomizeMapCommands.getMatcher(x , CustomizeMapCommands.VALID_NUMBER) == null ||
@@ -229,8 +236,8 @@ public class CustomizeMapController {
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         Building buildingToConstruct = GameMenuController.getBuildingByName(type);
-        if (DataBase.getSelectedMap() == null)
-            return CustomizeMapMessages.NO_MAP_SELECTED;
+
+
         if(xInt <= 0 || xInt  +buildingToConstruct.getLength()> DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
         else if(yInt <= 0 || yInt +buildingToConstruct.getWidth() > DataBase.getSelectedMap().getWidth())
@@ -291,6 +298,11 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages dropUnitController(String x, String y, String type, String count , String ownerGovernmentNumber) {
+
+
+        if (DataBase.getSelectedMap() == null)
+            return CustomizeMapMessages.NO_MAP_SELECTED;
+
         if(x == null || y  == null || count == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
 

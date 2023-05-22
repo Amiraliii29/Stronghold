@@ -19,7 +19,7 @@ public class LoginMenuController {
         else{
             int usersCount = selectedMap.getGovernmentsInMap().size();
             for (int i = 0 ; i < usersCount ; i++){
-                Input_Output.outPut("please enter payer number" + i + "'s name:");
+                Input_Output.outPut("please enter player number" + i + "'s name:");
                 String userName = Input_Output.getInput();
                 if(User.getUserByUserName(userName) == null) {
                     Input_Output.outPut("Invalid username");

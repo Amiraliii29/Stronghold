@@ -52,6 +52,8 @@ public class ShowMapMenuController {
                         mapToShow[i+10][j+10] = " SS |";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getBuilding() != null)
                         mapToShow[i+10][j+10] = " BB |";
+                    else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getTree() != null)
+                        mapToShow[i+10][j+10] = " TT | ";
                     else if(DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).getLand() != null){
                         char[] landName = DataBase.getSelectedMap().getSquareFromMap(yLocationOnMap + i, xLocationOnMap + j).
                                 getLand().name().toCharArray();
@@ -101,7 +103,7 @@ public class ShowMapMenuController {
         }
         if (xLocationOnMap <= 0) xLocationOnMap = 1;
         if (yLocationOnMap <= 0) yLocationOnMap = 1;
-        //System.out.println("******x: " + xLocationOnMap + " ** y: " +  yLocationOnMap);
+        //2System.out.println("******x: " + xLocationOnMap + " ** y: " +  yLocationOnMap);
         return showMapController(Integer.toString(xLocationOnMap) , Integer.toString(yLocationOnMap));
     }
     public static String showDetailsController(String  x, String y){
@@ -119,6 +121,7 @@ public class ShowMapMenuController {
 
         toReturn += "Land type: \n" + square.getLand() + "\n------------------\n";
         if (square.getBuilding() != null) toReturn += "building: \n" + square.getBuilding().getName() + "\n------------------\n";
+        if(square.getTree() != null) toReturn += "Trees: \n" + square.getTree().name() + "\n------------------\n";
         toReturn += "Units : \n";
         HashMap<String,  Integer> unitsTypeAndCount = square.getUnitsTypeAndCount();
         for (String unitName : unitsTypeAndCount.keySet()) {
