@@ -27,6 +27,7 @@ public class LoginMenu {
                 User.getCurrentUser().setStayLoggedIn(false);
                 UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
                 User.setCurrentUser(null);
+                SignUpMenu.run();
                 break;
             }
             else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU) != null)

@@ -144,7 +144,7 @@ public class CustomizeMapController {
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
 
         else {
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - 1 , xInt - 1);
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt , xInt);
             selectedSquare.setLand(Land.DEFAULT);
             selectedSquare.setBuilding(null);
             selectedSquare.newSelectedUnit();
