@@ -56,9 +56,10 @@ public class ShopMenu {
                 break;
             case NOT_ENOUGH_BALANCE:
                 System.out.println("buy item error: not enough gold :|");
+
                 break;
             case NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE:
-                System.out.println("buy item error: not enough free space in wareHouse you bought just " + amount + " of " + itemName);
+                System.out.println("buy item error: not enough free space in wareHouse");
                 break;
             case INVALID_AMOUNT:
                 System.out.println("buy item error: invalid amount");

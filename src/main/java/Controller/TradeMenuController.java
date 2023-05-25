@@ -35,8 +35,8 @@ public class TradeMenuController {
                     + " , price: " + tradeRequest.getPrice() + " , government that requested: " +
                     tradeRequest.getGovernmentThatRequested().getOwner().getUsername() +
                     " , government that has been asked: " + tradeRequest.getGovernmentThatHasBeenAsked().getOwner().getUsername()
-                    + " , request message: " + tradeRequest.getMessage() +
-                    " , id: " + tradeRequest.getId() + "\n";
+                    + " , request message: " + tradeRequest.getMessage() + "\n";
+//                    " , id: " + tradeRequest.getId() + "\n";
             counter++;
 
         }

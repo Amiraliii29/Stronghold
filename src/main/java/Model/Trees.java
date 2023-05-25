@@ -17,6 +17,9 @@ public enum Trees {
         return mainEnum.name;
     }
     public static Trees getTreeByName(String name){
-        return Trees.valueOf(name);
+        for (Trees trees : Trees.values()) {
+            if (trees.name.equals(name)) return trees;
+        }
+        return null;
     }
 }
