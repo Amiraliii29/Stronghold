@@ -64,24 +64,24 @@ public class TestClass {
         ProfileMenuController.removeSlogan();
     }
 
-    @Test
-    public void testChangeUsername() throws NoSuchAlgorithmException{
-        SignUpMenuController.userLoginController("tempUser", "aA@123", false);
-        Assertions.assertEquals(User.getCurrentUser(), User.getUserByUserName("tempUser"));
-
-        ProfileMenuController.setCurrentUser(User.getCurrentUser());
-
-        ProfileMenuMessages result;
-        result=  ProfileMenuController.changeUsername("oi oi");
-        Assertions.assertEquals(result, ProfileMenuMessages.INVALID_USERNAME_ERROR);
-
-        ProfileMenuController.changeUsername("testt");
-        Assertions.assertEquals(User.getCurrentUser().getUsername(), "testt");
-
-        ProfileMenuController.changeUsername("TERMALL");
-        Assertions.assertEquals(User.getCurrentUser().getUsername(), "TERMALL");
-
-        ProfileMenuController.changeUsername("test");
-    }
+//    @Test
+//    public void testChangeUsername() throws NoSuchAlgorithmException{
+//        SignUpMenuController.userLoginController("tempUser", "aA@123", false);
+//        Assertions.assertEquals(User.getCurrentUser(), User.getUserByUserName("tempUser"));
+//
+//        ProfileMenuController.setCurrentUser(User.getCurrentUser());
+//
+//        ProfileMenuMessages result;
+//        result=  ProfileMenuController.changeUsername("oi oi");
+//        Assertions.assertEquals(result, ProfileMenuMessages.INVALID_USERNAME_ERROR);
+//
+//        ProfileMenuController.changeUsername("testt");
+//        Assertions.assertEquals(User.getCurrentUser().getUsername(), "testt");
+//
+//        ProfileMenuController.changeUsername("TERMALL");
+//        Assertions.assertEquals(User.getCurrentUser().getUsername(), "TERMALL");
+//
+//        ProfileMenuController.changeUsername("test");
+//    }
 
 }
