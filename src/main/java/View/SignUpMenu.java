@@ -2,6 +2,7 @@ package View;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
+
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
 import Model.User;
@@ -13,25 +14,21 @@ public class SignUpMenu {
 
     public static void run() throws NoSuchAlgorithmException {
         String input;
+        Matcher matcher;
+        Input_Output.outPut("SIGNUP MENU:");
 
-        while (User.getCurrentUser()==null) {
-            Matcher matcher;
+        while (User.getCurrentUser() == null) {
             input = Input_Output.getInput();
 
-            if (input.equals("exit")) break;
-
+            if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.EXIT) != null) break;
             if (SignUpMenuController.getPenalty() > 0)
-               Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
-
+                Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) != null)
                 createUser(matcher);
-
-            else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD)) != null)
+            else if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD) != null)
                 forgotMyPassWord();
-
             else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.LOGIN)) != null)
                 userLogin(matcher);
-
             else Input_Output.outPut("error: invalid command!");
         }
         handleLoginProcess();
@@ -43,10 +40,15 @@ public class SignUpMenu {
         String signupComponentsInput = matcher.group("signupComponents");
         SignUpMenuMessages message = SignUpMenuController.runControllerSignupFunction(signupComponentsInput);
 
+        if(Orders.isOrderJunky(signupComponentsInput, true, "-u","-p","-n","-s","--email")){
+            Input_Output.outPut("error: invalid inputs were included");
+            return ;
+        }
+
         switch (message) {
 
             case EMPTY_FIELDS_SIGNUP_ERROR:
-            Input_Output.outPut("error: you have left some nessecary fields empty!");
+                Input_Output.outPut("error: you have left some nessecary fields empty!");
                 break;
 
             case INVALID_EMAIL_SIGNUP_ERROR:
@@ -89,6 +91,11 @@ public class SignUpMenu {
         String password = Orders.findFlagOption("-p", loginComponents);
         boolean stayLoggidInFlag = Orders.doesFlagExist("--stay-logged-in", loginComponents);
 
+        if(Orders.isOrderJunky(loginComponents, false, "-u","-p","--stay-logged-in")){
+            Input_Output.outPut("error: invalid inputs were included");
+            return ;
+        }
+
         SignUpMenuMessages result = SignUpMenuController.userLoginController(username, password, stayLoggidInFlag);
         switch (result) {
             case LOGIN_EMPTY_FIELDS_ERROR:
@@ -107,10 +114,6 @@ public class SignUpMenu {
                 Input_Output.outPut("error logging in!");
                 break;
         }
-
-        if (!result.equals(SignUpMenuMessages.SUCCESFUL_LOGIN))
-            SignUpMenuController.setNewPenalty();
-
     }
 
     private static void forgotMyPassWord() throws NoSuchAlgorithmException {
@@ -172,10 +175,10 @@ public class SignUpMenu {
                 Input_Output.outPut("error: invalid input!");
                 continue;
             }
-                
-                
-            String inputComponents=matcher.group("securityComponents");
-            SignUpMenuMessages response=SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
+
+
+            String inputComponents = matcher.group("securityComponents");
+            SignUpMenuMessages response = SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
 
 
             if (response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))

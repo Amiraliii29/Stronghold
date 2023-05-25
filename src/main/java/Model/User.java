@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import Controller.JsonConverter;
 
@@ -15,12 +16,12 @@ public class User {
     private String slogan;
     private String securityQuestion;
     private boolean stayLoggedIn;
-    private int highscore;
+    private int highScore;
     private int rank;
 
     static {
         users = new ArrayList<>();
-        JsonConverter.fillFormerUsersDatabase("src/main/java/jsonData/Users.json");
+        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
     }
 
     public User(String username, String password, String nickname,String email, String slogan) {
@@ -84,16 +85,16 @@ public class User {
         this.rank = rank;
     }
 
-    public void setHighscore(int highscore){
-        this.highscore=highscore;
+    public void setHighScore(int highScore){
+        this.highScore = highScore;
     }
 
     public int getRank(){
         return rank;
     }
 
-    public int getHighscore(){
-        return highscore;
+    public int getHighScore(){
+        return highScore;
     }
 
     public void setStayLoggedIn(boolean status){
@@ -108,7 +109,6 @@ public class User {
         for (User user : users)
             if (user.getUsername().equals(userName))
                 return user;
-
         return null;
     }
 
@@ -138,5 +138,13 @@ public class User {
 
     public static void setCurrentUser(User user){
         currentUser=user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickName, user.nickName) && Objects.equals(email, user.email) && Objects.equals(slogan, user.slogan) && Objects.equals(securityQuestion, user.securityQuestion);
     }
 }

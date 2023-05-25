@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.regex.Matcher;
 
-import Model.DataBase;
 import Model.User;
 
 public class UserInfoOperator {
@@ -47,7 +47,7 @@ public class UserInfoOperator {
         String securityQuestion=user.getSecurityQuestion();
         String nickname=user.getNickName();
         String rank=Integer.toString(user.getRank());
-        String highscore=Integer.toString(user.getHighscore());
+        String highscore=Integer.toString(user.getHighScore());
         boolean loginStatus=user.getStayLoggedIn();
 
         JsonConverter.putUserDataInFile(username, password, email, slogan, 
@@ -104,6 +104,54 @@ public class UserInfoOperator {
         }
         targetString=targetString.concat(targetConcat);
         return targetString;
+    }
+
+    public static boolean isEmailFormatValid(String inputEmail){
+        String spaceCheckerRegex="\\s";
+        Matcher spaceCheckerMatcher=Orders.createMatcher(spaceCheckerRegex, inputEmail);
+        if(spaceCheckerMatcher.find()) return false;
+
+        String correctFormatRegex="(?<emailBody>[^\\@]+)\\@(?<firstEmailHead>[^\\.]+)\\.(?<secondEmailHead>.+)";
+        Matcher correctFormatMatcher=Orders.createMatcher(correctFormatRegex, inputEmail);
+        if(!correctFormatMatcher.matches()) return false;
+
+        return true;
+    }
+
+    public static boolean isPasswordStrong(String password){
+        if(password.length()<6) return false;
+
+        String bigAlphabetRegex="[A-Z]";
+        Matcher bigAlphabetMatcher=Orders.createMatcher(bigAlphabetRegex, password);
+        if(!bigAlphabetMatcher.find()) return false;
+
+        String smallAlphabetRegex="[a-z]";
+        Matcher smallAlphabetMatcher=Orders.createMatcher(smallAlphabetRegex, password);
+        if(!smallAlphabetMatcher.find()) return false;
+
+        String numberRegex="[0-9]";
+        Matcher numberMatcher=Orders.createMatcher(numberRegex, password);
+        if(!numberMatcher.find()) return false;
+
+        String specialCharRegex="[^a-zA-Z0-9]";
+        Matcher specialCharMatcher=Orders.createMatcher(specialCharRegex, password);
+        if(!specialCharMatcher.find()) return false;
+
+        return true;
+    }
+
+    public static boolean isUsernameFormatValid(String inputUsername){
+        String invalidCharRegex="[^A-Za-z0-9\\_]";
+        Matcher invalidCharMatcher=Orders.createMatcher(invalidCharRegex, inputUsername);
+        if(invalidCharMatcher.find()) return false;
+
+        return true;
+    }
+
+    public static boolean isPasswordRepeatedCorrectly(String password, String passwordRepeat){
+        if(password.equals(passwordRepeat))
+            return true;
+        else return false;
     }
 
     private static char generateSmallAlphabet(){

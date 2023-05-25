@@ -1,38 +1,73 @@
 package Model.Buildings;
 
-import Model.Land;
-import Model.Resources.Resource;
+import Model.Government;
+import Model.Resource;
 
 import java.util.ArrayList;
 
 public abstract class Building {
-    protected Resource resource;
+    protected Government owner;
     protected String name;
+    protected int width;
+    protected int length;
     protected int xCoordinateLeft;
-    protected int xCoordinateRight;
-    protected int yCoordinateDown;
     protected int yCoordinateUp;
-    protected ArrayList<Land> lands;
+    protected ArrayList<String> lands;
+    protected final int maximumHp;
     protected int hp;
+    protected Resource resource;
     protected int numberOfResource;
     protected int cost;
     protected boolean canPass;
 
-    // add each kind of building to users arraylist in database ! //TODO
-    public Building(String name, int hp, Resource resource, int numberOfResource, int cost) {
+
+    public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
+                    ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
+        this.owner = owner;
         this.name = name;
+        this.width = width;
+        this.length = length;
+        this.xCoordinateLeft = xCoordinateLeft;
+        this.yCoordinateUp = yCoordinateUp;
+        this.lands = lands;
         this.hp = hp;
         this.resource = resource;
         this.numberOfResource = numberOfResource;
         this.cost = cost;
-        lands = new ArrayList<>();
+        this.canPass = canPass;
+        this.maximumHp=hp;
     }
 
-    public void setCoordinate(int xCoordinateLeft, int xCoordinateRight, int yCoordinateDown, int yCoordinateUp) {
-        this.xCoordinateLeft = xCoordinateLeft;
-        this.xCoordinateRight = xCoordinateRight;
-        this.yCoordinateDown = yCoordinateDown;
-        this.yCoordinateUp = yCoordinateUp;
+    public static String getBuildingCategoryByName(String buildingName){
+        for (String name : Generator.getGeneratorsName()) 
+            if(buildingName.equals(name)) return "Generator";
+                
+        for (String name : Barrack.getBarracksName()) 
+            if(buildingName.equals(name)) return "Barrack";
+                
+        for(String name : Defence.getDefencesName())
+            if(buildingName.equals(name)) return "Defence";
+
+        for(String name : TownBuilding.getTownBuildingsName())
+            if(buildingName.equals(name)) return "TownBuilding";
+
+        for(String name : Stockpile.getStockpilesName())
+            if(buildingName.equals(name)) return "Stockpile";
+
+        return null;
+    }
+
+    public int getMaximumHp(){
+        return maximumHp;
+    }
+
+    public int changeHP(int damage) {
+        hp -= damage;
+        return hp;
+    }
+
+    public Government getOwner() {
+        return owner;
     }
 
     public String getName() {
@@ -43,24 +78,20 @@ public abstract class Building {
         return xCoordinateLeft;
     }
 
-    public int getXCoordinateRight() {
-        return xCoordinateRight;
-    }
-
-    public int getYCoordinateDown() {
-        return yCoordinateDown;
-    }
-
     public int getYCoordinateUp() {
         return yCoordinateUp;
     }
 
-    public ArrayList<Land> getLands() {
-        return lands;
+    public int getLength() {
+        return length;
     }
 
-    public void setLands(ArrayList<Land> lands) {
-        this.lands = lands;
+    public int getWidth() {
+        return width;
+    }
+
+    public ArrayList<String> getLands() {
+        return lands;
     }
 
     public int getHp() {
@@ -77,5 +108,22 @@ public abstract class Building {
 
     public int getCost() {
         return cost;
+    }
+
+    public boolean getCanPass(Boolean up) {
+        if (!up) return canPass;
+        return true;
+    }
+
+    public void changeCanPass(boolean state){
+        this.canPass=state;
+    }
+
+    public static void readBuildingsFromFile() {
+        Defence.createDefence(null, -1, -1, "");
+        Generator.createGenerator(null, -1, -1, "");
+        Barrack.createBarrack(null, -1, -1, "");
+        Stockpile.createStockpile(null, -1, -1, "");
+        TownBuilding.createTownBuilding(null, -1, -1, "");
     }
 }

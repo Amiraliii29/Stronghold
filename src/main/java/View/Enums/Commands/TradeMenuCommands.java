@@ -4,8 +4,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum TradeMenuCommands {
-    ;
 
+    TRADE_REQUEST("^\\s*trade\\s*request\\s*(?<options>.+)$"),
+    TRADE_LIST("^\\s*trade\\s*list\\s*$"),
+    ACCEPT_TRADE("^\\s*trade\\s+accept\\s*(?<options>.+)\\s*$"),
+    TRADE_HISTORY("^\\s*trade\\s*history\\s*$"),
+    TRADE_REJECT("^\\s*trade\\s*reject\\s*-i\\s+(?<id>\\S+)\\s*$"),
+    DONATE("^\\s*donate\\s*(?<options>.+)$"),
+    EXIT("^\\s*exit\\s*$"),
+    ;
 
     private String regex;
 

@@ -1,88 +1,122 @@
 package Controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Model.DataBase;
-
-import java.security.SecureRandom;
-
 public class Orders {
-
-    private static Scanner scanner=new Scanner(System.in);
- 
-
-
-
-    public static Matcher createMatcher(String regex,String input){
-        Pattern pattern=Pattern.compile(regex);
-        Matcher matcher=pattern.matcher(input);
+    public static Matcher createMatcher(String regex, String input) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
         return matcher;
     }
 
-    private static String findRawFlagOption(String flag, String input){
-        String optionRegex="(?<option>(\"[^\"]+\")|([^\\s]+))";
-        String flagRegex=flag+"\\s+"+optionRegex;
-        Matcher flagMatcher=createMatcher(flagRegex, input);
-        if(!flagMatcher.find()) return null;
+    private static String findRawFlagOption(String flag, String input) {
+        String optionRegex = "(?<option>(\"[^\"]+\")|([^\\s]+))";
+        String flagRegex = flag + "\\s+" + optionRegex;
+        Matcher flagMatcher = createMatcher(flagRegex, input);
+        if (!flagMatcher.find()) return null;
 
         return flagMatcher.group("option");
     }
 
-    public static boolean doesFlagExist(String flag, String input){
-        Matcher matcher=createMatcher(flag, input);
-        if(matcher.find())
-          return true;
+    public static boolean doesFlagExist(String flag, String input) {
+        Matcher matcher = createMatcher(flag, input);
+        if (matcher.find())
+            return true;
 
         return false;
     }
 
-    public static String findFlagOption(String flag, String input){
-        
-        String option =findRawFlagOption(flag, input);
-        if(option==null)
+    public static String findFlagOption(String flag, String input) {
+
+        String option = findRawFlagOption(flag, input);
+        if (option == null)
             return null;
 
-        if(option.charAt(0)=='\"')
-         option=trimEndAndStartOfString(option);
-
+        option = trimIfNeeded(option);
         return option;
     }
 
-    public static String findWordAfterFlagSequence(String flag,String input){
-        String nextWordRegex="(?<nextWord>(\"[^\"]+\")|([^\\s]+))";
+    public static String trimIfNeeded(String input) {
+        if (input.charAt(0) == '\"')
+            return trimEndAndStartOfString(input);
+        else return input;
+    }
 
-        String flagOption=findRawFlagOption(flag, input);
-        if(flagOption==null) return null;
+    public static String findWordAfterFlagSequence(String flag, String input) {
+        String nextWordRegex = "(?<nextWord>(\"[^\"]+\")|([^\\s]+))";
+
+        String flagOption = findRawFlagOption(flag, input);
+        if (flagOption == null) return null;
 
 
-        String nextWordSearchRegex=flag+"\\s+"+flagOption+"\\s+"+nextWordRegex;
-        Matcher nextWordMatcher=createMatcher(nextWordSearchRegex, input);
-        if(!nextWordMatcher.find()) return null;
+        String nextWordSearchRegex = flag + "\\s+" + flagOption + "\\s+" + nextWordRegex;
+        Matcher nextWordMatcher = createMatcher(nextWordSearchRegex, input);
+        if (!nextWordMatcher.find()) return null;
 
-        
-        String nextWord= nextWordMatcher.group("nextWord");
-        if(nextWord.charAt(0)=='\"')
-         nextWord=trimEndAndStartOfString(nextWord);
+
+        String nextWord = nextWordMatcher.group("nextWord");
+        nextWord = trimIfNeeded(nextWord);
 
         return nextWord;
     }
 
-    public static Boolean isOrderNotJunky(String order){
-        //ToDo
 
-        //note: aksare ordera, bayad hameye flag haye valid va optioneshon ke joda shodan az string, 
-        //      kamel khali she va chizi azash namone; vagarna yani vasate dastor
-        //      chize cherto pert vared karde va error bayad begire
+    public static boolean isInputInteger(String input){
+        String integerRegex="\\d+";
+        createMatcher(integerRegex, input);
+        
+        if(input.matches(integerRegex))
+            return true;
+        else return false;
     }
 
-    public static String trimEndAndStartOfString(String input){
-        String output="";
-        for (int i = 1; i < input.length()-1; i++) {
-            output=output.concat(""+input.charAt(i));
+    public static Boolean isOrderJunky(String order,boolean hasConfirmPass,String ... flags) {
+        
+        if(hasConfirmPass){
+            String password=findFlagOption("-p", order);
+            if(!password.equals("random")){
+                String repeat=findWordAfterFlagSequence("-p",order);
+                order=removeSubstring(order, repeat);
+            }
+        }
+
+        for (String flag : flags) {
+            String option=findRawFlagOption(flag, order);
+            order=removeSubstring(order, option);
+
+            if(doesFlagExist(flag, order))
+                order=removeSubstring(order, flag);
+        }
+        String emptyRegex="\\s*";
+        Matcher matcher=createMatcher(emptyRegex, order);
+        if(matcher.matches())
+            return false;
+    
+         return true;
+    }
+
+    private static String removeSubstring(String input, String substring){
+        if(substring==null)
+            return input;
+        StringBuffer buffer= new StringBuffer(input);
+        int startIndex=input.indexOf(substring);
+        buffer.replace(startIndex, startIndex+substring.length(), "");
+        return buffer.toString();
+    }
+
+    private static String trimEndAndStartOfString(String input) {
+        String output = "";
+        for (int i = 1; i < input.length() - 1; i++) {
+            output = output.concat("" + input.charAt(i));
         }
         return output;
     }
+
+    public static ArrayList<int[]> concatCoords(ArrayList<int[]> coords1,ArrayList<int[]> coords2 ){
+        for (int[] coord : coords2) 
+            coords1.add( coord);
+        return coords1;
+    } 
 }

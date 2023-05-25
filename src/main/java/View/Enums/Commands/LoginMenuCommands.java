@@ -4,7 +4,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum LoginMenuCommands {
-    ;
+    
+    LOGOUT("\\s*logout\\s*"),
+
+    ENTER_PROFILE_MENU("\\s*enter\\s+profile\\s+menu\\s*"),
+
+    ENTER_MAP_MENU("\\s*enter\\s+map\\s+menu\\s*"),
+    START_GAME("^\\s*start\\s*game\\s*(?<options>.+)$"),
+    EXIT("^\\s*exit\\s*&");
     private String regex;
 
     private LoginMenuCommands(String regex) {
