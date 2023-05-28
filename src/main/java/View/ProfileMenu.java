@@ -1,5 +1,6 @@
 package View;
 
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -9,9 +10,22 @@ import Controller.ProfileMenuController;
 import Model.User;
 import View.Enums.Commands.ProfileMenuCommands;
 import View.Enums.Messages.ProfileMenuMessages;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
-public class ProfileMenu {
+public class ProfileMenu extends Application {
 
+    @Override
+    public void start(Stage stage) throws Exception {
+        AnchorPane Pane = FXMLLoader.load(
+                new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
+        Scene scene = new Scene(Pane);
+        stage.setScene(scene);
+        stage.show();
+    }
     public static void run() throws NoSuchAlgorithmException {
 
         Input_Output.outPut("PROFILE MENU:");

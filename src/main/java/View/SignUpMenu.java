@@ -1,5 +1,6 @@
 package View;
 
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 
@@ -9,8 +10,24 @@ import Model.User;
 import Controller.Orders;
 import View.Enums.Commands.SignUpMenuCommands;
 import View.Enums.Messages.SignUpMenuMessages;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
-public class SignUpMenu {
+public class SignUpMenu extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        AnchorPane Pane = FXMLLoader.load(
+            new URL(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml").toExternalForm()));
+        Scene scene = new Scene(Pane);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public static void run() throws NoSuchAlgorithmException {
         String input;

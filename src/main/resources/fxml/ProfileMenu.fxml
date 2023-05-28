@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            fx:controller="View.SignUpMenu" prefHeight="-Infinity" prefWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <ImageView fitHeight="1000" fitWidth="1650" layoutX="-1.0" layoutY="-1.0">
+        <image>
+            <Image url="@../Images/11.jpg" />
+        </image>
+    </ImageView>
+    <VBox spacing="20" layoutY="50" layoutX="420"  prefWidth="206.0">
+
+        <Label text="SignUp Menu:">  </Label>
+        <TextField promptText="change username" prefHeight="26.0" prefWidth="206.0"> </TextField>
+        <TextField promptText="change password" prefHeight="26.0" prefWidth="206.0"> </TextField>
+        <TextField promptText="change email" prefHeight="26.0" prefWidth="206.0"> </TextField>
+        <TextField promptText="change nickname" prefHeight="26.0" prefWidth="206.0"> </TextField>
+        <TextField promptText="change slogan (optional)" prefHeight="26.0" prefWidth="206.0"> </TextField>
+        <Button text="Submit Changes"> </Button>
+
+        <Button text="Display Slogan!"> </Button>
+        <Button text="Remove Slogan"> </Button>
+        <Button text="Display Rank"> </Button>
+        <Button text="Display Entire Profile"> </Button>
+
+
+
+
+    </VBox>
+</AnchorPane>
