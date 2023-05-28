@@ -3,6 +3,7 @@ package Model;
 import Model.Buildings.Building;
 
 import Model.Units.Unit;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class Square {
     private int treeAmount;
     private final int x;
     private final int y;
+    private transient Image image;
 
     static {
         canPass = new HashMap<>();
@@ -40,6 +42,7 @@ public class Square {
         this.tree = null;
         this.cliffDirection = null;
         this.treeAmount = 0;
+        image = HashMaps.getImage(Land.getName(land));
     }
 
     public ArrayList<Unit> getUnits() {
@@ -142,5 +145,9 @@ public class Square {
 
     public String getCliffDirection() {
         return cliffDirection;
+    }
+
+    public Image getImage() {
+        return image;
     }
 }

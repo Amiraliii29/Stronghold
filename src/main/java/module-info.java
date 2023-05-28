@@ -9,6 +9,7 @@ module Project {
 
     exports Model;
     opens Model to com.google.gson;
+
     exports Controller;
     opens Controller to com.google.gson;
 

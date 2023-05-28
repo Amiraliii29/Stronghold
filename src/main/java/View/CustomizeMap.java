@@ -199,6 +199,5 @@ public class CustomizeMap {
 
     private static void showMap() {
         if (DataBase.getSelectedMap() == null) Input_Output.outPut("select map first");
-        else ShowMapMenu.run();
     }
 }
