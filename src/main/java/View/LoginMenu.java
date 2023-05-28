@@ -1,5 +1,6 @@
 package View;
 
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 
@@ -9,8 +10,25 @@ import Controller.UserInfoOperator;
 import Model.User;
 import View.Enums.Commands.LoginMenuCommands;
 import View.Enums.Messages.LoginMenuMessages;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
-public class LoginMenu {
+public class LoginMenu extends Application {
+
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        AnchorPane shopPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/LoginMenu.fxml").toExternalForm()));
+
+        Scene scene = new Scene(shopPane);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public static void run() throws NoSuchAlgorithmException {
         Matcher matcher;
         Input_Output.outPut("MAIN MENU:");
@@ -18,19 +36,17 @@ public class LoginMenu {
         while (true) {
             input = Input_Output.getInput();
 
-            if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.EXIT) != null){
+            if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.EXIT) != null) {
                 UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
                 User.setCurrentUser(null);
                 break;
-            }
-            else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.LOGOUT) != null) {
+            } else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.LOGOUT) != null) {
                 User.getCurrentUser().setStayLoggedIn(false);
                 UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
                 User.setCurrentUser(null);
                 SignUpMenu.run();
                 break;
-            }
-            else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU) != null)
+            } else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU) != null)
                 CustomizeMap.run();
             else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_PROFILE_MENU) != null)
                 ProfileMenu.run();
@@ -57,3 +73,4 @@ public class LoginMenu {
         }
     }
 }
+

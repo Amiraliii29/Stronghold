@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
