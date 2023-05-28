@@ -2,13 +2,32 @@ package View;
 
 import Controller.Orders;
 import Controller.ShopMenuController;
+import Model.DataBase;
 import View.Enums.Commands.ShopMenuCommands;
 import View.Enums.Messages.ShopMenuMessages;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class ShopMenu {
+public class ShopMenu extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        AnchorPane shopPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
+
+        Scene scene = new Scene(shopPane);
+        stage.setScene(scene);
+        stage.show();
+
+    }
 
     public static void run(){
         String input;
@@ -113,8 +132,4 @@ public class ShopMenu {
         return confirm;
 
     }
-
-
-
-
 }

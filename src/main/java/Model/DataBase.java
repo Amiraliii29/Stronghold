@@ -14,6 +14,7 @@ import Controller.GameMenuController;
 import Controller.JsonConverter;
 import Model.Units.Troop;
 import Model.Units.Unit;
+import javafx.stage.Stage;
 
 public class DataBase {
     private static ArrayList<Government> governments;
@@ -23,6 +24,11 @@ public class DataBase {
     private static Building selectedBuilding;
     private static ArrayList<Unit> selectedUnit;
     private static SecureRandom randomGenerator = new SecureRandom();
+    private static Stage ShopMenuStage = new Stage();
+
+    public static Stage getShopMenuStage() {
+        return ShopMenuStage;
+    }
 
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
