@@ -33,6 +33,7 @@ public class Generator extends Building {
         for (Generator generator : generators) {
             generatorsName.add(generator.name);
             GameMenuController.addToGameBuildings(generator);
+            buildings.add(generator.name);
         }
     }
 
@@ -82,5 +83,9 @@ public class Generator extends Building {
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

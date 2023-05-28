@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Defence extends Building {
     private static ArrayList<Defence> defences;
     private static ArrayList<String> defencesName;
-    private int range;
+    public int range;
     private int capacity;
 
     static {
@@ -26,10 +26,12 @@ public class Defence extends Building {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         defencesName = new ArrayList<>();
         for (Defence defence : defences) {
             defencesName.add(defence.name);
             GameMenuController.addToGameBuildings(defence);
+            buildings.add(defence.name);
         }
     }
 
@@ -63,5 +65,9 @@ public class Defence extends Building {
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

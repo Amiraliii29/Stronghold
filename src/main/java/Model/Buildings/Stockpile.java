@@ -34,6 +34,7 @@ public class Stockpile extends Building {
         for (Stockpile stockpile: stockpiles) {
             stockpilesName.add(stockpile.name);
             GameMenuController.addToGameBuildings(stockpile);
+            buildings.add(stockpile.name);
         }
     }
 
@@ -170,5 +171,9 @@ public class Stockpile extends Building {
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

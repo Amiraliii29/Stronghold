@@ -4,8 +4,10 @@ import Model.Government;
 import Model.Resource;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class Building {
+    protected static LinkedList<String> buildings;
     protected Government owner;
     protected String name;
     protected int width;
@@ -20,6 +22,14 @@ public abstract class Building {
     protected int cost;
     protected boolean canPass;
 
+    static {
+        buildings = new LinkedList<>();
+        Defence.load();
+        Generator.load();
+        Stockpile.load();
+        TownBuilding.load();
+        Barrack.load();
+    }
 
     public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
                     ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
@@ -120,10 +130,10 @@ public abstract class Building {
     }
 
     public static void readBuildingsFromFile() {
-        Defence.createDefence(null, -1, -1, "");
-        Generator.createGenerator(null, -1, -1, "");
-        Barrack.createBarrack(null, -1, -1, "");
-        Stockpile.createStockpile(null, -1, -1, "");
-        TownBuilding.createTownBuilding(null, -1, -1, "");
+        return;
+    }
+
+    public static LinkedList<String> getBuildings() {
+        return buildings;
     }
 }

@@ -24,7 +24,6 @@ public class GameMenu {
 
             if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
                 Input_Output.outPut("entered show map menu successfully");
-                ShowMapMenu.run();
             }
             else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.DROP_BUILDING_FOR_CUSTOMIZE)) != null)
                 dropBuildingTest(matcher);
@@ -86,7 +85,6 @@ public class GameMenu {
 
             else if (GameMenuCommands.getMatcher(input, GameMenuCommands.ENTER_SHOW_MAP_MENU) != null) {
                 Input_Output.outPut("entered show map menu successfully");
-                ShowMapMenu.run();
 
             } else if ((matcher = GameMenuCommands.getMatcher(input, GameMenuCommands.SET_TAX_RATE)) != null)
                 setTaxRate(matcher);

@@ -806,4 +806,8 @@ public class GameMenuController {
             return GameMenuMessages.FILL_DITCH_SUCCESS;
         }
     }
+
+    public static ArrayList<Building> getAllBuildings() {
+        return allBuildings;
+    }
 }

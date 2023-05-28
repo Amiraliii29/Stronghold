@@ -32,6 +32,7 @@ public class Barrack extends Building {
         for (Barrack barrack : barracks) {
             barracksName.add(barrack.name);
             GameMenuController.addToGameBuildings(barrack);
+            buildings.add(barrack.name);
         }
     }
 
@@ -83,5 +84,9 @@ public class Barrack extends Building {
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

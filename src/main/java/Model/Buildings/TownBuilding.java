@@ -30,6 +30,7 @@ public class TownBuilding extends Building {
         for (TownBuilding townBuilding : townBuildings) {
             townBuildingsName.add(townBuilding.name);
             GameMenuController.addToGameBuildings(townBuilding);
+            buildings.add(townBuilding.name);
         }
     }
 
@@ -64,5 +65,9 @@ public class TownBuilding extends Building {
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }
