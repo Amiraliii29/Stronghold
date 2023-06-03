@@ -31,8 +31,8 @@ public class Barrack extends Building {
         barracksName = new ArrayList<>();
         for (Barrack barrack : barracks) {
             barracksName.add(barrack.name);
-            GameMenuController.addToGameBuildings(barrack);
-            buildings.add(barrack.name);
+            buildings.add(barrack);
+            barracksName.add(barrack.name);
         }
     }
 

@@ -32,8 +32,8 @@ public class Generator extends Building {
         generatorsName = new ArrayList<>();
         for (Generator generator : generators) {
             generatorsName.add(generator.name);
-            GameMenuController.addToGameBuildings(generator);
-            buildings.add(generator.name);
+            buildingsNames.add(generator.name);
+            buildings.add(generator);
         }
     }
 

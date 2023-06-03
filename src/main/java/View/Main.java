@@ -3,8 +3,8 @@ package View;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+
 import Model.Buildings.Building;
-import Model.HashMaps;
 import Model.Map;
 import Model.Resource;
 import Model.Units.Unit;
@@ -21,7 +21,7 @@ public class Main extends Application {
 //        Building.readBuildingsFromFile();
 //        Unit.readUnitsFromFile();
 //        Resource.readResourcesFromFile();
-        HashMaps.loadImages(); // need work for all pictures !!/ TODO
+        ShowMap.loadImages(); // need work for all pictures !!/ TODO
         Map map = new Map("testMap", 100, 100);
         new ShowMap(map).start(stage);
     }
