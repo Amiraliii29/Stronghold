@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class Map {
     // toole mehvar ofogi = length  moalefe ofoghi = x
     // toole mehvar amoudi = width  moalefe amoudi = y
+    //get square is one based
     private String name;
     private Square[][] squares;
     private ArrayList<Government> governmentsInMap;

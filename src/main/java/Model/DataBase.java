@@ -5,15 +5,20 @@ import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Buildings.TownBuilding;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import Controller.GameMenuController;
 import Controller.JsonConverter;
 import Model.Units.Troop;
 import Model.Units.Unit;
+import View.LoginMenu;
+import View.ShopMenu;
 import javafx.stage.Stage;
 
 public class DataBase {
@@ -25,6 +30,17 @@ public class DataBase {
     private static ArrayList<Unit> selectedUnit;
     private static SecureRandom randomGenerator = new SecureRandom();
     private static Stage ShopMenuStage = new Stage();
+    private static int captchaNumber;
+
+    public static String getRandomCaptchaImageAddress() throws MalformedURLException {
+        int[] numbers = {1181 , 1381 , 1491 , 1722 , 1959 , 2163 , 8692 , 8776 , 8972 , 8996 , 9061 ,
+                9386 , 9582 , 9633};
+        Random random = new Random();
+        int randomIndex  = random.nextInt(numbers.length);
+        captchaNumber = numbers[randomIndex - 1];
+        return String.valueOf(new URL(LoginMenu.class.getResource("/Images/Captcha/" + captchaNumber + ".png")
+                .toExternalForm()));
+    }
 
     public static Stage getShopMenuStage() {
         return ShopMenuStage;
@@ -286,5 +302,9 @@ public class DataBase {
         }
 
         return nearestCorner;
+    }
+
+    public static int getCaptchaNumber() {
+        return captchaNumber;
     }
 }

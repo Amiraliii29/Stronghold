@@ -21,13 +21,14 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField layoutX="218.0" layoutY="60.0" prefHeight="26.0" prefWidth="226.0" promptText="Username" />
-      <PasswordField layoutX="218.0" layoutY="99.0" prefHeight="26.0" prefWidth="225.0" promptText="Password" />
-      <Button layoutX="218.0" layoutY="138.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="77.0" text="Login" />
-      <Button layoutX="304.0" layoutY="138.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" text="i forgot my password">
+      <TextField fx:id="username" layoutX="218.0" layoutY="60.0" prefHeight="26.0" prefWidth="226.0" promptText="Username" />
+      <PasswordField fx:id="password" layoutX="218.0" layoutY="99.0" prefHeight="26.0" prefWidth="225.0" promptText="Password" />
+      <Button layoutX="218.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#login" prefHeight="26.0" prefWidth="77.0" text="Login" />
+      <Button layoutX="301.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#forgotPassword" prefHeight="26.0" prefWidth="140.0" text="i forgot my password">
          <font>
             <Font size="12.0" />
          </font>
       </Button>
+      <TextField layoutX="217.0" layoutY="131.0" prefHeight="26.0" prefWidth="225.0" promptText="Captcha" fx:id="captcha" />
    </children>
 </AnchorPane>
