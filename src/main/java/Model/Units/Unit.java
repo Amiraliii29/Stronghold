@@ -45,10 +45,10 @@ public abstract class Unit {
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
-        DataBase.getSelectedMap().getSquareFromMap(this.yCoordinate, this.xCoordinate).removeUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
