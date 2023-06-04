@@ -29,6 +29,8 @@ public abstract class Unit {
         allUnits.add("LadderMan");
         Troop.createTroop(null, null, -1, -1);
         Siege.createSiege(null, null, -1, -1);
+
+
     }
 
     public Unit(Government owner, String name, int speed, int hitPoint, int damage, int attackRange, int cost) {
@@ -45,10 +47,10 @@ public abstract class Unit {
     }
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
-        DataBase.getSelectedMap().getSquareFromMap(this.yCoordinate, this.xCoordinate).removeUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(this);
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
@@ -95,7 +97,7 @@ public abstract class Unit {
 
     public int getAttackRange() {
         Building building = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
-        if (building != null && building instanceof Defence && this.attackRange > 5) {
+        if (building instanceof Defence && this.attackRange > 5) {
             return this.attackRange + ((Defence) building).getRange();
         }
         return this.attackRange;

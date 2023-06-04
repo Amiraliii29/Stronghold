@@ -12,10 +12,8 @@ import java.util.Scanner;
 
 
 public class ShopMenuController {
-
     private static User user;
     private static ArrayList<Resource> items;
-
     private static HashMap<Resource, Integer> itemsBuyingPrice;
     private static HashMap<Resource, Integer> itemsSellingPrice;
 
@@ -42,7 +40,6 @@ public class ShopMenuController {
         }
         return toReturn;
     }
-
 
     public static ShopMenuMessages buyItemByNameController(String name, String amount) {
         Resource itemToBuy = null;

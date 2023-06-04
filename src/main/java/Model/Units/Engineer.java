@@ -24,7 +24,7 @@ public class Engineer extends Unit {
         newEngineer.yCoordinate = yCoordinate;
         newEngineer.busy = false;
         if (xCoordinate >= 0 && yCoordinate >= 0)
-            DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newEngineer);
+            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newEngineer);
         return newEngineer;
     }
 }
