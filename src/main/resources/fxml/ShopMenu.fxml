@@ -25,42 +25,42 @@
             <Image url="@../Images/resources/food.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="272.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="272.0" layoutY="97.0" onMouseClicked="#selectApples" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Apple.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="449.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="449.0" layoutY="97.0" onMouseClicked="#selectWheat" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Wheat.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="390.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="390.0" layoutY="97.0" onMouseClicked="#selectAle" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Ale.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="331.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="331.0" layoutY="97.0" onMouseClicked="#selectHops" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Hops.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="508.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="508.0" layoutY="97.0" onMouseClicked="#selectFlour" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Flour.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="567.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="567.0" layoutY="97.0" onMouseClicked="#selectBread" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/bread.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="213.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="213.0" layoutY="97.0" onMouseClicked="#selectCheese" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Cheese.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="155.0" layoutY="97.0" pickOnBounds="true">
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="155.0" layoutY="97.0" onMouseClicked="#selectMeat" pickOnBounds="true">
          <image>
             <Image url="@../Images/resources/Meat.png" />
          </image>
@@ -174,37 +174,37 @@
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Label>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="159.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="159.0" layoutY="264.0" onMouseClicked="#selectSword" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/Sword.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="217.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="217.0" layoutY="264.0" onMouseClicked="#selectSpear" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/Spear.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="277.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="277.0" layoutY="264.0" onMouseClicked="#selectPike" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/Pike.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="336.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="336.0" layoutY="264.0" onMouseClicked="#selectMace" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/Mace.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="394.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="394.0" layoutY="264.0" onMouseClicked="#selectBow" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/Bow.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="453.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="453.0" layoutY="264.0" onMouseClicked="#selectCrossBow" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/CrossBow.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="512.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="512.0" layoutY="264.0" onMouseClicked="#selectMetalArmor" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/MetalArmour.png" />
          </image>
@@ -258,7 +258,8 @@
             <Label prefHeight="17.0" prefWidth="66.0" text="24" />
          </children>
       </VBox>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="572.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="572.0" layoutY="264.0" onMouseClicked="#selectLeatherArmor"
+                 pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/LeatherArmour.png" />
          </image>
@@ -275,22 +276,22 @@
             <Image url="@../Images/resources/resources.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="273.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="273.0" layoutY="427.0" onMouseClicked="#selectIron" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Iron.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="214.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="214.0" layoutY="427.0" onMouseClicked="#selectStone" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Stone.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="159.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="159.0" layoutY="427.0" onMouseClicked="#selectWood" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Wood.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="333.0" layoutY="427.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="333.0" layoutY="427.0" onMouseClicked="#selectPitch" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/resources/Pitch.png" />
          </image>
@@ -347,12 +348,12 @@
             <Label prefHeight="17.0" prefWidth="66.0" text="7" />
          </children>
       </VBox>
-      <Button layoutX="525.0" layoutY="464.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="138.0" text="Buy">
+      <Button layoutX="525.0" layoutY="464.0" mnemonicParsing="false" onMouseClicked="#buy" prefHeight="26.0" prefWidth="138.0" text="Buy">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="525.0" layoutY="495.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="138.0" text="Sell">
+      <Button layoutX="525.0" layoutY="495.0" mnemonicParsing="false" onMouseClicked="#sell" prefHeight="26.0" prefWidth="138.0" text="Sell">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>

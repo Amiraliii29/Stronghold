@@ -127,7 +127,8 @@ public class Resource {
     }
 
     public static Resource getResourceByName(String name) {
-        for (Resource resource : resources) {
+
+        for (Resource resource : allResources) {
             if (resource.getName().equals(name))
                 return resource;
         }
@@ -137,6 +138,7 @@ public class Resource {
     public static void readResourcesFromFile() {
         return;
     }
+
 
     @Override
     public boolean equals(Object o) {

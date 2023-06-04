@@ -47,7 +47,7 @@ public class SignUpMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Pane Pane =FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
+        Pane Pane = FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
             mainPane=Pane;
             this.stage=stage;
         Scene scene = new Scene(Pane);

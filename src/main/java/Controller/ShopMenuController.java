@@ -6,10 +6,13 @@ import Model.Resource;
 import Model.User;
 import View.Enums.Messages.ShopMenuMessages;
 import View.ShopMenu;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -51,7 +54,7 @@ public class ShopMenuController {
     public static Label stoneAmount = new Label();
 
     public static void setItemsAmount(){
-        DataBase.setCurrentGovernment(new Government(2000));
+        
         meatAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Meat"))));
         cheeseAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Cheese"))));
         appleAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Apples"))));
@@ -94,7 +97,9 @@ public class ShopMenuController {
     }
 
 
-    public static ShopMenuMessages buyItemByNameController(String name, String amount) {
+    public static ShopMenuMessages buyItemByNameController(String name) {
+        if(name == null)
+            return ShopMenuMessages.NO_ITEM_SELECTED;
         Resource itemToBuy = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -102,35 +107,22 @@ public class ShopMenuController {
                 break;
             }
         }
-        if(amount == null)
-            return ShopMenuMessages.NO_AMOUNT;
-        int amountInt = Integer.parseInt(amount);
-        if(itemToBuy == null)
-            return ShopMenuMessages.INVALID_ITEM_NAME;
-        else if(amountInt <= 0)
-            return ShopMenuMessages.INVALID_AMOUNT;
-        else if(DataBase.getCurrentGovernment().getMoney() < itemToBuy.getBuyPrice() * amountInt)
+        int amountInt = 1;
+        if(DataBase.getCurrentGovernment().getMoney() < itemToBuy.getBuyPrice() * amountInt)
             return ShopMenuMessages.NOT_ENOUGH_BALANCE;
         else if(DataBase.getCurrentGovernment().freeStockpileSpace(itemToBuy) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE;
         else{
-            while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy ("buy" , name , amountInt);
-
-                if(confirmation.toUpperCase().equals("YES")){
-                    DataBase.getCurrentGovernment().changeMoney(-1 * amountInt * itemToBuy.getBuyPrice());
-                    DataBase.getCurrentGovernment().addToStockpile(itemToBuy , amountInt);
-                    return ShopMenuMessages.BUY_ITEM_SUCCESS;
-                }
-                else if(confirmation.toUpperCase().equals("NO")){
-                    return ShopMenuMessages.BUY_ITEM_NOT_CONFIRMED;
-                }
-            }
+            DataBase.getCurrentGovernment().changeMoney(-1 * amountInt * itemToBuy.getBuyPrice());
+            DataBase.getCurrentGovernment().addToStockpile(itemToBuy , amountInt);
+            return ShopMenuMessages.BUY_ITEM_SUCCESS;
         }
 
     }
 
-    public static ShopMenuMessages sellItemByNameController(String name, String amount) {
+    public static ShopMenuMessages sellItemByNameController(String name) {
+        if(name == null)
+            return ShopMenuMessages.NO_ITEM_SELECTED;
         Resource itemToSell = null;
         for (Resource item : items) {
             if(item.getName().equals(name)) {
@@ -138,29 +130,15 @@ public class ShopMenuController {
                 break;
             }
         }
-        if(amount == null)
-            return ShopMenuMessages.NO_AMOUNT;
-        int amountInt = Integer.parseInt(amount);
-        if(itemToSell == null)
-            return ShopMenuMessages.INVALID_ITEM_NAME;
-        else if(amountInt <= 0)
-            return ShopMenuMessages.INVALID_AMOUNT;
-        else if(DataBase.getCurrentGovernment().getResourceInStockpiles(itemToSell) < amountInt)
+
+        int amountInt = 1;
+
+        if(DataBase.getCurrentGovernment().getResourceInStockpiles(itemToSell) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_ITEM_IN_STOCKPILE;
         else{
-            while (true) {
-                String confirmation = ShopMenu.confirmSellOrBuy("sell", name, amountInt);
-
-                if (confirmation.toUpperCase().equals("YES")) {
-                    DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amountInt);
-                    DataBase.getCurrentGovernment().changeMoney(itemToSell.getSellPrice() * amountInt);
-                    return ShopMenuMessages.SELL_ITEM_SUCCESS;
-                }
-                else if (confirmation.toUpperCase().equals("NO")) {
-                    return ShopMenuMessages.SELL_ITEM_NOT_CONFIRMED;
-                }
-            }
-
+            DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amountInt);
+            DataBase.getCurrentGovernment().changeMoney(itemToSell.getSellPrice() * amountInt);
+            return ShopMenuMessages.SELL_ITEM_SUCCESS;
         }
 
 
@@ -168,5 +146,133 @@ public class ShopMenuController {
 
     public static void setTargetUser(User user) {
         ShopMenuController.user = user;
+    }
+
+    public void buy(MouseEvent mouseEvent) {
+        ShopMenuMessages message = buyItemByNameController(selectedItem.getName());
+        Alert error = new Alert(Alert.AlertType.ERROR);
+        error.setHeaderText("buy item error");
+        switch (message){
+            case NO_ITEM_SELECTED -> {
+                error.setContentText("NO item selected!");
+                error.showAndWait();
+            }
+            case NOT_ENOUGH_BALANCE -> {
+                error.setContentText("Not enough balance :|");
+                error.showAndWait();
+            }
+            case NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE -> {
+                error.setContentText("Not enough free space in wareHouse :|");
+                error.showAndWait();
+            }
+            case BUY_ITEM_SUCCESS -> {
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setHeaderText("Success");
+                success.setContentText("Item bought successfully");
+                success.showAndWait();
+            }
+        }
+    }
+
+    public void sell(MouseEvent mouseEvent) {
+        ShopMenuMessages message = sellItemByNameController(selectedItem.getName());
+        Alert error = new Alert(Alert.AlertType.ERROR);
+        error.setHeaderText("Sell item error");
+
+        switch (message){
+            case NO_ITEM_SELECTED -> {
+                error.setContentText("NO item selected!");
+                error.showAndWait();
+            }
+            case NOT_ENOUGH_ITEM_IN_STOCKPILE -> {
+                error.setContentText("There is no " + selectedItem.getName() + " in warehouse");
+                error.showAndWait();
+            }
+            case SELL_ITEM_SUCCESS -> {
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setHeaderText("Success");
+                success.setContentText("Item Sold Successfully :)");
+                success.showAndWait();
+            }
+        }
+    }
+
+    public void selectApples(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Apples");
+    }
+
+    public void selectWheat(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Wheat");
+    }
+
+    public void selectAle(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Ale");
+    }
+
+    public void selectHops(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Hops");
+    }
+
+    public void selectFlour(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Flour");
+    }
+
+    public void selectBread(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Bread");
+    }
+
+    public void selectCheese(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Cheese");
+    }
+
+    public void selectMeat(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Meat");
+    }
+
+    public void selectSword(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Sword");
+    }
+
+    public void selectSpear(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Spear");
+    }
+
+    public void selectPike(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Pike");
+    }
+
+    public void selectMace(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Mace");
+    }
+
+    public void selectBow(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Bow");
+    }
+
+    public void selectCrossBow(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("CrossBow");
+    }
+
+    public void selectMetalArmor(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("MetalArmor");
+    }
+
+    public void selectIron(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Iron");
+    }
+
+    public void selectStone(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Stone");
+    }
+
+    public void selectWood(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Wood");
+    }
+
+    public void selectPitch(MouseEvent mouseEvent) {
+        selectedItem = Resource.getResourceByName("Pitch");
+    }
+    public void selectLeatherArmor(MouseEvent mouseEvent){
+        selectedItem = Resource.getResourceByName("LeatherArmor");
     }
 }

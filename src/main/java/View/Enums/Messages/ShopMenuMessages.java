@@ -10,6 +10,7 @@ public enum ShopMenuMessages {
     NOT_ENOUGH_ITEM_IN_STOCKPILE,
     SELL_ITEM_NOT_CONFIRMED,
     SELL_ITEM_SUCCESS,
+    NO_ITEM_SELECTED,
     NO_AMOUNT;
     
 }
