@@ -17,7 +17,7 @@ public class SignUpMenuController {
 
     //username password email slogan
     public static SignUpMenuMessages createUserController(String userName, String passWord,
-                                                          String nickName, String passWordConfirmation, String email, String slogan) throws NoSuchAlgorithmException {
+                                                          String nickName, String passWordConfirmation, String email, String slogan,String securityAnswer) throws NoSuchAlgorithmException {
         email = email.toLowerCase();
 
         if (User.getUserByUserName(userName) != null)
@@ -42,8 +42,7 @@ public class SignUpMenuController {
         passWord = UserInfoOperator.encodeStringToSha256(passWord);
         User newUser = new User(userName, passWord, nickName, email, slogan);
         newUser.setStayLoggedIn(false);
-
-        SignUpMenu.chooseSecurityQuestionForUser(newUser);
+        newUser.setSecurityQuestion(securityAnswer);
 
         UserInfoOperator.storeUserDataInJson(newUser, "src/main/resources/jsonData/Users.json");
         User.addUser(newUser);
@@ -128,44 +127,7 @@ public class SignUpMenuController {
         timerObj.scheduleAtFixedRate(new PenaltyTimer(), 0, 1000);
     }
 
-    public static SignUpMenuMessages runControllerSignupFunction(String signupComponentsInput) throws NoSuchAlgorithmException {
-
-        //NOTE: if(!Orders.isOrderNotJunky(signupComponentsInput)) System.out.println("error");
-
-        String username = Orders.findFlagOption("-u", signupComponentsInput);
-        String password = Orders.findFlagOption("-p", signupComponentsInput);
-        String passwordConfirmation = Orders.findWordAfterFlagSequence("-p", signupComponentsInput);
-        String nickName = Orders.findFlagOption("-n", signupComponentsInput);
-        String email = Orders.findFlagOption("--email", signupComponentsInput);
-        String slogan = Orders.findFlagOption("-s", signupComponentsInput);
-
-        if (slogan == null)
-            slogan = "";
-
-        if (password.equals("random")) {
-            password = UserInfoOperator.generateRandomPassword();
-            passwordConfirmation = SignUpMenu.confirmRandomPassword(password);
-        }
-
-        if (username == null || password == null || email == null || passwordConfirmation == null || nickName == null)
-            return SignUpMenuMessages.EMPTY_FIELDS_SIGNUP_ERROR;
-
-        if (slogan.equals("random")) {
-            slogan = UserInfoOperator.getRandomSlogan();
-            SignUpMenu.displayRandomSlogan(slogan);
-        }
-
-        SignUpMenuMessages message = SignUpMenuController.createUserController(username,
-                password, nickName, passwordConfirmation, email, slogan);
-
-        if (message.equals(SignUpMenuMessages.DUPLICATE_USERNAME_SIGNUP_ERROR)) {
-            username = SignUpMenu.suggestNewUsername(username);
-            if (username != null)
-                return createUserController(username, password, nickName,
-                        passwordConfirmation, email, slogan);
-        }
-        return message;
-    }
+   
 
     public static SignUpMenuMessages UserSecurityAnswerController(String securityAnswerComponents, User user) {
 

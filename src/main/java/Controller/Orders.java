@@ -5,6 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Orders {
+
+    public static String yellowNotifErrorColor="rgba(193, 174, 32, 0.628);";
+    public static String greenNotifSuccesColor="rgba(50, 158, 20, 0.664);";
+    public static String redNotifErrorColor="rgba(188, 25, 25, 0.623);";
+
     public static Matcher createMatcher(String regex, String input) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);

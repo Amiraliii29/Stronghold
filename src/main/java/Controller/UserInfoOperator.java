@@ -141,6 +141,7 @@ public class UserInfoOperator {
     }
 
     public static boolean isUsernameFormatValid(String inputUsername){
+        if(inputUsername.length()<3) return false;
         String invalidCharRegex="[^A-Za-z0-9\\_]";
         Matcher invalidCharMatcher=Orders.createMatcher(invalidCharRegex, inputUsername);
         if(invalidCharMatcher.find()) return false;

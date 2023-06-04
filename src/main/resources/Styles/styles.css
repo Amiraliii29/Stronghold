@@ -1,0 +1,31 @@
+Button{
+-fx-padding: 8;
+-fx-text-fill: rgb(33, 33, 62);
+-fx-color:rgba(127, 161, 72, 0.829);
+-fx-border-color: transparent transparent #616161 transparent;
+-fx-border-width: 1;
+-fx-border-insets: 0 0 1 0;
+-fx-border-style: hidden hidden solid hidden;
+}
+
+Button:hover{
+  -fx-opacity: 0.6;
+  -fx-cursor: hand;
+}
+
+CheckBox{
+    -fx-text-fill: rgb(44, 185, 13);
+ 
+}
+
+Label{
+    -fx-font-size: 24px;
+    -fx-text-fill: rgba(158, 42, 3, 0.984);
+    
+  
+}
+
+
+Text{
+  -fx-font-size: 15px;
+}

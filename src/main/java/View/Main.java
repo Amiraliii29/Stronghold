@@ -22,7 +22,7 @@ public class Main extends Application {
 //        Unit.readUnitsFromFile();
 //        Resource.readResourcesFromFile();
         HashMaps.loadImages(); // need work for all pictures !!/ TODO
-        Map map = new Map("testMap", 100, 100);
-        new ShowMap(map).start(stage);
+       SignUpMenu menu=new SignUpMenu();
+       menu.start(stage);
     }
 }

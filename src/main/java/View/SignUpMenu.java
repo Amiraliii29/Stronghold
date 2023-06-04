@@ -10,250 +10,344 @@ import Model.User;
 import Controller.Orders;
 import View.Enums.Commands.SignUpMenuCommands;
 import View.Enums.Messages.SignUpMenuMessages;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class SignUpMenu extends Application {
 
+    TextField usernameField,nicknameField,sloganField,emailField,securityField,passwordVisibleField,repeatPasswordVisibleField;
+    PasswordField passwordField,repeatPasswordField;
+    HBox userHbox,passwordHbox,emailHbox,nicknameHbox,questionHbox;
+    Button signupButton,loginButton;
+    Label label,securityQuestion;
+    Text userText,nicknameText,emailText,passwordText,securityText;
+    CheckBox randomSloganBox,randomPasswordBox,changeQuestionBox,visiblePasswordsBox;
+    VBox componentsVbox;
+    Pane mainPane;
+
+    Stage stage;
+    int questionIndex=1;
+
     @Override
     public void start(Stage stage) throws Exception {
-        AnchorPane Pane = FXMLLoader.load(
-            new URL(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml").toExternalForm()));
+        Pane Pane =FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
+            mainPane=Pane;
+            this.stage=stage;
         Scene scene = new Scene(Pane);
         stage.setScene(scene);
+        initializeMainVbox();
+        initializeLabel();
+        initializeFields();
+        initializeButtons();
+        setFieldListeners();
+        setVisibleFieldsBoinds();
+        setButtonListeners();
+        chooseNewSecurityQuestion();
+        setCheckboxListeners();
         stage.show();
     }
 
-    public static void run() throws NoSuchAlgorithmException {
-        String input;
-        Matcher matcher;
-        Input_Output.outPut("SIGNUP MENU:");
-
-        while (User.getCurrentUser() == null) {
-            input = Input_Output.getInput();
-
-            if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.EXIT) != null) break;
-            if (SignUpMenuController.getPenalty() > 0)
-                Input_Output.outPut("error: you have to wait " + SignUpMenuController.getPenalty() + " seconds before next order!");
-            else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SIGNUP)) != null)
-                createUser(matcher);
-            else if (SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.FORGOT_PASSWORD) != null)
-                forgotMyPassWord();
-            else if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.LOGIN)) != null)
-                userLogin(matcher);
-            else Input_Output.outPut("error: invalid command!");
-        }
-        handleLoginProcess();
-        LoginMenu.run();
-    }
-
-    private static void createUser(Matcher matcher) throws NoSuchAlgorithmException {
-
-        String signupComponentsInput = matcher.group("signupComponents");
-        SignUpMenuMessages message = SignUpMenuController.runControllerSignupFunction(signupComponentsInput);
-
-        if(Orders.isOrderJunky(signupComponentsInput, true, "-u","-p","-n","-s","--email")){
-            Input_Output.outPut("error: invalid inputs were included");
-            return ;
-        }
-
-        switch (message) {
-
-            case EMPTY_FIELDS_SIGNUP_ERROR:
-                Input_Output.outPut("error: you have left some nessecary fields empty!");
-                break;
-
-            case INVALID_EMAIL_SIGNUP_ERROR:
-                Input_Output.outPut("error: invalid email!");
-                break;
-
-            case DUPLICATE_EMAIL_SIGNUP_ERROR:
-                Input_Output.outPut("error: email already in use!");
-                break;
-
-            case DUPLICATE_USERNAME_SIGNUP_ERROR:
-                Input_Output.outPut("error: your username was already in use!");
-                break;
-
-            case INVALID_USERNAME_SIGNUP_ERROR:
-                Input_Output.outPut("error: invalid username!");
-                break;
-
-            case WEAK_PASSWORD_ERROR:
-                Input_Output.outPut("error: your password is weak!");
-                break;
-
-            case WRONG_PASSWORD_REPEAT_SIGNUP_ERROR:
-                Input_Output.outPut("error: password was not repeated correctly!");
-                break;
-
-            case SUCCESFUL_SIGNUP_STEP:
-                Input_Output.outPut("Congratulations! you succesfully signed in.");
-                break;
-
-            default:
-                break;
-        }
+    private void sendTextNotification(Text text,String output,String VboxColor,HBox hbox){
+        hbox.setStyle("-fx-background-color:"+VboxColor);
+        double minWidth=hbox.getMinWidth();
+        double maxWidth=hbox.getMaxWidth();
+        text.setText(output);
+        text.setOpacity(1);
+        FadeTransition fadeTrans=new FadeTransition(Duration.seconds(3),text);
+        fadeTrans.setDelay(Duration.seconds(1));
+        fadeTrans.setFromValue(1);
+        fadeTrans.setToValue(0.2);
+        fadeTrans.setOnFinished(event -> {hbox.setStyle("");
+                                          hbox.setMinWidth(minWidth);
+                                          hbox.setMaxWidth(maxWidth);
+                                          text.setText("");});
+        fadeTrans.play();
 
     }
 
-    private static void userLogin(Matcher matcher) throws NoSuchAlgorithmException {
-        String loginComponents = matcher.group("loginComponents");
-        String username = Orders.findFlagOption("-u", loginComponents);
-        String password = Orders.findFlagOption("-p", loginComponents);
-        boolean stayLoggidInFlag = Orders.doesFlagExist("--stay-logged-in", loginComponents);
+    private void initializeMainVbox(){
 
-        if(Orders.isOrderJunky(loginComponents, false, "-u","-p","--stay-logged-in")){
-            Input_Output.outPut("error: invalid inputs were included");
-            return ;
-        }
-
-        SignUpMenuMessages result = SignUpMenuController.userLoginController(username, password, stayLoggidInFlag);
-        switch (result) {
-            case LOGIN_EMPTY_FIELDS_ERROR:
-                Input_Output.outPut("error: empty username or password field!");
-                break;
-            case LOGIN_INCORRECT_PASSWORD_ERROR:
-                Input_Output.outPut("error: incorrect password!");
-                break;
-            case LOGIN_INVALID_USERNAME_ERROR:
-                Input_Output.outPut("error: invalid username!");
-                break;
-            case SUCCESFUL_LOGIN:
-                Input_Output.outPut("login succesful!");
-                break;
-            default:
-                Input_Output.outPut("error logging in!");
-                break;
-        }
+        componentsVbox=new VBox(16);
+        componentsVbox.setLayoutX(360);
+        componentsVbox.setLayoutY(80);
+        componentsVbox.setStyle("-fx-background-color:rgba(170, 215, 213, 0.296);");
+        mainPane.getChildren().add(componentsVbox);
     }
 
-    private static void forgotMyPassWord() throws NoSuchAlgorithmException {
-        Input_Output.outPut("Please enter your email below:");
-        String userEmail = Input_Output.getInput();
-
-        Input_Output.outPut("try to remember the security question you have answered!");
-        Input_Output.outPut("===the questions where: ");
-        displaySecurityQuestions();
-
-        Input_Output.outPut("===please enter your security answer to start recovery: ");
-        String answer = Input_Output.getInput();
-
-        SignUpMenuMessages message = SignUpMenuController.forgotMyPassWordController(userEmail, answer);
-
-        switch (message) {
-            case SUCCESFUL_FORGET_PASSWORD:
-                Input_Output.outPut("your new password has been saved succesfuly!");
-                break;
-
-            case INVALID_EMAIL_FORGET_PASSWORD_ERROR:
-                Input_Output.outPut("error: there is no user associated with the entered email!");
-                break;
-
-            case INCORRECT_SECURITY_FORGET_PASSWORD_ERROR:
-                Input_Output.outPut("error: the security answer doesnt match!");
-                break;
-
-            default:
-                Input_Output.outPut("error restoring your password!");
-                break;
-        }
+    private void initializeLabel(){
+        label=new Label("SignUp Menu:");
+        componentsVbox.getChildren().add(label);
     }
 
-    public static String suggestNewUsername(String username) {
-
-        Input_Output.outPut("username is already in use!");
-
-        username = UserInfoOperator.addRandomizationToString(username);
-        Input_Output.outPut("would you like " + username + " to be your username instead?(yes to proceed)");
-        String userAnswer = Input_Output.getInput();
-
-        if (userAnswer.equals("yes"))
-            return username;
-
-        return null;
-    }
-
-    public static void chooseSecurityQuestionForUser(User user) {
-
-        Input_Output.outPut("sign up was succesful! now please answer a security question of your choice to finish:");
-        displaySecurityQuestions();
-        // HANDLING USER RESPONSE:
-        while (true) {
-            String input = Input_Output.getInput();
-
-            Matcher matcher;
-            if ((matcher = SignUpMenuCommands.getMatcher(input, SignUpMenuCommands.SECURITY)) == null) {
-                Input_Output.outPut("error: invalid input!");
-                continue;
+    private void setButtonListeners(){
+        signupButton.setOnMouseClicked(event -> signup());
+        loginButton.setOnMouseClicked(event -> {
+            try {
+                new LoginMenu().start(stage);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+        });
+    }
+
+    private void signup(){
+        String username=usernameField.getText();
+        String passWord=passwordField.getText();
+        String email=emailField.getText();
+        String nickname=nicknameField.getText();
+        String slogan=sloganField.getText();
+        String securityAnswer=securityField.getText();
+
+        boolean proceed=true;
+        if(!checkUsernameValue(username, true))
+            proceed=false;
+        if(!checkPasswordValue(passWord, true))
+            proceed=false;
+        if(!checkEmailValue(email, true))
+            proceed=false;
+        if(!checkNicknameValue(nickname, true))
+            proceed=false;
+        if(!checkSecurityValue(securityAnswer, true))
+            proceed=false;
+        
+        if(proceed)
+            try {
+                SignUpMenuController.createUserController(username, passWord, nickname, passWord, email, slogan, securityAnswer);
+                new LoginMenu().start(stage);
+            } catch ( Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+    }
+
+    private void setVisibleFieldsBoinds(){
+        passwordVisibleField.managedProperty().bind(visiblePasswordsBox.selectedProperty());
+        passwordVisibleField.visibleProperty().bind(visiblePasswordsBox.selectedProperty());
+        
+        passwordField.managedProperty().bind(visiblePasswordsBox.selectedProperty().not());
+        passwordField.visibleProperty().bind(visiblePasswordsBox.selectedProperty().not());
+
+        passwordVisibleField.textProperty().bindBidirectional(passwordField.textProperty());
 
 
-            String inputComponents = matcher.group("securityComponents");
-            SignUpMenuMessages response = SignUpMenuController.UserSecurityAnswerController(inputComponents, user);
 
+        repeatPasswordVisibleField.managedProperty().bind(visiblePasswordsBox.selectedProperty());
+        repeatPasswordVisibleField.visibleProperty().bind(visiblePasswordsBox.selectedProperty());
 
-            if (response.equals(SignUpMenuMessages.SUCCESFUL_SECURITY_ANSWER))
-                return;
-            else
-                Input_Output.outPut("error: invalid form of answer or wrong answer repetition!");
+        repeatPasswordField.managedProperty().bind(visiblePasswordsBox.selectedProperty().not());
+        repeatPasswordField.visibleProperty().bind(visiblePasswordsBox.selectedProperty().not());
+
+        repeatPasswordField.textProperty().bindBidirectional(repeatPasswordVisibleField.textProperty());
+    }
+
+    private void setCheckboxListeners(){
+        randomSloganBox.selectedProperty().addListener(event -> {
+            sloganField.setText(UserInfoOperator.getRandomSlogan());
+            randomSloganBox.setSelected(false);
+                }); 
+
+        randomPasswordBox.selectedProperty().addListener(event ->{
+            String password=UserInfoOperator.generateRandomPassword();
+            passwordField.setText(password);
+            sendTextNotification(passwordText, "Your password is: "+password,
+                                         Orders.greenNotifSuccesColor, passwordHbox);
+            randomPasswordBox.setSelected(false);
+                }); 
+        
+        changeQuestionBox.selectedProperty().addListener( event ->{
+            chooseNewSecurityQuestion();
+            changeQuestionBox.setSelected(false);
+                }); 
+    }
+
+    private void setFieldListeners(){
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkUsernameValue(newValue,false);});
+
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
+                checkPasswordValue(newValue,false);
+            });
+
+            
+        nicknameField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    checkNicknameValue(newValue,false);});
+        
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        checkEmailValue(newValue,false);});
+        
+        securityField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        checkSecurityValue(newValue,false);});
+    }
+
+    private boolean checkSecurityValue(String value,boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(value.length()==0){
+            sendTextNotification(securityText, "Shouldn't be left empty",color, questionHbox);
+            return false;
         }
 
+        return true;
     }
 
-    public static String confirmRandomPassword(String randomChosenPassword) {
-        Input_Output.outPut("your random password is: " + randomChosenPassword);
-        Input_Output.outPut("please re-enter the password chosen for you:");
-        return Input_Output.getInput();
-    }
+    private boolean checkEmailValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
-    public static void displayRandomSlogan(String slogan) {
-        Input_Output.outPut("your random slogan is: " + slogan);
-    }
-
-    public static String getNewPasswordFromUser() {
-        Input_Output.outPut("identification was succesful!");
-
-        String input;
-        while (true) {
-            Input_Output.outPut("enter and repeat a new password!(-newp <password> <repeat>)");
-            input = Input_Output.getInput();
-            String password = Orders.findFlagOption("-newp", input);
-            String passwordConfirmation = Orders.findWordAfterFlagSequence("-newp", input);
-            SignUpMenuMessages message = SignUpMenuController.handleNewPasswordEntry(password, passwordConfirmation);
-
-            if (message.equals(SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD))
-                return password;
-
-            else if (message.equals(SignUpMenuMessages.WEAK_PASSWORD_ERROR))
-                Input_Output.outPut("error: your new password is weak!");
-
-            else
-                Input_Output.outPut("error: invalid input or unmatching password repeat!");
-
+        if(!UserInfoOperator.isEmailFormatValid(value)){
+            sendTextNotification(emailText, "Invalid email format",color, emailHbox);
+            return false;
         }
-    }
 
-    private static void displaySecurityQuestions() {
-        String securityQuestion;
-        int i = 1;
-        while (true) {
-            securityQuestion = UserInfoOperator.getSecurityQuestionByIndex(i);
-            if (securityQuestion != null)
-                Input_Output.outPut("" + i + ") " + securityQuestion);
-            else break;
-            i++;
+        if(User.getUserByEmail(value) != null){
+            sendTextNotification(emailText, "Email already in use",color, emailHbox);
+            return false;
         }
+
+        return true;
     }
 
-    private static void handleLoginProcess() {
-        User welcomedUser = User.getCurrentUser();
-        Input_Output.outPut("welcome: " + welcomedUser.getNickName() + "! ");
+    private boolean checkNicknameValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(value.length()==0){
+            sendTextNotification(nicknameText, "Shouldn't be left empty",color, nicknameHbox);
+            return false;
+        }
+
+        return true;
     }
+
+    private boolean checkPasswordValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(!UserInfoOperator.isPasswordStrong(value)){
+            sendTextNotification(passwordText, "Your password is weak",color, passwordHbox);
+            return false;
+        }
+
+        if(isOnSignUpProcess)
+        if(!repeatPasswordField.getText().equals(passwordField.getText())){
+            sendTextNotification(passwordText, "Password is not repeated correctly",color, passwordHbox);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkUsernameValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(!UserInfoOperator.isUsernameFormatValid(value)){
+            sendTextNotification(userText, "Must contain alphabet, numbers, '_' and 3 characters",color, userHbox);
+            return false;
+        }
+
+        else if(User.getUserByUserName(value) != null){
+            sendTextNotification(userText, "username already in use, suggest:"+UserInfoOperator.addRandomizationToString(value),Orders.yellowNotifErrorColor, userHbox);
+            return false;
+        }
+        return true;
+    }
+
+    private void initializeFields(){
+        usernameField=new TextField();
+        usernameField.setPromptText("username");
+
+       
+        userText=new Text("");
+        userHbox=new HBox(8, usernameField,userText);
+
+
+        sloganField=new TextField();
+        sloganField.setPromptText("slogan");
+        sloganField.setMinWidth(150);
+        randomSloganBox=new CheckBox("choose a random slogan");
+        usernameField.setStyle("-fx-text-fill: rgba(15, 11, 90, 0.694);");
+        HBox hb1= new HBox(8, sloganField, randomSloganBox);
+
+        nicknameField=new TextField();
+        nicknameField.setPromptText("nickname");
+
+        nicknameText=new Text();
+        nicknameHbox=new HBox(8, nicknameField,nicknameText);
+
+
+        emailField=new TextField();
+        emailField.setPromptText("email");
+        emailField.setMaxWidth(160);
+        emailText=new Text();
+        emailHbox=new HBox(8, emailField,emailText);
+
+
+        passwordField=new PasswordField();
+        passwordField.setPromptText("password");
+        passwordVisibleField=new TextField();
+        passwordVisibleField.setPromptText("password");
+
+        passwordText=new Text();
+
+        randomPasswordBox=new CheckBox("choose randomly");
+        HBox hb2=new HBox(24, passwordField,passwordVisibleField,randomPasswordBox);
+
+        passwordHbox=new HBox(8, hb2,passwordText);
+
+
+        repeatPasswordField=new PasswordField();
+        repeatPasswordField.setPromptText("repeat password");
+        repeatPasswordField.setMaxWidth(150);
+
+        repeatPasswordVisibleField=new TextField();
+        repeatPasswordVisibleField.setPromptText("repeat password");
+        repeatPasswordVisibleField.setMaxWidth(150);
+
+        securityQuestion=new Label();
+        securityQuestion.setStyle("-fx-font-size: 16px;-fx-background-color: rgba(203, 189, 105, 0.55);");
+        securityField=new TextField();
+        changeQuestionBox=new CheckBox("Choose another question");
+        securityField.setPromptText("Security answer");
+
+        securityText=new Text();
+        questionHbox=new HBox(8, securityField,changeQuestionBox,securityText);
+        componentsVbox.getChildren().addAll(userHbox,passwordHbox,repeatPasswordField,repeatPasswordVisibleField,emailHbox,nicknameHbox,hb1,securityQuestion,questionHbox);
+    }
+
+    private void initializeButtons(){
+        signupButton=new Button("Sign Up!");
+        loginButton=new Button("Already have account? Login!");
+        visiblePasswordsBox=new CheckBox("visible password");
+        HBox hBox= new HBox(16, signupButton,visiblePasswordsBox);
+        VBox vbox=new VBox(16,hBox,loginButton);
+        componentsVbox.getChildren().addAll(vbox);
+    }
+
+    private void chooseNewSecurityQuestion(){
+        securityQuestion.setText(UserInfoOperator.getSecurityQuestionByIndex(questionIndex%4+1));
+        questionIndex++;
+    }
+
+
+
 
 }
