@@ -68,7 +68,7 @@ public class Resource {
     }
 
     public int getSellPrice() {
-        return ((int) (Math.floor((price * 8) / 10)));
+        return ((int) (Math.floor(price / 2.0)));
     }
 
     public int getBuyPrice() {

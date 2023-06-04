@@ -5,6 +5,7 @@ import Controller.GameMenuController;
 import Controller.Orders;
 import Model.DataBase;
 import Model.Government;
+import Model.Resource;
 import View.Enums.Commands.GameMenuCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 import View.Enums.Messages.GameMenuMessages;
@@ -29,6 +30,7 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Resource.readResourcesFromFile();
         gamePane  = new AnchorPane();
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         gamePane.setPrefSize(primaryScreenBounds.getWidth() , primaryScreenBounds.getHeight());
@@ -40,9 +42,6 @@ public class GameMenu extends Application {
         Scene scene = new Scene(gamePane);
         stage.setScene(scene);
         stage.show();
-    }
-    public void  openShopMenu(){
-
     }
     public static void run() {
         keepCnt = 0;

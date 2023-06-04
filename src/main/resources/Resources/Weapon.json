@@ -1,49 +1,49 @@
 [
   {
     "name": "Sword",
-    "price": 100,
+    "price": 58,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "Spear",
-    "price": 100,
+    "price": 20,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "Pike",
-    "price": 100,
+    "price": 36,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "MetalArmor",
-    "price": 100,
+    "price": 58,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "Bow",
-    "price": 100,
+    "price": 31,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "CrossBow",
-    "price": 100,
+    "price": 58,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "Mace",
-    "price": 100,
+    "price": 58,
     "count": 0.0,
     "storage": "Armoury"
   },
   {
     "name": "LeatherArmor",
-    "price": 100,
+    "price": 25,
     "count": 0.0,
     "storage": "Armoury"
   }

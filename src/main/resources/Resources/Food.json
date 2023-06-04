@@ -1,25 +1,25 @@
 [
   {
     "name": "Bread",
-    "price": 100,
+    "price": 8,
     "count": 0.0,
     "storage": "Granary"
   },
   {
     "name": "Meat",
-    "price": 100,
+    "price": 8,
     "count": 0.0,
     "storage": "Granary"
   },
   {
     "name": "Apples",
-    "price": 100,
+    "price": 8,
     "count": 0.0,
     "storage": "Granary"
   },
   {
     "name": "Cheese",
-    "price": 100,
+    "price": 8,
     "count": 0.0,
     "storage": "Granary"
   }

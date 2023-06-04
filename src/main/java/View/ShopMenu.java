@@ -29,17 +29,8 @@ public class ShopMenu extends Application {
         AnchorPane shopPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
 
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-        shopPane.resize(primaryScreenBounds.getWidth() , 200);
-        Scene scene = new Scene(shopPane , primaryScreenBounds.getWidth() , 200);
-
-        stage.setScene(scene);
-        stage.setX(0);
-        stage.setY(primaryScreenBounds.getHeight() - 200);
-        stage.setResizable(true);
+        Scene scene = new Scene(shopPane);
         stage.show();
-
     }
 
 

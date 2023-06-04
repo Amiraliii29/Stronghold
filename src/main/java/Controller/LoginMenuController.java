@@ -70,7 +70,7 @@ public class LoginMenuController {
             alert.showAndWait();
         }
 
-        passWord = UserInfoOperator.encodeStringToSha256(passWord);
+//        passWord = UserInfoOperator.encodeStringToSha256(passWord); todo
         User targetUser = User.getUserByUserName(userName);
 
         if (targetUser == null){
@@ -111,10 +111,12 @@ public class LoginMenuController {
 //            targetUser.setStayLoggedIn(true);
 //            UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
 //        }
+        else {
+            User.setCurrentUser(targetUser);
+            DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
 
-        User.setCurrentUser(targetUser);
-
-        new MainMenu().start(DataBase.getMainStage());
+            new MainMenu().start(DataBase.getMainStage());
+        }
     }
 
     public void forgotPassword(MouseEvent mouseEvent) {
@@ -184,6 +186,8 @@ public class LoginMenuController {
                     LoginMenu.loginMenuPane.getChildren().remove(confirm);
 
                     try {
+                        DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
+                        User.setCurrentUser(User.getUserByUserName(userName));
                         new MainMenu().start(DataBase.getMainStage());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
