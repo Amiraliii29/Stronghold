@@ -17,7 +17,6 @@ public class GameMenuController {
     private static int turnsPassed = 0;
     private static Building selectedBuilding = null;
     private static Map currentMap;
-    private static ArrayList<Building> allBuildings;
     private static ArrayList<Unit> allUnits;
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> squares;
@@ -28,7 +27,6 @@ public class GameMenuController {
         allWays = new ArrayList<>();
         squares = new ArrayList<>();
         allUnits = new ArrayList<>();
-        allBuildings = new ArrayList<>();
     }
 
     public static GameMenuMessages nextTurnController() {
@@ -76,16 +74,16 @@ public class GameMenuController {
         for (int i = 0; i < governments.size(); i++) {
             if (governments.get(i).getLord().getHitPoint() <= 0) {
                 //destroy every thing for this government
-                for (int j = 0; j < allSquares.length; j++) {
+                for (Square[] allSquare : allSquares) {
                     for (int k = 0; k < allSquares[0].length; k++) {
-                        if (allSquares[j][k].getBuilding() != null
-                                && allSquares[j][k].getBuilding().getOwner().equals(governments.get(i))) {
-                            allSquares[j][k].getBuilding().changeHP(-100000);
-                            DataBase.removeDestroyedBuildings(allSquares[j][k].getBuilding());
+                        if (allSquare[k].getBuilding() != null
+                                && allSquare[k].getBuilding().getOwner().equals(governments.get(i))) {
+                            allSquare[k].getBuilding().changeHP(-100000);
+                            DataBase.removeDestroyedBuildings(allSquare[k].getBuilding());
                         }
-                        for (int l = 0; l < allSquares[j][k].getUnits().size(); l++) {
-                            if (allSquares[j][k].getUnits().get(l).getOwner().equals(governments.get(i))) {
-                                allSquares[j][k].removeUnit(allSquares[j][k].getUnits().get(l));
+                        for (int l = 0; l < allSquare[k].getUnits().size(); l++) {
+                            if (allSquare[k].getUnits().get(l).getOwner().equals(governments.get(i))) {
+                                allSquare[k].removeUnit(allSquare[k].getUnits().get(l));
                                 l--;
                             }
                         }
@@ -95,16 +93,18 @@ public class GameMenuController {
                 i--;
             }
         }
+
         allUnits = new ArrayList<>();
-        for (int j = 0; j < allSquares.length; j++) {
+
+        for (Square[] allSquare : allSquares) {
             for (int k = 0; k < allSquares[0].length; k++) {
-                for (Unit unit : allSquares[j][k].getUnits()) {
+                for (Unit unit : allSquare[k].getUnits()) {
                     allUnits.add(unit);
                     unit.setDidFight(false);
                 }
             }
         }
-        //if both lord die in one turn !!!
+        //if both lord die in one turn !!! //TODO
         if (governments.size() == 1) return true;
         return false;
     }
@@ -113,21 +113,13 @@ public class GameMenuController {
         currentGovernment = government;
     }
 
-    public static GameMenuMessages userLogout() {
-        return null;
-    }
-
-    public static void addToGameBuildings(Building building) {
-        allBuildings.add(building);
-    }
-
     public static GameMenuMessages putBuildingController(String x, String y, String buildingType) {
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
         int xInNum = Integer.parseInt(x);
         int yInNum = Integer.parseInt(y);
-        Building targetBuilding = getBuildingByName(buildingType);
+        Building targetBuilding = Building.getBuildingByName(buildingType);
 
         if (!currentMap.isCoordinationValid(xInNum, yInNum))
             return GameMenuMessages.INVALID_COORDINATE;
@@ -146,17 +138,16 @@ public class GameMenuController {
         if (targetBuilding.getResource() != null)
             if (currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount)
                 return GameMenuMessages.INSUFFICIENT_RESOURCES;
+
         if (targetBuilding instanceof Generator && ((Generator) targetBuilding).getNumberOfWorker() > currentGovernment.getFreeWorker())
             return GameMenuMessages.NOT_ENOUGH_FREE_WORKER;
 
         currentGovernment.changeMoney(-buildingCost);
-
         if (targetBuilding.getResource() != null)
             currentGovernment.removeFromStockpile(targetBuilding.getResource(), resourceCount);
 
-        targetBuilding = constructBuildingForPlayer(buildingType, xInNum, yInNum);
-        currentMap.constructBuilding(targetBuilding, xInNum, yInNum);
-
+        Building newBuilding = constructBuildingForPlayer(buildingType, xInNum, yInNum);
+        currentMap.constructBuilding(newBuilding, xInNum, yInNum);
         return GameMenuMessages.SUCCESS;
     }
 
@@ -663,18 +654,9 @@ public class GameMenuController {
     }
 
     public static ArrayList<String> getBuildingValidLandsByName(String buildingName) {
-
-        for (Building building : allBuildings)
+        for (Building building : Building.getBuildings())
             if (building.getName().equals(buildingName))
                 return building.getLands();
-
-        return null;
-    }
-
-    public static Building getBuildingByName(String buildingName) {
-        for (Building building : allBuildings)
-            if (building.getName().equals(buildingName))
-                return building;
         return null;
     }
 
@@ -805,9 +787,5 @@ public class GameMenuController {
             DataBase.getSelectedMap().getSquareFromMap(yInt , xInt).setLand(Land.DITCH);
             return GameMenuMessages.FILL_DITCH_SUCCESS;
         }
-    }
-
-    public static ArrayList<Building> getAllBuildings() {
-        return allBuildings;
     }
 }

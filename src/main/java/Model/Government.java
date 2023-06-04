@@ -370,7 +370,8 @@ public class Government {
         int QuarryNumber = getBuildingCountByName("Quarry");
         if (QuarryNumber * 3 < cowCount) cowCount = QuarryNumber * 3;
 
-        Generator quarry = (Generator) GameMenuController.getBuildingByName("Quarry");
+        Generator quarry = (Generator) Building.getBuildingByName("Quarry");
+        assert quarry != null;
         resourceGenerationRate.put(quarry.getResourceGenerate().getName(), quarry.getGeneratingRate() * cowCount / 3);
     }
 

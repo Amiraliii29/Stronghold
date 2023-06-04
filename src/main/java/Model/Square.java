@@ -3,10 +3,12 @@ package Model;
 import Model.Buildings.Building;
 
 import Model.Units.Unit;
+import View.ShowMap;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Square {
     private static final HashMap<String, Boolean> canPass;
@@ -18,7 +20,6 @@ public class Square {
     private int treeAmount;
     private final int x;
     private final int y;
-    private transient Image image;
 
     static {
         canPass = new HashMap<>();
@@ -37,12 +38,14 @@ public class Square {
         this.x = x;
         this.y = y;
         units = new ArrayList<>();
-        this.land = Land.DEFAULT;
+
+        if (new Random().nextInt(2) % 2 == 1) this.land = Land.DEFAULT;
+        else this.land = Land.CLIFF;
+
         this.building = null;
         this.tree = null;
         this.cliffDirection = null;
         this.treeAmount = 0;
-        image = HashMaps.getImage(Land.getName(land));
     }
 
     public ArrayList<Unit> getUnits() {
@@ -145,9 +148,5 @@ public class Square {
 
     public String getCliffDirection() {
         return cliffDirection;
-    }
-
-    public Image getImage() {
-        return image;
     }
 }

@@ -33,8 +33,8 @@ public class Stockpile extends Building {
         stockpilesName = new ArrayList<>();
         for (Stockpile stockpile: stockpiles) {
             stockpilesName.add(stockpile.name);
-            GameMenuController.addToGameBuildings(stockpile);
-            buildings.add(stockpile.name);
+            buildingsNames.add(stockpile.name);
+            buildings.add(stockpile);
         }
     }
 

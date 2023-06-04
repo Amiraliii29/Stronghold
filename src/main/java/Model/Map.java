@@ -17,13 +17,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Map {
-    // toole mehvar ofogi = length  moalefe ofoghi = x
-    // toole mehvar amoudi = width  moalefe amoudi = y
-    private String name;
+    // toole mehvar ofogi = width  moalefe ofoghi = x
+    // toole mehvar amoudi = length  moalefe amoudi = y
+    private final String name;
     private Square[][] squares;
     private ArrayList<Government> governmentsInMap;
-    private int width;
-    private int length;
+    private final int width;
+    private final int length;
 
     public Map(String name, int width, int length) {
         this.name = name;
@@ -63,7 +63,7 @@ public class Map {
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
         boolean check = false;
-        int length = 0;
+        int length;
         if (building.getName().equals("Keep")) length = building.getLength()  + 4;
         else length = building.getLength();
         for (int i = x; i < x + length; i++) {
@@ -138,7 +138,6 @@ public class Map {
     }
 
     public void constructBuilding(Building building, int x, int y) {
-        //amirali: i edited x and y
         for (int i = x; i < x + building.getLength(); i++) {
             for (int j = y; j < y + building.getWidth(); j++) {
                 squares[j-1][i-1].setBuilding(building);

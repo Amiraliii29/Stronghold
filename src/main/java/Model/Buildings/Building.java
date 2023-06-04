@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public abstract class Building {
-    protected static LinkedList<String> buildings;
+    protected static LinkedList<String> buildingsNames;
+    protected static LinkedList<Building> buildings;
     protected Government owner;
     protected String name;
     protected int width;
@@ -24,6 +25,7 @@ public abstract class Building {
 
     static {
         buildings = new LinkedList<>();
+        buildingsNames = new LinkedList<>();
         Defence.load();
         Generator.load();
         Stockpile.load();
@@ -129,11 +131,22 @@ public abstract class Building {
         this.canPass=state;
     }
 
-    public static void readBuildingsFromFile() {
-        return;
+    public static LinkedList<String> getBuildingsNames() {
+        return buildingsNames;
     }
 
-    public static LinkedList<String> getBuildings() {
+    public static LinkedList<Building> getBuildings() {
         return buildings;
+    }
+
+    public static Building getBuildingByName(String buildingName) {
+        for (Building building : buildings)
+            if (building.name.equals(buildingName))
+                return building;
+        return null;
+    }
+
+    public static void readBuildingsFromFile() {
+        return;
     }
 }

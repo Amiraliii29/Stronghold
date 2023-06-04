@@ -30,8 +30,8 @@ public class Defence extends Building {
         defencesName = new ArrayList<>();
         for (Defence defence : defences) {
             defencesName.add(defence.name);
-            GameMenuController.addToGameBuildings(defence);
-            buildings.add(defence.name);
+            buildingsNames.add(defence.name);
+            buildings.add(defence);
         }
     }
 

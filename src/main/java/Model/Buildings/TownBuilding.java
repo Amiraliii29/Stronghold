@@ -29,8 +29,8 @@ public class TownBuilding extends Building {
         townBuildingsName = new ArrayList<>();
         for (TownBuilding townBuilding : townBuildings) {
             townBuildingsName.add(townBuilding.name);
-            GameMenuController.addToGameBuildings(townBuilding);
-            buildings.add(townBuilding.name);
+            buildingsNames.add(townBuilding.name);
+            buildings.add(townBuilding);
         }
     }
 
