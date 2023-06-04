@@ -28,8 +28,9 @@ public class ShopMenu extends Application {
     public void start(Stage stage) throws Exception {
         AnchorPane shopPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
-        ShopMenuController.setItemsAmount();
+
         Scene scene = new Scene(shopPane);
+        ShopMenuController.setItemsAmount();
         stage.setScene(scene);
         stage.show();
     }
