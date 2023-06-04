@@ -74,44 +74,44 @@ public class SignUpMenuController {
         return SignUpMenuMessages.SUCCESFUL_LOGIN;
     }
 
-    public static SignUpMenuMessages forgotMyPassWordController(String email, String securityAnswer) throws NoSuchAlgorithmException {
-        User targetUser = User.getUserByEmail(email);
-        if (targetUser == null)
-            return SignUpMenuMessages.INVALID_EMAIL_FORGET_PASSWORD_ERROR;
+    // public static SignUpMenuMessages forgotMyPassWordController(String email, String securityAnswer) throws NoSuchAlgorithmException {
+    //     User targetUser = User.getUserByEmail(email);
+    //     if (targetUser == null)
+    //         return SignUpMenuMessages.INVALID_EMAIL_FORGET_PASSWORD_ERROR;
 
-        if (!targetUser.getSecurityQuestion().equals(securityAnswer))
-            return SignUpMenuMessages.INCORRECT_SECURITY_FORGET_PASSWORD_ERROR;
+    //     if (!targetUser.getSecurityQuestion().equals(securityAnswer))
+    //         return SignUpMenuMessages.INCORRECT_SECURITY_FORGET_PASSWORD_ERROR;
 
-        String newPassword = SignUpMenu.getNewPasswordFromUser();
-        newPassword = UserInfoOperator.encodeStringToSha256(newPassword);
+    //     String newPassword = SignUpMenu.getNewPasswordFromUser();
+    //     newPassword = UserInfoOperator.encodeStringToSha256(newPassword);
 
-        targetUser.setPassword(newPassword);
-        UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
-        return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
-    }
+    //     targetUser.setPassword(newPassword);
+    //     UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
+    //     return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
+    // }
 
-    public static SignUpMenuMessages handleNewPasswordEntry(String password, String passwordRepeat) {
+    // public static SignUpMenuMessages handleNewPasswordEntry(String password, String passwordRepeat) {
 
-        if (password == null)
-            return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
+    //     if (password == null)
+    //         return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
 
-        if (password.equals("random")) {
-            password = UserInfoOperator.generateRandomPassword();
-            passwordRepeat = SignUpMenu.confirmRandomPassword(password);
-        }
+    //     if (password.equals("random")) {
+    //         password = UserInfoOperator.generateRandomPassword();
+    //         passwordRepeat = SignUpMenu.confirmRandomPassword(password);
+    //     }
 
-        if (passwordRepeat == null)
-            return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
+    //     if (passwordRepeat == null)
+    //         return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
 
-        if (!UserInfoOperator.isPasswordRepeatedCorrectly(password, passwordRepeat))
-            return SignUpMenuMessages.INCORRECT_REPEAT_FORGET_PASSWORD_ERROR;
+    //     if (!UserInfoOperator.isPasswordRepeatedCorrectly(password, passwordRepeat))
+    //         return SignUpMenuMessages.INCORRECT_REPEAT_FORGET_PASSWORD_ERROR;
 
-        if (!UserInfoOperator.isPasswordStrong(password))
-            return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
+    //     if (!UserInfoOperator.isPasswordStrong(password))
+    //         return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
 
 
-        return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
-    }
+    //     return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
+    // }
 
     public static void setNewPenalty() {
         failedAttempts++;

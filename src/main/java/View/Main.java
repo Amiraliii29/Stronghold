@@ -21,7 +21,6 @@ public class Main extends Application {
 //        Building.readBuildingsFromFile();
 //        Unit.readUnitsFromFile();
 //        Resource.readResourcesFromFile();
-       SignUpMenu menu=new SignUpMenu();
-       menu.start(stage);
+       new ProfileMenu().start(stage);
     }
 }

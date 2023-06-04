@@ -10,22 +10,95 @@ import Controller.ProfileMenuController;
 import Model.User;
 import View.Enums.Commands.ProfileMenuCommands;
 import View.Enums.Messages.ProfileMenuMessages;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
+    TextField usernameField,emailField,nicknameField,sloganField;
+    Text usernameText,emailText,nicknameText;
+    HBox usernameHbox,emailHbox,nicknameHbox;
+    Button submitChanges,removeSlogan;
+    VBox mainVbox;
+    Label label;
+
+    Pane mainPane;
+
+    {
+        User.setCurrentUser(User.getUsers().get(0));
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
-        AnchorPane Pane = FXMLLoader.load(
+        Pane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
+        this.mainPane=Pane;
         stage.setScene(scene);
+        initializeMainVbox();
+        initializeFields();
         stage.show();
     }
+
+    private void sendTextNotification(Text text,String output,String VboxColor,HBox hbox){
+        hbox.setStyle("-fx-background-color:"+VboxColor);
+        double minWidth=hbox.getMinWidth();
+        double maxWidth=hbox.getMaxWidth();
+        text.setText(output);
+        text.setOpacity(1);
+        FadeTransition fadeTrans=new FadeTransition(Duration.seconds(3),text);
+        fadeTrans.setDelay(Duration.seconds(1));
+        fadeTrans.setFromValue(1);
+        fadeTrans.setToValue(0.2);
+        fadeTrans.setOnFinished(event -> {hbox.setStyle("");
+                                          hbox.setMinWidth(minWidth);
+                                          hbox.setMaxWidth(maxWidth);
+                                          text.setText("");});
+        fadeTrans.play();
+    }
+
+    private void initializeMainVbox(){
+        mainVbox=new VBox(16);
+        mainVbox.setLayoutX(360);
+        mainVbox.setLayoutY(80);
+        mainVbox.setStyle("-fx-background-color:rgba(170, 215, 213, 0.296);");
+        mainPane.getChildren().add(mainVbox);
+    }
+
+    private void initializeFields(){
+        usernameField=new TextField(); emailField=new TextField(); nicknameField= new TextField(); sloganField= new TextField();
+        usernameText=new Text(); emailText= new Text(); nicknameText= new Text();
+
+        usernameField.setPromptText("change username");
+        usernameField.setText(User.getCurrentUser().getUsername());
+        usernameHbox=new HBox(8, usernameField,usernameText);
+
+        emailField.setText(User.getCurrentUser().getEmail());
+        emailField.setPromptText("change email");
+        emailHbox=new HBox(8, emailField,emailText);
+
+        nicknameField.setText(User.getCurrentUser().getNickName());
+        nicknameField.setPromptText("change nickname");
+        nicknameHbox=new HBox(8, nicknameField,nicknameText);
+
+        sloganField.setPromptText("change slogan");
+        sloganField.setText(User.getCurrentUser().getSlogan());
+
+        mainVbox.getChildren().addAll(usernameHbox,emailHbox,nicknameHbox,sloganField);
+    }
+
     public static void run() throws NoSuchAlgorithmException {
 
         Input_Output.outPut("PROFILE MENU:");

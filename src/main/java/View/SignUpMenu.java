@@ -79,7 +79,6 @@ public class SignUpMenu extends Application {
                                           hbox.setMaxWidth(maxWidth);
                                           text.setText("");});
         fadeTrans.play();
-
     }
 
     private void initializeMainVbox(){
