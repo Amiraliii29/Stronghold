@@ -25,6 +25,9 @@ Label{
   
 }
 
+.container-Vbox{
+  -fx-background-color: rgba(79, 159, 36, 0.596);
+}
 
 Text{
   -fx-font-size: 15px;
