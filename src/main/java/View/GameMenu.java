@@ -8,11 +8,42 @@ import Model.Government;
 import View.Enums.Commands.GameMenuCommands;
 import View.Enums.Messages.CustomizeMapMessages;
 import View.Enums.Messages.GameMenuMessages;
+import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.paint.Color;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 import java.util.regex.Matcher;
 
-public class GameMenu {
+public class GameMenu extends Application {
     private static int keepCnt;
+    public static AnchorPane gamePane;
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        gamePane  = new AnchorPane();
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        gamePane.setPrefSize(primaryScreenBounds.getWidth() , primaryScreenBounds.getHeight());
+        ImageView backGround = new ImageView(new Image(GameMenu.class.getResource("/Images/menu-backgrounds/mainMenu.jpg").toString()
+                , primaryScreenBounds.getWidth(),primaryScreenBounds.getHeight() , false , false));
+        gamePane.getChildren().add(backGround);
+        ShopMenu.openShopMenu();
+
+        Scene scene = new Scene(gamePane);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void  openShopMenu(){
+
+    }
     public static void run() {
         keepCnt = 0;
         String input;
@@ -620,4 +651,5 @@ public class GameMenu {
     public static void addKeepCnt() {
         keepCnt++;
     }
+
 }

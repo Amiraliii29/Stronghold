@@ -8,6 +8,7 @@ import View.Enums.Messages.LoginMenuMessages;
 import View.Enums.Messages.SignUpMenuMessages;
 import View.Input_Output;
 import View.LoginMenu;
+import View.MainMenu;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -55,7 +56,7 @@ public class LoginMenuController {
         }
     }
 
-    public void login(MouseEvent mouseEvent) throws NoSuchAlgorithmException, MalformedURLException {
+    public void login(MouseEvent mouseEvent) throws Exception {
         String userName = username.getText();
         String passWord = password.getText();
         if (userName == null || passWord == null){
@@ -113,7 +114,7 @@ public class LoginMenuController {
 
         User.setCurrentUser(targetUser);
 
-        //todo to go where after logged in successfully
+        new MainMenu().start(DataBase.getMainStage());
     }
 
     public void forgotPassword(MouseEvent mouseEvent) {
@@ -177,14 +178,22 @@ public class LoginMenuController {
                     LoginMenu.loginMenuPane.getChildren().remove(confirm);
                 }
                 else{
-                    // todo login to next menu
 
                     LoginMenu.loginMenuPane.getChildren().remove(securityAnswer);
                     LoginMenu.loginMenuPane.getChildren().remove(securityQuestionLabel);
                     LoginMenu.loginMenuPane.getChildren().remove(confirm);
+
+                    try {
+                        new MainMenu().start(DataBase.getMainStage());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
     }
 
+    public void back(MouseEvent mouseEvent) {
+        //todo back to sign up menu
+    }
 }

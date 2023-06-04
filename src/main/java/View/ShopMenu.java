@@ -7,10 +7,17 @@ import View.Enums.Commands.ShopMenuCommands;
 import View.Enums.Messages.ShopMenuMessages;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -22,11 +29,19 @@ public class ShopMenu extends Application {
         AnchorPane shopPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
 
-        Scene scene = new Scene(shopPane);
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        shopPane.resize(primaryScreenBounds.getWidth() , 200);
+        Scene scene = new Scene(shopPane , primaryScreenBounds.getWidth() , 200);
+
         stage.setScene(scene);
+        stage.setX(0);
+        stage.setY(primaryScreenBounds.getHeight() - 200);
+        stage.setResizable(true);
         stage.show();
 
     }
+
 
     public static void run(){
         String input;
@@ -49,6 +64,24 @@ public class ShopMenu extends Application {
 
         }
     };
+
+    public static void openShopMenu(){
+
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        double screenLength = primaryScreenBounds.getHeight();
+
+        AnchorPane shopPane = new AnchorPane();
+        shopPane.setLayoutX(0);
+        shopPane.setLayoutY(screenLength-200);
+        shopPane.setPrefSize(screenWidth, 200);
+
+        ImageView background = new ImageView(new Image(ShopMenu.class.getResource("/Images/menu-backgrounds/shopMenu.png").toString(), screenWidth
+                ,200, false, false));
+        shopPane.getChildren().add(background);
+
+        GameMenu.gamePane.getChildren().add(shopPane);
+    }
 
 
     private static void showItems(){

@@ -31,13 +31,22 @@ public class DataBase {
     private static SecureRandom randomGenerator = new SecureRandom();
     private static Stage ShopMenuStage = new Stage();
     private static int captchaNumber;
+    private static Stage mainStage;
+
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
+    public static void setMainStage(Stage mainStage) {
+        DataBase.mainStage = mainStage;
+    }
 
     public static String getRandomCaptchaImageAddress() throws MalformedURLException {
         int[] numbers = {1181 , 1381 , 1491 , 1722 , 1959 , 2163 , 8692 , 8776 , 8972 , 8996 , 9061 ,
                 9386 , 9582 , 9633};
         Random random = new Random();
-        int randomIndex  = random.nextInt(numbers.length);
-        captchaNumber = numbers[randomIndex - 1];
+        int randomIndex  = random.nextInt(numbers.length - 1);
+        captchaNumber = numbers[randomIndex];
         return String.valueOf(new URL(LoginMenu.class.getResource("/Images/Captcha/" + captchaNumber + ".png")
                 .toExternalForm()));
     }
