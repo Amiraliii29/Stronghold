@@ -21,9 +21,23 @@ CheckBox{
 Label{
     -fx-font-size: 24px;
     -fx-text-fill: rgba(158, 42, 3, 0.984);
-    
-    
   
+}
+
+TextField{
+  -fx-max-height: 32;
+  -fx-min-height: 32;
+  -fx-max-width: 200;
+  -fx-min-width: 200;
+  -fx-font-size: 16;
+}
+
+PasswordField{
+  -fx-max-height: 32;
+  -fx-min-height: 32;
+  -fx-max-width: 200;
+  -fx-min-width: 200;
+  -fx-font-size: 16;
 }
 
 .container-Vbox{

@@ -24,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -31,24 +33,27 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class SignUpMenu extends Application {
+
     TextField usernameField,nicknameField,sloganField,emailField,securityField,passwordVisibleField,repeatPasswordVisibleField;
     PasswordField passwordField,repeatPasswordField;
-    HBox userHbox,passwordHbox,emailHbox,nicknameHbox,questionHbox;
+    VBox userVbox,passwordVbox,emailVbox,nicknameVbox,questionVbox,sloganVBox;
     Button signupButton,loginButton;
     Label label,securityQuestion;
     Text userText,nicknameText,emailText,passwordText,securityText;
     CheckBox randomSloganBox,randomPasswordBox,changeQuestionBox,visiblePasswordsBox;
     VBox componentsVbox;
-    Pane mainPane;
+    StackPane mainPane;
+
     Stage stage;
     int questionIndex=1;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Pane Pane = FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
+        StackPane Pane = FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
             mainPane=Pane;
             this.stage=stage;
         Scene scene = new Scene(Pane);
+        stage.setFullScreen(true);
         stage.setScene(scene);
         initializeMainVbox();
         initializeLabel();
@@ -59,33 +64,41 @@ public class SignUpMenu extends Application {
         setButtonListeners();
         chooseNewSecurityQuestion();
         setCheckboxListeners();
+        setAlignments();
         stage.show();
+
     }
 
-    private void sendTextNotification(Text text,String output,String VboxColor,HBox hbox){
-        hbox.setStyle("-fx-background-color:"+VboxColor);
-        double minWidth=hbox.getMinWidth();
-        double maxWidth=hbox.getMaxWidth();
+    private void sendTextNotification(Text text,String output,String VboxColor,VBox vbox){
+        vbox.setStyle("-fx-background-color:"+VboxColor);
+        text.setVisible(true);
+        double minWidth=vbox.getMinWidth();
+        double maxWidth=vbox.getMaxWidth();
         text.setText(output);
         text.setOpacity(1);
         FadeTransition fadeTrans=new FadeTransition(Duration.seconds(3),text);
         fadeTrans.setDelay(Duration.seconds(1));
         fadeTrans.setFromValue(1);
         fadeTrans.setToValue(0.2);
-        fadeTrans.setOnFinished(event -> {hbox.setStyle("");
-                                          hbox.setMinWidth(minWidth);
-                                          hbox.setMaxWidth(maxWidth);
-                                          text.setText("");});
+        fadeTrans.setOnFinished(event -> {vbox.setStyle("");
+                                          vbox.setMinWidth(minWidth);
+                                          vbox.setMaxWidth(maxWidth);
+                                          text.setText("");
+                                          text.setVisible(false);});
         fadeTrans.play();
     }
 
-    private void initializeMainVbox(){
 
+    private void initializeMainVbox(){
+        mainPane.setAlignment( Pos.CENTER);
+        
         componentsVbox=new VBox(16);
-        componentsVbox.setLayoutX(360);
-        componentsVbox.setLayoutY(80);
-        componentsVbox.setStyle("-fx-background-color:rgba(170, 215, 213, 0.296);");
+        componentsVbox.setMaxWidth(350);
+        componentsVbox.setMinWidth(350);
+        componentsVbox.setAlignment(Pos.CENTER);
+        componentsVbox.setStyle("-fx-border-width: 0 3 3 0;");
         mainPane.getChildren().add(componentsVbox);
+        
     }
 
     private void initializeLabel(){
@@ -165,7 +178,7 @@ public class SignUpMenu extends Application {
             String password=UserInfoOperator.generateRandomPassword();
             passwordField.setText(password);
             sendTextNotification(passwordText, "Your password is: "+password,
-                                         Orders.greenNotifSuccesColor, passwordHbox);
+                                         Orders.greenNotifSuccesColor, passwordVbox);
             randomPasswordBox.setSelected(false);
                 }); 
         
@@ -199,7 +212,7 @@ public class SignUpMenu extends Application {
         if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
         if(value.length()==0){
-            sendTextNotification(securityText, "Shouldn't be left empty",color, questionHbox);
+            sendTextNotification(securityText, "Shouldn't be left empty",color, questionVbox);
             return false;
         }
 
@@ -211,12 +224,12 @@ public class SignUpMenu extends Application {
         if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
         if(!UserInfoOperator.isEmailFormatValid(value)){
-            sendTextNotification(emailText, "Invalid email format",color, emailHbox);
+            sendTextNotification(emailText, "Invalid email format",color, emailVbox);
             return false;
         }
 
         if(User.getUserByEmail(value) != null){
-            sendTextNotification(emailText, "Email already in use",color, emailHbox);
+            sendTextNotification(emailText, "Email already in use",color, emailVbox);
             return false;
         }
 
@@ -228,7 +241,7 @@ public class SignUpMenu extends Application {
         if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
         if(value.length()==0){
-            sendTextNotification(nicknameText, "Shouldn't be left empty",color, nicknameHbox);
+            sendTextNotification(nicknameText, "Shouldn't be left empty",color, nicknameVbox);
             return false;
         }
 
@@ -240,13 +253,13 @@ public class SignUpMenu extends Application {
         if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
         if(!UserInfoOperator.isPasswordStrong(value)){
-            sendTextNotification(passwordText, "Your password is weak",color, passwordHbox);
+            sendTextNotification(passwordText, "Your password is weak",color, passwordVbox);
             return false;
         }
 
         if(isOnSignUpProcess)
         if(!repeatPasswordField.getText().equals(passwordField.getText())){
-            sendTextNotification(passwordText, "Password is not repeated correctly",color, passwordHbox);
+            sendTextNotification(passwordText, "Password is not repeated correctly",color, passwordVbox);
             return false;
         }
         return true;
@@ -257,12 +270,12 @@ public class SignUpMenu extends Application {
         if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
 
         if(!UserInfoOperator.isUsernameFormatValid(value)){
-            sendTextNotification(userText, "Must contain alphabet, numbers, '_' and 3 characters",color, userHbox);
+            sendTextNotification(userText, "[a-zA-z0-9] and '_' +min 3 size",color, userVbox);
             return false;
         }
 
         else if(User.getUserByUserName(value) != null){
-            sendTextNotification(userText, "username already in use, suggest:"+UserInfoOperator.addRandomizationToString(value),Orders.yellowNotifErrorColor, userHbox);
+            sendTextNotification(userText, "username already in use, suggest:"+UserInfoOperator.addRandomizationToString(value),Orders.yellowNotifErrorColor, userVbox);
             return false;
         }
         return true;
@@ -274,28 +287,29 @@ public class SignUpMenu extends Application {
 
        
         userText=new Text("");
-        userHbox=new HBox(8, usernameField,userText);
+        userVbox=new VBox(0, usernameField,userText);
 
 
         sloganField=new TextField();
         sloganField.setPromptText("slogan");
-        sloganField.setMinWidth(150);
-        randomSloganBox=new CheckBox("choose a random slogan");
+        randomSloganBox=new CheckBox("choose randomly");
         usernameField.setStyle("-fx-text-fill: rgba(15, 11, 90, 0.694);");
         HBox hb1= new HBox(8, sloganField, randomSloganBox);
+        hb1.setMaxWidth(350);
+        hb1.setMinWidth(350);
+        sloganVBox=new VBox(0, hb1);
 
         nicknameField=new TextField();
         nicknameField.setPromptText("nickname");
 
         nicknameText=new Text();
-        nicknameHbox=new HBox(8, nicknameField,nicknameText);
+        nicknameVbox=new VBox(0, nicknameField,nicknameText);
 
 
         emailField=new TextField();
         emailField.setPromptText("email");
-        emailField.setMaxWidth(160);
         emailText=new Text();
-        emailHbox=new HBox(8, emailField,emailText);
+        emailVbox=new VBox(0, emailField,emailText);
 
 
         passwordField=new PasswordField();
@@ -306,28 +320,33 @@ public class SignUpMenu extends Application {
         passwordText=new Text();
 
         randomPasswordBox=new CheckBox("choose randomly");
-        HBox hb2=new HBox(24, passwordField,passwordVisibleField,randomPasswordBox);
+        HBox hb2=new HBox(8, passwordField,passwordVisibleField,randomPasswordBox);
+        hb2.setMaxWidth(350);
+        hb2.setMinWidth(350);
 
-        passwordHbox=new HBox(8, hb2,passwordText);
+
+        passwordVbox=new VBox(0, hb2,passwordText);
 
 
         repeatPasswordField=new PasswordField();
         repeatPasswordField.setPromptText("repeat password");
-        repeatPasswordField.setMaxWidth(150);
 
         repeatPasswordVisibleField=new TextField();
         repeatPasswordVisibleField.setPromptText("repeat password");
-        repeatPasswordVisibleField.setMaxWidth(150);
 
         securityQuestion=new Label();
-        securityQuestion.setStyle("-fx-font-size: 16px;-fx-background-color: rgba(203, 189, 105, 0.55);");
+        securityQuestion.setStyle("-fx-font-size: 16px;");
         securityField=new TextField();
-        changeQuestionBox=new CheckBox("Choose another question");
+        changeQuestionBox=new CheckBox("Next Question");
         securityField.setPromptText("Security answer");
 
         securityText=new Text();
-        questionHbox=new HBox(8, securityField,changeQuestionBox,securityText);
-        componentsVbox.getChildren().addAll(userHbox,passwordHbox,repeatPasswordField,repeatPasswordVisibleField,emailHbox,nicknameHbox,hb1,securityQuestion,questionHbox);
+        HBox hb3=new HBox(8, securityField,changeQuestionBox);
+        hb3.setMaxWidth(350);
+        hb3.setMinWidth(350);
+
+        questionVbox=new VBox(0, hb3,securityText);
+        componentsVbox.getChildren().addAll(userVbox,passwordVbox,repeatPasswordField,repeatPasswordVisibleField,emailVbox,nicknameVbox,sloganVBox,securityQuestion,questionVbox);
     }
 
     private void initializeButtons(){
@@ -336,6 +355,8 @@ public class SignUpMenu extends Application {
         visiblePasswordsBox=new CheckBox("visible password");
         HBox hBox= new HBox(16, signupButton,visiblePasswordsBox);
         VBox vbox=new VBox(16,hBox,loginButton);
+        vbox.setMaxWidth(200);
+        vbox.setMinWidth(200);
         componentsVbox.getChildren().addAll(vbox);
     }
 
@@ -344,6 +365,37 @@ public class SignUpMenu extends Application {
         questionIndex++;
     }
 
+    private void setAlignments(){
+        userVbox.setMinWidth(200);
+        userVbox.setMaxWidth(200);
+
+        emailVbox.setMinWidth(200);
+        emailVbox.setMaxWidth(200);
+
+        nicknameVbox.setMinWidth(200);
+        nicknameVbox.setMaxWidth(200);
+
+        questionVbox.setMinWidth(200);
+        questionVbox.setMaxWidth(200);
+
+        passwordVbox.setMinWidth(200);
+        passwordVbox.setMaxWidth(200);
+
+        sloganVBox.setMinWidth(200);
+        sloganVBox.setMaxWidth(200);
+
+        // passwordField.setMaxWidth(140);
+        // passwordField.setMinWidth(140);
+        // passwordVisibleField.setMinWidth(140);
+        // passwordVisibleField.setMaxWidth(140);
+
+
+        userText.setVisible(false);
+        passwordText.setVisible(false);
+        emailText.setVisible(false);
+        nicknameText.setVisible(false);
+        securityText.setVisible(false);
+    }
 
 
 

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.regex.Matcher;
 
+import com.google.gson.Gson;
+
 import Model.User;
 
 public class UserInfoOperator {
@@ -40,18 +42,8 @@ public class UserInfoOperator {
     }
 
     public static void storeUserDataInJson(User user,String dirFromSrc) throws NoSuchAlgorithmException{
-        String username=user.getUsername();
-        String password=user.getPassword();
-        String email=user.getEmail();
-        String slogan=user.getSlogan();
-        String securityQuestion=user.getSecurityQuestion();
-        String nickname=user.getNickName();
-        String rank=Integer.toString(user.getRank());
-        String highscore=Integer.toString(user.getHighScore());
-        boolean loginStatus=user.getStayLoggedIn();
-
-        JsonConverter.putUserDataInFile(username, password, email, slogan, 
-                        securityQuestion, nickname,rank,highscore,loginStatus ,dirFromSrc);
+        //LOL THIS FUNCTION WAS BULLSHIT
+        JsonConverter.putUserDataInFile(user,dirFromSrc);
     }
 
     public static void updateAllUsersJsonData(String dirFromSrc) throws NoSuchAlgorithmException{
