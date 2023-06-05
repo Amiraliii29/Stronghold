@@ -3,8 +3,6 @@ package Model;
 import Model.Buildings.Building;
 
 import Model.Units.Unit;
-import View.ShowMap;
-import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.HashMap;

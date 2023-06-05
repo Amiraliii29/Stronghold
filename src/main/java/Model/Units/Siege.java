@@ -74,4 +74,7 @@ public class Siege extends Unit {
         return null;
     }
 
+    public static void load() {
+        return;
+    }
 }

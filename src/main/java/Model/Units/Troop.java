@@ -67,7 +67,6 @@ public class Troop extends Unit{
         return null;
     }
 
-
     public static Troop createTroop(Government owner, String troopName, int xCoordinate, int yCoordinate) {
         for (Troop troop : troops) {
             if (troop.name.equals(troopName)) {
@@ -82,5 +81,9 @@ public class Troop extends Unit{
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

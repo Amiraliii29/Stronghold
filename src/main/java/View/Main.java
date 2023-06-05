@@ -18,9 +18,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-//        Building.readBuildingsFromFile();
-//        Unit.readUnitsFromFile();
-        Resource.readResourcesFromFile();
-       new ProfileMenu().start(stage);
+        Building.load();
+        Unit.load();
+        Resource.load();
+        Game.loadImages();
+        Map map = new Map("for show test", 100, 100);
+        new Game(map).start(stage);
     }
 }

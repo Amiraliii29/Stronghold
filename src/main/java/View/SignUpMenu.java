@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class SignUpMenu extends Application {
-
     TextField usernameField,nicknameField,sloganField,emailField,securityField,passwordVisibleField,repeatPasswordVisibleField;
     PasswordField passwordField,repeatPasswordField;
     HBox userHbox,passwordHbox,emailHbox,nicknameHbox,questionHbox;
@@ -41,7 +40,6 @@ public class SignUpMenu extends Application {
     CheckBox randomSloganBox,randomPasswordBox,changeQuestionBox,visiblePasswordsBox;
     VBox componentsVbox;
     Pane mainPane;
-
     Stage stage;
     int questionIndex=1;
 
