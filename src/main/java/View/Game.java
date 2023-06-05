@@ -3,18 +3,24 @@ package View;
 import Model.Land;
 import Model.Map;
 import Model.Square;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Game extends Application{
@@ -26,11 +32,14 @@ public class Game extends Application{
     private static final double screenHeight;
     private static int blockWidth;
     private static int blockHeight;
+    private static final int pixelFromEdge;
     private Map map;
+    private Stage stage;
+    private Pane pane;
+    private Scene scene;
     private int squareI;
     private int squareJ;
-    private int leftX;
-    private int upY;
+    private Timeline moveTimeLine;
 
 
     static {
@@ -40,116 +49,103 @@ public class Game extends Application{
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = Math.ceil(screenBounds.getWidth());
-        screenHeight = Math.ceil(screenBounds.getHeight());
+        screenHeight = Math.ceil(screenBounds.getHeight()) - 150;
+        pixelFromEdge = 5;
     }
 
     public Game(Map map) {
         this.map = map;
         squareI = 0;
         squareJ = 0;
-        leftX = 0;
-        upY = 0;
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        Pane pane = new Pane();
+        this.pane = new Pane();
+        this.stage = stage;
 
-        Scene scene = new Scene(pane, screenWidth, screenHeight);
+        this.scene = new Scene(pane, screenWidth, screenHeight);
         stage.setScene(scene);
 
-        blockPixel = 20;
-        blockWidth = ((int) Math.ceil(screenWidth / blockPixel)) + 3;
-        blockHeight = ((int) Math.ceil(screenHeight / blockPixel)) + 3;
+        blockPixel = 30;
+        blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
+        blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
 
-        keys(stage, scene, pane);
-
-        drawMap(pane);
+        drawMap();
+        drawBottom();
+        keys();
 
         stage.setFullScreen(true);
         stage.show();
     }
 
-    public void keys(Stage stage, Scene scene, Pane pane) {
+    public void keys() {
         //move :
         scene.setOnMouseMoved(event -> {
             double mouseX = event.getSceneX();
             double mouseY = event.getSceneY();
 
-            if (mouseX < 10) {
+            if (mouseX < pixelFromEdge) {
                 if (squareI > 0) {
-//                    leftX -= 5;
-//                    if (leftX < -blockPixel) {
-//                        leftX += blockPixel;
-//                    }
-                    squareI--;
-                    drawMap(pane);
+                    moveTimeLine(-1, 0);
                 }
-            } else if (mouseX > screenWidth - 10) {
+            } else if (mouseX > screenWidth - pixelFromEdge) {
                 if (squareI < map.getWidth() - blockWidth) {
-//                    leftX += 5;
-//                    if (leftX > blockPixel) {
-//                        leftX -= blockPixel;
-//                    }
-                    squareI++;
-                    drawMap(pane);
+                    moveTimeLine(1, 0);
                 }
             }
 
-            if (mouseY < 10) {
+            if (mouseY < pixelFromEdge) {
                 if (squareJ > 0) {
-//                    upY -= 5;
-//                    if (upY < -blockPixel) {
-//                        upY += blockPixel;
-//                    }
-                    squareJ--;
-                    drawMap(pane);
+                    moveTimeLine(0, -1);
                 }
-            } else if (mouseY > screenHeight - 10) {
+            } else if (mouseY > screenHeight - pixelFromEdge) {
                 if (squareJ < map.getLength() - blockHeight) {
-//                    upY += 5;
-//                    if (upY > blockPixel) {
-//                        upY -= blockPixel;
-//                    }
-                    squareJ++;
-                    drawMap(pane);
+                    moveTimeLine(0, 1);
                 }
             }
         });
-
 
         //other keys :
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.I) {
-                if (blockPixel < 30) blockPixel += 5;
-                blockWidth = ((int) Math.ceil(screenWidth / blockPixel)) + 3;
-                blockHeight = ((int) Math.ceil(screenHeight / blockPixel)) + 3;
-                drawMap(pane);
+                if (blockPixel < 35) {
+                    blockPixel += 5;
+                    blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
+                    blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
+                    drawMap();
+                }
             } else if (event.getCode() == KeyCode.O) {
-                if (blockPixel > 15) blockPixel -= 5;
-                blockWidth = ((int) Math.ceil(screenWidth / blockPixel)) + 3;
-                blockHeight = ((int) Math.ceil(screenHeight / blockPixel)) + 3;
-                drawMap(pane);
+                if (blockPixel > 25) {
+                    blockPixel -= 5;
+                    blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
+                    blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
+                    drawMap();
+                }
             }
         });
     }
 
-    public void drawMap(Pane pane) {
+    private void moveTimeLine(int i, int j) {
+        moveTimeLine = new Timeline(new KeyFrame(Duration.millis(100), actionEvent -> {
+            if ((i < 0 && squareI > 0) || (i > 0 && squareI < map.getWidth() - blockWidth))
+                squareI += i;
+            if ((j < 0 && squareJ > 0) || (j > 0 && squareJ < map.getLength() - blockHeight))
+                squareJ += j;
+            drawMap();
+        }));
+        moveTimeLine.setCycleCount(1);
+        moveTimeLine.play();
+    }
+
+    private void drawMap() {
         Square[][] squares = map.getSquares();
 
-        Image image = null;
-        try {
-            image = new Image(new FileInputStream("src/main/resources/Images/tiles/sea.jpg"));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        int k = leftX, l = upY;
+        double time = System.currentTimeMillis();
+        int k = 0, l = 0;
         for (int i = squareI; i < squareI + blockWidth; i++) {
             for (int j = squareJ; j < squareJ + blockHeight; j++) {
-                ImageView imageView;
-                if (i == 0 || j == 0 || j == map.getLength() - 1 || i == map.getWidth() - 1) {
-                     imageView = new ImageView(image);
-                } else imageView = new ImageView(tiles.get(squares[i][j].getLand()));
+                ImageView imageView = new ImageView(tiles.get(squares[i][j].getLand()));
                 imageView.setLayoutX(k);
                 imageView.setLayoutY(l);
                 imageView.setFitHeight(blockPixel);
@@ -158,8 +154,14 @@ public class Game extends Application{
                 l += blockPixel;
             }
             k += blockPixel;
-            l = upY;
+            l = 0;
         }
+        double time2 = System.currentTimeMillis();
+        System.out.println(time2 - time);
+    }
+
+    private void drawBottom() {
+
     }
 
     public static void loadImages() throws FileNotFoundException {

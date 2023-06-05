@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class Square {
     private static final HashMap<String, Boolean> canPass;
-    private ArrayList<Unit> units;
+    private final ArrayList<Unit> units;
     private Building building;
     private Land land;
     private String cliffDirection;
