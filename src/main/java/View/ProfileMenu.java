@@ -7,12 +7,14 @@ import java.util.regex.Matcher;
 
 import Controller.Orders;
 import Controller.ProfileMenuController;
+import Controller.UserInfoOperator;
 import Model.User;
 import View.Enums.Commands.ProfileMenuCommands;
 import View.Enums.Messages.ProfileMenuMessages;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,7 +32,7 @@ public class ProfileMenu extends Application {
     TextField usernameField,emailField,nicknameField,sloganField;
     Text usernameText,emailText,nicknameText;
     HBox usernameHbox,emailHbox,nicknameHbox;
-    Button submitChanges,removeSlogan;
+    Button submitChanges,removeSlogan,changePassword,back;
     VBox mainVbox;
     Label label;
 
@@ -49,8 +51,111 @@ public class ProfileMenu extends Application {
         stage.setScene(scene);
         initializeMainVbox();
         initializeFields();
+        initializeButtons();
+        setFieldListeners();
+        setButtonListeners();
+        setStartingTexts();
         stage.show();
     }
+
+    private void setButtonListeners(){
+        submitChanges.setOnMouseClicked(event -> submitChanges());
+
+        removeSlogan.setOnMouseClicked(event -> {
+            sloganField.setText("");
+            sloganField.setPromptText("slogan is empty");
+            User.getCurrentUser().setSlogan("");
+            try {
+                UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
+            } catch (NoSuchAlgorithmException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void setStartingTexts(){
+        sendTextNotification(usernameText, "username", Orders.greenNotifSuccesColor, usernameHbox);
+        sendTextNotification(emailText, "email", Orders.greenNotifSuccesColor, emailHbox);
+        sendTextNotification(nicknameText, "nickname", Orders.greenNotifSuccesColor, nicknameHbox);
+    }
+
+    private void submitChanges(){
+        
+        if(checkUsernameValue(usernameField.getText(), true))
+            User.getCurrentUser().setUsername(usernameField.getText());
+        
+        if(checkEmailValue(emailField.getText(), true))
+            User.getCurrentUser().setEmail(emailField.getText());
+        
+        if(checkNicknameValue(nicknameField.getText(), true))
+            User.getCurrentUser().setNickName(nicknameField.getText());
+        
+        User.getCurrentUser().setSlogan(sloganField.getText());
+        try {
+            UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void setFieldListeners(){
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkUsernameValue(newValue,false);});
+            
+        nicknameField.textProperty().addListener((observable, oldValue, newValue) -> {
+                    checkNicknameValue(newValue,false);});
+        
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        checkEmailValue(newValue,false);});
+    }
+
+    private boolean checkEmailValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(!UserInfoOperator.isEmailFormatValid(value)){
+            sendTextNotification(emailText, "Invalid email format",color, emailHbox);
+            return false;
+        }
+
+        if(User.getUserByEmail(value) != null){
+            sendTextNotification(emailText, "Email already in use",color, emailHbox);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkNicknameValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(value.length()==0){
+            sendTextNotification(nicknameText, "Shouldn't be left empty",color, nicknameHbox);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkUsernameValue(String value, boolean isOnSignUpProcess){
+        String color=Orders.yellowNotifErrorColor;
+        if(isOnSignUpProcess) color=Orders.redNotifErrorColor;
+
+        if(!UserInfoOperator.isUsernameFormatValid(value)){
+            sendTextNotification(usernameText, "Must contain alphabet, numbers, '_' and 3 characters",color, usernameHbox);
+            return false;
+        }
+
+        else if(User.getUserByUserName(value) != null){
+            sendTextNotification(usernameText, "username already in use, suggest:"+UserInfoOperator.addRandomizationToString(value),Orders.yellowNotifErrorColor, usernameHbox);
+            return false;
+        }
+        return true;
+    }
+
 
     private void sendTextNotification(Text text,String output,String VboxColor,HBox hbox){
         hbox.setStyle("-fx-background-color:"+VboxColor);
@@ -73,8 +178,17 @@ public class ProfileMenu extends Application {
         mainVbox=new VBox(16);
         mainVbox.setLayoutX(360);
         mainVbox.setLayoutY(80);
-        mainVbox.setStyle("-fx-background-color:rgba(170, 215, 213, 0.296);");
+        
         mainPane.getChildren().add(mainVbox);
+    }
+
+    private void initializeButtons(){
+        submitChanges=new Button("Submit changes!");
+        removeSlogan= new Button("Remove Slogan");
+        changePassword= new Button("Change Password");
+        back= new Button("Back to main Menu");
+        back.setStyle("-fx-color: rgba(221, 142, 14, 0.708);");
+        mainVbox.getChildren().addAll(submitChanges,removeSlogan,changePassword,back);
     }
 
     private void initializeFields(){
@@ -83,58 +197,28 @@ public class ProfileMenu extends Application {
 
         usernameField.setPromptText("change username");
         usernameField.setText(User.getCurrentUser().getUsername());
+        usernameField.setMaxWidth(160);
+        usernameField.setMinWidth(160);
         usernameHbox=new HBox(8, usernameField,usernameText);
 
         emailField.setText(User.getCurrentUser().getEmail());
         emailField.setPromptText("change email");
+        emailField.setMaxWidth(160);
+        emailField.setMinWidth(160);
         emailHbox=new HBox(8, emailField,emailText);
 
         nicknameField.setText(User.getCurrentUser().getNickName());
         nicknameField.setPromptText("change nickname");
+        nicknameField.setMaxWidth(160);
+        nicknameField.setMinWidth(160);
         nicknameHbox=new HBox(8, nicknameField,nicknameText);
 
         sloganField.setPromptText("change slogan");
         sloganField.setText(User.getCurrentUser().getSlogan());
+        sloganField.setMaxWidth(160);
+        sloganField.setMinWidth(160);
 
         mainVbox.getChildren().addAll(usernameHbox,emailHbox,nicknameHbox,sloganField);
-    }
-
-    public static void run() throws NoSuchAlgorithmException {
-
-        Input_Output.outPut("PROFILE MENU:");
-        ProfileMenuController.setCurrentUser(User.getCurrentUser());
-        String input;
-
-        while (true) {
-            Matcher matcher;
-            input=Input_Output.getInput();
-            if(input.equals("back"))
-                break;
-
-            if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.CHANGE_USERNAME)) !=null)
-                changeUsername(matcher);
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.CHANGE_EMAIL)) !=null)
-                changeEmail(matcher);
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.CHANGE_PASSWORD)) !=null)
-                changePassword(matcher);
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.CHANGE_NICKNAME)) !=null)
-                changeNickname(matcher);
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.CHANGE_SLOGAN)) !=null)
-                changeSlogan(matcher);
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.REMOVE_SLOGAN)) !=null)
-                removeSlogan();
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.DISPLAY_ENTIRE_PROFILE)) !=null)
-                displayEntireProfile();
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.DISPLAY_SLOGAN)) !=null)
-                displaySlogan();
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.DISPLAY_RANK)) !=null)
-                displayRank();
-            else if( (matcher=ProfileMenuCommands.getMatcher(input, ProfileMenuCommands.DISPLAY_HIGHSCORE)) !=null)
-                displayHighscore();
-            else Input_Output.outPut("error: invalid order!");
-        }
-        ProfileMenuController.setCurrentUser(null);
-        LoginMenu.run();
     }
 
 
