@@ -35,7 +35,7 @@ public class ShopMenu extends Application {
                 new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
 
 
-        Resource.readResourcesFromFile();
+        Resource.load();
         Scene scene = new Scene(shopPane);
         // todo uncomment when code finished     amirali
 //        ShopMenuController.setItemsAmount();

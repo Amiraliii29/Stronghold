@@ -13,16 +13,15 @@ import java.util.ArrayList;
 
 public class Defence extends Building {
     private static ArrayList<Defence> defences;
-    private static ArrayList<String> defencesName;
-    public int range;
-    private int capacity;
+    private static final ArrayList<String> defencesName;
+    private final int range;
+    private final int capacity;
 
     static {
         try {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Defence>>() {}.getType();
             defences = gson.fromJson(new FileReader("src/main/resources/Buildings/Defences.json"), type);
-
         } catch (IOException e) {
             e.printStackTrace();
         }

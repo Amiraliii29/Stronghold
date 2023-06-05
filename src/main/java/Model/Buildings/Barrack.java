@@ -1,9 +1,7 @@
 package Model.Buildings;
 
-import Controller.GameMenuController;
 import Model.Government;
 import Model.Resource;
-import Model.Units.Troop;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -11,13 +9,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Barrack extends Building {
     private static ArrayList<Barrack> barracks;
-    private static ArrayList<String> barracksName;
-    private ArrayList<String> troops;
-    private HashMap<Troop, Integer> troopsCreated;
+    private static final ArrayList<String> barracksName;
+    private final ArrayList<String> troops;
+
 
     static {
         try {
@@ -40,22 +37,11 @@ public class Barrack extends Building {
                    int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> troops) {
         super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.troops = troops;
-        troopsCreated = new HashMap<>();
     }
 
     public ArrayList<String> getTroops() {
         return troops;
     }
-
-    public HashMap<Troop, Integer> getTroopsCreated() {
-        return troopsCreated;
-    }
-
-    public int getTroopNumber(Troop troop) {
-        //TODO
-        return 0;
-    }
-
 
     public boolean canBuildTroopByName(String targetTroopName){
         for (String troopName : troops) {
@@ -63,10 +49,6 @@ public class Barrack extends Building {
                 return true;
         }
         return false;
-    }
-
-    public void addTroopsCreated(Troop troop, int number) {
-
     }
 
     public static ArrayList<String> getBarracksName() {

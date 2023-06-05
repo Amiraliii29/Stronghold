@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Resource {
-    private static ArrayList<Resource> allResources;
-    private String name;
-    private int price;
+    private static final ArrayList<Resource> allResources;
+    private final String name;
+    private final int price;
     private double count;
-    private String storage;//where we store it
+    private final String storage;//where we store it
     private static ArrayList<Resource> resources;
     private static ArrayList<Resource> foods;
     private static ArrayList<Resource> weapons;
-    private static ArrayList<String> resourcesName;
-    private static ArrayList<String> foodsName;
-    private static ArrayList<String> weaponsName;
+    private static final ArrayList<String> resourcesName;
+    private static final ArrayList<String> foodsName;
+    private static final ArrayList<String> weaponsName;
 
     static {
         try {
@@ -135,10 +135,9 @@ public class Resource {
         return null;
     }
 
-    public static void readResourcesFromFile() {
+    public static void load() {
         return;
     }
-
 
     @Override
     public boolean equals(Object o) {

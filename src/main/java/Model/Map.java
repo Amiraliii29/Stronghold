@@ -45,8 +45,8 @@ public class Map {
         return squares;
     }
 
-    public Square getSquareFromMap(int y, int x) {
-        return squares[y-1][x-1];
+    public Square getSquareFromMap(int x, int y) {
+        return squares[x][y];
     }
 
     public int getWidth() {
@@ -63,15 +63,17 @@ public class Map {
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
         boolean check = false;
-        int length;
-        if (building.getName().equals("Keep")) length = building.getLength()  + 4;
-        else length = building.getLength();
-        for (int i = x; i < x + length; i++) {
-            for (int j = y; j < y + building.getWidth(); j++) {
+        int width;
+
+        if (building.getName().equals("Keep")) width = building.getWidth()  + 4;
+        else width = building.getWidth();
+
+        for (int i = x; i < x + width; i++) {
+            for (int j = y; j < y + building.getLength(); j++) {
                 for (String validLand : building.getLands()) {
-                    if (Land.getName(squares[j-1][i-1].getLand()).equals(validLand))
+                    if (Land.getName(squares[i][j].getLand()).equals(validLand))
                         check = true;
-                    if (squares[j-1][i-1].getBuilding() != null || squares[j-1][i-1].getTree() != null)
+                    if (squares[i][j].getBuilding() != null || squares[i][j].getTree() != null)
                         return false;
                 }
                 if (!check) return false;
@@ -120,29 +122,100 @@ public class Map {
     }
 
     public static double getDistance(int x1, int y1, int x2, int y2) {
-        double distancepwr2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-        return Math.sqrt(distancepwr2);
+        double distancePwr2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+        return Math.sqrt(distancePwr2);
     }
 
     public static int getCartesianZone(int centerX, int centerY, int targetX, int targetY) {
         if (targetX >= centerX && targetY >= centerY) return 1;
         else if (targetX <= centerX && targetY >= centerY) return 2;
-        else if (targetX <= centerX && targetY <= centerY) return 3;
+        else if (targetX <= centerX) return 3;
         else return 4;
     }
 
     public boolean isCoordinationValid(int x, int y) {
-        if (x > length || x <= 0 || y <= 0 || y > width)
-            return false;
-        return true;
+        return x < width && x >= 0 && y >= 0 && y < length;
     }
 
     public void constructBuilding(Building building, int x, int y) {
-        for (int i = x; i < x + building.getLength(); i++) {
-            for (int j = y; j < y + building.getWidth(); j++) {
-                squares[j-1][i-1].setBuilding(building);
+        for (int i = x; i < x + building.getWidth(); i++) {
+            for (int j = y; j < y + building.getLength(); j++) {
+                squares[i][j].setBuilding(building);
             }
         }
+    }
+
+    public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment, int x, int y) {
+        Square targetSquare = getSquareFromMap(x, y);
+        ArrayList<Unit> enemyUnits = new ArrayList<>();
+
+        for (Unit unit : targetSquare.getUnits())
+            if (!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
+
+        return enemyUnits;
+    }
+
+    public int getSquareUnfriendlyBelongingsType(Government ownGovernment, int x, int y) {
+        //0 for nothing, 1 for troops (prime to buildings, except deffences), 2 for buildings
+        Square targetSquare = getSquareFromMap(x, y);
+        Building targetBuilding = targetSquare.getBuilding();
+
+        if (doesSquareContainEnemyUnits(x, y, ownGovernment))
+            return 1;
+
+        if (targetBuilding != null)
+            if (!DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
+                return 2;
+
+        return 0;
+    }
+
+    public void removeBuildingFromMap(Building building) {
+        int width, length, cornerX, cornerY;
+        width = building.getWidth();
+        length = building.getLength();
+        cornerX = building.getXCoordinateLeft();
+        cornerY = building.getYCoordinateUp();
+
+        for (int i = cornerX; i < width; i++)
+            for (int j = cornerY; j < length; j++)
+                getSquareFromMap(i, j).setBuilding(null);
+    }
+
+    public void setGovernmentsInMap(int count) {
+        this.governmentsInMap = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Government government = new Government(2000);
+            governmentsInMap.add(government);
+        }
+    }
+
+    public int[] getAnEnemyCoordInRange(Unit mainUnit) {
+        ArrayList<int[]> landsWithinRange = new ArrayList<>();
+        int aggressionRange = mainUnit.getAggressionRange();
+        int unitX = mainUnit.getXCoordinate();
+        int unitY = mainUnit.getYCoordinate();
+
+        for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++)
+            landsWithinRange.addAll(getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
+        
+        for (int[] coord : landsWithinRange)
+            if (doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
+                return coord;
+        return null;
+    }
+
+    public boolean doesSquareContainEnemyUnits(int x, int y, Government owner) {
+        Square targetSquare = squares[x][y];
+
+        for (Unit unit : targetSquare.getUnits())
+            if (!DataBase.isUnitFriendly(owner, unit)) return true;
+
+        return false;
+    }
+
+    public ArrayList<Government> getGovernmentsInMap() {
+        return governmentsInMap;
     }
 
     public static void saveMap(Map map, String fileName) {
@@ -177,78 +250,5 @@ public class Map {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<Unit> getSquareUnfriendlyUnits(Government ownGovernment, int x, int y) {
-        Square targetSquare = getSquareFromMap(y, x);
-        ArrayList<Unit> enemyUnits = new ArrayList<>();
-
-        for (Unit unit : targetSquare.getUnits())
-            if (!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
-
-        return enemyUnits;
-    }
-
-    public int getSquareUnfriendlyBelongingsType(Government ownGovernment, int x, int y) {
-        //0 for nothing, 1 for troops (prime to buildings, except deffences), 2 for buildings
-        Square targetSquare = getSquareFromMap(y, x);
-        Building targetBuilding = targetSquare.getBuilding();
-
-        if (doesSquareContainEnemyUnits(y, x, ownGovernment))
-            return 1;
-
-        if (targetBuilding != null)
-            if (!DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
-                return 2;
-
-        return 0;
-    }
-
-    public void removeBuildingFromMap(Building building) {
-        int width, length, cornerX, cornerY;
-        width = building.getWidth();
-        length = building.getLength();
-        cornerX = building.getXCoordinateLeft();
-        cornerY = building.getYCoordinateUp();
-
-        for (int i = cornerX; i < width; i++)
-            for (int j = cornerY; j < length; j++)
-                getSquareFromMap(i, j).setBuilding(null);
-    }
-
-    public boolean doesSquareContainEnemyUnits(int x, int y, Government owner) {
-        Square targetSquare = getSquareFromMap(x, y);
-
-        for (Unit unit : targetSquare.getUnits())
-            if (!DataBase.isUnitFriendly(owner, unit)) return true;
-
-        return false;
-    }
-
-    public void setGovernmentsInMap(int count) {
-        this.governmentsInMap = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Government government = new Government(2000);
-            governmentsInMap.add(government);
-        }
-    }
-
-    public int[] getAnEnemyCoordInRange(Unit mainUnit) {
-        ArrayList<int[]> landsWithinRange = new ArrayList<>();
-        int aggressionRange = mainUnit.getAggressionRange();
-        int unitX = mainUnit.getXCoordinate();
-        int unitY = mainUnit.getYCoordinate();
-
-        for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++) 
-            landsWithinRange = Orders.concatCoords(landsWithinRange, getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
-        
-        for (int[] coord : landsWithinRange)
-            if (doesSquareContainEnemyUnits(coord[1], coord[0], mainUnit.getOwner()))
-                return coord;
-        return null;
-    }
-
-    public ArrayList<Government> getGovernmentsInMap() {
-        return governmentsInMap;
     }
 }

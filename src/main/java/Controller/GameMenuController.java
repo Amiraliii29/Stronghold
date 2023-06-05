@@ -29,11 +29,15 @@ public class GameMenuController {
         allUnits = new ArrayList<>();
     }
 
+    public static void setCurrentGovernment(Government government) {
+        currentGovernment = government;
+    }
+
     public static GameMenuMessages nextTurnController() {
         //remove tent and add sieges
         for (HashMap.Entry<Square, String> entry : buildSiege.entrySet()) {
             Siege siege = Siege.createSiege(currentGovernment, entry.getValue(), entry.getKey().getX(), entry.getKey().getY());
-            for (int i = 0; i < siege.getEngineerNeed(); i++) {
+            for (int i = 0; i < Objects.requireNonNull(siege).getEngineerNeed(); i++) {
                 entry.getKey().removeUnit(Engineer.createEngineer(currentGovernment, -1, -1));
             }
             entry.getKey().getBuilding().changeHP(-10000);
@@ -41,11 +45,13 @@ public class GameMenuController {
         }
         if (checkForEnd())
             return GameMenuMessages.END;
+
         //automatic fights
         ArrayList<Government> governments = DataBase.getGovernments();
         int index = governments.indexOf(currentGovernment);
         if (index == governments.size() - 1)
             DataBase.handleEndOfTurnFights();
+
         //change government
         if (index == governments.size() - 1)
             currentGovernment = governments.get(0);
@@ -54,6 +60,7 @@ public class GameMenuController {
 
         DataBase.setCurrentGovernment(currentGovernment);
         selectedBuilding = null;
+
         //work with government
         currentGovernment.addAndRemoveFromGovernment();
         DataBase.generateResourcesForCurrentGovernment();
@@ -71,6 +78,7 @@ public class GameMenuController {
     public static boolean checkForEnd() {
         ArrayList<Government> governments = DataBase.getGovernments();
         Square[][] allSquares = DataBase.getSelectedMap().getSquares();
+
         for (int i = 0; i < governments.size(); i++) {
             if (governments.get(i).getLord().getHitPoint() <= 0) {
                 //destroy every thing for this government
@@ -109,16 +117,12 @@ public class GameMenuController {
         return false;
     }
 
-    public static void setCurrentGovernment(Government government) {
-        currentGovernment = government;
-    }
-
     public static GameMenuMessages putBuildingController(String x, String y, String buildingType) {
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
-        int xInNum = Integer.parseInt(x);
-        int yInNum = Integer.parseInt(y);
+        int xInNum = Integer.parseInt(x) - 1;
+        int yInNum = Integer.parseInt(y) - 1;
         Building targetBuilding = Building.getBuildingByName(buildingType);
 
         if (!currentMap.isCoordinationValid(xInNum, yInNum))
@@ -153,9 +157,11 @@ public class GameMenuController {
 
     public static Building constructBuildingForPlayer(String buildingName, int x, int y) {
         String buildingCategory = Building.getBuildingCategoryByName(buildingName);
-        switch (buildingCategory) {
+
+        switch (Objects.requireNonNull(buildingCategory)) {
             case "Generator" -> {
                 Generator generator = Generator.createGenerator(currentGovernment, x, y, buildingName);
+                assert generator != null;
                 currentGovernment.changePopulation(generator.getNumberOfWorker());
                 currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
                 currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(), generator.getGeneratingRate());
@@ -164,6 +170,7 @@ public class GameMenuController {
             }
             case "TownBuilding" -> {
                 TownBuilding townBuilding = TownBuilding.createTownBuilding(currentGovernment, x, y, buildingName);
+                assert townBuilding != null;
                 currentGovernment.addToMaxPopulation(townBuilding.getCapacity());
                 currentGovernment.updateBuildingPopularity();
                 return townBuilding;
@@ -181,12 +188,11 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages selectBuildingController(String x, String y) {
-
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
-        int xInNum = Integer.parseInt(x);
-        int yInNum = Integer.parseInt(y);
+        int xInNum = Integer.parseInt(x) - 1;
+        int yInNum = Integer.parseInt(y) - 1;
 
         if (!currentMap.isCoordinationValid(xInNum, yInNum))
             return GameMenuMessages.INVALID_COORDINATE;
@@ -203,7 +209,7 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages createUnitController(String type, String count) {
-        if (!(selectedBuilding instanceof Barrack))
+        if (!(selectedBuilding instanceof Barrack selectedBarrack))
             return GameMenuMessages.CREATE_UNIT_WRONG_SELECTED_BUILDING;
 
         if (!Orders.isInputInteger(count))
@@ -213,12 +219,12 @@ public class GameMenuController {
         if (countInNum <= 0)
             return GameMenuMessages.CREATEUNIT_WRONG_NUMBERFORMAT;
 
-        Barrack selectedBarrack = (Barrack) selectedBuilding;
         if (!selectedBarrack.canBuildTroopByName(type))
             return GameMenuMessages.CREATEUNIT_UNMATCHING_BARRACK;
 
         Troop targetTroop = Troop.getTroopByName(type);
 
+        assert targetTroop != null;
         int totalCost = targetTroop.getCost() * countInNum;
         if (currentGovernment.getMoney() < totalCost)
             return GameMenuMessages.INSUFFICIENT_GOLD;
@@ -234,7 +240,7 @@ public class GameMenuController {
     }
 
     private static boolean doesHaveUnitsWeapons(int count, Troop targetTroop) {
-        ArrayList<Resource> neededWeapons = new ArrayList<Resource>(targetTroop.getWeapons());
+        ArrayList<Resource> neededWeapons = new ArrayList<>(targetTroop.getWeapons());
 
         for (Resource resource : neededWeapons) {
             resource.changeCount(count - resource.getCount());
@@ -249,7 +255,6 @@ public class GameMenuController {
     }
 
     private static void trainTroopsForGovernment(int count, Troop targetTroop, Barrack selectedBarrack) {
-
         int barrackX = selectedBarrack.getXCoordinateLeft();
         int barrackY = selectedBarrack.getYCoordinateUp();
 
@@ -268,7 +273,6 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages repairController() {
-
         if (selectedBuilding == null)
             return GameMenuMessages.EMPTY_INPUT_FIELDS_ERROR;
 
@@ -305,14 +309,13 @@ public class GameMenuController {
         if (!Unit.getAllUnits().contains(type))
             return GameMenuMessages.INVALID_TROOP_TYPE;
 
-        int xCoordinate = Integer.parseInt(x);
-        int yCoordinate = Integer.parseInt(y);
+        int xCoordinate = Integer.parseInt(x) - 1;
+        int yCoordinate = Integer.parseInt(y) - 1;
 
-        if (DataBase.getSelectedMap().getLength() < xCoordinate
-                || DataBase.getSelectedMap().getWidth() < yCoordinate)
+        if (!currentMap.isCoordinationValid(xCoordinate, yCoordinate))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        Square square = DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate);
+        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
         ArrayList<Unit> selectedUnit = new ArrayList<>();
 
         for (Unit unit : square.getUnits()) {
@@ -329,13 +332,15 @@ public class GameMenuController {
     public static GameMenuMessages moveUnitController(String coordinate) {
         String x = Orders.findFlagOption("-x", coordinate);
         String y = Orders.findFlagOption("-y", coordinate);
+
         assert x != null;
         if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-        int xCoordinate = Integer.parseInt(x);
-        int yCoordinate = Integer.parseInt(y);
-        if (DataBase.getSelectedMap().getLength() <= xCoordinate || DataBase.getSelectedMap().getWidth() <= yCoordinate
-                || xCoordinate < 0 || yCoordinate < 0)
+
+        int xCoordinate = Integer.parseInt(x) - 1;
+        int yCoordinate = Integer.parseInt(y) - 1;
+
+        if (!currentMap.isCoordinationValid(xCoordinate, yCoordinate))
             return GameMenuMessages.INVALID_COORDINATE;
 
         if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -390,63 +395,72 @@ public class GameMenuController {
 
     private static boolean move(Unit unit, Map map, int x, int y, int xFin, int yFin, int speed, boolean up) {
         //conditions
-        if (x < 0 || y < 0 || x >= map.getLength() || y >= map.getWidth()) return false;
-        if (!map.getSquareFromMap(y, x).canPass()) return false;
-        if (map.getSquareFromMap(y, x).getBuilding() != null) {
+        if (currentMap.isCoordinationValid(x, y)) return false;
+
+        if (!map.getSquareFromMap(x, y).canPass()) return false;
+
+        if (map.getSquareFromMap(x, y).getBuilding() != null) {
             if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
-                if (!map.getSquareFromMap(y, x).getBuilding().getCanPass(up)
-                        || map.getSquareFromMap(y, x).getBuilding().getName().equals("Stair"))
-                    return false;
+
+//                if (!map.getSquareFromMap(x, y).getBuilding().getCanPass(up)
+//                        || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
+//                    return false;
+                return false;
+
             } else if (!unit.getName().equals("Assassin")) {
-                if (!(map.getSquareFromMap(y, x).getBuilding() instanceof Defence
-                        || map.getSquareFromMap(y, x).getBuilding().getCanPass(up)))
+
+                if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                        || map.getSquareFromMap(x, y).getBuilding().getCanPass(up)))
                     return false;
 
                 LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
-                if (map.getSquareFromMap(y, x).getBuilding().getName().equals("Stair")) up = !up;
-                else if (map.getSquareFromMap(y, x).getUnits().contains(ladderMan)
+                if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair")) up = !up;
+
+                else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
                         && unit instanceof Troop && ((Troop) unit).isClimbLadder()) up = !up;
 
-                if (up && !(map.getSquareFromMap(y, x).getBuilding() instanceof Defence)) return false;
+                if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence)) return false;
 
-                if (!up && (map.getSquareFromMap(y, x).getBuilding() instanceof Defence
-                        && !map.getSquareFromMap(y, x).getBuilding().getCanPass(false)))
+                if (!up && (map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                        && !map.getSquareFromMap(x, y).getBuilding().getCanPass(false)))
                     return false;
             }
         }
+
         if (speed >= 0 && x == xFin && y == yFin) {
-            if (map.getSquareFromMap(y, x).getBuilding() != null
-                    && map.getSquareFromMap(y, x).getBuilding() instanceof Defence
-                    && map.getSquareFromMap(y, x).getUnits().size() >= ((Defence) map.getSquareFromMap(y, x).getBuilding()).getCapacity())
+            if (map.getSquareFromMap(x, y).getBuilding() != null
+                    && map.getSquareFromMap(x, y).getBuilding() instanceof Defence
+                    && map.getSquareFromMap(x, y).getUnits().size() >= ((Defence) map.getSquareFromMap(x, y).getBuilding()).getCapacity())
                 return false;
-//            if (map.getSquareFromMap(x,y).getBuilding() != null
-//                    && map.getSquareFromMap(x,y).getBuilding().getCanPass(up))
-//                return false;
+
+            if (map.getSquareFromMap(x,y).getBuilding() != null && map.getSquareFromMap(x,y).getBuilding().getCanPass(up))
+                return false;
 
             allWays.add(squares);
             return true;
         }
+
         if (speed == 0) return false;
 
-        if (x <= map.getLength() - 1) {
-            squares.add(map.getSquareFromMap(y, x+1));
+        if (x < map.getWidth() - 1) {
+            squares.add(map.getSquareFromMap(x + 1, y));
             move(unit, map, x + 1, y, xFin, yFin, speed - 1, up);
-            squares.remove(map.getSquareFromMap(y, x + 1));
+            squares.remove(map.getSquareFromMap(x + 1, y));
         }
-        if (x > 1) {
-            squares.add(map.getSquareFromMap(y, x - 1));
+        if (x > 0) {
+            squares.add(map.getSquareFromMap(x - 1, y));
             move(unit, map, x - 1, y, xFin, yFin, speed - 1, up);
-            squares.remove(map.getSquareFromMap(y, x - 1));
+            squares.remove(map.getSquareFromMap(x - 1, y));
         }
-        if (y <= map.getWidth() - 1) {
-            squares.add(map.getSquareFromMap(y + 1, x));
+        if (y < map.getLength() - 1) {
+            squares.add(map.getSquareFromMap(x, y + 1));
             move(unit, map, x, y + 1, xFin, yFin, speed - 1, up);
-            squares.remove(map.getSquareFromMap(y + 1, x));
+            squares.remove(map.getSquareFromMap(x, y + 1));
         }
-        if (y > 1) {
-            squares.add(map.getSquareFromMap(y - 1, x));
+        if (y > 0) {
+            squares.add(map.getSquareFromMap(x, y - 1));
             move(unit, map, x, y - 1, xFin, yFin, speed - 1, up);
-            squares.remove(map.getSquareFromMap(y - 1, x));
+            squares.remove(map.getSquareFromMap(x, y - 1));
         }
 
         return allWays.size() != 0;
@@ -456,13 +470,15 @@ public class GameMenuController {
         String x = Orders.findFlagOption("-x", option);
         String y = Orders.findFlagOption("-y", option);
         String state = Orders.findFlagOption("-s", option);
+
         assert x != null;
         if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-        int xCoordinate = Integer.parseInt(x);
-        int yCoordinate = Integer.parseInt(y);
-        if (DataBase.getSelectedMap().getLength() < xCoordinate
-                || DataBase.getSelectedMap().getWidth() < yCoordinate)
+
+        int xCoordinate = Integer.parseInt(x) - 1;
+        int yCoordinate = Integer.parseInt(y) - 1;
+
+        if (!currentMap.isCoordinationValid(xCoordinate, yCoordinate))
             return GameMenuMessages.INVALID_COORDINATE;
 
         StateUnits newState;
@@ -490,8 +506,8 @@ public class GameMenuController {
 
         if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
 
-        int targetXInNum = Integer.parseInt(enemyX);
-        int targetYInNum = Integer.parseInt(enemyY);
+        int targetXInNum = Integer.parseInt(enemyX) - 1;
+        int targetYInNum = Integer.parseInt(enemyY) - 1;
 
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
@@ -505,7 +521,7 @@ public class GameMenuController {
         int currentUnitsY = currentUnits.get(0).getYCoordinate();
         int unitRange = currentUnits.get(0).getAttackRange();
 
-        if(unitRange > currentMap.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
+        if(unitRange > Map.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
             rangedAttackController(enemyX, enemyY);
             return GameMenuMessages.SUCCESS;
         }
@@ -518,7 +534,7 @@ public class GameMenuController {
             if (moveUnit(validCoord[0], validCoord[1])) {
                 if (targetType == 1) {
                     double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
-                    DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);
+                    DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
                 } else
                     DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
 
@@ -536,8 +552,8 @@ public class GameMenuController {
         if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
-        int targetXInNum = Integer.parseInt(enemyX);
-        int targetYInNum = Integer.parseInt(enemyY);
+        int targetXInNum = Integer.parseInt(enemyX) - 1;
+        int targetYInNum = Integer.parseInt(enemyY) - 1;
 
         if (DataBase.getSelectedUnit().size() == 0)
             return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -545,7 +561,7 @@ public class GameMenuController {
         if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
             return GameMenuMessages.INVALID_COORDINATE;
 
-        if (!currentMap.doesSquareContainEnemyUnits(targetYInNum, targetXInNum, currentGovernment))
+        if (!currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
             return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
         if (!DataBase.areSelectedUnitsRanged())
@@ -560,7 +576,7 @@ public class GameMenuController {
         if (unitRange < distance)
             return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
 
-        DataBase.attackEnemyByselectedUnits(distance, targetXInNum, targetYInNum);
+        DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
         return GameMenuMessages.SUCCESS;
     }
 
@@ -579,12 +595,14 @@ public class GameMenuController {
     public static GameMenuMessages digTunnelController(String coordinate) {
         String x = Orders.findFlagOption("-x", coordinate);
         String y = Orders.findFlagOption("-y", coordinate);
+
         assert x != null;
         if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-        int xCoordinate = Integer.parseInt(x);
-        int yCoordinate = Integer.parseInt(y);
-        if (DataBase.getSelectedMap().getLength() < xCoordinate || DataBase.getSelectedMap().getWidth() < yCoordinate)
+
+        int xCoordinate = Integer.parseInt(x) - 1;
+        int yCoordinate = Integer.parseInt(y) - 1;
+        if (currentMap.isCoordinationValid(xCoordinate, yCoordinate))
             return GameMenuMessages.INVALID_COORDINATE;
 
         if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
@@ -607,14 +625,17 @@ public class GameMenuController {
     public static GameMenuMessages buildEquipmentController(String siegeName) {
         if (!Siege.getSiegesName().contains(siegeName)) return GameMenuMessages.WRONG_NAME;
         Siege siege = Siege.createSiege(currentGovernment, siegeName, -1, -1);
+
         if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
         if (!(DataBase.getSelectedUnit().get(0) instanceof Engineer)) return GameMenuMessages.UNIT_ISNT_ENGINEER;
+
         assert siege != null;
         if (DataBase.getSelectedUnit().size() < siege.getEngineerNeed()) return GameMenuMessages.NOT_ENOUGH_ENGINEER;
         if (siege.getCost() > currentGovernment.getMoney()) return GameMenuMessages.NOT_ENOUGH_BALANCE;
 
         int xCoordinate = DataBase.getSelectedUnit().get(0).getXCoordinate();
         int yCoordinate = DataBase.getSelectedUnit().get(0).getYCoordinate();
+
         if (DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding() == null)
             return GameMenuMessages.CANT_BUILD_HERE;
 
@@ -635,10 +656,6 @@ public class GameMenuController {
         DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
 
         return GameMenuMessages.SUCCESS;
-    }
-
-    public static GameMenuMessages showMapController(String x, String y) {
-        return null;
     }
 
     public static void setCurrentMap(Map map) {
@@ -725,7 +742,7 @@ public class GameMenuController {
     }
 
     public static GameMenuMessages setFearRateController(int rateNumber) {
-        if (rateNumber > 5 || rateNumber < -5 || (rateNumber % 1) != 0)
+        if (rateNumber > 5 || rateNumber < -5)
             return GameMenuMessages.INVALID_FEAR_RATE;
         else {
             DataBase.getCurrentGovernment().setFear(rateNumber);
@@ -740,25 +757,24 @@ public class GameMenuController {
     public static GameMenuMessages digDitchController(String x, String y) {
         if(x == null || y == null)
             return GameMenuMessages.NO_OPTIONS;
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
 
-        if(xInt > DataBase.getSelectedMap().getLength() || xInt <= 0)
+        if(xInt >= DataBase.getSelectedMap().getWidth() || xInt < 0)
             return GameMenuMessages.INVALID_X;
-        if(yInt > DataBase.getSelectedMap().getWidth() || yInt <= 0)
+        if(yInt >= DataBase.getSelectedMap().getLength() || yInt < 0)
             return GameMenuMessages.INVALID_Y;
 
         if(DataBase.getSelectedUnit() == null)
             return GameMenuMessages.NO_UNIT_SELECTED;
-        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop)){
+        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop selectedTroop)){
             return GameMenuMessages.CANNOT_DIG_DITCH;
         }
         else{
-            Troop selectedTroop = (Troop) DataBase.getSelectedUnit().get(0);
-            if(selectedTroop.isDigMoat() == false)
+            if(!selectedTroop.isDigMoat())
                 return GameMenuMessages.CANNOT_DIG_DITCH;
 
-            DataBase.getSelectedMap().getSquareFromMap(yInt , xInt).setLand(Land.DITCH);
+            DataBase.getSelectedMap().getSquareFromMap(xInt , yInt).setLand(Land.DITCH);
             return GameMenuMessages.DIG_DITCH_SUCCESS;
         }
     }
@@ -766,25 +782,24 @@ public class GameMenuController {
     public static GameMenuMessages fillDitchController(String x, String y) {
         if(x == null || y == null)
             return GameMenuMessages.NO_OPTIONS;
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
 
-        if(xInt > DataBase.getSelectedMap().getLength() || xInt <= 0)
+        if(xInt >= DataBase.getSelectedMap().getWidth() || xInt < 0)
             return GameMenuMessages.INVALID_X;
-        if(yInt > DataBase.getSelectedMap().getWidth() || yInt <= 0)
+        if(yInt >= DataBase.getSelectedMap().getLength() || yInt < 0)
             return GameMenuMessages.INVALID_Y;
 
         if(DataBase.getSelectedUnit() == null)
             return GameMenuMessages.NO_UNIT_SELECTED;
-        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop)){
+        else if(! (DataBase.getSelectedUnit().get(0) instanceof Troop selectedTroop)){
             return GameMenuMessages.CANNOT_DIG_DITCH;
         }
         else{
-            Troop selectedTroop = (Troop) DataBase.getSelectedUnit().get(0);
-            if(selectedTroop.isDigMoat() == false)
+            if(!selectedTroop.isDigMoat())
                 return GameMenuMessages.CANNOT_DIG_DITCH;
 
-            DataBase.getSelectedMap().getSquareFromMap(yInt , xInt).setLand(Land.DITCH);
+            DataBase.getSelectedMap().getSquareFromMap(xInt , yInt).setLand(Land.DITCH);
             return GameMenuMessages.FILL_DITCH_SUCCESS;
         }
     }

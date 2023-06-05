@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class Siege extends Unit {
     private static ArrayList<Siege> sieges;
     private static ArrayList<String> SiegesName;
-    private int engineerNeed;
-    private Resource whatTheyThrow;
+    private final int engineerNeed;
+    private final Resource whatTheyThrow;
     private int howManyLeft;
 
     static {
@@ -67,11 +67,14 @@ public class Siege extends Unit {
                 newSiege.xCoordinate = xCoordinate;
                 newSiege.yCoordinate = yCoordinate;
                 if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newSiege);
+                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
                 return newSiege;
             }
         }
         return null;
     }
 
+    public static void load() {
+        return;
+    }
 }

@@ -105,7 +105,7 @@ public class Orders {
     private static String removeSubstring(String input, String substring){
         if(substring==null)
             return input;
-        StringBuffer buffer= new StringBuffer(input);
+        StringBuffer buffer = new StringBuffer(input);
         int startIndex=input.indexOf(substring);
         buffer.replace(startIndex, startIndex+substring.length(), "");
         return buffer.toString();
@@ -119,9 +119,8 @@ public class Orders {
         return output;
     }
 
-    public static ArrayList<int[]> concatCoords(ArrayList<int[]> coords1,ArrayList<int[]> coords2 ){
-        for (int[] coord : coords2) 
-            coords1.add( coord);
+    public static ArrayList<int[]> concatCoords(ArrayList<int[]> coords1, ArrayList<int[]> coords2 ){
+        coords1.addAll(coords2);
         return coords1;
     } 
 }
