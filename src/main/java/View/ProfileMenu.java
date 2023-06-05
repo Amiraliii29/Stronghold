@@ -37,6 +37,7 @@ public class ProfileMenu extends Application {
     Label label;
 
     Pane mainPane;
+    Stage stage;
 
     {
         User.setCurrentUser(User.getUsers().get(0));
@@ -48,14 +49,16 @@ public class ProfileMenu extends Application {
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
         this.mainPane=Pane;
+        this.stage=stage;
         stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.show();
         initializeMainVbox();
         initializeFields();
         initializeButtons();
         setFieldListeners();
         setButtonListeners();
         setStartingTexts();
-        stage.show();
     }
 
     private void setButtonListeners(){
@@ -176,7 +179,7 @@ public class ProfileMenu extends Application {
 
     private void initializeMainVbox(){
         mainVbox=new VBox(16);
-        mainVbox.setLayoutX(360);
+        mainVbox.setLayoutX(stage.getX()/2-200);
         mainVbox.setLayoutY(80);
         
         mainPane.getChildren().add(mainVbox);

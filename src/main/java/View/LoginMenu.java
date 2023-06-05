@@ -60,7 +60,7 @@ public class LoginMenu extends Application {
             } else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_MAP_MENU) != null)
                 CustomizeMap.run();
             else if (LoginMenuCommands.getMatcher(input, LoginMenuCommands.ENTER_PROFILE_MENU) != null)
-                ProfileMenu.run();
+                ;
             else if ((matcher = LoginMenuCommands.getMatcher(input, LoginMenuCommands.START_GAME)) != null)
                 startGame(matcher);
             else Input_Output.outPut("error: invalid command!");
