@@ -40,7 +40,7 @@ public class ProfileMenuController {
         return "your highscore is: "+highscore;
     }
 
-    public static ProfileMenuMessages changePassword(String oldPassword,String newPassword) throws NoSuchAlgorithmException {
+    public static ProfileMenuMessages changePassword(String oldPassword,String newPassword,String passwordConfirmation) throws NoSuchAlgorithmException {
 
         if(oldPassword==null || newPassword ==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
@@ -58,7 +58,6 @@ public class ProfileMenuController {
         if(newPassword.equals(oldPassword))
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
         
-        String passwordConfirmation=ProfileMenu.getPasswordConfirmationFromUser();
         passwordConfirmation=UserInfoOperator.encodeStringToSha256(passwordConfirmation);
 
         if(!passwordConfirmation.equals(newPassword))
@@ -67,7 +66,6 @@ public class ProfileMenuController {
         currentUser.setPassword(newPassword);
         UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_PASSWORD;
-            
     }
 
     public static ProfileMenuMessages changeUsername(String newUsername) throws NoSuchAlgorithmException {

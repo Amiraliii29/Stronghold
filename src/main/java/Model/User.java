@@ -1,5 +1,6 @@
 package Model;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -8,7 +9,9 @@ import Controller.JsonConverter;
 public class User {
     private static ArrayList<User> users;
     private static User currentUser;
+    private static SecureRandom randomGenerator=new SecureRandom();
 
+    private String avatarFileName;
     private String username;
     private String password;
     private String nickName;
@@ -30,7 +33,19 @@ public class User {
         this.nickName=nickname;
         this.email = email;
         this.slogan = slogan;
+        avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
         users.add(this);
+    }
+
+    public String getAvatarFileName(){
+        if(avatarFileName != null)
+        return avatarFileName;
+
+        return "1.png";
+    }
+
+    public void setAvatarFileName(String name){
+        this.avatarFileName=name;
     }
 
     public String getUsername() {

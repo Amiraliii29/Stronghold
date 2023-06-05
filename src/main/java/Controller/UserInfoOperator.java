@@ -42,7 +42,6 @@ public class UserInfoOperator {
     }
 
     public static void storeUserDataInJson(User user,String dirFromSrc) throws NoSuchAlgorithmException{
-        //LOL THIS FUNCTION WAS BULLSHIT
         JsonConverter.putUserDataInFile(user,dirFromSrc);
     }
 
