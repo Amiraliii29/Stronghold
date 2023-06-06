@@ -29,6 +29,11 @@ public class DataBase {
     private static Stage ShopMenuStage = new Stage();
     private static int captchaNumber;
     private static Stage mainStage;
+    private static Stage tradeMenuStage = new Stage();
+
+    public static Stage getTradeMenuStage() {
+        return tradeMenuStage;
+    }
 
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");

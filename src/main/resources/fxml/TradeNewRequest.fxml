@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.TradeMenuController">
+   <children>
+      <ImageView fitHeight="750.0" fitWidth="748.0" layoutX="-4.0">
+         <image>
+            <Image url="@../Images/menu-backgrounds/shopMenu2.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="-7.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="66.0" text="Back" onMouseClicked="#back">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Label layoutX="210.0" layoutY="20.0" prefHeight="28.0" prefWidth="320.0" text="Send new trade offer Menu">
+         <font>
+            <Font name="American Typewriter" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="210.0" layoutY="60.0" prefHeight="42.0" prefWidth="320.0" text="Select the Government you want to trade!" textFill="#b51c1c">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutY="369.0" prefHeight="13.0" prefWidth="740.0" />
+      <Label layoutX="198.0" layoutY="375.0" prefHeight="42.0" prefWidth="320.0" text="    Click on the Item you want to trade!" textFill="#b51c1c">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="30.0" layoutY="432.0" onMouseClicked="#selectMeat" pickOnBounds="true">
+         <image>
+            <Image url="@../Images/resources/Meat.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="88.0" layoutY="432.0" onMouseClicked="#selectCheese" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Cheese.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="147.0" layoutY="432.0" onMouseClicked="#selectApples" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Apple.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="210.0" layoutY="432.0" onMouseClicked="#selectHops" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Hops.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="269.0" layoutY="432.0" onMouseClicked="#selectAle" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Ale.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="328.0" layoutY="432.0" onMouseClicked="#selectWheat" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Wheat.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="387.0" layoutY="432.0" onMouseClicked="#selectFlour" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Flour.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="446.0" layoutY="432.0" onMouseClicked="#selectBread" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/bread.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="505.0" layoutY="436.0" onMouseClicked="#selectSword" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/Sword.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="557.0" layoutY="436.0" onMouseClicked="#selectSpear" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/Spear.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="332.0" layoutY="492.0" onMouseClicked="#selectPike" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/Pike.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="34.0" layoutY="491.0" onMouseClicked="#selectMace" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/Mace.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="92.0" layoutY="491.0" onMouseClicked="#selectBow" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/Bow.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="151.0" layoutY="491.0" onMouseClicked="#selectCrossBow" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/CrossBow.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="214.0" layoutY="491.0" onMouseClicked="#selectMetalArmor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/MetalArmour.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="273.0" layoutY="491.0" onMouseClicked="#selectLeatherArmor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/weapons/LeatherArmour.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="388.0" layoutY="491.0" onMouseClicked="#selectWood" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Wood.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="447.0" layoutY="491.0" onMouseClicked="#selectStone" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Stone.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="501.0" layoutY="491.0" onMouseClicked="#selectIron" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Iron.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="553.0" layoutY="488.0" onMouseClicked="#selectPitch" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/resources/Pitch.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="627.0" layoutY="436.0" prefHeight="17.0" prefWidth="105.0" text="Select the amount" textFill="#b51c1c" />
+      <Button layoutX="682.0" layoutY="463.0" mnemonicParsing="false" onMouseClicked="#increaseAmount" prefHeight="35.0" prefWidth="44.0" text="+">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="627.0" layoutY="463.0" mnemonicParsing="false" onMouseClicked="#decreaseAmount" prefHeight="35.0" prefWidth="44.0" text="-">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Label fx:id="selectedItemAmount" layoutX="671.0" layoutY="517.0" prefHeight="23.0" prefWidth="44.0" text="0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="Message" layoutX="177.0" layoutY="605.0" prefHeight="26.0" prefWidth="387.0" promptText="Enter your message" />
+      <Button layoutX="411.0" layoutY="674.0" mnemonicParsing="false" onMouseClicked="#donate" prefHeight="34.0" prefWidth="153.0" text="Donate">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="177.0" layoutY="674.0" mnemonicParsing="false" onMouseClicked="#request" prefHeight="34.0" prefWidth="153.0" text="Request">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Button>
+      <Label fx:id="selectedItemName" layoutX="627.0" layoutY="538.0" prefHeight="22.0" prefWidth="105.0" text="Item Name">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="User1" layoutX="301.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User2" layoutX="302.0" layoutY="144.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User3" layoutX="301.0" layoutY="171.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User4" layoutX="301.0" layoutY="202.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User5" layoutX="301.0" layoutY="238.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User6" layoutX="301.0" layoutY="270.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="User7" layoutX="301.0" layoutY="302.0" mnemonicParsing="false" onMouseClicked="#selectGovernment" text="GovernmentName">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </CheckBox>
+   </children>
+</AnchorPane>

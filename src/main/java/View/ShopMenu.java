@@ -44,23 +44,6 @@ public class ShopMenu extends Application {
     }
 
 
-    public static void run(){
-        String input;
-        Matcher matcher;
-        Input_Output.outPut("SHOP MENU: ");
-        while (true) {
-            input = Input_Output.getInput();
-            if (ShopMenuCommands.getMatcher(input, ShopMenuCommands.SHOW_PRICE_LIST) != null)
-                showItems();
-            else if(ShopMenuCommands.getMatcher(input , ShopMenuCommands.EXIT) != null){
-                Input_Output.outPut("returned back to game menu");
-                return;
-            }
-            else
-                Input_Output.outPut("invalid command");
-
-        }
-    };
 
     public static void openShopMenu(){
 
@@ -84,14 +67,5 @@ public class ShopMenu extends Application {
     private static void showItems(){
         String toPrint = ShopMenuController.showItemsController();
         System.out.print(toPrint);
-    }
-
-    public static String confirmSellOrBuy( String operationType , String name , int amount){
-        System.out.println("Do you confirm to " + operationType + " " + name + " for the amount: " + amount + " (please enter YES or NO)");
-        String confirm;
-        confirm = Input_Output.getInput();
-
-        return confirm;
-
     }
 }
