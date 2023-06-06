@@ -13,8 +13,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      fx:controller="View.SignUpMenu" prefHeight="-Infinity" prefWidth="-Infinity" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../Styles/styles.css">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      fx:controller="View.SignUpMenu" prefHeight="-Infinity" prefWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../Styles/styles.css">
      <ImageView fitHeight="1000" fitWidth="1650" layoutX="-1.0" layoutY="-1.0">
         <image>
             <Image url="@../Images/11.jpg" />

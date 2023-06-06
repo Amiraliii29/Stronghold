@@ -6,40 +6,24 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+
 import Model.User;
 
 public class JsonConverter {
-    public static void putUserDataInFile(String username, String password,String email, String slogan,
-         String securityQ, String nickname,String rank,String highscore,boolean stayLoggedIn ,String dirFromSrc) {
+    public static void putUserDataInFile(User user,String dirFromSrc) {
 
-            JSONObject newUser= new JSONObject();
-            String loginValue;
-            if (stayLoggedIn) loginValue="true";
-            else loginValue="false";
-
-            newUser.put("username", username);
-            newUser.put("password", password);
-            newUser.put("email", email);
-            newUser.put("slogan", slogan);
-            newUser.put("securityQ", securityQ);
-            newUser.put("nickname", nickname);
-            newUser.put("rank", rank);
-            newUser.put("highscore", highscore);
-            newUser.put("stayLoggedIn", loginValue);
-
-
+            String userInJsonString= new Gson().toJson(user);
             
+            try {
+                removeUsernameJsonData(user, dirFromSrc);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             JSONArray userData=getUsersDataInJson(dirFromSrc);
-            int userIndexInData=getUserIndexInJsonArray(username, dirFromSrc);
-            
-            
-            if(userIndexInData==-1)
-                userData.add(newUser);
-            else{
-                userData.remove(userIndexInData);
-                userData.add(newUser);
-            }
+                userData.add(userInJsonString);
 
             try{
                 File file=new File(dirFromSrc);
@@ -52,44 +36,32 @@ public class JsonConverter {
             }
     }
 
+    public static void removeUsernameJsonData(User user, String dirFromSrc) throws ParseException{
+        JSONArray userData=getUsersDataInJson(dirFromSrc);
+        int index=getUserIndexInJsonArray(user,dirFromSrc);
+        userData.remove(index);
+        try{
+            File file=new File(dirFromSrc);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(userData.toJSONString());  
+            fileWriter.flush();  
+            fileWriter.close();  
+        } catch ( IOException e) {  
+            e.printStackTrace();  
+        }
+    }
+
     public static void fillFormerUsersDatabase(String dirFromSrc){
         JSONArray usersJsonArray=getUsersDataInJson(dirFromSrc);
+        User userUnderRestoration;
+        Gson gson=new Gson();
 
         for (int i = 0; i < usersJsonArray.size(); i++) {
-            User userUnderRestoration=new User(null, null, null, null, null);
-            fillUserInfo(userUnderRestoration, i, usersJsonArray);
-            User.addUser(userUnderRestoration);
+            userUnderRestoration= gson.fromJson(usersJsonArray.get(i).toString(), User.class);
+            User.getUsers().add(userUnderRestoration);
             if(userUnderRestoration.getStayLoggedIn())
-             User.setCurrentUser(userUnderRestoration);
+                User.setCurrentUser(userUnderRestoration);
         }
-
-    }
-   
-    private static void fillUserInfo(User user,int userIndex, JSONArray jsonData){
-        JSONObject UserInJson=(JSONObject) jsonData.get(userIndex);
-        user.setNickName(getJsonKeyValue("nickname", UserInJson));
-        user.setUsername(getJsonKeyValue("username", UserInJson));
-        user.setEmail(getJsonKeyValue("email", UserInJson));
-        user.setSlogan(getJsonKeyValue("slogan", UserInJson));
-        user.setSecurityQuestion(getJsonKeyValue("securityQ", UserInJson));
-
-        String hashedPassword=getJsonKeyValue("password", UserInJson);
-        user.setPassword(hashedPassword);
-
-        String loginStatInString=getJsonKeyValue("stayLoggedIn", UserInJson);
-        if(loginStatInString.equals("true"))
-            user.setStayLoggedIn(true);
-        else 
-            user.setStayLoggedIn(false);
-
-        user.setRank(Integer.parseInt(getJsonKeyValue("rank", UserInJson)));
-        user.setHighScore(Integer.parseInt(getJsonKeyValue("highscore", UserInJson)));
-    }
-
-    private static String getJsonKeyValue(String key, JSONObject jsonObject){
-        if(jsonObject.get(key)!=null)
-            return jsonObject.get(key).toString();
-        else return null;
     }
 
     private static JSONArray getUsersDataInJson(String dirFromSrc){
@@ -106,13 +78,14 @@ public class JsonConverter {
         return formerData;
     }
 
-    private static int getUserIndexInJsonArray(String username, String dirFromSrc){
+    private static int getUserIndexInJsonArray(User user, String dirFromSrc){
         JSONArray jsonDataArray=getUsersDataInJson(dirFromSrc);
-        JSONObject jsonUser;
+        User userUnderRestoration;
+        Gson gson=new Gson();
 
         for (int i = 0; i < jsonDataArray.size(); i++) {
-            jsonUser= (JSONObject)jsonDataArray.get(i);
-            if(jsonUser.get("username").toString().equals(username))
+            userUnderRestoration=gson.fromJson(jsonDataArray.get(i).toString(), User.class);
+            if(userUnderRestoration.getUsername().equals(user.getUsername()) || userUnderRestoration.getEmail().equals(user.getEmail()) )
                 return i;
         }
         return -1;

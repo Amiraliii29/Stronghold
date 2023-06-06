@@ -30,7 +30,7 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Resource.readResourcesFromFile();
+        Resource.load();
         gamePane  = new AnchorPane();
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         gamePane.setPrefSize(primaryScreenBounds.getWidth() , primaryScreenBounds.getHeight());

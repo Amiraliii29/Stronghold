@@ -13,7 +13,7 @@ public class LadderMan extends Unit{
         newLadderMan.xCoordinate = xCoordinate;
         newLadderMan.yCoordinate = yCoordinate;
         if (xCoordinate >= 0 && yCoordinate >= 0)
-            DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newLadderMan);
+            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newLadderMan);
         return newLadderMan;
     }
 }

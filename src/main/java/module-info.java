@@ -10,6 +10,12 @@ module Project {
     exports Model;
     opens Model to com.google.gson;
 
+    exports Model.Buildings;
+    opens Model.Buildings to com.google.gson;
+
+    exports Model.Units;
+    opens Model.Units to com.google.gson;
+
     exports Controller;
     opens Controller to com.google.gson;
 

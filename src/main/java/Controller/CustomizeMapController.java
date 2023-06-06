@@ -17,7 +17,7 @@ import java.util.Random;
 import javax.transaction.xa.Xid;
 
 public class CustomizeMapController {
-    private static String[] randomDirection = {"n", "s", "e", "w"};
+    private static final String[] randomDirection = {"n", "s", "e", "w"};
 
     public static CustomizeMapMessages createNewMapController(String mapName, String length, String width) {
         if (mapName == null)
@@ -62,7 +62,6 @@ public class CustomizeMapController {
 
     public static CustomizeMapMessages setTextureController(String x, String y, String x1, String y1,
                                                             String x2, String y2, String type) {
-
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
         if (x != null && y != null) {
@@ -70,12 +69,12 @@ public class CustomizeMapController {
                     CustomizeMapCommands.getMatcher(y, CustomizeMapCommands.VALID_NUMBER) == null)
                 return CustomizeMapMessages.INVALID_NUMBER;
 
-            int xInt = Integer.parseInt(x);
-            int yInt = Integer.parseInt(y);
+            int xInt = Integer.parseInt(x) - 1;
+            int yInt = Integer.parseInt(y) - 1;
 
-            if (xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+            if (xInt < 0 || xInt >= DataBase.getSelectedMap().getWidth())
                 return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-            else if (yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+            else if (yInt < 0 || yInt >= DataBase.getSelectedMap().getLength())
                 return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
 
             Land land = Land.getLandByName(type);
@@ -83,7 +82,7 @@ public class CustomizeMapController {
             if (land == null)
                 return CustomizeMapMessages.INVALID_TYPE;
 
-            DataBase.getSelectedMap().getSquareFromMap(yInt, xInt).setLand(land);
+            DataBase.getSelectedMap().getSquareFromMap(xInt, yInt).setLand(land);
             Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
             return CustomizeMapMessages.SET_TEXTURE_SUCCESS;
 
@@ -94,16 +93,16 @@ public class CustomizeMapController {
                     CustomizeMapCommands.getMatcher(y2, CustomizeMapCommands.VALID_NUMBER) == null)
                 return CustomizeMapMessages.INVALID_NUMBER;
 
-            int x1Int = Integer.parseInt(x1);
-            int y1Int = Integer.parseInt(y1);
-            int x2Int = Integer.parseInt(x2);
-            int y2Int = Integer.parseInt(y2);
+            int x1Int = Integer.parseInt(x1) - 1;
+            int y1Int = Integer.parseInt(y1) - 1;
+            int x2Int = Integer.parseInt(x2) - 1;
+            int y2Int = Integer.parseInt(y2) - 1;
 
-            if (x1Int <= 0 || x1Int > DataBase.getSelectedMap().getLength() || x2Int <= 0
-                    || x2Int > DataBase.getSelectedMap().getLength())
+            if (x1Int < 0 || x1Int >= DataBase.getSelectedMap().getWidth() || x2Int < 0
+                    || x2Int >= DataBase.getSelectedMap().getWidth())
                 return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-            else if (y1Int <= 0 || y1Int > DataBase.getSelectedMap().getWidth() || y2Int <= 0 ||
-                    y2Int > DataBase.getSelectedMap().getWidth())
+            else if (y1Int < 0 || y1Int >= DataBase.getSelectedMap().getLength() || y2Int < 0 ||
+                    y2Int >= DataBase.getSelectedMap().getLength())
                 return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
 
             Land land = Land.getLandByName(type);
@@ -113,7 +112,7 @@ public class CustomizeMapController {
 
             for (int j = y2Int; j >= y1Int; j--) {
                 for (int i = x1Int; i <= x2Int; i++) {
-                    DataBase.getSelectedMap().getSquareFromMap(j, i).setLand(land);
+                    DataBase.getSelectedMap().getSquareFromMap(i, j).setLand(land);
                 }
             }
             Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
@@ -124,7 +123,6 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages clearController(String x, String y) {
-
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
         if (x == null || y == null)
@@ -133,19 +131,19 @@ public class CustomizeMapController {
                 CustomizeMapCommands.getMatcher(y, CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
 
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
 
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
 
-        if (xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+        if (xInt < 0 || xInt >= DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-        else if (yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+        else if (yInt < 0 || yInt >= DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
 
         else {
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt, xInt);
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
             selectedSquare.setLand(Land.DEFAULT);
             selectedSquare.setBuilding(null);
             selectedSquare.newSelectedUnit();
@@ -161,19 +159,18 @@ public class CustomizeMapController {
                 CustomizeMapCommands.getMatcher(y, CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
 
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
 
-
-        if (xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+        if (xInt < 0 || xInt >= DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-        else if (yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+        else if (yInt < 0 || yInt >= DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
         else if (!direction.equals("n") && !direction.equals("s") && !direction.equals("w") &&
                 !direction.equals("e") && !direction.equals("r"))
             return CustomizeMapMessages.INVALID_DIRECTION;
         else {
-            Square squareSelected = DataBase.getSelectedMap().getSquareFromMap(yInt, xInt);
+            Square squareSelected = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
             squareSelected.setLand(Land.CLIFF);
             if (direction.equals("r")) {
                 Random random = new Random();
@@ -186,7 +183,6 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages dropTreeController(String x, String y, String type) {
-
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
 
@@ -196,17 +192,17 @@ public class CustomizeMapController {
                 CustomizeMapCommands.getMatcher(y, CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
 
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
 
-        if (xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+        if (xInt < 0 || xInt >= DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
-        else if (yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+        else if (yInt < 0 || yInt >= DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
         else if (Trees.getTreeByName(type) == null)
             return CustomizeMapMessages.INVALID_TREE_NAME;
         else {
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt, xInt);
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
             selectedSquare.setTree(Trees.getTreeByName(type));
             selectedSquare.setTreeAmount(100);
             return CustomizeMapMessages.DROP_TREE_SUCCESS;
@@ -215,22 +211,24 @@ public class CustomizeMapController {
     }
 
     public static CustomizeMapMessages dropBuildingController(String x, String y, String type, String ownerGovernmentNumber) {
-
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
 
         if (x == null || y == null)
             return CustomizeMapMessages.INVALID_OPTIONS;
+
         if (CustomizeMapCommands.getMatcher(x, CustomizeMapCommands.VALID_NUMBER) == null ||
                 CustomizeMapCommands.getMatcher(y, CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
+
         if (CustomizeMapCommands.getMatcher(ownerGovernmentNumber, CustomizeMapCommands.VALID_NUMBER) == null)
             return CustomizeMapMessages.INVALID_NUMBER;
+
         if (ownerGovernmentNumber == null)
             return CustomizeMapMessages.NO_OWNER_GOVERNMENT_NUMBER;
 
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         Building buildingToConstruct = Building.getBuildingByName(type);
@@ -250,7 +248,7 @@ public class CustomizeMapController {
         Map selectedMap = DataBase.getSelectedMap();
         for (int i = 0; i < buildingToConstruct.getWidth(); i++) {
             for (int j = 0; j < buildingToConstruct.getLength(); j++) {
-                Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt + j, xInt + i);
+                Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(xInt + i, yInt + j);
                 if (!Objects.requireNonNull(GameMenuController.getBuildingValidLandsByName(type)).contains(Land.getName(selectedSquare.getLand())))
                     return CustomizeMapMessages.UNSUITABLE_LAND;
             }
@@ -265,13 +263,13 @@ public class CustomizeMapController {
             GameMenu.addKeepCnt();
 
             Building newBuilding = GameMenuController.constructBuildingForPlayer(type, xInt, yInt);
-            Stockpile stockpile = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt, "Stockpile");
-            Stockpile granary = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + 8, yInt + 4, "Granary");
-            if (stockpile == null || granary == null) return CustomizeMapMessages.FAILD;
+            Stockpile stockpile = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + newBuilding.getWidth(), yInt, "Stockpile");
+            Stockpile granary = Stockpile.createStockpile(DataBase.getCurrentGovernment(), xInt + newBuilding.getWidth(), yInt + stockpile.getLength(), "Granary");
+            if (granary == null) return CustomizeMapMessages.FAILD;
 
             selectedMap.constructBuilding(newBuilding, xInt, yInt);
-            selectedMap.constructBuilding(stockpile, xInt + 8, yInt);
-            selectedMap.constructBuilding(granary, xInt + 8, yInt + 4);
+            selectedMap.constructBuilding(stockpile, xInt + newBuilding.getWidth(), yInt);
+            selectedMap.constructBuilding(granary, xInt + newBuilding.getWidth(), yInt + stockpile.getWidth());
 
             Government ownerGovernment = selectedMap.getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
             ownerGovernment.setLord(xInt, yInt);
@@ -314,18 +312,18 @@ public class CustomizeMapController {
         if (ownerGovernmentNumber == null)
             return CustomizeMapMessages.NO_OWNER_GOVERNMENT_NUMBER;
 
-        int xInt = Integer.parseInt(x);
-        int yInt = Integer.parseInt(y);
+        int xInt = Integer.parseInt(x) - 1;
+        int yInt = Integer.parseInt(y) - 1;
         int countInt = Integer.parseInt(count);
         int ownerGovernmentNumberInt = Integer.parseInt(ownerGovernmentNumber);
 
         if (DataBase.getSelectedMap() == null)
             return CustomizeMapMessages.NO_MAP_SELECTED;
 
-        if (xInt <= 0 || xInt > DataBase.getSelectedMap().getLength())
+        if (xInt < 0 || xInt >= DataBase.getSelectedMap().getWidth())
             return CustomizeMapMessages.X_OUT_OF_BOUNDS;
 
-        else if (yInt <= 0 || yInt > DataBase.getSelectedMap().getWidth())
+        else if (yInt < 0 || yInt > DataBase.getSelectedMap().getLength())
             return CustomizeMapMessages.Y_OUT_OF_BOUNDS;
 
         else if (countInt < 0)
@@ -339,7 +337,7 @@ public class CustomizeMapController {
 
         else {
             Government ownerGovernment = DataBase.getSelectedMap().getGovernmentsInMap().get(ownerGovernmentNumberInt - 1);
-            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(yInt - 1, xInt - 1);
+            Square selectedSquare = DataBase.getSelectedMap().getSquareFromMap(xInt, yInt);
             if (selectedSquare.getLand().equals(Land.SEA) || selectedSquare.getLand().equals(Land.CLIFF)
                     || selectedSquare.getLand().equals(Land.OIL) || selectedSquare.getLand().equals(Land.ROCK) ||
                     selectedSquare.getLand().equals(Land.FLAT_ROCK))

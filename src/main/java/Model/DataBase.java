@@ -8,10 +8,7 @@ import Model.Buildings.TownBuilding;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 import Controller.GameMenuController;
 import Controller.JsonConverter;
@@ -38,12 +35,19 @@ public class DataBase {
         return tradeMenuStage;
     }
 
-    public static Stage getMainStage() {
-        return mainStage;
+    static {
+        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
+        governments = new ArrayList<>();
+        maps = new ArrayList<>();
+        selectedUnit = new ArrayList<>();
     }
 
     public static void setMainStage(Stage mainStage) {
         DataBase.mainStage = mainStage;
+    }
+
+    public static Stage getMainStage() {
+        return mainStage;
     }
 
     public static String getRandomCaptchaImageAddress() throws MalformedURLException {
@@ -59,14 +63,6 @@ public class DataBase {
     public static Stage getShopMenuStage() {
         return ShopMenuStage;
     }
-
-    static {
-        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
-        governments = new ArrayList<>();
-        maps = new ArrayList<>();
-        selectedUnit = new ArrayList<>();
-    }
-
 
     public static Government getCurrentGovernment() {
         return currentGovernment;
@@ -135,7 +131,6 @@ public class DataBase {
     }
 
     public static void attackBuildingBySelectedUnits(int xUnderAttack, int yUnderAttack) {
-
         Building buildingUnderAttack = selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getBuilding();
 
         if (isBuildingFriendly(currentGovernment, buildingUnderAttack))
@@ -147,7 +142,7 @@ public class DataBase {
             removeDestroyedBuildings(buildingUnderAttack);
     }
 
-    public static void attackEnemyByselectedUnits(Double distance, int xUnderAttack, int yUnderAttack) {
+    public static void attackEnemyBySelectedUnits(Double distance, int xUnderAttack, int yUnderAttack) {
         ArrayList<Unit> enemyUnits = selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
         Unit randomEnemy;
         int randomEnemyIndex;
@@ -163,7 +158,7 @@ public class DataBase {
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
 
             if (randomEnemy.getHitPoint() <= 0) {
-                selectedMap.getSquareFromMap(randomEnemy.getYCoordinate(), randomEnemy.getXCoordinate()).removeUnit(randomEnemy);
+                selectedMap.getSquareFromMap(randomEnemy.getXCoordinate(), randomEnemy.getYCoordinate()).removeUnit(randomEnemy);
                 enemyUnits.remove(randomEnemyIndex);
             }
         }
@@ -216,11 +211,11 @@ public class DataBase {
                             break outer;
                         if (changeAmount > squares[i][j].getTreeAmount()) {
                             squares[i][j].changeTreeAmount(squares[i][j].getTreeAmount());
-                            currentGovernment.addToStockpile(Resource.createResource("Wood"), squares[i][j].getTreeAmount());
+                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), squares[i][j].getTreeAmount());
                             changeAmount -= squares[i][j].getTreeAmount();
                         } else {
                             squares[i][j].changeTreeAmount(changeAmount);
-                            currentGovernment.addToStockpile(Resource.createResource("Wood"), changeAmount);
+                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), changeAmount);
                             changeAmount = 0;
                         }
                     }
@@ -228,6 +223,7 @@ public class DataBase {
             } else {
                 Integer resourceGenerationRate = generationRates.get(s);
                 Resource targetResource = Resource.getResourceByName(s);
+                assert targetResource != null;
                 currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
             }
         }
@@ -288,7 +284,7 @@ public class DataBase {
             if (targetCoord != null) {
                 selectedUnit.clear();
                 selectedUnit.add(unit);
-                GameMenuController.attackController(Integer.toString(targetCoord[0]), Integer.toString(targetCoord[1]));
+                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
                 unit.setDidFight(true);
             }
         }

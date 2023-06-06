@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 public class Troop extends Unit{
     private static ArrayList<Troop> troops;
-    private boolean climbLadder;
-    private boolean digMoat;
+    private final boolean climbLadder;
+    private final boolean digMoat;
     private boolean needHorse;
-    private ArrayList<Resource> weapons;
+    private final ArrayList<Resource> weapons;
 
     static {
         try {
@@ -67,7 +67,6 @@ public class Troop extends Unit{
         return null;
     }
 
-
     public static Troop createTroop(Government owner, String troopName, int xCoordinate, int yCoordinate) {
         for (Troop troop : troops) {
             if (troop.name.equals(troopName)) {
@@ -77,10 +76,14 @@ public class Troop extends Unit{
                 newTroop.xCoordinate = xCoordinate;
                 newTroop.yCoordinate = yCoordinate;
                 if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(yCoordinate, xCoordinate).addUnit(newTroop);
+                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTroop);
                 return newTroop;
             }
         }
         return null;
+    }
+
+    public static void load() {
+        return;
     }
 }

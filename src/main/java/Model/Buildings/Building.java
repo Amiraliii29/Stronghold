@@ -146,7 +146,7 @@ public abstract class Building {
         return null;
     }
 
-    public static void readBuildingsFromFile() {
+    public static void load() {
         return;
     }
 }
