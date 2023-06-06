@@ -4,27 +4,27 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="1024" prefWidth="1024" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" >
+<Pane prefHeight="816" prefWidth="816" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="63.0" layoutY="874.0" opacity="0.21" prefHeight="150.0" prefWidth="660.0" style="-fx-background-color: blue;" textFill="#1907e4" />
-      <Label layoutX="723.0" layoutY="874.0" opacity="0.2" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: red;" />
-      <Label layoutX="873.0" layoutY="874.0" opacity="0.23" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: green;" />
-      <Label layoutX="63.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="243.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="108.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="198.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="153.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="288.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="684.0" layoutY="874.0" opacity="0.31" prefHeight="150.0" prefWidth="38.0" style="-fx-background-color: brown;" />
-      <Label layoutX="609.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="654.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="688.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="688.0" layoutY="958.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="688.0" layoutY="919.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="688.0" layoutY="880.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="333.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="378.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Label layoutX="423.0" layoutY="995.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
-      <Separator layoutX="63.0" layoutY="989.0" prefHeight="8.0" prefWidth="621.0" />
+      <Label layoutX="-1.0" layoutY="666.0" opacity="0.21" prefHeight="150.0" prefWidth="544.0" style="-fx-background-color: blue;" textFill="#1907e4" />
+      <Label layoutX="543.0" layoutY="666.0" opacity="0.2" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: red;" />
+      <Label layoutX="693.0" layoutY="666.0" opacity="0.23" prefHeight="150.0" prefWidth="124.0" style="-fx-background-color: green;" />
+      <Label layoutX="-1.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="119.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="29.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="89.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="59.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="149.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="505.0" layoutY="666.0" opacity="0.31" prefHeight="150.0" prefWidth="38.0" style="-fx-background-color: brown;" />
+      <Label layoutX="440.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="470.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="509.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="509.0" layoutY="747.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="509.0" layoutY="717.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="509.0" layoutY="687.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="179.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="209.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Label layoutX="239.0" layoutY="778.0" opacity="0.48" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: yellow;" />
+      <Separator layoutY="774.0" prefHeight="7.0" prefWidth="505.0" />
    </children>
 </Pane>
