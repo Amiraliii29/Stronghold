@@ -84,7 +84,6 @@ public class Game extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
-        mainPane = new Pane();
         this.pane = new Pane();
         mainPane.getChildren().add(pane);
         this.stage = stage;
@@ -213,6 +212,9 @@ public class Game extends Application{
                     while (blockHeight * blockPixel < screenHeight)
                         blockHeight++;
 
+                    if (squareI > map.getWidth() - blockWidth) squareI = map.getWidth() - blockWidth;
+                    if (squareJ > map.getLength() - blockHeight) squareJ = map.getLength() - blockHeight;
+
                     try {
                         drawMap();
                     } catch (IOException e) {
@@ -225,7 +227,7 @@ public class Game extends Application{
         });
     }
 
-    private void drawMap() throws IOException {
+    private void drawMap() {
         pane.getChildren().clear();
         pane.getChildren().add(blackRec);
 
