@@ -9,9 +9,28 @@ public class TradeRequest {
     private Government governmentThatHasBeenAsked;
     private int id;
     private String acceptanceMessage;
+    private boolean isSeenByTargetUser = false;
+    private int isAccepted = 2;
+    private boolean isDonate;
+
+    public void setAccepted(int accepted) {
+        isAccepted = accepted;
+    }
+
+    public int isAccepted() {
+        return isAccepted;
+    }
+
+    public boolean isSeenByTargetUser() {
+        return isSeenByTargetUser;
+    }
+
+    public void setSeenByTargetUser(boolean seenByTargetUser) {
+        isSeenByTargetUser = seenByTargetUser;
+    }
 
     public TradeRequest(Resource resource , int amount , int price , String message ,
-                        Government governmentThatHasBeenAsked , int id) {
+                        Government governmentThatHasBeenAsked , int id , boolean isDonate) {
         this.resource = resource;
         this.amount = amount;
         this.price = price;
@@ -19,7 +38,13 @@ public class TradeRequest {
         this.governmentThatRequested = DataBase.getCurrentGovernment();
         this.governmentThatHasBeenAsked = governmentThatHasBeenAsked;
         this.id = id;
+        this.isDonate = isDonate;
     }
+
+    public boolean isDonate() {
+        return isDonate;
+    }
+
 
     public Resource getResource() {
         return resource;

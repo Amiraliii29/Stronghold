@@ -32,9 +32,18 @@ public class Government {
     private ArrayList<Stockpile> granary;
     private HashMap<String, Integer> resourceGenerationRate;
     private ArrayList<Building> buildings;
-    private ArrayList<TradeRequest> requestsAskedFromMe;
-    private ArrayList<TradeRequest> tradeHistory;
-    private ArrayList<TradeRequest> requestNotifications;
+    private ArrayList<TradeRequest> requestsAskedFromMe = new ArrayList<>();
+    private ArrayList<TradeRequest> requestsIAsked = new ArrayList<>();
+    private ArrayList<TradeRequest> tradeHistory = new ArrayList<>();
+    private ArrayList<TradeRequest> requestNotifications = new ArrayList<>();
+
+    public void addToRequestsIAsked(TradeRequest tradeRequest){
+        requestsIAsked.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getRequestsIAsked() {
+        return requestsIAsked;
+    }
 
     public Troop getLord() {
         return lord;

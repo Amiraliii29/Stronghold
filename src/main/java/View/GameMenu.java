@@ -155,10 +155,6 @@ public class GameMenu extends Application {
                 digDitch(matcher);
             else if((matcher = GameMenuCommands.getMatcher(input , GameMenuCommands.FILL_DITCH)) != null)
                 fillDitch(matcher);
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_TRADE_MENU) != null)
-                TradeMenu.run();
-            else if(GameMenuCommands.getMatcher(input , GameMenuCommands.ENTER_SHOP_MENU) != null)
-                ShopMenu.run();
 
             else Input_Output.outPut("invalid command");
         }

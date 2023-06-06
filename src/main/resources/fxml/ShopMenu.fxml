@@ -258,8 +258,7 @@
             <Label prefHeight="17.0" prefWidth="66.0" text="24" />
          </children>
       </VBox>
-      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="572.0" layoutY="264.0" onMouseClicked="#selectLeatherArmor"
-                 pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="572.0" layoutY="264.0" onMouseClicked="#selectLeatherArmor" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/weapons/LeatherArmour.png" />
          </image>
@@ -368,5 +367,15 @@
             <Font name="System Bold Italic" size="18.0" />
          </font>
       </Label>
+      <Label fx:id="selectedItemName" layoutX="535.0" layoutY="434.0" prefHeight="22.0" prefWidth="119.0" text="Item Name">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="525.0" layoutY="554.0" mnemonicParsing="false" onMouseClicked="#openTradeMenu" prefHeight="26.0" prefWidth="138.0" text="Open Trade menu">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

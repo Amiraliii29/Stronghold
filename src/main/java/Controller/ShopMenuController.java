@@ -6,10 +6,18 @@ import Model.Resource;
 import Model.User;
 import View.Enums.Messages.ShopMenuMessages;
 import View.ShopMenu;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +60,7 @@ public class ShopMenuController {
     public static Label ironAmount = new Label();
     public static Label woodAmount = new Label();
     public static Label stoneAmount = new Label();
+    public Label selectedItemName;
 
     public static void setItemsAmount(){
         
@@ -196,83 +205,112 @@ public class ShopMenuController {
             }
         }
     }
+    
+        public void selectApples (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Apples");
+            selectedItemName.setText("Apples");
+        }
 
-    public void selectApples(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Apples");
-    }
+        public void selectWheat (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Wheat");
+            selectedItemName.setText("Wheat");
+        }
 
-    public void selectWheat(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Wheat");
-    }
+        public void selectAle (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Ale");
+            selectedItemName.setText("Ale");
+        }
 
-    public void selectAle(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Ale");
-    }
+        public void selectHops (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Hops");
+            selectedItemName.setText("Hops");
+        }
 
-    public void selectHops(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Hops");
-    }
+        public void selectFlour (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Flour");
+            selectedItemName.setText("Flour");
+        }
 
-    public void selectFlour(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Flour");
-    }
+        public void selectBread (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Bread");
+            selectedItemName.setText("Bread");
+        }
 
-    public void selectBread(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Bread");
-    }
+        public void selectCheese (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Cheese");
+            selectedItemName.setText("Cheese");
+        }
 
-    public void selectCheese(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Cheese");
-    }
+        public void selectMeat (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Meat");
+            selectedItemName.setText("Meat");
+        }
 
-    public void selectMeat(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Meat");
-    }
+        public void selectSword (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Sword");
+            selectedItemName.setText("Sword");
+        }
 
-    public void selectSword(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Sword");
-    }
+        public void selectSpear (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Spear");
+            selectedItemName.setText("Spear");
+        }
 
-    public void selectSpear(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Spear");
-    }
+        public void selectPike (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Pike");
+            selectedItemName.setText("Pike");
+        }
 
-    public void selectPike(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Pike");
-    }
+        public void selectMace (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Mace");
+            selectedItemName.setText("Mace");
+        }
 
-    public void selectMace(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Mace");
-    }
+        public void selectBow (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Bow");
+            selectedItemName.setText("Bow");
+        }
 
-    public void selectBow(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Bow");
-    }
+        public void selectCrossBow (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("CrossBow");
+            selectedItemName.setText("CrossBow");
+        }
 
-    public void selectCrossBow(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("CrossBow");
-    }
+        public void selectMetalArmor (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("MetalArmor");
+            selectedItemName.setText("MetalArmour");
+        }
 
-    public void selectMetalArmor(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("MetalArmor");
-    }
+        public void selectIron (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Iron");
+            selectedItemName.setText("Iron");
+        }
 
-    public void selectIron(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Iron");
-    }
+        public void selectStone (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Stone");
+            selectedItemName.setText("Stone");
+        }
 
-    public void selectStone(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Stone");
-    }
+        public void selectWood (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Wood");
+            selectedItemName.setText("Wood");
+        }
 
-    public void selectWood(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Wood");
-    }
+        public void selectPitch (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("Pitch");
+            selectedItemName.setText("Pitch");
+        }
+        public void selectLeatherArmor (MouseEvent mouseEvent){
+            selectedItem = Resource.getResourceByName("LeatherArmor");
+            selectedItemName.setText("LeatherArmor");
+        }
+        public void openTradeMenu() throws IOException {
+            AnchorPane tradeMenuPane = FXMLLoader.load(
+                    new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
 
-    public void selectPitch(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("Pitch");
-    }
-    public void selectLeatherArmor(MouseEvent mouseEvent){
-        selectedItem = Resource.getResourceByName("LeatherArmor");
-    }
+            Scene scene = new Scene(tradeMenuPane);
+            Stage stage = DataBase.getTradeMenuStage();
+            stage.setScene(scene);
+            stage.show();
+        }
 }

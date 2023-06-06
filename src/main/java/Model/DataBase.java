@@ -32,6 +32,11 @@ public class DataBase {
     private static Stage ShopMenuStage = new Stage();
     private static int captchaNumber;
     private static Stage mainStage;
+    private static Stage tradeMenuStage = new Stage();
+
+    public static Stage getTradeMenuStage() {
+        return tradeMenuStage;
+    }
 
     public static Stage getMainStage() {
         return mainStage;
