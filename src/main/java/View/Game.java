@@ -197,6 +197,9 @@ public class Game extends Application{
                     while (blockHeight * blockPixel < screenHeight)
                         blockHeight++;
 
+                    if (squareI > map.getWidth() - blockWidth) squareI = map.getWidth() - blockWidth;
+                    if (squareJ > map.getLength() - blockHeight) squareJ = map.getLength() - blockHeight;
+
                     drawMap();
                 }
             } else if (event.getCode() == KeyCode.S) {
