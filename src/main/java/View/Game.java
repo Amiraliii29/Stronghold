@@ -156,15 +156,17 @@ public class Game extends Application{
         });
 
         pane.setOnMouseReleased(event -> {
-            double endX = event.getX();
-            double endY = event.getY();
-            int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
-            int nowY = (int) (Math.floor(endY / blockPixel));
+            if (!moveMode) {
+                double endX = event.getX();
+                double endY = event.getY();
+                int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+                int nowY = (int) (Math.floor(endY / blockPixel));
 
-            for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
-                for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
-                    Square thisSquare = squares[squareI + i][squareJ + j];
-                    //TODO
+                for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
+                    for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
+                        Square thisSquare = squares[squareI + i][squareJ + j];
+                        //TODO
+                    }
                 }
             }
         });
