@@ -3,6 +3,7 @@ package View;
 import Model.Land;
 import Model.Map;
 import Model.Square;
+import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -46,6 +47,7 @@ public class Game extends Application{
     private Square[][] squares;
     private Stage stage;
     private Pane pane;
+    private Pane mainPane; // this pane contains all other panes such as pane
     private Scene scene;
     private int squareI;
     private int squareJ;
@@ -82,10 +84,12 @@ public class Game extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
+        mainPane = new Pane();
         this.pane = new Pane();
+        mainPane.getChildren().add(pane);
         this.stage = stage;
 
-        this.scene = new Scene(pane, screenWidth, screenHeight);
+        this.scene = new Scene(mainPane, screenWidth, screenHeight);
         this.stage.setScene(scene);
 
         blockPixel = 30;
@@ -147,7 +151,13 @@ public class Game extends Application{
                 if (draw ) {
                     blockX = nowX;
                     blockY = nowY;
-                    drawMap();
+
+                    try {
+                        drawMap();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             } else {
                 selectSq.setWidth(Math.abs((nowX - blockX) * blockPixel));
@@ -186,7 +196,11 @@ public class Game extends Application{
                     while (blockHeight * blockPixel < screenHeight)
                         blockHeight++;
 
-                    drawMap();
+                    try {
+                        drawMap();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } else if (event.getCode() == KeyCode.O) {
                 if (blockPixel > 25) {
@@ -199,7 +213,11 @@ public class Game extends Application{
                     while (blockHeight * blockPixel < screenHeight)
                         blockHeight++;
 
-                    drawMap();
+                    try {
+                        drawMap();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             } else if (event.getCode() == KeyCode.S) {
                 moveMode = !moveMode;
@@ -207,7 +225,7 @@ public class Game extends Application{
         });
     }
 
-    private void drawMap() {
+    private void drawMap() throws IOException {
         pane.getChildren().clear();
         pane.getChildren().add(blackRec);
 
@@ -253,10 +271,10 @@ public class Game extends Application{
 
     private void drawBottom() throws IOException {
         AnchorPane bottomPane = FXMLLoader.load(
-                new URL(ShopMenu.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
-        bottomPane.setLayoutX(100);
-        bottomPane.setLayoutY(1000);
-        pane.getChildren().add(bottomPane);
+                new URL(Game.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
+        bottomPane.setLayoutX(leftX);
+        bottomPane.setLayoutY(screenHeight - 150);
+        mainPane.getChildren().add(bottomPane);
     }
 
     public static void loadImages() throws FileNotFoundException {
