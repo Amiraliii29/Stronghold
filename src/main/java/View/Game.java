@@ -84,6 +84,7 @@ public class Game extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
+        mainPane = new Pane();
         this.pane = new Pane();
         mainPane.getChildren().add(pane);
         this.stage = stage;
@@ -151,11 +152,7 @@ public class Game extends Application{
                     blockX = nowX;
                     blockY = nowY;
 
-                    try {
-                        drawMap();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    drawMap();
 
                 }
             } else {
@@ -195,11 +192,7 @@ public class Game extends Application{
                     while (blockHeight * blockPixel < screenHeight)
                         blockHeight++;
 
-                    try {
-                        drawMap();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    drawMap();
                 }
             } else if (event.getCode() == KeyCode.O) {
                 if (blockPixel > 25) {
@@ -215,11 +208,7 @@ public class Game extends Application{
                     if (squareI > map.getWidth() - blockWidth) squareI = map.getWidth() - blockWidth;
                     if (squareJ > map.getLength() - blockHeight) squareJ = map.getLength() - blockHeight;
 
-                    try {
-                        drawMap();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    drawMap();
                 }
             } else if (event.getCode() == KeyCode.S) {
                 moveMode = !moveMode;
