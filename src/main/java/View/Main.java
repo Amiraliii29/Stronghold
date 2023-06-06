@@ -20,6 +20,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 //        Building.readBuildingsFromFile();
 //        Unit.readUnitsFromFile();
+
        new ProfileMenu().start(stage);
     }
 }

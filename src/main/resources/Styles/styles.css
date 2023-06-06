@@ -17,6 +17,10 @@ Button:hover{
   -fx-cursor: hand;
 }
 
+.yellow-warning-color{
+  -fx-color: rgba(221, 142, 14, 0.708);
+}
+
 CheckBox{
     -fx-text-fill: rgb(44, 185, 13);
  
@@ -34,6 +38,22 @@ TextField{
   -fx-max-width: 200;
   -fx-min-width: 200;
   -fx-font-size: 16;
+}
+
+.picked-field-styles{
+  -fx-opacity: 0.5;
+}
+
+.gold-color{
+  -fx-background-color: rgba(219, 188, 10, 0.749);
+}
+
+.silver-color{
+  -fx-background-color: rgba(187, 183, 183, 0.758);
+}
+
+.bronze-color{
+  -fx-background-color: rgba(105, 68, 19, 0.753);
 }
 
 Hbox{

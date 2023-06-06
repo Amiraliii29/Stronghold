@@ -1,13 +1,20 @@
 package View;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -15,6 +22,7 @@ import java.util.regex.Matcher;
 
 import Controller.Orders;
 import Controller.ProfileMenuController;
+import Controller.UserComparator;
 import Controller.UserInfoOperator;
 import Model.User;
 import View.Enums.Commands.ProfileMenuCommands;
@@ -30,6 +38,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
@@ -48,15 +57,17 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
+    boolean isProfileShown=true;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
-    Button submitChanges, removeSlogan, changePassword, back;
+    Button submitChanges, removeSlogan, changePassword,displayScoreBoard, back;
     Image image1,image2,image3,image4,userimg,selectCustomImg;
     ImageView imgview1,imgview2,imgview3,imgview4,userimgView=new ImageView(),selectCustomView;
-    VBox mainVbox,avatarVbox;
+    VBox mainVbox,avatarVbox,scoreBoardVBox, bigVbox;
+    ScrollPane scoreboardPane;
     Label label;
-
+    ArrayList<User> sortedUsers;
     FileChooser fileChooser;
 
     StackPane mainPane;
@@ -76,6 +87,162 @@ public class ProfileMenu extends Application {
         this.stage = stage;
         stage.setFullScreen(true);
         stage.setScene(scene);
+        showProfileProtocol();
+        stage.show();
+    }
+
+
+    private void setUpperDetailOfScoreboardVbox(){
+        Text avatartText=new Text("Avatar");
+        avatartText.setOpacity(0.75);
+
+        Text usernameText=new Text("Username");
+        usernameText.setOpacity(0.75);
+
+        Text highscoreText=new Text("Highscore");
+        highscoreText.setOpacity(0.75);
+
+        Text rankText=new Text("Rank");
+        rankText.setOpacity(0.75);
+
+        HBox hb0=new HBox(avatartText),hb1=new HBox(usernameText),hb2=new HBox(highscoreText),hb3=new HBox(rankText);
+        hb0.setMaxWidth(100);hb0.setMinWidth(100);hb1.setMaxWidth(100);hb1.setMinWidth(100);hb2.setMaxWidth(100);hb2.setMinWidth(100);hb3.setMaxWidth(100);hb3.setMinWidth(100);
+        hb2.setAlignment(Pos.CENTER);
+        hb3.setAlignment(Pos.CENTER);
+        hb0.setAlignment(Pos.CENTER);
+        hb1.setAlignment(Pos.CENTER);
+        HBox parentHBox=new HBox(8, hb0,hb1,hb2,hb3);
+        scoreBoardVBox.getChildren().addAll(parentHBox);
+    }
+
+    private void sortUsers(){
+        sortedUsers=new ArrayList<>(User.getUsers());
+        Collections.sort(sortedUsers, new UserComparator());
+        UserComparator.updateUsersRank(sortedUsers);
+    }
+
+    private void showScoreBoardProtocol(){
+        mainPane.setAlignment(Pos.CENTER);
+        mainPane.getChildren().removeAll(mainVbox,avatarVbox);
+        sortUsers();
+        bigVbox=new VBox(8);
+        bigVbox.setAlignment(Pos.CENTER);
+        label=new Label("ScoreBoard");
+        scoreBoardVBox=new VBox(8);
+        scoreboardPane= new ScrollPane(scoreBoardVBox);
+        scoreBoardVBox.setAlignment(Pos.CENTER);
+        scoreboardPane.setPannable(true);
+        setUpperDetailOfScoreboardVbox();
+
+        scoreboardPane.setMaxHeight(200);
+        scoreboardPane.setMaxWidth(450);
+        for (int i = 0; i < 10; i++) {
+            displayUserInfo(i+1);
+        }
+
+        bigVbox.getChildren().addAll(label,scoreboardPane);
+        setProfileButtons();
+        setProfileButtonListeners();
+        mainPane.getChildren().add(bigVbox);
+    }
+
+    private void setProfileButtons(){
+        displayScoreBoard=new Button("Show Profile");
+        back = new Button("Back to main Menu");
+        back.getStyleClass().add("yellow-warning-color");
+        HBox hbox=new HBox(16, displayScoreBoard,back);
+        hbox.setMinWidth(300); hbox.setMaxWidth(300);
+        hbox.setAlignment(Pos.CENTER);
+        bigVbox.getChildren().addAll(hbox);
+    }
+
+    private void setProfileButtonListeners(){
+        displayScoreBoard.setOnMouseClicked(event -> {
+            if(isProfileShown)
+                showScoreBoardProtocol();
+            else
+                showProfileProtocol();
+                isProfileShown=!isProfileShown;
+                });
+    }
+
+    private ImageView getUserImageView(User user){
+        Image userAvatarimg=null;
+        try {
+            userAvatarimg=new Image(new FileInputStream("src/main/resources/Images/avatars/"+user.getAvatarFileName()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ImageView userAvatarImgView=new ImageView(userAvatarimg);
+        userAvatarImgView.setFitWidth(40);
+        userAvatarImgView.setFitHeight(40);
+        userAvatarImgView.getStyleClass().add("hover-effect");
+        userAvatarImgView.setOnMouseClicked(event -> {
+            copyTargetAvatarToUserAvatar(user);
+            try {
+                UserInfoOperator.storeUserDataInJson(user, "src/main/resources/jsonData/Users.json");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+                });
+
+        return userAvatarImgView;
+    }
+
+    private void addStylesToHboxIfNeeded(HBox userInfoHbox,User targetUser){
+
+        switch (targetUser.getRank()) {
+            case 1:
+                userInfoHbox.getStyleClass().add("gold-color");
+                break;
+
+            case 2:
+                userInfoHbox.getStyleClass().add("silver-color");
+                break;
+
+            case 3:
+                userInfoHbox.getStyleClass().add("bronze-color");
+                break;
+        
+            default:
+                break;
+        }
+
+        if(targetUser.getUsername().equals(User.getCurrentUser().getUsername())){
+            userInfoHbox.getStyleClass().add("picked-field-styles");
+        }
+            
+        
+    }
+
+    private void copyTargetAvatarToUserAvatar(User targetUser){
+        User.getCurrentUser().setAvatarFileName(targetUser.getAvatarFileName());
+    }
+
+    private void displayUserInfo(int userRank){
+        if(sortedUsers.size()+1<=userRank) return;
+        User targetUser=sortedUsers.get(userRank-1);
+        HBox userInfoHbox=new HBox(8);
+        ImageView userAvatarImgView=getUserImageView(targetUser);
+        Text userNameText=new Text(targetUser.getUsername());Text userRankText=new Text(""+targetUser.getRank());Text userScoreText=new Text(""+targetUser.getHighScore());
+        
+        HBox temp0=new HBox(8, userAvatarImgView);
+        temp0.setMinWidth(100);
+        HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText);
+        temp1.setMinWidth(100); temp1.setMaxWidth(100);temp2.setMinWidth(100); temp2.setMaxWidth(100);temp3.setMinWidth(100); temp3.setMaxWidth(100);
+        temp0.setAlignment(Pos.CENTER);
+        temp1.setAlignment(Pos.CENTER);
+        temp2.setAlignment(Pos.CENTER);
+        temp3.setAlignment(Pos.CENTER);
+        
+        userInfoHbox.getChildren().addAll(temp0,temp1,temp2,temp3);
+        userInfoHbox.setAlignment(Pos.CENTER);
+        addStylesToHboxIfNeeded(userInfoHbox, targetUser);
+        scoreBoardVBox.getChildren().add(userInfoHbox);
+    }
+
+    private void showProfileProtocol(){
+        mainPane.getChildren().remove(bigVbox);
         initializeMainVbox();
         initalizeLabel();
         initializeAvatarSection();
@@ -86,7 +253,6 @@ public class ProfileMenu extends Application {
         setFieldListeners();
         setButtonListeners();
         setStartingTexts();
-        stage.show();
     }
 
     private void setFileChooser(){
@@ -97,14 +263,36 @@ public class ProfileMenu extends Application {
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             try {
-                Files.copy(selectedFile.toPath(), new FileOutputStream("src/main/resources/Images/avatars/"));
+                InputStream inputStream = new BufferedInputStream(
+                            Files.newInputStream(selectedFile.toPath()));
+
+                uploadCustomAvatar(inputStream, selectedFile);
+
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void uploadCustomAvatar(InputStream inputStream,File selectedFile) {
+        Path to = Paths.get("src/main/resources/Images/avatars/" + selectedFile.getName());
+        User.getCurrentUser().setAvatarFileName(selectedFile.getName());
+        try {
+            Files.copy(
+                    inputStream,
+                    to,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+            displayUserAvatar();
+            UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
+        } catch (IOException e) {
+            System.out.println("Unable to upload custom avatar");
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
         
@@ -239,6 +427,13 @@ public class ProfileMenu extends Application {
             }
         });
 
+        displayScoreBoard.setOnMouseClicked(event -> {
+            if(isProfileShown)
+                showScoreBoardProtocol();
+            else showScoreBoardProtocol();
+                isProfileShown=!isProfileShown;
+                });
+
         changePassword.setOnMouseClicked(event -> {
             createChangePasswordDialog();
             });
@@ -246,7 +441,7 @@ public class ProfileMenu extends Application {
 
     private void createChangePasswordDialog(){
         TextInputDialog dialog = new TextInputDialog();  // create an instance
-
+        dialog.initOwner(stage);
         dialog.setTitle("Change Password:");
         dialog.setHeaderText("Please Fill Content Below:");
         // other formatting etc
@@ -272,6 +467,7 @@ public class ProfileMenu extends Application {
 
     private void createNotificationDialog(String title,String header,String outputText,String Color){
         Dialog dialog=new Dialog<>();
+        dialog.initOwner(stage);
         dialog.setTitle(title);
         dialog.setHeaderText(header);
         DialogPane dialogPane = dialog.getDialogPane();
@@ -475,9 +671,10 @@ public class ProfileMenu extends Application {
         submitChanges = new Button("Submit changes!");
         removeSlogan = new Button("Remove Slogan");
         changePassword = new Button("Change Password");
+        displayScoreBoard=new Button("Show ScoreBoard");
         back = new Button("Back to main Menu");
-        back.setStyle("-fx-color: rgba(221, 142, 14, 0.708);");
-        mainVbox.getChildren().addAll(submitChanges, removeSlogan, changePassword, back);
+        back.getStyleClass().add("yellow-warning-color");
+        mainVbox.getChildren().addAll(submitChanges, removeSlogan, changePassword,displayScoreBoard, back);
     }
 
     private void initializeFields() {
@@ -508,13 +705,6 @@ public class ProfileMenu extends Application {
         sloganTempVbox.setMaxWidth(200);
 
         mainVbox.getChildren().addAll(usernameVbox, emailVbox, nicknameVbox, sloganTempVbox);
-    }
-
-    public static String getPasswordConfirmationFromUser() {
-        Input_Output.outPut("please verify your password: ");
-        String passwordConfirmation = Input_Output.getInput();
-
-        return passwordConfirmation;
     }
 
     public void setAlignments() {

@@ -88,7 +88,6 @@ public class SignUpMenu extends Application {
         fadeTrans.play();
     }
 
-
     private void initializeMainVbox(){
         mainPane.setAlignment( Pos.CENTER);
         
