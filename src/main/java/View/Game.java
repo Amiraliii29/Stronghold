@@ -23,6 +23,9 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Game extends Application{
@@ -83,7 +86,7 @@ public class Game extends Application{
         blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
 
         drawMap();
-//        drawBottom();
+        drawBottom();
         keys();
 
         stage.setFullScreen(true);
@@ -184,7 +187,6 @@ public class Game extends Application{
                 if (k + blockPixel > screenWidth + leftX) {
                     imageView.setFitWidth(screenWidth + leftX - k);
                 }
-
                 l += blockPixel;
             }
             k += blockPixel;
@@ -194,8 +196,12 @@ public class Game extends Application{
         System.out.println(time2 - time);
     }
 
-    private void drawBottom() {
-
+    private void drawBottom() throws IOException {
+        AnchorPane bottomPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
+        bottomPane.setLayoutX(100);
+        bottomPane.setLayoutY(1000);
+        pane.getChildren().add(bottomPane);
     }
 
     public static void loadImages() throws FileNotFoundException {
