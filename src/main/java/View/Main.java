@@ -18,6 +18,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Unit.load();
+        Building.load();
+        Resource.load();
         Game.loadImages();
         Map map = new Map("for show test", 200, 200);
         new Game(map).start(stage);
