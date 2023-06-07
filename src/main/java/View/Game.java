@@ -265,6 +265,9 @@ public class Game extends Application{
                 new URL(Game.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
         bottomPane.setLayoutX(leftX);
         bottomPane.setLayoutY(screenHeight - 150);
+//        todo uncomment when code finished
+
+//        GameGraphicController.setPopularityGoldPopulation();
         mainPane.getChildren().add(bottomPane);
     }
 
