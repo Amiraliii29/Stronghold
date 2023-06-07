@@ -217,6 +217,38 @@
       "count": 0.0,
       "storage": "Stockpile"
     },
+    "name": "Armorer",
+    "width": 4,
+    "length": 3,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
+    "hp": 400,
+    "numberOfResource": 20,
+    "cost": 100,
+    "canPass": false
+  }, {
+    "usingRate": 3,
+    "generatingRate": 1,
+    "resourceGenerate": {
+      "name": "Sword",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Armoury"
+    },
+    "resourceNeed": {
+      "name": "Iron",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
+    "numberOfWorker": 1,
+    "resource": {
+      "name": "Wood",
+      "price": 100,
+      "count": 0.0,
+      "storage": "Stockpile"
+    },
     "name": "BlackSmith",
     "width": 4,
     "length": 3,
@@ -227,8 +259,7 @@
     "numberOfResource": 20,
     "cost": 100,
     "canPass": false
-  },
-  {
+  }, {
     "usingRate": 3,
     "generatingRate": 1,
     "resourceGenerate": {

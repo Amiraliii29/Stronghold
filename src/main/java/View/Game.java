@@ -1,5 +1,7 @@
 package View;
 
+import Model.Buildings.Building;
+import Model.DataBase;
 import Model.Land;
 import Model.Map;
 import Model.Square;
@@ -21,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +32,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Game extends Application{
     private static final HashMap<Land, Image> tiles;
@@ -74,8 +79,8 @@ public class Game extends Application{
         selectSq.setStroke(Color.BLUE);
     }
 
-    public Game(Map map) {
-        this.map = map;
+    public Game() {
+        this.map = DataBase.getSelectedMap();
         squares = map.getSquares();
         squareI = 0;
         squareJ = 0;
@@ -220,7 +225,10 @@ public class Game extends Application{
         pane.getChildren().clear();
         pane.getChildren().add(blackRec);
 
-//        double time = System.currentTimeMillis();
+        ArrayList<Building> buildingsInMap = new ArrayList<>();
+        ArrayList<Integer> xCoords = new ArrayList<>();
+        ArrayList<Integer> yCoords = new ArrayList<>();
+
         int k = leftX, l = 0;
         for (int i = squareI; i < squareI + blockWidth; i++) {
             for (int j = squareJ; j < squareJ + blockHeight; j++) {
@@ -238,23 +246,49 @@ public class Game extends Application{
                     imageView.setFitWidth(screenWidth + leftX - k);
                 }
 
-                if (squares[i][j].getUnits().size() != 0) {
-                    ImageView unit = new ImageView(units.get(squares[i][j].getUnits().get(0).getName()));
-                    unit.setLayoutX(k);
-                    unit.setLayoutY(l);
-                    unit.setFitHeight(blockPixel);
-                    unit.setFitWidth(blockPixel);
-                    pane.getChildren().add(unit);
+                for (Unit unit : squares[i][j].getUnits()) {
+                    ImageView unitImage = new ImageView(units.get(unit.getName()));
+                    unitImage.setLayoutX(k);
+                    unitImage.setLayoutY(l);
+                    unitImage.setFitHeight(blockPixel);
+                    unitImage.setFitWidth(blockPixel);
+                    pane.getChildren().add(unitImage);
                 }
+
+                if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding())) {
+                    buildingsInMap.add(squares[i][j].getBuilding());
+                    xCoords.add(k);
+                    yCoords.add(l);
+                }
+
                 l += blockPixel;
             }
             k += blockPixel;
             l = 0;
         }
-//        double time2 = System.currentTimeMillis();
-//        System.out.println(time2 - time);
 
-        //TODO : add buildings :
+        int index = 0;
+        for (Building building : buildingsInMap) {
+            ImageView buildingImage = new ImageView(buildings.get(building.getName()));
+
+            buildingImage.setLayoutX((building.getXCoordinateLeft() - squareI) * blockPixel + leftX);
+            buildingImage.setLayoutY((building.getYCoordinateUp() - squareJ) * blockPixel);
+            buildingImage.setFitWidth(building.getWidth() * blockPixel);
+            buildingImage.setFitHeight(building.getLength() * blockPixel);
+
+//            buildingImage.setViewport(new javafx.geometry.Rectangle2D(xCoords.get(index), yCoords.get(index),
+//                    Math.min(building.getXCoordinateLeft() + building.getWidth() - squareI, building.getWidth()) * blockPixel,
+//                    Math.min(building.getYCoordinateUp() + building.getLength() - squareJ, building.getLength()) * blockPixel));
+
+//            buildingImage.setViewport(new javafx.geometry.Rectangle2D(
+//                    Math.max(building.getXCoordinateLeft() - squareI, 0),
+//                    Math.max(building.getYCoordinateUp() - squareJ, 0),
+//                    building.getWidth() * blockPixel - Math.max(building.getXCoordinateLeft() - squareI, 0),
+//                    building.getLength() * blockPixel - Math.max(building.getYCoordinateUp() - squareJ, 0)));
+
+            pane.getChildren().add(buildingImage);
+            index++;
+        }
 
         pane.getChildren().add(selectSq);
         selectSq.setVisible(false);
@@ -264,7 +298,7 @@ public class Game extends Application{
         AnchorPane bottomPane = FXMLLoader.load(
                 new URL(Game.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
         bottomPane.setLayoutX(leftX);
-        bottomPane.setLayoutY(screenHeight - 150);
+        bottomPane.setLayoutY(screenHeight);
         mainPane.getChildren().add(bottomPane);
     }
 
@@ -279,7 +313,11 @@ public class Game extends Application{
             Image image = new Image(new FileInputStream("src/main/resources/Images/units/" + unit + ".png"));
             units.put(unit, image);
         }
-        // TODO
+        //buildings :
+        for (String building : Building.getBuildingsNames()) {
+            Image image = new Image(new FileInputStream("src/main/resources/Images/buildings/" + building + ".png"));
+            buildings.put(building, image);
+        }
     }
 
     public static HashMap<Land, Image> getTiles() {
