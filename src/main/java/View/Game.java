@@ -1,13 +1,8 @@
 package View;
 
+import Model.*;
 import Model.Buildings.Building;
-import Model.DataBase;
-import Model.Land;
-import Model.Map;
-import Model.Square;
 import Model.Units.Unit;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -16,29 +11,24 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.util.Pair;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+
 
 public class Game extends Application{
     private static final HashMap<Land, Image> tiles;
     private static final HashMap<String, Image> units;
     private static final HashMap<String, Image> buildings;
+    private static final HashMap<Trees, Image> trees;
     private static int blockPixel;
     private static final double screenWidth;
     private static final double screenHeight;
@@ -48,12 +38,12 @@ public class Game extends Application{
     private static final Rectangle blackRec;
     private static final Rectangle selectSq;
 
-    private Map map;
-    private Square[][] squares;
     private Stage stage;
-    private Pane pane;
     private Pane mainPane; // this pane contains all other panes such as pane
+    private Pane pane;
     private Scene scene;
+    private final Map map;
+    private final Square[][] squares;
     private int squareI;
     private int squareJ;
     private int blockX;
@@ -64,6 +54,7 @@ public class Game extends Application{
         tiles = new HashMap<>();
         units = new HashMap<>();
         buildings = new HashMap<>();
+        trees = new HashMap<>();
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = 1115;
@@ -137,7 +128,7 @@ public class Game extends Application{
 
             if (moveMode) {
                 //on move mode :
-                if (nowX > blockX && squareI < map.getWidth() - blockWidth) {
+                if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
                     squareI++;
                     draw = true;
                 } else if (nowX < blockX && squareI > 0) {
@@ -145,7 +136,7 @@ public class Game extends Application{
                     draw = true;
                 }
 
-                if (nowY > blockY && squareJ < map.getLength() - blockHeight) {
+                if (nowY > blockY && squareJ < map.getLength() - blockHeight + 1) {
                     squareJ++;
                     draw = true;
                 } else if (nowY < blockY && squareJ > 0) {
@@ -156,9 +147,7 @@ public class Game extends Application{
                 if (draw ) {
                     blockX = nowX;
                     blockY = nowY;
-
                     drawMap();
-
                 }
             } else {
                 selectSq.setWidth(Math.abs((nowX - blockX) * blockPixel));
@@ -226,9 +215,8 @@ public class Game extends Application{
         pane.getChildren().add(blackRec);
 
         ArrayList<Building> buildingsInMap = new ArrayList<>();
-        ArrayList<Integer> xCoords = new ArrayList<>();
-        ArrayList<Integer> yCoords = new ArrayList<>();
 
+        boolean check;
         int k = leftX, l = 0;
         for (int i = squareI; i < squareI + blockWidth; i++) {
             for (int j = squareJ; j < squareJ + blockHeight; j++) {
@@ -239,26 +227,38 @@ public class Game extends Application{
                 imageView.setFitWidth(blockPixel);
                 pane.getChildren().add(imageView);
 
+                check = true;
+
                 if (l + blockPixel > screenHeight) {
                     imageView.setFitHeight(screenHeight - l);
+                    check = false;
                 }
                 if (k + blockPixel > screenWidth + leftX) {
                     imageView.setFitWidth(screenWidth + leftX - k);
+                    check = false;
                 }
 
-                for (Unit unit : squares[i][j].getUnits()) {
-                    ImageView unitImage = new ImageView(units.get(unit.getName()));
-                    unitImage.setLayoutX(k);
-                    unitImage.setLayoutY(l);
-                    unitImage.setFitHeight(blockPixel);
-                    unitImage.setFitWidth(blockPixel);
-                    pane.getChildren().add(unitImage);
-                }
+                if (check) {
+                    if (squares[i][j].getTree() != null) {
+                        ImageView treeImage = new ImageView(trees.get(squares[i][j].getTree()));
+                        treeImage.setLayoutX(k);
+                        treeImage.setLayoutY(l);
+                        treeImage.setFitHeight(blockPixel);
+                        treeImage.setFitWidth(blockPixel);
+                        pane.getChildren().add(treeImage);
+                    }
 
-                if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding())) {
-                    buildingsInMap.add(squares[i][j].getBuilding());
-                    xCoords.add(k);
-                    yCoords.add(l);
+                    for (Unit unit : squares[i][j].getUnits()) {
+                        ImageView unitImage = new ImageView(units.get(unit.getName()));
+                        unitImage.setLayoutX(k);
+                        unitImage.setLayoutY(l);
+                        unitImage.setFitHeight(blockPixel);
+                        unitImage.setFitWidth(blockPixel);
+                        pane.getChildren().add(unitImage);
+                    }
+
+                    if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding()))
+                        buildingsInMap.add(squares[i][j].getBuilding());
                 }
 
                 l += blockPixel;
@@ -267,7 +267,6 @@ public class Game extends Application{
             l = 0;
         }
 
-        int index = 0;
         for (Building building : buildingsInMap) {
             ImageView buildingImage = new ImageView(buildings.get(building.getName()));
 
@@ -276,18 +275,9 @@ public class Game extends Application{
             buildingImage.setFitWidth(building.getWidth() * blockPixel);
             buildingImage.setFitHeight(building.getLength() * blockPixel);
 
-//            buildingImage.setViewport(new javafx.geometry.Rectangle2D(xCoords.get(index), yCoords.get(index),
-//                    Math.min(building.getXCoordinateLeft() + building.getWidth() - squareI, building.getWidth()) * blockPixel,
-//                    Math.min(building.getYCoordinateUp() + building.getLength() - squareJ, building.getLength()) * blockPixel));
-
-//            buildingImage.setViewport(new javafx.geometry.Rectangle2D(
-//                    Math.max(building.getXCoordinateLeft() - squareI, 0),
-//                    Math.max(building.getYCoordinateUp() - squareJ, 0),
-//                    building.getWidth() * blockPixel - Math.max(building.getXCoordinateLeft() - squareI, 0),
-//                    building.getLength() * blockPixel - Math.max(building.getYCoordinateUp() - squareJ, 0)));
+            //TODO : buildings in edge
 
             pane.getChildren().add(buildingImage);
-            index++;
         }
 
         pane.getChildren().add(selectSq);
@@ -317,6 +307,11 @@ public class Game extends Application{
         for (String building : Building.getBuildingsNames()) {
             Image image = new Image(new FileInputStream("src/main/resources/Images/buildings/" + building + ".png"));
             buildings.put(building, image);
+        }
+        //trees :
+        for (Trees tree : Trees.values()) {
+            Image image = new Image(new FileInputStream("src/main/resources/Images/trees/" + Trees.getName(tree) + ".png"));
+            trees.put(tree, image);
         }
     }
 

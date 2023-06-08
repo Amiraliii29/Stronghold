@@ -29,10 +29,11 @@ public class Map {
         this.name = name;
         this.width = width;
         this.length = length;
-        this.squares = new Square[width][length];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < length; j++) {
+        this.squares = new Square[width + 1][length + 1];
+        for (int i = 0; i < width + 1; i++) {
+            for (int j = 0; j < length + 1; j++) {
                 squares[i][j] = new Square(i, j);
+                if (i == width || j == length) squares[i][j].setLand(Land.CLIFF);
             }
         }
     }

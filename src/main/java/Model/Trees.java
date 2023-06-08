@@ -4,7 +4,6 @@ public enum Trees {
     CHERRY_PALM("cherryPalm"),
     COCONUT_TREE("coconutTree"),
     OLIVE_PALM("olivePalm"),
-    DESSERT_SHRUB("dessertShrub"),
     DATE_PALM("datePalm"),
     ;
 

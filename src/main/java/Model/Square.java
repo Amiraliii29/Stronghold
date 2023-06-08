@@ -42,7 +42,7 @@ public class Square {
 
         this.building = null;
         this.tree = null;
-        this.cliffDirection = null;
+        this.cliffDirection = "n";
         this.treeAmount = 0;
     }
 

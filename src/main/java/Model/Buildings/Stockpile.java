@@ -1,6 +1,5 @@
 package Model.Buildings;
 
-import Controller.GameMenuController;
 import Model.Government;
 import Model.Resource;
 import com.google.gson.Gson;
@@ -11,27 +10,27 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class Stockpile extends Building {
+    private static final ArrayList<String> stockpilesName;
     private static ArrayList<Stockpile> stockpiles;
-    private static ArrayList<String> stockpilesName;
     private HashMap<String, Integer> resources;
-    private ArrayList<String> resourcesStored;
+    private final ArrayList<String> resourcesStored;
     private final int capacity;//how many resource in one slot of stockpile
 
     static {
         try {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<Stockpile>>() {}.getType();
+            Type type = new TypeToken<ArrayList<Stockpile>>() {
+            }.getType();
             stockpiles = gson.fromJson(new FileReader("src/main/resources/Buildings/Stockpiles.json"), type);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         stockpilesName = new ArrayList<>();
-        for (Stockpile stockpile: stockpiles) {
+        for (Stockpile stockpile : stockpiles) {
             stockpilesName.add(stockpile.name);
             buildingsNames.add(stockpile.name);
             buildings.add(stockpile);
@@ -39,41 +38,31 @@ public class Stockpile extends Building {
     }
 
     private Stockpile(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp, ArrayList<String> lands,
-                     int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> resourcesStored, int capacity) {
+                      int hp, Resource resource, int numberOfResource, int cost, boolean canPass, ArrayList<String> resourcesStored, int capacity) {
         super(owner, name, width, length, xCoordinateLeft, yCoordinateUp, lands, hp, resource, numberOfResource, cost, canPass);
         this.resourcesStored = resourcesStored;
         this.capacity = capacity;
         resources = new HashMap<>();
     }
 
+
+    public int getCapacity() {
+        return capacity;
+    }
+
     public HashMap<String, Integer> getResources() {
         return resources;
     }
 
-    public static int getResourceCount(ArrayList<Stockpile> stockpiles, Resource resource) {
-        int count = 0;
-        for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource.getName())) count += set.getValue();
-            }
-        }
-        return count;
+    public static ArrayList<String> getStockpilesName() {
+        return stockpilesName;
     }
 
-    public static int freeSpaceForResource(ArrayList<Stockpile> stockpiles, Resource resource) {
-        int freeSpace = 0;
-        for (Stockpile stockpile : stockpiles) {
-            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
-                if (set.getKey().equals(resource.getName())) freeSpace += stockpile.capacity - set.getValue();
-            }
-            for (int i = 0; i < (4 - stockpile.getResources().keySet().size()); i++) {
-                freeSpace += stockpile.capacity;
-            }
-        }
-        return freeSpace;
+    public ArrayList<String> getResourcesStored() {
+        return resourcesStored;
     }
 
-    public static boolean addResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
+    public static void addResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
         for (Stockpile stockpile : stockpiles) {
             for (Map.Entry<String, Integer> set : stockpile.resources.entrySet()) {
                 if (set.getKey().equals(resource.getName()) && set.getValue() < stockpile.capacity) {
@@ -82,10 +71,11 @@ public class Stockpile extends Building {
                         number -= (stockpile.capacity - set.getValue());
                     } else {
                         stockpile.addToHashMap(resource.getName(), number);
-                        number -= number;
+                        return;
                     }
                 }
             }
+
             while (stockpile.getFreeSlot() < 4 && number > 0) {
                 if (number >= stockpile.getCapacity()) {
                     stockpile.addToHashMap(resource.getName(), stockpile.capacity);
@@ -96,7 +86,30 @@ public class Stockpile extends Building {
                 }
             }
         }
-        return number == 0;
+    }
+
+    public static int getResourceCount(ArrayList<Stockpile> stockpiles, Resource resource) {
+        int count = 0;
+        for (Stockpile stockpile : stockpiles) {
+            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
+                if (set.getKey().equals(resource.getName()))
+                    count += set.getValue();
+            }
+        }
+        return count;
+    }
+
+    public static int freeSpaceForResource(ArrayList<Stockpile> stockpiles, Resource resource) {
+        int freeSpace = 0;
+        for (Stockpile stockpile : stockpiles) {
+            for (Map.Entry<String, Integer> set : stockpile.getResources().entrySet()) {
+                if (set.getKey().equals(resource.getName()) && set.getValue() < stockpile.capacity)
+                    freeSpace += stockpile.capacity - set.getValue();
+            }
+            for (int i = 0; i < (4 - stockpile.getFreeSlot()); i++)
+                freeSpace += stockpile.capacity;
+        }
+        return freeSpace;
     }
 
     public static boolean removeResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
@@ -105,7 +118,7 @@ public class Stockpile extends Building {
                 if (set.getKey().equals(resource.getName()) && number > 0) {
                     if (set.getValue() >= number) {
                         stockpile.removeFromHashMap(resource.getName(), number);
-                        number -= number;
+                        return true;
                     } else {
                         stockpile.removeFromHashMap(resource.getName(), set.getValue());
                         number -= set.getValue();
@@ -117,27 +130,15 @@ public class Stockpile extends Building {
         return number == 0;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void addToHashMap(String resource, int number) {
+    private void addToHashMap(String resource, int number) {
         if (resources.containsKey(resource))
-            resources.put(resource, resources.get(resource)+number);
+            resources.put(resource, resources.get(resource) + number);
         else
             resources.put(resource, number);
     }
 
-    public void removeFromHashMap(String resource, int number) {
-        resources.put(resource, resources.get(resource)-number);
-    }
-
-    public static ArrayList<String> getStockpilesName() {
-        return stockpilesName;
-    }
-
-    public ArrayList<String> getResourcesStored() {
-        return resourcesStored;
+    private void removeFromHashMap(String resource, int number) {
+        resources.put(resource, resources.get(resource) - number);
     }
 
     private int getFreeSlot() {
@@ -146,7 +147,7 @@ public class Stockpile extends Building {
             int slot = resources.keySet().size();
             for (Map.Entry<String, Integer> set : resources.entrySet()) {
                 int val = set.getValue();
-                while (val > capacity) {
+                while (val >= capacity) {
                     slot++;
                     val -= capacity;
                 }

@@ -11,9 +11,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import Controller.GameMenuController;
-
 public class Government {
+    private final ArrayList<Stockpile> stockpiles;
+    private final ArrayList<Stockpile> armoury;
+    private final ArrayList<Stockpile> granary;
+    private final HashMap<String, Integer> resourceGenerationRate;
+    private final ArrayList<Building> buildings;
+    private final ArrayList<TradeRequest> requestsAskedFromMe;
+    private final ArrayList<TradeRequest> requestsIAsked;
+    private final ArrayList<TradeRequest> tradeHistory;
+    private final ArrayList<TradeRequest> requestNotifications;
     private User owner;
     private int popularity;
     private int maxPopulation;
@@ -27,31 +34,17 @@ public class Government {
     private int fear;
     private double money;
     private Troop lord;
-    private ArrayList<Stockpile> stockpiles;
-    private ArrayList<Stockpile> armoury;
-    private ArrayList<Stockpile> granary;
-    private HashMap<String, Integer> resourceGenerationRate;
-    private ArrayList<Building> buildings;
-    private ArrayList<TradeRequest> requestsAskedFromMe = new ArrayList<>();
-    private ArrayList<TradeRequest> requestsIAsked = new ArrayList<>();
-    private ArrayList<TradeRequest> tradeHistory = new ArrayList<>();
-    private ArrayList<TradeRequest> requestNotifications = new ArrayList<>();
 
-    public void addToRequestsIAsked(TradeRequest tradeRequest){
-        requestsIAsked.add(tradeRequest);
-    }
-
-    public ArrayList<TradeRequest> getRequestsIAsked() {
-        return requestsIAsked;
-    }
-
-    public Troop getLord() {
-        return lord;
-    }
-
-    public void setLord(int x, int y) {
-        Troop lord = Troop.createTroop(this, "Lord", x, y);
-        this.lord = lord;
+    {
+        stockpiles = new ArrayList<>();
+        armoury = new ArrayList<>();
+        granary = new ArrayList<>();
+        buildings = new ArrayList<>();
+        resourceGenerationRate = new HashMap<>();
+        requestsAskedFromMe = new ArrayList<>();
+        tradeHistory = new ArrayList<>();
+        requestNotifications = new ArrayList<>();
+        requestsIAsked = new ArrayList<>();
     }
 
     public Government(double money) {
@@ -64,45 +57,14 @@ public class Government {
         this.population = 32;
         this.maxPopulation = 40;
         this.freeWorker = 20;
-        stockpiles = new ArrayList<>();
-        armoury = new ArrayList<>();
-        granary = new ArrayList<>();
-        buildings = new ArrayList<>();
-        requestsAskedFromMe = new ArrayList<>();
-        tradeHistory = new ArrayList<>();
-        requestNotifications = new ArrayList<>();
-        resourceGenerationRate = new HashMap<String, Integer>();
+    }
+
+    public void setLord(int x, int y) {
+        this.lord = Troop.createTroop(this, "Lord", x, y);
     }
 
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void updatePopularity() {
-        setFoodFactors();
-        popularity = 0;
-        popularity += food * 4;
-        popularity += foodType - 1;
-        popularity += fear;
-        popularity += faith;
-        //tax factor
-        if (tax <= 0) popularity += (tax * (-2) + 1);
-        else if (tax <= 4) popularity += (tax * (-2));
-        else popularity += (((tax - 5) * (-4)) - 12);
-        updateBuildingPopularity();
-    }
-
-    public void updateBuildingPopularity() {
-        for (Building building : buildings)
-            if (building.getName().equals("Church")) {
-                TownBuilding church = (TownBuilding) building;
-                faith += church.getPopularityRate();
-                return;
-            }
     }
 
     public void setFood(int food) {
@@ -129,8 +91,24 @@ public class Government {
         this.tax = tax;
     }
 
+    public void setFear(int fear) {
+        this.fear = fear;
+    }
+
+    public void setFaith(int faith) {
+        this.faith = faith;
+    }
+
     public void changeMoney(double money) {
         this.money += money;
+    }
+
+    public Troop getLord() {
+        return lord;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public int getFood() {
@@ -171,56 +149,93 @@ public class Government {
         return foodCount;
     }
 
-    public ArrayList<Stockpile> getStockpiles() {
-        return stockpiles;
+    public int getPopularity() {
+        updatePopularity();
+        return popularity;
     }
 
     public void addStockpiles(Stockpile stockpile) {
         this.stockpiles.add(stockpile);
     }
 
-    public ArrayList<Stockpile> getArmoury() {
-        return armoury;
-    }
-
     public void addArmoury(Stockpile armoury) {
         this.armoury.add(armoury);
-    }
-
-    public ArrayList<Stockpile> getGranary() {
-        return granary;
     }
 
     public void addGranary(Stockpile granary) {
         this.granary.add(granary);
     }
 
-    public ArrayList<Building> getBuildings() {
-        return buildings;
-    }
-
-    public void addToMaxPopulation(int addValue) {
-        maxPopulation += addValue;
-    }
-
-    public void addToGenerationRate(String resourceType, int addedGenerationValue) {
-        int previousValue = 0;
-        if (resourceGenerationRate.containsKey(resourceType))
-            previousValue = resourceGenerationRate.get(resourceType);
-
-        resourceGenerationRate.put(resourceType, previousValue + addedGenerationValue);
-    }
-
     public void addBuildings(Building building) {
         this.buildings.add(building);
     }
 
-    public void setFear(int fear) {
-        this.fear = fear;
+    public void addToRequestsAskedFromMe(TradeRequest tradeRequest) {
+        requestsAskedFromMe.add(tradeRequest);
     }
 
-    public void setFaith(int faith) {
-        this.faith = faith;
+    public void addToTradeHistory(TradeRequest tradeRequest) {
+        tradeHistory.add(tradeRequest);
+    }
+
+    public void addToRequestNotification(TradeRequest tradeRequest) {
+        requestNotifications.add(tradeRequest);
+    }
+
+    public void addToRequestsIAsked(TradeRequest tradeRequest){
+        requestsIAsked.add(tradeRequest);
+    }
+
+    public ArrayList<Stockpile> getStockpiles() {
+        return stockpiles;
+    }
+
+    public ArrayList<Stockpile> getArmoury() {
+        return armoury;
+    }
+
+    public ArrayList<Stockpile> getGranary() {
+        return granary;
+    }
+
+    public ArrayList<Building> getBuildings() {
+        return buildings;
+    }
+
+    public ArrayList<TradeRequest> getRequestsAskedFromMe() {
+        return requestsAskedFromMe;
+    }
+
+    public ArrayList<TradeRequest> getTradeHistory() {
+        return tradeHistory;
+    }
+
+    public ArrayList<TradeRequest> getRequestNotifications() {
+        return requestNotifications;
+    }
+
+    public ArrayList<TradeRequest> getRequestsIAsked() {
+        return requestsIAsked;
+    }
+
+    public HashMap<String, Integer> getResourceGenerationRates() {
+        return resourceGenerationRate;
+    }
+
+
+
+    public void updatePopularity() {
+        setFoodFactors();
+        popularity = 0;
+        popularity += food * 4;
+        popularity += foodType - 1;
+        popularity += fear;
+        popularity += faith;
+        //tax factor
+        if (tax <= 0) popularity += (tax * (-2) + 1);
+        else if (tax <= 4) popularity += (tax * (-2));
+        else popularity += (((tax - 5) * (-4)) - 12);
+        updateBuildingPopularity();
     }
 
     public void addAndRemoveFromGovernment() {
@@ -254,13 +269,6 @@ public class Government {
         foodType = names.size();
     }
 
-    private void removeFood(double numberForRemove) {
-        for (int i = 0; i < numberForRemove; i++) {
-            if (!removeFromStockpile(Resource.createResource(Resource.getFoodsName().get(i % 4)), 1)) numberForRemove++;
-            //need to be checked//TODO
-        }
-    }
-
     private void doTaxes() {
         setTax(this.tax);
         double moneyPerPerson = getMoneyEachPersonPay(this.tax);
@@ -275,13 +283,22 @@ public class Government {
         return moneyPerPerson;
     }
 
-    public boolean addToStockpile(Resource resource, int number) {
-        if (Resource.getResourcesName().contains(resource.getName()))
-            return Stockpile.addResource(stockpiles, resource, number);
-        else if (Resource.getFoodsName().contains(resource.getName()))
-            return Stockpile.addResource(granary, resource, number);
-        else
-            return Stockpile.addResource(armoury, resource, number);
+    private void removeFood(double numberForRemove) {
+        for (int i = 0; i < numberForRemove; i++) {
+            if (!removeFromStockpile(Objects.requireNonNull(Resource.createResource(Resource.getFoodsName().get(i % 4))), 1))
+                numberForRemove++;
+            //need to be checked//TODO
+        }
+    }
+
+    public void addToStockpile(Resource resource, int number) {
+        if (Resource.getResourcesName().contains(resource.getName())) {
+            Stockpile.addResource(stockpiles, resource, number);
+        } else if (Resource.getFoodsName().contains(resource.getName())) {
+            Stockpile.addResource(granary, resource, number);
+        } else {
+            Stockpile.addResource(armoury, resource, number);
+        }
     }
 
     public int freeStockpileSpace(Resource resource) {
@@ -311,12 +328,27 @@ public class Government {
             return Stockpile.removeResource(armoury, resource, number);
     }
 
-    public void addToRequestsAskedFromMe(TradeRequest tradeRequest) {
-        requestsAskedFromMe.add(tradeRequest);
+
+
+    public void updateBuildingPopularity() {
+        for (Building building : buildings)
+            if (building.getName().equals("Church")) {
+                TownBuilding church = (TownBuilding) building;
+                faith += church.getPopularityRate();
+                return;
+            }
     }
 
-    public ArrayList<TradeRequest> getRequestsAskedFromMe() {
-        return requestsAskedFromMe;
+    public void addToMaxPopulation(int addValue) {
+        maxPopulation += addValue;
+    }
+
+    public void addToGenerationRate(String resourceType, int addedGenerationValue) {
+        int previousValue = 0;
+        if (resourceGenerationRate.containsKey(resourceType))
+            previousValue = resourceGenerationRate.get(resourceType);
+
+        resourceGenerationRate.put(resourceType, previousValue + addedGenerationValue);
     }
 
     public TradeRequest getRequestById(int id) {
@@ -325,30 +357,6 @@ public class Government {
                 return tradeRequest;
         }
         return null;
-    }
-
-    public ArrayList<TradeRequest> getTradeHistory() {
-        return tradeHistory;
-    }
-
-    public void addToTradeHistory(TradeRequest tradeRequest) {
-        tradeHistory.add(tradeRequest);
-    }
-
-    public void removeFromRequestsAskedFromMe(TradeRequest tradeRequest) {
-        requestsAskedFromMe.remove(tradeRequest);
-    }
-
-    public void addToRequestNotification(TradeRequest tradeRequest) {
-        requestNotifications.add(tradeRequest);
-    }
-
-    public ArrayList<TradeRequest> getRequestNotifications() {
-        return requestNotifications;
-    }
-
-    public void removeAllRequestNotification() {
-        requestNotifications.clear();
     }
 
     public void changeFreeWorkers(int addedWorkers) {
@@ -360,10 +368,6 @@ public class Government {
     public void changePopulation(int addedPopulation) {
         population += addedPopulation;
         if (population > maxPopulation) population = maxPopulation;
-    }
-
-    public HashMap<String, Integer> getResourceGenerationRates() {
-        return resourceGenerationRate;
     }
 
     public int getBuildingCountByName(String buildingName) {
@@ -390,10 +394,5 @@ public class Government {
         if (o == null || getClass() != o.getClass()) return false;
         Government that = (Government) o;
         return Objects.equals(owner, that.owner);
-    }
-
-    public int getPopularity() {
-        updatePopularity();
-        return popularity;
     }
 }
