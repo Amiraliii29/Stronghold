@@ -36,18 +36,19 @@ public class Game extends Application{
     private static final HashMap<String, Image> buildings;
     private static int blockPixel;
     private static final double screenWidth;
-    private static final double screenHeight;
-    private static final int leftX;
+    public static final double screenHeight;
+    public static final int leftX;
     private static int blockWidth;
     private static int blockHeight;
     private static final Rectangle blackRec;
     private static final Rectangle selectSq;
+    public static AnchorPane bottomPane;
 
     private Map map;
     private Square[][] squares;
     private Stage stage;
     private Pane pane;
-    private Pane mainPane; // this pane contains all other panes such as pane
+    public static Pane mainPane; // this pane contains all other panes such as pane
     private Scene scene;
     private int squareI;
     private int squareJ;
@@ -261,7 +262,7 @@ public class Game extends Application{
     }
 
     private void drawBottom() throws IOException {
-        AnchorPane bottomPane = FXMLLoader.load(
+        bottomPane = FXMLLoader.load(
                 new URL(Game.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
         bottomPane.setLayoutX(leftX);
         bottomPane.setLayoutY(screenHeight - 150);

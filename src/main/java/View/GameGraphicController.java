@@ -9,6 +9,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -45,5 +47,65 @@ public class GameGraphicController {
         }
         catch (Exception e){}
         throw new RuntimeException("heyo");
+    }
+
+    public void openConstructorBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/ConstructorBottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
+    }
+
+    public void openFoodBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/FoodBottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
+    }
+
+    public void openVillageBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/VillageBottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
+    }
+
+    public void openKitchenBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/KitchenBottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
+    }
+
+    public void openDefenceBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/DefenceBottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
+    }
+
+    public void openWallBuildingsMenu(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(Game.bottomPane);
+        AnchorPane anchorPane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
+        anchorPane.setLayoutX(Game.leftX);
+        anchorPane.setLayoutY(Game.screenHeight - 150);
+        Game.bottomPane = anchorPane;
+        Game.mainPane.getChildren().add(Game.bottomPane);
     }
 }

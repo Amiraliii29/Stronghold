@@ -8,7 +8,7 @@
    <children>
       <ImageView fitHeight="151.0" fitWidth="1117.0" layoutX="-1.0" layoutY="-2.0">
          <image>
-            <Image url="@../Images/menu-backgrounds/wallBottomMenu.png" />
+            <Image url="@../Images/menu-backgrounds/FoodBottomMenu.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="180.0" layoutY="121.0" onMouseClicked="#openConstructorBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
@@ -16,5 +16,6 @@
       <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="261.0" layoutY="121.0" onMouseClicked="#openVillageBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="301.0" layoutY="121.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="32.0" layoutX="341.0" layoutY="120.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="29.0" fitWidth="24.0" layoutX="148.0" layoutY="119.0" onMouseClicked="#openWallBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>
