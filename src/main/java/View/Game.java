@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CustomizeMapController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Units.Unit;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 
 public class Game extends Application{
@@ -37,19 +40,24 @@ public class Game extends Application{
     private static int blockHeight;
     private static final Rectangle blackRec;
     private static final Rectangle selectSq;
+    public static Pane mainPane; // this pane contains all other panes such as pane
     public static AnchorPane bottomPane;
+    public static AnchorPane customizePane;
+
+    public static Trees tree;
+    public static Land land;
 
     private Stage stage;
-    private Pane mainPane; // this pane contains all other panes such as pane
     private Pane pane;
     private Scene scene;
     private final Map map;
-    private final Square[][] squares;
+    private Square[][] squares;
     private int squareI;
     private int squareJ;
     private int blockX;
     private int blockY;
     private boolean moveMode;
+    private Building building;
 
     static {
         tiles = new HashMap<>();
@@ -77,6 +85,7 @@ public class Game extends Application{
         squareI = 0;
         squareJ = 0;
         moveMode = true;
+        building = null;
     }
 
     @Override
@@ -110,12 +119,28 @@ public class Game extends Application{
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
 
-            if (!moveMode) {
-                selectSq.setVisible(true);
-                selectSq.setX(leftX + blockX * blockPixel);
-                selectSq.setY(blockY * blockPixel);
-                selectSq.setWidth(blockPixel);
-                selectSq.setHeight(blockPixel);
+            if(event.getButton() == MouseButton.SECONDARY) {
+                building = null;
+            }
+
+            if (customizePane != null) {
+               if (tree != null)
+                   CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
+               else if (land != null)
+                   CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
+
+               drawMap();
+            } else if (!moveMode) {
+                if (building != null) {
+                    //TODO
+                    drawMap();
+                } else {
+                    selectSq.setVisible(true);
+                    selectSq.setX(leftX + blockX * blockPixel);
+                    selectSq.setY(blockY * blockPixel);
+                    selectSq.setWidth(blockPixel);
+                    selectSq.setHeight(blockPixel);
+                }
             }
         });
 
@@ -127,7 +152,9 @@ public class Game extends Application{
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
 
-            if (moveMode) {
+            if (customizePane != null) {
+
+            } else if (moveMode) {
                 //on move mode :
                 if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
                     squareI++;
@@ -159,7 +186,7 @@ public class Game extends Application{
         });
 
         pane.setOnMouseReleased(event -> {
-            if (!moveMode) {
+            if (!moveMode && customizePane == null) {
                 double endX = event.getX();
                 double endY = event.getY();
                 int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
@@ -207,11 +234,23 @@ public class Game extends Application{
                 }
             } else if (event.getCode() == KeyCode.S) {
                 moveMode = !moveMode;
+            } else if (event.getCode() == KeyCode.C) {
+                if (customizePane == null) {
+                    try {
+                        drawLeft();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    mainPane.getChildren().remove(customizePane);
+                    customizePane = null;
+                }
             }
         });
     }
 
     private void drawMap() {
+        squares = map.getSquares();
         pane.getChildren().clear();
         pane.getChildren().add(blackRec);
 
@@ -287,13 +326,21 @@ public class Game extends Application{
 
     private void drawBottom() throws IOException {
         bottomPane = FXMLLoader.load(
-                new URL(Game.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
+                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BottomMenu.fxml")).toExternalForm()));
         bottomPane.setLayoutX(leftX);
-        bottomPane.setLayoutY(screenHeight - 150);
+        bottomPane.setLayoutY(screenHeight);
 //        todo uncomment when code finished
 
 //        GameGraphicController.setPopularityGoldPopulation();
         mainPane.getChildren().add(bottomPane);
+    }
+
+    private void drawLeft() throws IOException {
+        customizePane = FXMLLoader.load(
+                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/CustomizeMap.fxml")).toExternalForm()));
+        customizePane.setLayoutX(0);
+        customizePane.setLayoutY(0);
+        mainPane.getChildren().add(customizePane);
     }
 
     public static void loadImages() throws FileNotFoundException {
@@ -317,17 +364,5 @@ public class Game extends Application{
             Image image = new Image(new FileInputStream("src/main/resources/Images/trees/" + Trees.getName(tree) + ".png"));
             trees.put(tree, image);
         }
-    }
-
-    public static HashMap<Land, Image> getTiles() {
-        return tiles;
-    }
-
-    public static HashMap<String, Image> getUnits() {
-        return units;
-    }
-
-    public static HashMap<String, Image> getBuildings() {
-        return buildings;
     }
 }

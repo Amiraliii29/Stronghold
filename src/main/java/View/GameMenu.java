@@ -588,24 +588,6 @@ public class GameMenu extends Application {
             Input_Output.outPut("error: unmatching inputs for this order!");
             return;
         }
-
-        CustomizeMapMessages message = CustomizeMapController.dropUnitController(x , y , type , count , onwerGovernmentNumber);
-
-        switch (message) {
-            case INVALID_GOVERNMENT_NUMBER -> System.out.println("drop unit error: invalid government number");
-            case NO_OWNER_GOVERNMENT_NUMBER ->
-                    System.out.println("drop unit error: please enter owner government number after " +
-                            " -g flag next time");
-            case INVALID_NUMBER -> System.out.println("drop unit error: invalid number");
-            case INVALID_OPTIONS -> System.out.println("drop unit error: please enter x and y component");
-            case X_OUT_OF_BOUNDS -> System.out.println("drop unit error: x out of bounds");
-            case Y_OUT_OF_BOUNDS -> System.out.println("drop unit error: y out of bounds");
-            case INVALID_COUNT -> System.out.println("drop unit error: invalid count");
-            case UNSUITABLE_LAND -> System.out.println("drop unit error: unsuitable land to drop unit");
-            case DROP_UNIT_SUCCESS -> System.out.println("unit dropped successfully");
-            case NO_MAP_SELECTED -> System.out.println("drop unit error: please first select your map");
-            case No_UNIT_WITH_THIS_NAME -> Input_Output.outPut("there is no unit with this name");
-        }
     }
 
     private static void dropBuildingTest(Matcher matcher) {
@@ -619,24 +601,24 @@ public class GameMenu extends Application {
             Input_Output.outPut("error: unmatching inputs for this order!");
             return;
         }
-        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x, y, type, governmentNumber);
-
-        switch (message) {
-            case INVALID_NUMBER -> Input_Output.outPut("drop building error: invalid number");
-            case INVALID_OPTIONS -> Input_Output.outPut("drop building error: please enter x and y component");
-            case X_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: x out of bounds");
-            case Y_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: y out of bounds");
-            case INVALID_BUILDING_NAME -> Input_Output.outPut("drop building error: invalid building name");
-            case DROP_BUILDING_SUCCESS -> Input_Output.outPut("building dropped successfully");
-            case UNSUITABLE_LAND -> Input_Output.outPut("drop building error: can't place there my lord");
-            case INVALID_GOVERNMENT_NUMBER -> Input_Output.outPut("drop building error: invalid government number");
-            case THIS_GOVERNMENT_HAS_KEEP -> Input_Output.outPut("this government has keep");
-            case NO_OWNER_GOVERNMENT_NUMBER ->
-                    Input_Output.outPut("drop building error: please enter owner government number after -g flag next time");
-            case DROPBUILDING_INVALID_PLACE ->
-                    Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
-            case NO_MAP_SELECTED -> Input_Output.outPut("drop building error: please first select your map");
-        }
+//        CustomizeMapMessages message = CustomizeMapController.dropBuildingController(x, y, type, governmentNumber);
+//
+//        switch (message) {
+//            case INVALID_NUMBER -> Input_Output.outPut("drop building error: invalid number");
+//            case INVALID_OPTIONS -> Input_Output.outPut("drop building error: please enter x and y component");
+//            case X_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: x out of bounds");
+//            case Y_OUT_OF_BOUNDS -> Input_Output.outPut("drop building error: y out of bounds");
+//            case INVALID_BUILDING_NAME -> Input_Output.outPut("drop building error: invalid building name");
+//            case DROP_BUILDING_SUCCESS -> Input_Output.outPut("building dropped successfully");
+//            case UNSUITABLE_LAND -> Input_Output.outPut("drop building error: can't place there my lord");
+//            case INVALID_GOVERNMENT_NUMBER -> Input_Output.outPut("drop building error: invalid government number");
+//            case THIS_GOVERNMENT_HAS_KEEP -> Input_Output.outPut("this government has keep");
+//            case NO_OWNER_GOVERNMENT_NUMBER ->
+//                    Input_Output.outPut("drop building error: please enter owner government number after -g flag next time");
+//            case DROPBUILDING_INVALID_PLACE ->
+//                    Input_Output.outPut("error: can't build there! either incompatible or already occupied land!");
+//            case NO_MAP_SELECTED -> Input_Output.outPut("drop building error: please first select your map");
+//        }
     }
 
     private static void showMoney() {
