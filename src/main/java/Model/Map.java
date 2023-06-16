@@ -33,7 +33,7 @@ public class Map {
         for (int i = 0; i < width + 1; i++) {
             for (int j = 0; j < length + 1; j++) {
                 squares[i][j] = new Square(i, j);
-                if (i == width || j == length) squares[i][j].setLand(Land.CLIFF);
+                if (i == width || j >= length) squares[i][j].setLand(Land.CLIFF);
             }
         }
     }

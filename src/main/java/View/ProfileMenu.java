@@ -190,22 +190,12 @@ public class ProfileMenu extends Application {
     }
 
     private void addStylesToHboxIfNeeded(HBox userInfoHbox,User targetUser){
-
         switch (targetUser.getRank()) {
-            case 1:
-                userInfoHbox.getStyleClass().add("gold-color");
-                break;
-
-            case 2:
-                userInfoHbox.getStyleClass().add("silver-color");
-                break;
-
-            case 3:
-                userInfoHbox.getStyleClass().add("bronze-color");
-                break;
-        
-            default:
-                break;
+            case 1 -> userInfoHbox.getStyleClass().add("gold-color");
+            case 2 -> userInfoHbox.getStyleClass().add("silver-color");
+            case 3 -> userInfoHbox.getStyleClass().add("bronze-color");
+            default -> {
+            }
         }
 
         if(targetUser.getUsername().equals(User.getCurrentUser().getUsername())){

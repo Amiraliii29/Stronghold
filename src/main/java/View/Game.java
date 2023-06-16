@@ -1,20 +1,26 @@
 package View;
 
 import Controller.CustomizeMapController;
+import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Units.Unit;
+import View.Controller.GetCoordinate;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -46,6 +52,8 @@ public class Game extends Application{
 
     public static Trees tree;
     public static Land land;
+    private static int selectedX;
+    private static int selectedY;
 
     private Stage stage;
     private Pane pane;
@@ -67,7 +75,7 @@ public class Game extends Application{
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = 1115;
-        screenHeight = Math.ceil(screenBounds.getHeight()) - 100;
+        screenHeight = Math.ceil(screenBounds.getHeight()) - 40;
         leftX = (int) (Math.floor((screenBounds.getWidth() - screenWidth) / 2));
 
         blackRec = new Rectangle(0, 0, Color.BLACK);
@@ -110,8 +118,25 @@ public class Game extends Application{
         stage.show();
     }
 
+    public static void setXY(int x, int y) {
+        selectedX = x;
+        selectedY = y;
+    }
+
     public void keys() {
-        //move :
+        double minX = leftX;
+        double maxX = leftX + blockWidth * blockPixel;
+        Robot robot = new Robot();
+
+        scene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
+            double x = event.getX();
+            double y = event.getY();
+
+            if (customizePane == null && (x < minX || x > maxX)) {
+                robot.mouseMove(Math.min(Math.max(minX, x), maxX), y);
+            }
+        });
+
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
@@ -121,6 +146,12 @@ public class Game extends Application{
 
             if(event.getButton() == MouseButton.SECONDARY) {
                 building = null;
+                mainPane.getChildren().remove(customizePane);
+                customizePane = null;
+                tree = null;
+                land = null;
+                moveMode = true;
+                DataBase.setSelectedUnit(null);
             }
 
             if (customizePane != null) {
@@ -152,9 +183,7 @@ public class Game extends Application{
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
 
-            if (customizePane != null) {
-
-            } else if (moveMode) {
+            if (moveMode && customizePane == null) {
                 //on move mode :
                 if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
                     squareI++;
@@ -192,16 +221,33 @@ public class Game extends Application{
                 int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
                 int nowY = (int) (Math.floor(endY / blockPixel));
 
-                for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
-                    for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
-                        Square thisSquare = squares[squareI + i][squareJ + j];
-                        //TODO
+                if (blockX == nowX && nowY == blockY && squares[squareI + nowX][squareI + nowY].getBuilding() != null)
+                    drawOptionForBuilding(squares[squareI + nowX][squareI + nowY].getBuilding());
+
+                else {
+                    ArrayList<Unit> selectedUnit = new ArrayList<>();
+                    for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
+                        for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
+                            Square thisSquare = squares[squareI + i][squareJ + j];
+                            for (Unit unit : thisSquare.getUnits())
+                                if (DataBase.getCurrentGovernment().equals(unit.getOwner())) selectedUnit.add(unit);
+                        }
+                    }
+
+                    if (selectedUnit.size() != 0) {
+                        DataBase.setSelectedUnit(selectedUnit);
+                        try {
+                            showSelectedSquares();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        drawMapDetails();
                     }
                 }
             }
         });
 
-        //other keys :
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.I) {
                 if (blockPixel < 35) {
@@ -244,7 +290,13 @@ public class Game extends Application{
                 } else {
                     mainPane.getChildren().remove(customizePane);
                     customizePane = null;
+                    tree = null;
+                    land = null;
                 }
+            } else if (event.getCode() == KeyCode.M) {
+                if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
+            } else if (event.getCode() == KeyCode.A) {
+                if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
             }
         });
     }
@@ -328,11 +380,23 @@ public class Game extends Application{
         bottomPane = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BottomMenu.fxml")).toExternalForm()));
         bottomPane.setLayoutX(leftX);
-        bottomPane.setLayoutY(screenHeight);
+        bottomPane.setLayoutY(screenHeight - 60);
 //        todo uncomment when code finished
 
 //        GameGraphicController.setPopularityGoldPopulation();
         mainPane.getChildren().add(bottomPane);
+    }
+
+    private void showSelectedSquares() throws IOException {
+
+    }
+
+    private void drawOptionForBuilding(Building building) {
+
+    }
+
+    private void drawMapDetails() {
+
     }
 
     private void drawLeft() throws IOException {
@@ -341,6 +405,20 @@ public class Game extends Application{
         customizePane.setLayoutX(0);
         customizePane.setLayoutY(0);
         mainPane.getChildren().add(customizePane);
+    }
+
+    private void moveGetCoordinate() {
+        new GetCoordinate();
+        if (selectedX != -1 && selectedY != -1) {
+
+        }
+    }
+
+    private void attackGetCoordinate() {
+        new GetCoordinate();
+        if (selectedX != -1 && selectedY != -1) {
+
+        }
     }
 
     public static void loadImages() throws FileNotFoundException {
