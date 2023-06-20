@@ -57,7 +57,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/ConstructorBottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
@@ -67,7 +67,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/FoodBottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
@@ -77,7 +77,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/VillageBottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
@@ -87,7 +87,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/KitchenBottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
@@ -97,7 +97,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/DefenceBottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
@@ -107,7 +107,7 @@ public class GameGraphicController {
         AnchorPane anchorPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/BottomMenu.fxml").toExternalForm()));
         anchorPane.setLayoutX(Game.leftX);
-        anchorPane.setLayoutY(Game.screenHeight);
+        anchorPane.setLayoutY(Game.screenHeight - 60);
         Game.bottomPane = anchorPane;
         Game.mainPane.getChildren().add(Game.bottomPane);
     }
