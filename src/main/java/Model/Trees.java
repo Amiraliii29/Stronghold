@@ -13,6 +13,7 @@ public enum Trees {
         this.name = name;
     }
     public static String getName(Trees mainEnum){
+        if (mainEnum == null) return "--";
         return mainEnum.name;
     }
     public static Trees getTreeByName(String name){

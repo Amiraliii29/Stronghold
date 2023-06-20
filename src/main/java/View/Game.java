@@ -6,12 +6,14 @@ import Model.*;
 import Model.Buildings.Building;
 import Model.Units.Unit;
 import View.Controller.GetCoordinate;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,9 +26,12 @@ import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,25 +43,28 @@ public class Game extends Application{
     private static final HashMap<String, Image> units;
     private static final HashMap<String, Image> buildings;
     private static final HashMap<Trees, Image> trees;
-    private static int blockPixel;
+
     private static final double screenWidth;
     public static final double screenHeight;
+    private static int blockPixel;
     public static final int leftX;
     private static int blockWidth;
     private static int blockHeight;
     private static final Rectangle blackRec;
     private static final Rectangle selectSq;
+
     public static Pane mainPane; // this pane contains all other panes such as pane
+    private static Stage stage;
+    private static Pane pane;
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
+    private static Pane squareInfo;
 
     public static Trees tree;
     public static Land land;
     private static int selectedX;
     private static int selectedY;
 
-    private Stage stage;
-    private Pane pane;
     private Scene scene;
     private final Map map;
     private Square[][] squares;
@@ -66,6 +74,10 @@ public class Game extends Application{
     private int blockY;
     private boolean moveMode;
     private Building building;
+    private Timeline hoverTimeline;
+    private double mouseX;
+    private double mouseY;
+
 
     static {
         tiles = new HashMap<>();
@@ -94,21 +106,27 @@ public class Game extends Application{
         squareJ = 0;
         moveMode = true;
         building = null;
+        customizePane = null;
+        tree = null;
+        land = null;
+        DataBase.setSelectedUnit(null);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
-        this.pane = new Pane();
+        pane = new Pane();
         mainPane.getChildren().add(pane);
-        this.stage = stage;
+        Game.stage = stage;
 
         this.scene = new Scene(mainPane, screenWidth, screenHeight);
-        this.stage.setScene(scene);
+        stage.setScene(scene);
 
         blockPixel = 30;
         blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
         blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
+
+        setHoverTimeline();
 
         drawMap();
         drawBottom();
@@ -121,6 +139,52 @@ public class Game extends Application{
     public static void setXY(int x, int y) {
         selectedX = x;
         selectedY = y;
+    }
+
+    private boolean isCordInMap(double x, double y) {
+        return x > leftX && x < screenWidth + leftX && y < screenHeight;
+    }
+
+    private void setHoverTimeline() throws IOException {
+        squareInfo = FXMLLoader.load(
+                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/SquareInfo.fxml")).toExternalForm()));
+        squareInfo.setLayoutX(leftX + screenWidth + 50);
+        squareInfo.setLayoutY(50);
+
+        Label landLabel = new Label();
+        landLabel.setLayoutY(25);
+        landLabel.setAlignment(Pos.CENTER);
+        landLabel.setPrefHeight(25);
+        landLabel.setPrefWidth(100);
+        squareInfo.getChildren().add(landLabel);
+
+        Label treeLabel = new Label();
+        treeLabel.setLayoutY(75);
+        treeLabel.setAlignment(Pos.CENTER);
+        treeLabel.setPrefHeight(25);
+        treeLabel.setPrefWidth(100);
+        squareInfo.getChildren().add(treeLabel);
+
+        Label buildingLabel = new Label();
+        buildingLabel.setLayoutY(125);
+        buildingLabel.setAlignment(Pos.CENTER);
+        buildingLabel.setPrefHeight(25);
+        buildingLabel.setPrefWidth(100);
+        squareInfo.getChildren().add(buildingLabel);
+
+        hoverTimeline = new Timeline(new KeyFrame(Duration.seconds(3), actionEvent -> {
+            int nowX = (int) (Math.floor((mouseX - leftX) / blockPixel));
+            int nowY = (int) (Math.floor(mouseY / blockPixel));
+
+            try {
+                if (moveMode && isCordInMap(mouseX, mouseY))
+                    drawSquareInfo(squares[nowX + squareI][squareJ + nowY], landLabel, treeLabel, buildingLabel);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
+        hoverTimeline.setCycleCount(-1);
+        hoverTimeline.play();
     }
 
     public void keys() {
@@ -140,17 +204,17 @@ public class Game extends Application{
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
-
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
 
-            if(event.getButton() == MouseButton.SECONDARY) {
-                building = null;
+            if (event.getButton() == MouseButton.SECONDARY) {
+                moveMode = true;
                 mainPane.getChildren().remove(customizePane);
                 customizePane = null;
                 tree = null;
                 land = null;
-                moveMode = true;
+                building = null;
+                selectSq.setVisible(false);
                 DataBase.setSelectedUnit(null);
             }
 
@@ -161,17 +225,16 @@ public class Game extends Application{
                    CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
                drawMap();
+            } else if (DataBase.getSelectedUnit() != null) {
+                //TODO : move
+            } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
+                //TODO : show building option
             } else if (!moveMode) {
-                if (building != null) {
-                    //TODO
-                    drawMap();
-                } else {
-                    selectSq.setVisible(true);
-                    selectSq.setX(leftX + blockX * blockPixel);
-                    selectSq.setY(blockY * blockPixel);
-                    selectSq.setWidth(blockPixel);
-                    selectSq.setHeight(blockPixel);
-                }
+                selectSq.setX(leftX + blockX * blockPixel);
+                selectSq.setY(blockY * blockPixel);
+                selectSq.setWidth(blockPixel);
+                selectSq.setHeight(blockPixel);
+                selectSq.setVisible(true);
             }
         });
 
@@ -179,12 +242,15 @@ public class Game extends Application{
             double endX = event.getX();
             double endY = event.getY();
             boolean draw = false;
-
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
 
-            if (moveMode && customizePane == null) {
-                //on move mode :
+
+            if (building != null) {
+
+            } else if (DataBase.getSelectedUnit() != null) {
+                //Nothing
+            } else if (moveMode) {
                 if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
                     squareI++;
                     draw = true;
@@ -206,7 +272,7 @@ public class Game extends Application{
                     blockY = nowY;
                     drawMap();
                 }
-            } else {
+            } else if (customizePane == null) {
                 selectSq.setWidth(Math.abs((nowX - blockX) * blockPixel));
                 selectSq.setHeight(Math.abs((nowY - blockY) * blockPixel));
                 selectSq.setX(leftX + Math.min(blockX, nowX) * blockPixel);
@@ -215,37 +281,45 @@ public class Game extends Application{
         });
 
         pane.setOnMouseReleased(event -> {
-            if (!moveMode && customizePane == null) {
-                double endX = event.getX();
-                double endY = event.getY();
-                int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
-                int nowY = (int) (Math.floor(endY / blockPixel));
+            double endX = event.getX();
+            double endY = event.getY();
+            int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+            int nowY = (int) (Math.floor(endY / blockPixel));
 
-                if (blockX == nowX && nowY == blockY && squares[squareI + nowX][squareI + nowY].getBuilding() != null)
-                    drawOptionForBuilding(squares[squareI + nowX][squareI + nowY].getBuilding());
-
-                else {
-                    ArrayList<Unit> selectedUnit = new ArrayList<>();
-                    for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
-                        for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
-                            Square thisSquare = squares[squareI + i][squareJ + j];
-                            for (Unit unit : thisSquare.getUnits())
-                                if (DataBase.getCurrentGovernment().equals(unit.getOwner())) selectedUnit.add(unit);
-                        }
-                    }
-
-                    if (selectedUnit.size() != 0) {
-                        DataBase.setSelectedUnit(selectedUnit);
-                        try {
-                            showSelectedSquares();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        drawMapDetails();
+            if (building != null) {
+                //TODO : put building
+            } else if (DataBase.getSelectedUnit() != null) {
+                //Nothing
+            } else if (!moveMode && customizePane == null) {
+                ArrayList<Unit> selectedUnit = new ArrayList<>();
+                for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
+                    for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
+                        Square thisSquare = squares[squareI + i][squareJ + j];
+                        for (Unit unit : thisSquare.getUnits())
+                            if (DataBase.getCurrentGovernment().equals(unit.getOwner())) selectedUnit.add(unit);
                     }
                 }
+
+                if (selectedUnit.size() != 0) {
+                    DataBase.setSelectedUnit(selectedUnit);
+                    try {
+                        showSelectedSquares(nowX, nowY);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    drawMapDetails(nowX, nowY);
+                }
             }
+        });
+
+        scene.setOnMouseMoved(event -> {
+            mouseX = event.getX();
+            mouseY = event.getY();
+
+            mainPane.getChildren().remove(squareInfo);
+
+            hoverTimeline.playFromStart();
         });
 
         scene.setOnKeyPressed(event -> {
@@ -280,9 +354,15 @@ public class Game extends Application{
                 }
             } else if (event.getCode() == KeyCode.S) {
                 moveMode = !moveMode;
+                customizePane = null;
+                building = null;
+                tree = null;
+                land = null;
             } else if (event.getCode() == KeyCode.C) {
                 if (customizePane == null) {
                     try {
+                        building = null;
+                        moveMode = false;
                         drawLeft();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -292,6 +372,8 @@ public class Game extends Application{
                     customizePane = null;
                     tree = null;
                     land = null;
+                    building = null;
+                    moveMode = true;
                 }
             } else if (event.getCode() == KeyCode.M) {
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
@@ -387,16 +469,16 @@ public class Game extends Application{
         mainPane.getChildren().add(bottomPane);
     }
 
-    private void showSelectedSquares() throws IOException {
-
+    private void showSelectedSquares(int finalBlockX, int finalBlockY) throws IOException {
+        System.out.println("show selected squares!");
     }
 
-    private void drawOptionForBuilding(Building building) {
-
+    private void showBuildingDetail(Building building) {
+        System.out.println("show building details!");
     }
 
-    private void drawMapDetails() {
-
+    private void drawMapDetails(int finalBlockX, int finalBlockY) {
+        System.out.println("show Map details");
     }
 
     private void drawLeft() throws IOException {
@@ -405,6 +487,51 @@ public class Game extends Application{
         customizePane.setLayoutX(0);
         customizePane.setLayoutY(0);
         mainPane.getChildren().add(customizePane);
+    }
+
+    private void drawSquareInfo(Square square, Label landLabel, Label treeLabel, Label buildingLabel) throws IOException {
+        landLabel.setText(Land.getName(square.getLand()));
+        landLabel.setTextFill(Color.WHITE);
+
+        treeLabel.setText(Trees.getName(square.getTree()));
+        treeLabel.setTextFill(Color.WHITE);
+
+        if (square.getBuilding() != null) buildingLabel.setText(square.getBuilding().getName());
+        else buildingLabel.setText("--");
+        buildingLabel.setTextFill(Color.WHITE);
+
+        HashMap<Unit,Integer> unitCount = new HashMap<>();
+        for (Unit unit : square.getUnits()) {
+            if (!DataBase.getCurrentGovernment().equals(unit.getOwner())) continue;
+            if (unitCount.containsKey(unit))
+                unitCount.put(unit, unitCount.get(unit) + 1);
+            else
+                unitCount.put(unit, 1);
+        }
+
+        int y = 175;
+        for (java.util.Map.Entry<Unit, Integer> set : unitCount.entrySet()) {
+            ImageView unitImage = new ImageView(units.get(set.getKey().getName()));
+            unitImage.setLayoutX(10);
+            unitImage.setLayoutY(y);
+            unitImage.setFitWidth(40);
+            unitImage.setFitHeight(40);
+
+            Label unitCnt = new Label(set.getValue().toString());
+            unitCnt.setLayoutX(60);
+            unitCnt.setLayoutY(y);
+            unitCnt.setAlignment(Pos.CENTER);
+            unitCnt.setPrefHeight(40);
+            unitCnt.setPrefWidth(40);
+            unitCnt.setTextFill(Color.WHITE);
+
+            squareInfo.getChildren().add(unitImage);
+            squareInfo.getChildren().add(unitCnt);
+
+            y += 40;
+        }
+
+        if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
     private void moveGetCoordinate() {
