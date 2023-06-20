@@ -62,6 +62,7 @@ public class Game extends Application{
 
     public static Trees tree;
     public static Land land;
+    private static AnchorPane buildingDetail;
     private static int selectedX;
     private static int selectedY;
 
@@ -216,6 +217,7 @@ public class Game extends Application{
                 building = null;
                 selectSq.setVisible(false);
                 DataBase.setSelectedUnit(null);
+                bottomPane.getChildren().remove(buildingDetail);
             }
 
             if (customizePane != null) {
@@ -228,7 +230,12 @@ public class Game extends Application{
             } else if (DataBase.getSelectedUnit() != null) {
                 //TODO : move
             } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
-                //TODO : show building option
+                try {
+                    showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                moveMode = true;
             } else if (!moveMode) {
                 selectSq.setX(leftX + blockX * blockPixel);
                 selectSq.setY(blockY * blockPixel);
@@ -473,8 +480,26 @@ public class Game extends Application{
         System.out.println("show selected squares!");
     }
 
-    private void showBuildingDetail(Building building) {
-        System.out.println("show building details!");
+    private void showBuildingDetail(Building building) throws IOException {
+        if (building.getName().equals("MercenaryPost")) {
+            buildingDetail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
+
+        } else if (building.getName().equals("Barrack")) {
+            buildingDetail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Barrack.fxml")).toExternalForm()));
+        } else if (building.getName().equals("EngineerGuild")) {
+            buildingDetail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
+        } else {
+            buildingDetail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/mercenaryPost.fxml")).toExternalForm()));
+        }
+
+        buildingDetail.setLayoutX(115);
+        buildingDetail.setLayoutY(30);
+
+        bottomPane.getChildren().add(buildingDetail);
     }
 
     private void drawMapDetails(int finalBlockX, int finalBlockY) {
