@@ -259,6 +259,11 @@ public class Game extends Application{
         scene.setOnMouseDragged(event -> {
             double endX = event.getX();
             double endY = event.getY();
+
+            if (customizePane == null && (endX < minX || endX > maxX)) {
+                robot.mouseMove(Math.min(Math.max(minX, endX), maxX), endY);
+            }
+
             boolean draw = false;
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
@@ -486,6 +491,7 @@ public class Game extends Application{
     }
 
     private void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<Unit> selectedUnit) throws IOException {
+        bottomPane.getChildren().remove(detail);
         detail = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/ShowSelectedSquares.fxml")).toExternalForm()));
         detail.setLayoutX(115);
@@ -506,6 +512,7 @@ public class Game extends Application{
             }
         }
 
+        mainPane.getChildren().remove(selectedSquareInfo);
         selectedSquareInfo = new Pane();
         selectedSquareInfo.setLayoutX(leftX + screenWidth + 50);
         selectedSquareInfo.setLayoutY(50);
