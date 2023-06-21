@@ -33,7 +33,7 @@
         "storage": "Armoury"
       },
       {
-        "name": "LeatherArmor",
+        "name": "LeatherArmour",
         "price": 100,
         "count": 0.0,
         "storage": "Armoury"
@@ -83,7 +83,7 @@
         "storage": "Armoury"
       },
       {
-        "name": "MetalArmor",
+        "name": "MetalArmour",
         "price": 100,
         "count": 0.0,
         "storage": "Armoury"
@@ -111,7 +111,7 @@
         "storage": "Armoury"
       },
       {
-        "name": "LeatherArmor",
+        "name": "LeatherArmour",
         "price": 100,
         "count": 0.0,
         "storage": "Armoury"
@@ -139,7 +139,7 @@
         "storage": "Armoury"
       },
       {
-        "name": "MetalArmor",
+        "name": "MetalArmour",
         "price": 100,
         "count": 0.0,
         "storage": "Armoury"
@@ -167,7 +167,7 @@
         "storage": "Armoury"
       },
       {
-        "name": "MetalArmor",
+        "name": "MetalArmour",
         "price": 100,
         "count": 0.0,
         "storage": "Armoury"

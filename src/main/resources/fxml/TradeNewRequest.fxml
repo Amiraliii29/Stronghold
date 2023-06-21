@@ -50,7 +50,7 @@
       </ImageView>
       <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="147.0" layoutY="432.0" onMouseClicked="#selectApples" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/resources/Apple.png" />
+            <Image url="@../Images/resources/Apples.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="210.0" layoutY="432.0" onMouseClicked="#selectHops" pickOnBounds="true" preserveRatio="true">
@@ -75,47 +75,47 @@
       </ImageView>
       <ImageView fitHeight="59.0" fitWidth="89.0" layoutX="446.0" layoutY="432.0" onMouseClicked="#selectBread" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/resources/bread.png" />
+            <Image url="@../Images/resources/Bread.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="505.0" layoutY="436.0" onMouseClicked="#selectSword" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/Sword.png" />
+            <Image url="@../Images/resources/Sword.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="557.0" layoutY="436.0" onMouseClicked="#selectSpear" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/Spear.png" />
+            <Image url="@../Images/resources/Spear.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="332.0" layoutY="492.0" onMouseClicked="#selectPike" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/Pike.png" />
+            <Image url="@../Images/resources/Pike.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="34.0" layoutY="491.0" onMouseClicked="#selectMace" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/Mace.png" />
+            <Image url="@../Images/resources/Mace.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="92.0" layoutY="491.0" onMouseClicked="#selectBow" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/Bow.png" />
+            <Image url="@../Images/resources/Bow.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="151.0" layoutY="491.0" onMouseClicked="#selectCrossBow" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/CrossBow.png" />
+            <Image url="@../Images/resources/CrossBow.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="214.0" layoutY="491.0" onMouseClicked="#selectMetalArmor" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/MetalArmour.png" />
+            <Image url="@../Images/resources/MetalArmour.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="51.0" fitWidth="65.0" layoutX="273.0" layoutY="491.0" onMouseClicked="#selectLeatherArmor" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/weapons/LeatherArmour.png" />
+            <Image url="@../Images/resources/LeatherArmour.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="59.0" fitWidth="58.0" layoutX="388.0" layoutY="491.0" onMouseClicked="#selectWood" pickOnBounds="true" preserveRatio="true">

@@ -4,7 +4,9 @@ import Controller.CustomizeMapController;
 import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
+import Model.Buildings.Generator;
 import Model.Units.Unit;
+import View.Controller.BuildingInfo;
 import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,6 +26,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -43,6 +46,7 @@ public class Game extends Application{
     private static final HashMap<String, Image> units;
     private static final HashMap<String, Image> buildings;
     private static final HashMap<Trees, Image> trees;
+    private static final HashMap<String, Image> resources;
 
     private static final double screenWidth;
     public static final double screenHeight;
@@ -59,10 +63,11 @@ public class Game extends Application{
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
     private static Pane squareInfo;
+    private static Pane selectedSquareInfo;
 
     public static Trees tree;
     public static Land land;
-    private static AnchorPane buildingDetail;
+    private static AnchorPane detail;
     private static int selectedX;
     private static int selectedY;
 
@@ -85,6 +90,7 @@ public class Game extends Application{
         units = new HashMap<>();
         buildings = new HashMap<>();
         trees = new HashMap<>();
+        resources = new HashMap<>();
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = 1115;
@@ -144,6 +150,19 @@ public class Game extends Application{
 
     private boolean isCordInMap(double x, double y) {
         return x > leftX && x < screenWidth + leftX && y < screenHeight;
+    }
+
+    private void clear() {
+        moveMode = true;
+        mainPane.getChildren().remove(customizePane);
+        customizePane = null;
+        tree = null;
+        land = null;
+        building = null;
+        selectSq.setVisible(false);
+        DataBase.setSelectedUnit(null);
+        bottomPane.getChildren().remove(detail);
+        mainPane.getChildren().remove(selectedSquareInfo);
     }
 
     private void setHoverTimeline() throws IOException {
@@ -208,17 +227,8 @@ public class Game extends Application{
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
 
-            if (event.getButton() == MouseButton.SECONDARY) {
-                moveMode = true;
-                mainPane.getChildren().remove(customizePane);
-                customizePane = null;
-                tree = null;
-                land = null;
-                building = null;
-                selectSq.setVisible(false);
-                DataBase.setSelectedUnit(null);
-                bottomPane.getChildren().remove(buildingDetail);
-            }
+            if (event.getButton() == MouseButton.SECONDARY)
+                clear();
 
             if (customizePane != null) {
                if (tree != null)
@@ -229,6 +239,7 @@ public class Game extends Application{
                drawMap();
             } else if (DataBase.getSelectedUnit() != null) {
                 //TODO : move
+                //TODO : edit selected unit arraylist based on users input !
             } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                 try {
                     showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
@@ -307,15 +318,13 @@ public class Game extends Application{
                     }
                 }
 
-                if (selectedUnit.size() != 0) {
+                if (selectedUnit.size() != 0)
                     DataBase.setSelectedUnit(selectedUnit);
-                    try {
-                        showSelectedSquares(nowX, nowY);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    drawMapDetails(nowX, nowY);
+
+                try {
+                    showSelectedSquares(nowX, nowY, selectedUnit);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -476,34 +485,127 @@ public class Game extends Application{
         mainPane.getChildren().add(bottomPane);
     }
 
-    private void showSelectedSquares(int finalBlockX, int finalBlockY) throws IOException {
-        System.out.println("show selected squares!");
+    private void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<Unit> selectedUnit) throws IOException {
+        detail = FXMLLoader.load(
+                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/ShowSelectedSquares.fxml")).toExternalForm()));
+        detail.setLayoutX(115);
+        detail.setLayoutY(30);
+
+        bottomPane.getChildren().add(detail);
+
+        HashMap<String, Integer> resourceGenerate = new HashMap<>();
+        for (int i = Math.min(blockX, finalBlockX); i < Math.max(blockX, finalBlockX); i++) {
+            for (int j = Math.min(blockY, finalBlockY); j < Math.max(blockY, finalBlockY); j++) {
+                if (squares[squareI + i][squareJ + j].getBuilding() instanceof Generator build &&
+                        build.getXCoordinateLeft() == squareI + i && build.getYCoordinateUp() == squareJ + j) {
+                    if (resourceGenerate.containsKey(build.getResourceGenerate().getName()))
+                        resourceGenerate.put(build.getResourceGenerate().getName(), resourceGenerate.get(build.getResourceGenerate().getName()) + build.getGeneratingRate());
+                    else
+                        resourceGenerate.put(build.getResourceGenerate().getName(), build.getGeneratingRate());
+                }
+            }
+        }
+
+        selectedSquareInfo = new Pane();
+        selectedSquareInfo.setLayoutX(leftX + screenWidth + 50);
+        selectedSquareInfo.setLayoutY(50);
+        selectedSquareInfo.setPrefWidth(100);
+        selectedSquareInfo.setPrefHeight(500);
+        int y = 0;
+        for (java.util.Map.Entry<String, Integer> entry : resourceGenerate.entrySet()) {
+            if (y == 200) break;
+
+            ImageView resImage = new ImageView(resources.get(entry.getKey()));
+            resImage.setLayoutX(10);
+            resImage.setLayoutY(y);
+            resImage.setFitHeight(30);
+            resImage.setFitWidth(30);
+
+            Label cntLabel = new Label(entry.getValue().toString());
+            cntLabel.setLayoutX(50);
+            cntLabel.setLayoutY(y);
+            cntLabel.setAlignment(Pos.CENTER);
+            cntLabel.setPrefHeight(30);
+            cntLabel.setPrefWidth(30);
+            cntLabel.setTextFill(Color.WHITE);
+            cntLabel.setFont(new Font(20));
+
+            selectedSquareInfo.getChildren().add(resImage);
+            selectedSquareInfo.getChildren().add(cntLabel);
+
+            y += 40;
+        }
+
+        y += 20;
+        HashMap<String, Integer> unitCnt = new HashMap<>();
+        for (Unit unit : selectedUnit) {
+            if (unitCnt.containsKey(unit.getName()))
+                unitCnt.put(unit.getName(), unitCnt.get(unit.getName()) + 1);
+            else
+                unitCnt.put(unit.getName(), 1);
+        }
+
+        int check = 0;
+        int x = 178;
+        for (java.util.Map.Entry<String, Integer> set : unitCnt.entrySet()) {
+            if (check == 8) break;
+
+            ImageView unitImage = new ImageView(units.get(set.getKey()));
+            unitImage.setLayoutX(10);
+            unitImage.setLayoutY(y);
+            unitImage.setFitWidth(30);
+            unitImage.setFitHeight(30);
+
+            Label unitLabel = new Label(set.getValue().toString());
+            unitLabel.setLayoutX(50);
+            unitLabel.setLayoutY(y);
+            unitLabel.setFont(new Font(20));
+            unitLabel.setAlignment(Pos.CENTER);
+            unitLabel.setPrefHeight(30);
+            unitLabel.setPrefWidth(30);
+            unitLabel.setTextFill(Color.WHITE);
+
+            selectedSquareInfo.getChildren().add(unitImage);
+            selectedSquareInfo.getChildren().add(unitLabel);
+
+
+
+            ImageView unitImage2 = new ImageView(units.get(set.getKey()));
+            unitImage2.setLayoutX(x);
+            unitImage2.setLayoutY(32);
+            unitImage2.setFitWidth(50);
+            unitImage2.setFitHeight(56);
+
+            detail.getChildren().add(unitImage2);
+
+            x += 50;
+            y += 40;
+            check++;
+        }
+
+        mainPane.getChildren().add(selectedSquareInfo);
     }
 
     private void showBuildingDetail(Building building) throws IOException {
         if (building.getName().equals("MercenaryPost")) {
-            buildingDetail = FXMLLoader.load(
+            detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
 
         } else if (building.getName().equals("Barrack")) {
-            buildingDetail = FXMLLoader.load(
+            detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Barrack.fxml")).toExternalForm()));
         } else if (building.getName().equals("EngineerGuild")) {
-            buildingDetail = FXMLLoader.load(
+            detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
         } else {
-            buildingDetail = FXMLLoader.load(
+            detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/mercenaryPost.fxml")).toExternalForm()));
         }
 
-        buildingDetail.setLayoutX(115);
-        buildingDetail.setLayoutY(30);
+        detail.setLayoutX(115);
+        detail.setLayoutY(30);
 
-        bottomPane.getChildren().add(buildingDetail);
-    }
-
-    private void drawMapDetails(int finalBlockX, int finalBlockY) {
-        System.out.println("show Map details");
+        bottomPane.getChildren().add(detail);
     }
 
     private void drawLeft() throws IOException {
@@ -553,7 +655,7 @@ public class Game extends Application{
             squareInfo.getChildren().add(unitImage);
             squareInfo.getChildren().add(unitCnt);
 
-            y += 40;
+            y += 50;
         }
 
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
@@ -593,6 +695,11 @@ public class Game extends Application{
         for (Trees tree : Trees.values()) {
             Image image = new Image(new FileInputStream("src/main/resources/Images/trees/" + Trees.getName(tree) + ".png"));
             trees.put(tree, image);
+        }
+        //resources :
+        for (Resource resource : Resource.getAllResources()) {
+            Image image = new Image(new FileInputStream("src/main/resources/Images/resources/" + resource.getName() + ".png"));
+            resources.put(resource.getName(), image);
         }
     }
 }

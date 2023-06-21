@@ -199,7 +199,7 @@
     "usingRate": 3,
     "generatingRate": 1,
     "resourceGenerate": {
-      "name": "MetalArmor",
+      "name": "MetalArmour",
       "price": 100,
       "count": 0.0,
       "storage": "Armoury"
@@ -217,7 +217,7 @@
       "count": 0.0,
       "storage": "Stockpile"
     },
-    "name": "Armorer",
+    "name": "Armourer",
     "width": 4,
     "length": 3,
     "xCoordinateLeft": 0,

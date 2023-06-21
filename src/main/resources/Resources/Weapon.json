@@ -18,7 +18,7 @@
     "storage": "Armoury"
   },
   {
-    "name": "MetalArmor",
+    "name": "MetalArmour",
     "price": 58,
     "count": 0.0,
     "storage": "Armoury"
@@ -42,7 +42,7 @@
     "storage": "Armoury"
   },
   {
-    "name": "LeatherArmor",
+    "name": "LeatherArmour",
     "price": 25,
     "count": 0.0,
     "storage": "Armoury"
