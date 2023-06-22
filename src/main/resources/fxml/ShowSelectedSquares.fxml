@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="120.0" prefWidth="618.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.BuildingInfo">
+<AnchorPane prefHeight="120.0" prefWidth="618.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.BuildingInfo">
    <children>
       <ImageView fitHeight="120.0" fitWidth="618.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -19,14 +19,14 @@
       <ImageView fitHeight="45.0" fitWidth="36.0" layoutX="40.0" layoutY="-2.0" onMouseClicked="#stanGround" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="84.0" layoutY="3.0" onMouseClicked="#defensive" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="127.0" layoutY="3.0" onMouseClicked="#aggressive" pickOnBounds="true" preserveRatio="true" />
-      <TextField fx:id="one" layoutX="185.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="two" layoutX="241.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="three" layoutX="291.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="four" layoutX="350.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="five" layoutX="403.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="six" layoutX="454.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="seven" layoutX="510.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
-      <TextField fx:id="eight" layoutX="561.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0"  />
+      <TextField fx:id="one" layoutX="185.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="two" layoutX="241.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="three" layoutX="291.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="four" layoutX="350.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="five" layoutX="403.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="six" layoutX="454.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="seven" layoutX="510.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
+      <TextField fx:id="eight" layoutX="561.0" layoutY="93.0" prefHeight="18.0" prefWidth="36.0" />
       <ImageView fitHeight="56.0" fitWidth="50.0" layoutX="178.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

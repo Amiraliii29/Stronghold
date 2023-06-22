@@ -37,6 +37,15 @@ public class Main extends Application {
         Troop.createTroop(government, "Slave", 199, 0);
         Troop.createTroop(government, "Slave", 199, 199);
 
+        Troop.createTroop(government, "Slave", 1, 1);
+        Troop.createTroop(government, "Slave", 1, 1);
+        Troop.createTroop(government, "Slave", 1, 1);
+        Troop.createTroop(government, "Slave", 1, 1);
+        Troop.createTroop(government, "Slave", 1, 1);
+        Troop.createTroop(government, "Slave", 1, 1);
+
+
+
         map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
         Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
         map.getSquareFromMap(30, 20).setBuilding(generator1);
@@ -45,6 +54,8 @@ public class Main extends Application {
         map.getSquareFromMap(31, 21).setBuilding(generator1);
 
         map.getSquareFromMap(50, 25).setBuilding(Generator.createGenerator(government, 50, 25, "IronMine"));
-        new Game().start(stage);
+        Game game = new Game();
+        DataBase.setGame(game);
+        game.start(stage);
     }
 }

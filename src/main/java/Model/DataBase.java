@@ -14,11 +14,13 @@ import Controller.GameMenuController;
 import Controller.JsonConverter;
 import Model.Units.Troop;
 import Model.Units.Unit;
+import View.Game;
 import View.LoginMenu;
 import View.ShopMenu;
 import javafx.stage.Stage;
 
 public class DataBase {
+    private static Game game;
     private static ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
@@ -149,8 +151,8 @@ public class DataBase {
 
         for (Unit unit : selectedUnit) {
             if (enemyUnits.size() == 0) break;
-            if (unit.getDidFight() || unit.getAttackRange() < (int) Math.floor(distance))
-                continue;
+//            if (unit.getDidFight() || unit.getAttackRange() < (int) Math.floor(distance))
+//                continue;
 
             randomEnemyIndex = randomGenerator.nextInt(enemyUnits.size());
             randomEnemy = enemyUnits.get(randomEnemyIndex);
@@ -168,11 +170,11 @@ public class DataBase {
 
     private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender) {
         deffender.changeHitPoint(attacker.getDamage());
-        attacker.setDidFight(true);
-        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance) && !deffender.getDidFight()) {
-            attacker.changeHitPoint(deffender.getDamage());
-            deffender.setDidFight(true);
-        }
+
+//        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance) && !deffender.getDidFight()) {
+//            attacker.changeHitPoint(deffender.getDamage());
+//            deffender.setDidFight(true);
+//        }
     }
 
     private static void removeDeadSelectedUnits() {
@@ -188,7 +190,7 @@ public class DataBase {
         }
     }
 
-    private static void removeUnit(Unit unit) {
+    public static void removeUnit(Unit unit) {
         for (int i = 0; i < selectedUnit.size(); i++) {
             if (selectedUnit.get(i).equals(unit) && unit.getHitPoint() == selectedUnit.get(i).getHitPoint()){
                 selectedUnit.remove(i);
@@ -277,17 +279,17 @@ public class DataBase {
     }
 
     public static void handleEndOfTurnFights() {
-        for (Unit unit : GameMenuController.getAllUnits()) {
-            GameMenuController.setCurrentGovernment(unit.getOwner());
-            currentGovernment = unit.getOwner();
-            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
-            if (targetCoord != null) {
-                selectedUnit.clear();
-                selectedUnit.add(unit);
-                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
-                unit.setDidFight(true);
-            }
-        }
+//        for (Unit unit : GameMenuController.getAllUnits()) {
+//            GameMenuController.setCurrentGovernment(unit.getOwner());
+//            currentGovernment = unit.getOwner();
+//            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+//            if (targetCoord != null) {
+//                selectedUnit.clear();
+//                selectedUnit.add(unit);
+//                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
+//                unit.setDidFight(true);
+//            }
+//        }
     }
 
     public static int[] getEnemyClosestBuilding(int currentX, int currentY) {
@@ -316,5 +318,14 @@ public class DataBase {
 
     public static int getCaptchaNumber() {
         return captchaNumber;
+    }
+
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public static void setGame(Game game) {
+        DataBase.game = game;
     }
 }

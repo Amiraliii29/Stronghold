@@ -9,7 +9,8 @@ import java.util.Objects;
 
 public abstract class Unit {
     protected static ArrayList<String> allUnits;
-    protected boolean didFight;
+    protected static final int maxDistance;
+
     protected Government owner;
     protected String name;
     protected int xCoordinate;
@@ -20,10 +21,10 @@ public abstract class Unit {
     protected int attackRange;
     protected StateUnits stateUnits;
     protected int cost;
-    protected int moveLeft;
 
     static {
         allUnits = new ArrayList<>();
+        maxDistance = 5;
         allUnits.add("Engineer");
         allUnits.add("Tunneler");
         allUnits.add("LadderMan");
@@ -40,9 +41,8 @@ public abstract class Unit {
         this.attackRange = attackRange;
         this.cost = cost;
         this.stateUnits = StateUnits.Stan_Ground;
-        this.moveLeft = speed;
-        this.didFight=false;
     }
+
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
         DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
@@ -62,6 +62,8 @@ public abstract class Unit {
     public void changeHitPoint(int damage) {
         hitPoint -= damage;
     }
+
+
 
     public Government getOwner() {
         return owner;
@@ -101,36 +103,12 @@ public abstract class Unit {
         return this.attackRange;
     }
 
-    public void changeState(StateUnits stateUnits) {
-        this.stateUnits = stateUnits;
-    }
-
     public StateUnits getState() {
         return stateUnits;
     }
 
     public int getCost() {
         return cost;
-    }
-
-    public static ArrayList<String> getAllUnits() {
-        return allUnits;
-    }
-
-    public int getMoveLeft() {
-        return moveLeft;
-    }
-
-    public void setMoveLeft(int moveLeft) {
-        this.moveLeft = moveLeft;
-    }
-
-    public void setDidFight(boolean value){
-        this.didFight=value;
-    }
-
-    public boolean getDidFight(){
-        return didFight;
     }
 
     public int getAggressionRange(){
@@ -140,6 +118,16 @@ public abstract class Unit {
             return (int) (Math.floor(attackRange));
         else
             return (int) (Math.floor(attackRange+speed*0.5));
+    }
+
+
+
+    public static ArrayList<String> getAllUnits() {
+        return allUnits;
+    }
+
+    public static int getMaxDistance() {
+        return maxDistance;
     }
 
     public static void load() {

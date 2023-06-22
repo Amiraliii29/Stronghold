@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -123,7 +124,20 @@ public class Game extends Application{
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
         pane = new Pane();
+        mainPane.getChildren().add(blackRec);
         mainPane.getChildren().add(pane);
+
+        Rectangle leftRec = new Rectangle(0, 0, Color.BLACK);
+        leftRec.setWidth(leftX);
+        leftRec.setHeight(screenHeight + 40);
+        mainPane.getChildren().add(leftRec);
+
+        Rectangle rightRec = new Rectangle(0, 0, Color.BLACK);
+        rightRec.setX(leftX + screenWidth);
+        rightRec.setWidth(leftX);
+        rightRec.setHeight(screenHeight + 40);
+        mainPane.getChildren().add(rightRec);
+
         Game.stage = stage;
 
         this.scene = new Scene(mainPane, screenWidth, screenHeight);
@@ -238,8 +252,9 @@ public class Game extends Application{
 
                drawMap();
             } else if (DataBase.getSelectedUnit() != null) {
-                //TODO : move
-                //TODO : edit selected unit arraylist based on users input !
+
+                move(squareI + blockX, squareJ + blockY);
+
             } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                 try {
                     showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
@@ -263,6 +278,7 @@ public class Game extends Application{
             if (customizePane == null && (endX < minX || endX > maxX)) {
                 robot.mouseMove(Math.min(Math.max(minX, endX), maxX), endY);
             }
+            mainPane.getChildren().remove(squareInfo);
 
             boolean draw = false;
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
@@ -404,10 +420,9 @@ public class Game extends Application{
         });
     }
 
-    private void drawMap() {
+    public void drawMap() {
         squares = map.getSquares();
         pane.getChildren().clear();
-        pane.getChildren().add(blackRec);
 
         ArrayList<Building> buildingsInMap = new ArrayList<>();
 
@@ -552,6 +567,7 @@ public class Game extends Application{
                 unitCnt.put(unit.getName(), 1);
         }
 
+        BuildingInfo.imagesOrder = new ArrayList<>();
         int check = 0;
         int x = 178;
         for (java.util.Map.Entry<String, Integer> set : unitCnt.entrySet()) {
@@ -576,7 +592,6 @@ public class Game extends Application{
             selectedSquareInfo.getChildren().add(unitLabel);
 
 
-
             ImageView unitImage2 = new ImageView(units.get(set.getKey()));
             unitImage2.setLayoutX(x);
             unitImage2.setLayoutY(32);
@@ -584,6 +599,9 @@ public class Game extends Application{
             unitImage2.setFitHeight(56);
 
             detail.getChildren().add(unitImage2);
+
+            BuildingInfo.imagesOrder.add(set.getKey());
+
 
             x += 50;
             y += 40;
@@ -666,6 +684,58 @@ public class Game extends Application{
         }
 
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
+    }
+
+    private void move (int finalX, int finalY) {
+        for (int i = 0; i < 8; i++) {
+            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
+            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) continue;
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText("Use Only 0-9");
+            return;
+        }
+
+
+        ArrayList<Unit> allUnits = new ArrayList<>();
+        ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            ArrayList<Unit> selectedUnit = new ArrayList<>();
+
+            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
+            if (BuildingInfo.getTextFields().get(i).getText() == null) {
+                for (Unit unit : DataBase.getSelectedUnit()) {
+                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i)))
+                        selectedUnit.add(unit);
+                }
+            } else {
+                int j = 0;
+                int max = Integer.parseInt(BuildingInfo.getTextFields().get(i).getText());
+                for (Unit unit : DataBase.getSelectedUnit()) {
+                    if (j == max) break;
+                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i))) {
+                        selectedUnit.add(unit);
+                        j++;
+                    }
+                }
+
+                if (j != max) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Large Selection");
+                    alert.setHeaderText("You Dont Have That Many Unit In This Square!");
+                    continue;
+                }
+            }
+            allUnits.addAll(selectedUnit);
+
+            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
+        }
+
+        DataBase.setSelectedUnit(allUnits);
+
+        for (MoveAnimation animation : moveAnimations)
+            animation.play();
     }
 
     private void moveGetCoordinate() {

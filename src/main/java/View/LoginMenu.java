@@ -76,7 +76,7 @@ public class LoginMenu extends Application {
             case NO_USERS_COUNT -> Input_Output.outPut("start game error: please enter users count");
             case START_GAME_SUCCESS -> {
                 System.out.println("game started successfully");
-                GameMenu.run();
+//                GameMenu.run();
             }
         }
     }

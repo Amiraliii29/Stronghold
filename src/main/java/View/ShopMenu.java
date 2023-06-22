@@ -60,7 +60,7 @@ public class ShopMenu extends Application {
                 ,200, false, false));
         shopPane.getChildren().add(background);
 
-        GameMenu.gamePane.getChildren().add(shopPane);
+//        GameMenu.gamePane.getChildren().add(shopPane);
     }
 
 

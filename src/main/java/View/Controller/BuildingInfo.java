@@ -5,7 +5,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+
 public class BuildingInfo {
+    public static ArrayList<String> imagesOrder;
     public static TextField one;
     public static TextField two;
     public static TextField three;
@@ -16,8 +19,17 @@ public class BuildingInfo {
     public static TextField eight;
 
 
-    public static boolean isSelected () {
-        return one != null || two != null || three != null || four != null || five != null || six != null || seven != null || eight != null;
+    public static ArrayList<TextField> getTextFields () {
+        ArrayList<TextField> textFields = new ArrayList<>();
+        textFields.add(one);
+        textFields.add(two);
+        textFields.add(three);
+        textFields.add(four);
+        textFields.add(five);
+        textFields.add(six);
+        textFields.add(seven);
+        textFields.add(eight);
+        return textFields;
     }
 
 

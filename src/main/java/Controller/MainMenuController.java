@@ -2,7 +2,6 @@ package Controller;
 
 import Model.DataBase;
 import Model.Map;
-import View.GameMenu;
 import View.LoginMenu;
 import javafx.scene.input.MouseEvent;
 
@@ -12,7 +11,7 @@ public class MainMenuController {
         // todo delete line below   amirali
         DataBase.setSelectedMap(new Map("map1"  , 100 , 100));
 
-        new GameMenu().start(DataBase.getMainStage());
+//        new GameMenu().start(DataBase.getMainStage());
     }
 
     public void openMapMenu(MouseEvent mouseEvent) {

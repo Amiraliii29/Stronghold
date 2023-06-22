@@ -37,8 +37,7 @@ public class Square {
         this.y = y;
         units = new ArrayList<>();
 
-        if (new Random().nextInt(2) % 2 == 1) this.land = Land.DEFAULT;
-        else this.land = Land.CLIFF;
+        this.land = Land.DEFAULT;
 
         this.building = null;
         this.tree = null;

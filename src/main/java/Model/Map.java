@@ -242,10 +242,10 @@ public class Map {
             File f = new File(fileAddress);
             if (f.exists() && !f.isDirectory()) {
                 DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
-                GameMenuController.setCurrentMap(DataBase.getSelectedMap());
+//                GameMenuController.setCurrentMap(DataBase.getSelectedMap());
             } else {
                 DataBase.setSelectedMap(null);
-                GameMenuController.setCurrentMap(null);
+//                GameMenuController.setCurrentMap(null);
             }
 
         } catch (IOException e) {
