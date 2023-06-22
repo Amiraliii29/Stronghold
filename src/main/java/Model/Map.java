@@ -20,7 +20,7 @@ public class Map {
     // toole mehvar ofogi = width  moalefe ofoghi = x
     // toole mehvar amoudi = length  moalefe amoudi = y
     private final String name;
-    private Square[][] squares;
+    private final Square[][] squares;
     private ArrayList<Government> governmentsInMap;
     private final int width;
     private final int length;
@@ -36,10 +36,6 @@ public class Map {
                 if (i == width || j >= length) squares[i][j].setLand(Land.CLIFF);
             }
         }
-    }
-
-    public void setSquares(Square[][] squares) {
-        this.squares = squares;
     }
 
     public Square[][] getSquares() {
@@ -61,6 +57,26 @@ public class Map {
     public String getName() {
         return name;
     }
+
+    public ArrayList<Government> getGovernmentsInMap() {
+        return governmentsInMap;
+    }
+
+    public boolean isCoordinationValid(int x, int y) {
+        return x < width && x >= 0 && y >= 0 && y < length;
+    }
+
+
+
+    public void setGovernmentsInMap(int count) {
+        this.governmentsInMap = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Government government = new Government(2000);
+            governmentsInMap.add(government);
+        }
+    }
+
+
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
         boolean check = false;
@@ -134,10 +150,6 @@ public class Map {
         else return 4;
     }
 
-    public boolean isCoordinationValid(int x, int y) {
-        return x < width && x >= 0 && y >= 0 && y < length;
-    }
-
     public void constructBuilding(Building building, int x, int y) {
         for (int i = x; i < x + building.getWidth(); i++) {
             for (int j = y; j < y + building.getLength(); j++) {
@@ -183,14 +195,6 @@ public class Map {
                 getSquareFromMap(i, j).setBuilding(null);
     }
 
-    public void setGovernmentsInMap(int count) {
-        this.governmentsInMap = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Government government = new Government(2000);
-            governmentsInMap.add(government);
-        }
-    }
-
     public int[] getAnEnemyCoordInRange(Unit mainUnit) {
         ArrayList<int[]> landsWithinRange = new ArrayList<>();
         int aggressionRange = mainUnit.getAggressionRange();
@@ -215,9 +219,7 @@ public class Map {
         return false;
     }
 
-    public ArrayList<Government> getGovernmentsInMap() {
-        return governmentsInMap;
-    }
+
 
     public static void saveMap(Map map, String fileName) {
         // filename only without address only name
@@ -242,10 +244,10 @@ public class Map {
             File f = new File(fileAddress);
             if (f.exists() && !f.isDirectory()) {
                 DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
-//                GameMenuController.setCurrentMap(DataBase.getSelectedMap());
+                GameMenuController.setMap(DataBase.getSelectedMap());
             } else {
                 DataBase.setSelectedMap(null);
-//                GameMenuController.setCurrentMap(null);
+                GameMenuController.setMap(null);
             }
 
         } catch (IOException e) {

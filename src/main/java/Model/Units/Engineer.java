@@ -4,7 +4,7 @@ import Model.DataBase;
 import Model.Government;
 
 public class Engineer extends Unit {
-    private boolean busy;
+    private transient boolean busy;
 
     private Engineer(Government owner) {
         super(owner, "Engineer", 2, 50, 0, 0, 15);

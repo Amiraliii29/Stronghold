@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class Siege extends Unit {
     private static ArrayList<Siege> sieges;
     private static ArrayList<String> SiegesName;
-    private final int engineerNeed;
-    private final Resource whatTheyThrow;
-    private int howManyLeft;
+    private transient final int engineerNeed;
+    private transient final Resource whatTheyThrow;
+    private transient int howManyLeft;
 
     static {
         SiegesName = new ArrayList<>();

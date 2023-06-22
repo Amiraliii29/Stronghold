@@ -1,12 +1,9 @@
 package Model;
 
 import Model.Buildings.Building;
-
 import Model.Units.Unit;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class Square {
     private static final HashMap<String, Boolean> canPass;
@@ -45,9 +42,68 @@ public class Square {
         this.treeAmount = 0;
     }
 
+
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Land getLand() {
+        return land;
+    }
+
     public ArrayList<Unit> getUnits() {
         return units;
     }
+
+    public Trees getTree() {
+        return tree;
+    }
+
+    public int getTreeAmount() {
+        return treeAmount;
+    }
+
+    public String getCliffDirection() {
+        return cliffDirection;
+    }
+
+    public boolean canPass() {
+        return canPass.get(Land.getName(land));
+    }
+
+
+
+    public void setTree(Trees tree) {
+        this.tree = tree;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
+    public void setCliffDirection(String cliffDirection) {
+        this.cliffDirection = cliffDirection;
+    }
+
+    public void setLand(Land land) {
+        this.land = land;
+    }
+
+    public void setTreeAmount(int treeAmount) {
+        this.treeAmount = treeAmount;
+    }
+
+
+
 
     public void addUnit(Unit unit) {
         this.units.add(unit);
@@ -72,26 +128,6 @@ public class Square {
         }
     }
 
-    public Building getBuilding() {
-        return building;
-    }
-
-    public void setBuilding(Building building) {
-        this.building = building;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Land getLand() {
-        return land;
-    }
-
     public HashMap<String, Integer> getUnitsTypeAndCount() {
         HashMap<String, Integer> troopsTypeAndCount = new HashMap<>();
         for (Unit unit : units) {
@@ -103,30 +139,6 @@ public class Square {
         return troopsTypeAndCount;
     }
 
-    public boolean canPass() {
-        return canPass.get(Land.getName(land));
-    }
-
-    public void setLand(Land land) {
-        this.land = land;
-    }
-
-    public void newSelectedUnit() {
-        units.clear();
-    }
-
-    public Trees getTree() {
-        return tree;
-    }
-
-    public void setTree(Trees tree) {
-        this.tree = tree;
-    }
-
-    public void setTreeAmount(int treeAmount) {
-        this.treeAmount = treeAmount;
-    }
-
     public void changeTreeAmount(int amount) {
         treeAmount -= amount;
         if (treeAmount <= 0) {
@@ -135,15 +147,7 @@ public class Square {
         }
     }
 
-    public int getTreeAmount() {
-        return treeAmount;
-    }
-
-    public void setCliffDirection(String cliffDirection) {
-        this.cliffDirection = cliffDirection;
-    }
-
-    public String getCliffDirection() {
-        return cliffDirection;
+    public void newSelectedUnit() {
+        units.clear();
     }
 }

@@ -30,12 +30,18 @@ public class Main extends Application {
         Game.loadImages();
         Government government = new Government(10000);
         DataBase.setCurrentGovernment(government);
-        Map map = new Map("for show test", 200, 200);
+
+
+//        Map.loadMap("for test");
+//        Map map = DataBase.getSelectedMap();
+
+
+        Map map = new Map("for test", 200, 200);
         DataBase.setSelectedMap(map);
         GameMenuController.setMap(map);
 
 
-        Troop.createTroop(government,"Lord", 3, 4);
+        Troop.createTroop(government,"Lord", 2, 2);
         Troop.createTroop(government, "Slave", 0, 0);
         Troop.createTroop(government, "Slave", 0, 199);
         Troop.createTroop(government, "Slave", 199, 0);

@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class Generator extends Building {
     private static ArrayList<Generator> generators;
     private static final ArrayList<String> generatorsName;
-    private final int usingRate;
-    private final int generatingRate;
-    private final Resource resourceGenerate;
-    private final Resource resourceNeed;
-    private final int numberOfWorker;
+    private transient final int usingRate;
+    private transient final int generatingRate;
+    private transient final Resource resourceGenerate;
+    private transient final Resource resourceNeed;
+    private transient final int numberOfWorker;
 
     static {
         try {
