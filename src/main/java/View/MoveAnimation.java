@@ -27,32 +27,29 @@ public class MoveAnimation extends Transition {
 
         squares = GameMenuController.moveUnit(unit, squareI, squareJ);
 
-        this.setCycleDuration(Duration.millis(2000.0 / unit.getSpeed()));
+        this.setCycleDuration(Duration.millis(8000.0 / unit.getSpeed()));
         if (squares == null) this.setCycleCount(0);
         else this.setCycleCount(squares.size());
     }
 
     @Override
     protected void interpolate(double v) {
-        for (int i = 0; i < squares.size() - 1; i++) {
-            if (squares.get(i).getX() == unit.getXCoordinate() && squares.get(i).getY() == unit.getYCoordinate()) {
-                //Trap :
-                if (squares.get(i + 1).getBuilding() != null && squares.get(i + 1).getBuilding().getName().equals("Trap")
-                        && !squares.get(i + 1).getBuilding().getOwner().equals(DataBase.getCurrentGovernment())) {
-                    squares.get(i + 1).setBuilding(null);
-                    squares.get(i).removeUnit(units.get(0));
-                    DataBase.removeUnit(units.get(0));
-                    units.remove(units.get(0));
-                }
+        if (squares == null) return;
+        if (squares.size() != 0) {
+            for (Unit moveUnit : units)
+                moveUnit.setCoordinate(squares.get(0).getX(), squares.get(0).getY());
 
-                //Move :
-                for (Unit moveUnit : units) {
-                    moveUnit.setCoordinate(squares.get(i + 1).getX(), squares.get(i + 1).getY());
-                }
-
-                DataBase.getGame().drawMap();
-                break;
+            if (squares.get(0).getBuilding() != null && squares.get(0).getBuilding().getName().equals("Trap")
+                    && !squares.get(0).getBuilding().getOwner().equals(DataBase.getCurrentGovernment())) {
+                squares.get(0).setBuilding(null);
+                squares.get(0).removeUnit(units.get(0));
+                DataBase.removeUnit(units.get(0));
+                units.remove(units.get(0));
             }
+
+            squares.remove(0);
+
+            DataBase.getGame().drawMap();
         }
     }
 }

@@ -618,6 +618,7 @@ public class Game extends Application{
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
         } else {
+            //TODO : change it !
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/mercenaryPost.fxml")).toExternalForm()));
         }

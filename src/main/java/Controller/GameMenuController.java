@@ -29,6 +29,7 @@ public class GameMenuController {
         int startY = unit.getYCoordinate();
         boolean up = map.getSquareFromMap(startX, startY).getBuilding() instanceof Defence;
 
+
         if (move(unit, startX, startY, x, y, Unit.getMaxDistance(), up)) {
             int size = 1000;
             for (ArrayList<Square> array : allWays) {
@@ -44,7 +45,7 @@ public class GameMenuController {
 
     private static boolean move(Unit unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
         //conditions
-        if (map.isCoordinationValid(x, y)) return false;
+        if (!map.isCoordinationValid(x, y)) return false;
 
         if (!map.getSquareFromMap(x, y).canPass()) return false;
 
@@ -85,7 +86,7 @@ public class GameMenuController {
             if (map.getSquareFromMap(x,y).getBuilding() != null && map.getSquareFromMap(x,y).getBuilding().getCanPass(up))
                 return false;
 
-            allWays.add(path);
+            allWays.add(new ArrayList<>(path));
             return true;
         }
 
