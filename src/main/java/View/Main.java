@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import Controller.GameMenuController;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.Buildings.Generator;
@@ -31,6 +32,9 @@ public class Main extends Application {
         DataBase.setCurrentGovernment(government);
         Map map = new Map("for show test", 200, 200);
         DataBase.setSelectedMap(map);
+        GameMenuController.setMap(map);
+
+
         Troop.createTroop(government,"Lord", 3, 4);
         Troop.createTroop(government, "Slave", 0, 0);
         Troop.createTroop(government, "Slave", 0, 199);

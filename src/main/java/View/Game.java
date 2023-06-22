@@ -79,7 +79,6 @@ public class Game extends Application{
     private int squareJ;
     private int blockX;
     private int blockY;
-    private boolean moveMode;
     private Building building;
     private Timeline hoverTimeline;
     private double mouseX;
@@ -112,7 +111,6 @@ public class Game extends Application{
         squares = map.getSquares();
         squareI = 0;
         squareJ = 0;
-        moveMode = true;
         building = null;
         customizePane = null;
         tree = null;
@@ -167,7 +165,6 @@ public class Game extends Application{
     }
 
     private void clear() {
-        moveMode = true;
         mainPane.getChildren().remove(customizePane);
         customizePane = null;
         tree = null;
@@ -211,7 +208,7 @@ public class Game extends Application{
             int nowY = (int) (Math.floor(mouseY / blockPixel));
 
             try {
-                if (moveMode && isCordInMap(mouseX, mouseY))
+                if (isCordInMap(mouseX, mouseY))
                     drawSquareInfo(squares[nowX + squareI][squareJ + nowY], landLabel, treeLabel, buildingLabel);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -241,34 +238,36 @@ public class Game extends Application{
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
 
-            if (event.getButton() == MouseButton.SECONDARY)
+            if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
+            } else if (event.getButton() == MouseButton.PRIMARY) {
+                if (customizePane != null) {
+                    if (tree != null)
+                        CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
+                    else if (land != null)
+                        CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
-            if (customizePane != null) {
-               if (tree != null)
-                   CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
-               else if (land != null)
-                   CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
+                    drawMap();
+                } else if (DataBase.getSelectedUnit() != null) {
 
-               drawMap();
-            } else if (DataBase.getSelectedUnit() != null) {
+                    move(squareI + blockX, squareJ + blockY);
 
-                move(squareI + blockX, squareJ + blockY);
-
-            } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
-                try {
-                    showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
+                    //TODO : Show bound for building !
+                    try {
+                        showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-                moveMode = true;
-            } else if (!moveMode) {
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 selectSq.setX(leftX + blockX * blockPixel);
                 selectSq.setY(blockY * blockPixel);
                 selectSq.setWidth(blockPixel);
                 selectSq.setHeight(blockPixel);
                 selectSq.setVisible(true);
             }
+
         });
 
         scene.setOnMouseDragged(event -> {
@@ -285,33 +284,33 @@ public class Game extends Application{
             int nowY = (int) (Math.floor(endY / blockPixel));
 
 
-            if (building != null) {
+            if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
+                if (building != null) {
 
-            } else if (DataBase.getSelectedUnit() != null) {
-                //Nothing
-            } else if (moveMode) {
-                if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
-                    squareI++;
-                    draw = true;
-                } else if (nowX < blockX && squareI > 0) {
-                    squareI--;
-                    draw = true;
-                }
+                } else {
+                    if (nowX > blockX && squareI < map.getWidth() - blockWidth + 1) {
+                        squareI++;
+                        draw = true;
+                    } else if (nowX < blockX && squareI > 0) {
+                        squareI--;
+                        draw = true;
+                    }
 
-                if (nowY > blockY && squareJ < map.getLength() - blockHeight + 1) {
-                    squareJ++;
-                    draw = true;
-                } else if (nowY < blockY && squareJ > 0) {
-                    squareJ--;
-                    draw = true;
-                }
+                    if (nowY > blockY && squareJ < map.getLength() - blockHeight + 1) {
+                        squareJ++;
+                        draw = true;
+                    } else if (nowY < blockY && squareJ > 0) {
+                        squareJ--;
+                        draw = true;
+                    }
 
-                if (draw ) {
-                    blockX = nowX;
-                    blockY = nowY;
-                    drawMap();
+                    if (draw ) {
+                        blockX = nowX;
+                        blockY = nowY;
+                        drawMap();
+                    }
                 }
-            } else if (customizePane == null) {
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 selectSq.setWidth(Math.abs((nowX - blockX) * blockPixel));
                 selectSq.setHeight(Math.abs((nowY - blockY) * blockPixel));
                 selectSq.setX(leftX + Math.min(blockX, nowX) * blockPixel);
@@ -319,20 +318,20 @@ public class Game extends Application{
             }
         });
 
-        pane.setOnMouseReleased(event -> {
+        scene.setOnMouseReleased(event -> {
             double endX = event.getX();
             double endY = event.getY();
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
 
-            if (building != null) {
-                //TODO : put building
-            } else if (DataBase.getSelectedUnit() != null) {
-                //Nothing
-            } else if (!moveMode && customizePane == null) {
+            if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
+                if (building != null) {
+                    //TODO : put building
+                }
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 ArrayList<Unit> selectedUnit = new ArrayList<>();
-                for (int i = Math.min(blockX, nowX); i < Math.max(blockX, nowX); i++) {
-                    for (int j = Math.min(blockY, nowY); j < Math.max(blockY, nowY); j++) {
+                for (int i = Math.min(blockX, nowX); i <= Math.max(blockX, nowX); i++) {
+                    for (int j = Math.min(blockY, nowY); j <= Math.max(blockY, nowY); j++) {
                         Square thisSquare = squares[squareI + i][squareJ + j];
                         for (Unit unit : thisSquare.getUnits())
                             if (DataBase.getCurrentGovernment().equals(unit.getOwner())) selectedUnit.add(unit);
@@ -389,17 +388,10 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.S) {
-                moveMode = !moveMode;
-                customizePane = null;
-                building = null;
-                tree = null;
-                land = null;
             } else if (event.getCode() == KeyCode.C) {
                 if (customizePane == null) {
                     try {
                         building = null;
-                        moveMode = false;
                         drawLeft();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -410,7 +402,6 @@ public class Game extends Application{
                     tree = null;
                     land = null;
                     building = null;
-                    moveMode = true;
                 }
             } else if (event.getCode() == KeyCode.M) {
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
@@ -608,6 +599,10 @@ public class Game extends Application{
             check++;
         }
 
+        for (int i = check; i < 8; i++) {
+            BuildingInfo.getTextFields().get(i).setVisible(false);
+        }
+
         mainPane.getChildren().add(selectedSquareInfo);
     }
 
@@ -704,7 +699,7 @@ public class Game extends Application{
             ArrayList<Unit> selectedUnit = new ArrayList<>();
 
             if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText() == null) {
+            if (BuildingInfo.getTextFields().get(i).getText() == null || BuildingInfo.getTextFields().get(i).getText().equals("")) {
                 for (Unit unit : DataBase.getSelectedUnit()) {
                     if (unit.getName().equals(BuildingInfo.imagesOrder.get(i)))
                         selectedUnit.add(unit);

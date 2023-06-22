@@ -16,6 +16,11 @@ public class GameMenuController {
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> path;
 
+
+    public static void setMap(Map map) {
+        GameMenuController.map = map;
+    }
+
     public static ArrayList<Square> moveUnit (Unit unit, int x, int y) {
         allWays = new ArrayList<>();
         path = new ArrayList<>();

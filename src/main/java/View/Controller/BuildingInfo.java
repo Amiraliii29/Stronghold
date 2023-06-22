@@ -19,6 +19,18 @@ public class BuildingInfo {
     public static TextField eight;
 
 
+    static {
+        one = new TextField();
+        two = new TextField();
+        three = new TextField();
+        four = new TextField();
+        five = new TextField();
+        six = new TextField();
+        seven = new TextField();
+        eight = new TextField();
+    }
+
+
     public static ArrayList<TextField> getTextFields () {
         ArrayList<TextField> textFields = new ArrayList<>();
         textFields.add(one);
