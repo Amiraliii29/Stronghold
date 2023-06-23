@@ -37,59 +37,59 @@ public class BuildingInfo {
 
 
     public void archerBow(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("ArcherBow", "1");
+        GameMenuController.createUnitController("ArcherBow");
     }
 
     public void slave(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("Slave", "1");
+        GameMenuController.createUnitController("Slave");
     }
 
     public void slinger(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("Slinger", "1");
+        GameMenuController.createUnitController("Slinger");
     }
 
     public void assassin(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("Assassin", "1");
+        GameMenuController.createUnitController("Assassin");
     }
 
     public void arabianSwordMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("ArabianSwordMan", "1");
+        GameMenuController.createUnitController("ArabianSwordMan");
     }
 
     public void horseArcher(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("HorseArcher", "1");
+        GameMenuController.createUnitController("HorseArcher");
     }
 
     public void fireThrower(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("FireThrower", "1");
+        GameMenuController.createUnitController("FireThrower");
     }
 
     public void archer(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("Archer", "1");
+        GameMenuController.createUnitController("Archer");
     }
 
     public void spearMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("SpearMan", "1");
+        GameMenuController.createUnitController("SpearMan");
     }
 
     public void maceMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("MaceMan", "1");
+        GameMenuController.createUnitController("MaceMan");
     }
 
     public void crossBowMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("CrossBowMan", "1");
+        GameMenuController.createUnitController("CrossBowMan");
     }
 
     public void pikeMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("PikeMan", "1");
+        GameMenuController.createUnitController("PikeMan");
     }
 
     public void swordMan(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("SwordMan", "1");
+        GameMenuController.createUnitController("SwordMan");
     }
 
     public void knight(MouseEvent mouseEvent) {
-        GameMenuController.createUnitController("Knight", "1");
+        GameMenuController.createUnitController("Knight");
     }
 
     public void disband(MouseEvent mouseEvent) {
