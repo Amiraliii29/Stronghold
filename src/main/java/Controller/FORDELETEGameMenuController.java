@@ -208,69 +208,10 @@ public class FORDELETEGameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    public static GameMenuMessages createUnitController(String type, String count) {
-        if (!(selectedBuilding instanceof Barrack selectedBarrack))
-            return GameMenuMessages.CREATE_UNIT_WRONG_SELECTED_BUILDING;
 
-        if (!Orders.isInputInteger(count))
-            return GameMenuMessages.CREATEUNIT_WRONG_NUMBERFORMAT;
+  
 
-        int countInNum = Integer.parseInt(count);
-        if (countInNum <= 0)
-            return GameMenuMessages.CREATEUNIT_WRONG_NUMBERFORMAT;
-
-        if (!selectedBarrack.canBuildTroopByName(type))
-            return GameMenuMessages.CREATEUNIT_UNMATCHING_BARRACK;
-
-        Troop targetTroop = Troop.getTroopByName(type);
-
-        assert targetTroop != null;
-        int totalCost = targetTroop.getCost() * countInNum;
-        if (currentGovernment.getMoney() < totalCost)
-            return GameMenuMessages.INSUFFICIENT_GOLD;
-
-        if (!doesHaveUnitsWeapons(countInNum, targetTroop))
-            return GameMenuMessages.INSUFFICIENT_RESOURCES;
-
-        if (currentGovernment.getFreeWorker() < countInNum)
-            return GameMenuMessages.CREATEUNIT_INSUFFICIENT_FREEPOP;
-
-        trainTroopsForGovernment(countInNum, targetTroop, selectedBarrack);
-        return GameMenuMessages.SUCCESS;
-    }
-
-    private static boolean doesHaveUnitsWeapons(int count, Troop targetTroop) {
-        ArrayList<Resource> neededWeapons = new ArrayList<>(targetTroop.getWeapons());
-
-        for (Resource resource : neededWeapons) {
-            resource.changeCount(count - resource.getCount());
-        }
-
-        for (Resource resource : neededWeapons) {
-            if (currentGovernment.getResourceInStockpiles(resource) < resource.getCount())
-                return false;
-        }
-
-        return true;
-    }
-
-    private static void trainTroopsForGovernment(int count, Troop targetTroop, Barrack selectedBarrack) {
-        int barrackX = selectedBarrack.getXCoordinateLeft();
-        int barrackY = selectedBarrack.getYCoordinateUp();
-
-        currentGovernment.changeMoney(-count * targetTroop.getCost());
-
-        for (Resource weapon : targetTroop.getWeapons()) {
-            currentGovernment.removeFromStockpile(weapon, count);
-        }
-
-        for (int i = 0; i < count; i++) {
-            Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            addToAllUnits(newTroop);
-        }
-
-        currentGovernment.changeFreeWorkers(-count);
-    }
+   
 
     public static GameMenuMessages repairController() {
         if (selectedBuilding == null)
@@ -461,40 +402,6 @@ public class FORDELETEGameMenuController {
 //
 //        return allWays.size() != 0;
         return false;
-    }
-
-    public static GameMenuMessages setUnitModeController(String option) {
-        String x = Orders.findFlagOption("-x", option);
-        String y = Orders.findFlagOption("-y", option);
-        String state = Orders.findFlagOption("-s", option);
-
-        assert x != null;
-        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        int xCoordinate = Integer.parseInt(x) - 1;
-        int yCoordinate = Integer.parseInt(y) - 1;
-
-        if (!currentMap.isCoordinationValid(xCoordinate, yCoordinate))
-            return GameMenuMessages.INVALID_COORDINATE;
-
-        StateUnits newState;
-        switch (Objects.requireNonNull(state)) {
-            case "Standing" -> newState = StateUnits.Stan_Ground;
-            case "Defensive" -> newState = StateUnits.Defensive;
-            case "Offensive" -> newState = StateUnits.Aggressive;
-            default -> {
-                return GameMenuMessages.INVALID_STATE;
-            }
-        }
-
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
-        for (Unit unit : square.getUnits()) {
-            if (unit.getOwner().equals(DataBase.getCurrentGovernment())) {
-                unit.setState(newState);
-            }
-        }
-        return GameMenuMessages.SUCCESS;
     }
 
     
