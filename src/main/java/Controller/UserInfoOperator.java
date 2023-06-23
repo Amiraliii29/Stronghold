@@ -36,6 +36,10 @@ public class UserInfoOperator {
         return defaultSlogans.get(randomSelectedIndex);
     }
 
+    public static ArrayList<String> getDefaultSlogans(){
+        return defaultSlogans;
+    }
+
     public static String getSecurityQuestionByIndex(int indexFromOne){
         if(indexFromOne>securityQuestions.size()) return null;
         return securityQuestions.get(indexFromOne-1);
