@@ -33,9 +33,6 @@ public class DataBase {
     private static Stage mainStage;
     private static Stage tradeMenuStage = new Stage();
 
-    public static Stage getTradeMenuStage() {
-        return tradeMenuStage;
-    }
 
     static {
         JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
@@ -44,12 +41,53 @@ public class DataBase {
         selectedUnit = new ArrayList<>();
     }
 
-    public static void setMainStage(Stage mainStage) {
-        DataBase.mainStage = mainStage;
+
+    public static Stage getTradeMenuStage() {
+        return tradeMenuStage;
+    }
+
+    public static Stage getShopMenuStage() {
+        return ShopMenuStage;
+    }
+
+    public static Government getCurrentGovernment() {
+        return currentGovernment;
     }
 
     public static Stage getMainStage() {
         return mainStage;
+    }
+
+    public static ArrayList<Government> getGovernments() {
+        return governments;
+    }
+
+    public static Building getSelectedBuilding() {
+        return selectedBuilding;
+    }
+
+    public static ArrayList<Unit> getSelectedUnit() {
+        return selectedUnit;
+    }
+
+    public static Map getSelectedMap() {
+        return selectedMap;
+    }
+
+    public static int getCaptchaNumber() {
+        return captchaNumber;
+    }
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public static Government getGovernmentByUserName(String userName) {
+        for (Government government : governments)
+            if (government.getOwner().getUsername().equals(userName))
+                return government;
+
+        return null;
     }
 
     public static String getRandomCaptchaImageAddress() throws MalformedURLException {
@@ -62,12 +100,18 @@ public class DataBase {
                 .toExternalForm()));
     }
 
-    public static Stage getShopMenuStage() {
-        return ShopMenuStage;
+
+
+    public static void setMainStage(Stage mainStage) {
+        DataBase.mainStage = mainStage;
     }
 
-    public static Government getCurrentGovernment() {
-        return currentGovernment;
+    public static void setSelectedBuilding(Building selectedBuilding) {
+        DataBase.selectedBuilding = selectedBuilding;
+    }
+
+    public static void setSelectedMap(Map selectedMap) {
+        DataBase.selectedMap = selectedMap;
     }
 
     public static void setCurrentGovernment(Government currentGovernment) {
@@ -76,60 +120,46 @@ public class DataBase {
         selectedBuilding = null;
     }
 
-    public static Government getGovernmentByUserName(String userName) {
-        for (Government government : governments)
-            if (government.getOwner().getUsername().equals(userName))
-                return government;
-
-        return null;
+    public static void setSelectedUnit(ArrayList<Unit> selectedUnit) {
+        DataBase.selectedUnit = selectedUnit;
     }
 
-    public static ArrayList<Government> getGovernments() {
-        return governments;
-    }
-
-    public static void addGovernment(Government government) {
-        governments.add(government);
+    public static void setGame(Game game) {
+        DataBase.game = game;
     }
 
     public static void newGovernments() {
         governments = new ArrayList<>();
     }
 
-    public static Building getSelectedBuilding() {
-        return selectedBuilding;
-    }
 
-    public static void setSelectedBuilding(Building selectedBuilding) {
-        DataBase.selectedBuilding = selectedBuilding;
-    }
 
-    public static ArrayList<Unit> getSelectedUnit() {
-        return selectedUnit;
+    public static void addGovernment(Government government) {
+        governments.add(government);
     }
 
     public static void addSelectedUnit(Troop selectedUnit) {
         DataBase.selectedUnit.add(selectedUnit);
     }
 
-    public static void setSelectedUnit(ArrayList<Unit> selectedUnit) {
-        DataBase.selectedUnit = selectedUnit;
-    }
-
     public static void addMap(Map map) {
         maps.add(map);
     }
 
-    public static Map getMapByName(String name) {
-        return null;
-    }
 
-    public static Map getSelectedMap() {
-        return selectedMap;
-    }
 
-    public static void setSelectedMap(Map selectedMap) {
-        DataBase.selectedMap = selectedMap;
+    public static void handleEndOfTurnFights() {
+//        for (Unit unit : GameMenuController.getAllUnits()) {
+//            GameMenuController.setCurrentGovernment(unit.getOwner());
+//            currentGovernment = unit.getOwner();
+//            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+//            if (targetCoord != null) {
+//                selectedUnit.clear();
+//                selectedUnit.add(unit);
+//                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
+//                unit.setDidFight(true);
+//            }
+//        }
     }
 
     public static void attackBuildingBySelectedUnits(int xUnderAttack, int yUnderAttack) {
@@ -177,6 +207,17 @@ public class DataBase {
 //        }
     }
 
+    public static boolean isUnitFriendly(Government owner, Unit unit) {
+        return owner.equals(unit.getOwner());
+    }
+
+    public static boolean isBuildingFriendly(Government owner, Building building) {
+        String ownerUsername = owner.getOwner().getUsername();
+        if (ownerUsername.equals(building.getOwner().getOwner().getUsername()))
+            return true;
+        return false;
+    }
+
     private static void removeDeadSelectedUnits() {
         ArrayList<Unit> deadUnits = new ArrayList<>();
 
@@ -195,38 +236,6 @@ public class DataBase {
             if (selectedUnit.get(i).equals(unit) && unit.getHitPoint() == selectedUnit.get(i).getHitPoint()){
                 selectedUnit.remove(i);
                 break;
-            }
-        }
-    }
-
-    public static void generateResourcesForCurrentGovernment() {
-        HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
-
-        for (String s : generationRates.keySet()) {
-            if (s.equals("Wood")) {
-                Square[][] squares = selectedMap.getSquares();
-                int changeAmount = generationRates.get(s);
-                outer:
-                for (int i = 0; i < selectedMap.getLength(); i++) {
-                    for (int j = 0; j < selectedMap.getWidth(); j++) {
-                        if (changeAmount < 0)
-                            break outer;
-                        if (changeAmount > squares[i][j].getTreeAmount()) {
-                            squares[i][j].changeTreeAmount(squares[i][j].getTreeAmount());
-                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), squares[i][j].getTreeAmount());
-                            changeAmount -= squares[i][j].getTreeAmount();
-                        } else {
-                            squares[i][j].changeTreeAmount(changeAmount);
-                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), changeAmount);
-                            changeAmount = 0;
-                        }
-                    }
-                }
-            } else {
-                Integer resourceGenerationRate = generationRates.get(s);
-                Resource targetResource = Resource.getResourceByName(s);
-                assert targetResource != null;
-                currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
             }
         }
     }
@@ -261,35 +270,10 @@ public class DataBase {
         }
     }
 
-    public static boolean isBuildingFriendly(Government owner, Building building) {
-        String ownerUsername = owner.getOwner().getUsername();
-        if (ownerUsername.equals(building.getOwner().getOwner().getUsername()))
-            return true;
-        return false;
-    }
-
-    public static boolean isUnitFriendly(Government owner, Unit unit) {
-        return owner.equals(unit.getOwner());
-    }
-
     public static boolean areSelectedUnitsRanged() {
         if (selectedUnit.get(0).getAttackRange() > 1)
             return true;
         else return false;
-    }
-
-    public static void handleEndOfTurnFights() {
-//        for (Unit unit : GameMenuController.getAllUnits()) {
-//            GameMenuController.setCurrentGovernment(unit.getOwner());
-//            currentGovernment = unit.getOwner();
-//            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
-//            if (targetCoord != null) {
-//                selectedUnit.clear();
-//                selectedUnit.add(unit);
-//                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
-//                unit.setDidFight(true);
-//            }
-//        }
     }
 
     public static int[] getEnemyClosestBuilding(int currentX, int currentY) {
@@ -316,16 +300,35 @@ public class DataBase {
         return nearestCorner;
     }
 
-    public static int getCaptchaNumber() {
-        return captchaNumber;
-    }
+    public static void generateResourcesForCurrentGovernment() {
+        HashMap<String, Integer> generationRates = currentGovernment.getResourceGenerationRates();
 
-
-    public static Game getGame() {
-        return game;
-    }
-
-    public static void setGame(Game game) {
-        DataBase.game = game;
+        for (String s : generationRates.keySet()) {
+            if (s.equals("Wood")) {
+                Square[][] squares = selectedMap.getSquares();
+                int changeAmount = generationRates.get(s);
+                outer:
+                for (int i = 0; i < selectedMap.getLength(); i++) {
+                    for (int j = 0; j < selectedMap.getWidth(); j++) {
+                        if (changeAmount < 0)
+                            break outer;
+                        if (changeAmount > squares[i][j].getTreeAmount()) {
+                            squares[i][j].changeTreeAmount(squares[i][j].getTreeAmount());
+                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), squares[i][j].getTreeAmount());
+                            changeAmount -= squares[i][j].getTreeAmount();
+                        } else {
+                            squares[i][j].changeTreeAmount(changeAmount);
+                            currentGovernment.addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), changeAmount);
+                            changeAmount = 0;
+                        }
+                    }
+                }
+            } else {
+                Integer resourceGenerationRate = generationRates.get(s);
+                Resource targetResource = Resource.getResourceByName(s);
+                assert targetResource != null;
+                currentGovernment.addToStockpile(targetResource, resourceGenerationRate);
+            }
+        }
     }
 }
