@@ -99,22 +99,22 @@ public class GameMenuController {
         if (x < map.getWidth() - 1) {
             path.add(map.getSquareFromMap(x + 1, y));
             move(unit, x + 1, y, xFin, yFin, speed - 1, up);
-            path.remove(map.getSquareFromMap(x + 1, y));
+            path.remove(path.lastIndexOf(map.getSquareFromMap(x + 1, y)));
         }
         if (x > 0) {
             path.add(map.getSquareFromMap(x - 1, y));
             move(unit, x - 1, y, xFin, yFin, speed - 1, up);
-            path.remove(map.getSquareFromMap(x - 1, y));
+            path.remove(path.lastIndexOf(map.getSquareFromMap(x - 1, y)));
         }
         if (y < map.getLength() - 1) {
             path.add(map.getSquareFromMap(x, y + 1));
             move(unit, x, y + 1, xFin, yFin, speed - 1, up);
-            path.remove(map.getSquareFromMap(x, y + 1));
+            path.remove(path.lastIndexOf(map.getSquareFromMap(x, y + 1)));
         }
         if (y > 0) {
             path.add(map.getSquareFromMap(x, y - 1));
             move(unit, x, y - 1, xFin, yFin, speed - 1, up);
-            path.remove(map.getSquareFromMap(x, y - 1));
+            path.remove(path.lastIndexOf(map.getSquareFromMap(x, y - 1)));
         }
 
         return allWays.size() != 0;

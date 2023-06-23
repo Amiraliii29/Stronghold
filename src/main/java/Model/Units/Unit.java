@@ -3,6 +3,7 @@ import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.DataBase;
 import Model.Government;
+import Model.Square;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -79,6 +80,10 @@ public abstract class Unit {
 
     public int getYCoordinate() {
         return yCoordinate;
+    }
+
+    public Square getSquare() {
+        return DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
     }
 
     public int getSpeed() {

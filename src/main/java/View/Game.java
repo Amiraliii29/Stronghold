@@ -620,7 +620,7 @@ public class Game extends Application{
         } else {
             //TODO : change it !
             detail = FXMLLoader.load(
-                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/mercenaryPost.fxml")).toExternalForm()));
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
         }
 
         detail.setLayoutX(115);
@@ -683,9 +683,18 @@ public class Game extends Application{
     }
 
     private void move (int finalX, int finalY) {
+        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+
         for (int i = 0; i < 8; i++) {
             if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) continue;
+            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
+                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
+                else
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
+
+                continue;
+            }
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");
@@ -696,36 +705,29 @@ public class Game extends Application{
 
         ArrayList<Unit> allUnits = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            ArrayList<Unit> selectedUnit = new ArrayList<>();
 
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText() == null || BuildingInfo.getTextFields().get(i).getText().equals("")) {
-                for (Unit unit : DataBase.getSelectedUnit()) {
-                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i)))
-                        selectedUnit.add(unit);
-                }
-            } else {
-                int j = 0;
-                int max = Integer.parseInt(BuildingInfo.getTextFields().get(i).getText());
-                for (Unit unit : DataBase.getSelectedUnit()) {
-                    if (j == max) break;
-                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i))) {
-                        selectedUnit.add(unit);
-                        j++;
-                    }
+        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
+            ArrayList<Square> squaresChecked = new ArrayList<>();
+
+            for (Unit unit : DataBase.getSelectedUnit()) {
+                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
+
+                squaresChecked.add(unit.getSquare());
+                ArrayList<Unit> selectedUnit = new ArrayList<>();
+
+                for (Unit squareUnit : unit.getSquare().getUnits()) {
+                    if (set.getValue() == 0) break;
+                    if (!squareUnit.getName().equals(set.getKey())) continue;
+
+                    selectedUnit.add(squareUnit);
+                    set.setValue(set.getValue() - 1);
                 }
 
-                if (j != max) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Large Selection");
-                    alert.setHeaderText("You Dont Have That Many Unit In This Square!");
-                    continue;
+                if (selectedUnit.size() != 0)  {
+                    allUnits.addAll(selectedUnit);
+                    moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
                 }
             }
-            allUnits.addAll(selectedUnit);
-
-            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
         }
 
         DataBase.setSelectedUnit(allUnits);
