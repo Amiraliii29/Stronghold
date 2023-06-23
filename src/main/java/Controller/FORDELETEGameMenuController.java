@@ -208,69 +208,10 @@ public class FORDELETEGameMenuController {
         return GameMenuMessages.SUCCESS;
     }
 
-    public static GameMenuMessages createUnitController(String type, String count) {
-        if (!(selectedBuilding instanceof Barrack selectedBarrack))
-            return GameMenuMessages.CREATE_UNIT_WRONG_SELECTED_BUILDING;
 
-        if (!Orders.isInputInteger(count))
-            return GameMenuMessages.CREATEUNIT_WRONG_NUMBERFORMAT;
+  
 
-        int countInNum = Integer.parseInt(count);
-        if (countInNum <= 0)
-            return GameMenuMessages.CREATEUNIT_WRONG_NUMBERFORMAT;
-
-        if (!selectedBarrack.canBuildTroopByName(type))
-            return GameMenuMessages.CREATEUNIT_UNMATCHING_BARRACK;
-
-        Troop targetTroop = Troop.getTroopByName(type);
-
-        assert targetTroop != null;
-        int totalCost = targetTroop.getCost() * countInNum;
-        if (currentGovernment.getMoney() < totalCost)
-            return GameMenuMessages.INSUFFICIENT_GOLD;
-
-        if (!doesHaveUnitsWeapons(countInNum, targetTroop))
-            return GameMenuMessages.INSUFFICIENT_RESOURCES;
-
-        if (currentGovernment.getFreeWorker() < countInNum)
-            return GameMenuMessages.CREATEUNIT_INSUFFICIENT_FREEPOP;
-
-        trainTroopsForGovernment(countInNum, targetTroop, selectedBarrack);
-        return GameMenuMessages.SUCCESS;
-    }
-
-    private static boolean doesHaveUnitsWeapons(int count, Troop targetTroop) {
-        ArrayList<Resource> neededWeapons = new ArrayList<>(targetTroop.getWeapons());
-
-        for (Resource resource : neededWeapons) {
-            resource.changeCount(count - resource.getCount());
-        }
-
-        for (Resource resource : neededWeapons) {
-            if (currentGovernment.getResourceInStockpiles(resource) < resource.getCount())
-                return false;
-        }
-
-        return true;
-    }
-
-    private static void trainTroopsForGovernment(int count, Troop targetTroop, Barrack selectedBarrack) {
-        int barrackX = selectedBarrack.getXCoordinateLeft();
-        int barrackY = selectedBarrack.getYCoordinateUp();
-
-        currentGovernment.changeMoney(-count * targetTroop.getCost());
-
-        for (Resource weapon : targetTroop.getWeapons()) {
-            currentGovernment.removeFromStockpile(weapon, count);
-        }
-
-        for (int i = 0; i < count; i++) {
-            Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            addToAllUnits(newTroop);
-        }
-
-        currentGovernment.changeFreeWorkers(-count);
-    }
+   
 
     public static GameMenuMessages repairController() {
         if (selectedBuilding == null)
@@ -463,119 +404,9 @@ public class FORDELETEGameMenuController {
         return false;
     }
 
-    public static GameMenuMessages setUnitModeController(String option) {
-        String x = Orders.findFlagOption("-x", option);
-        String y = Orders.findFlagOption("-y", option);
-        String state = Orders.findFlagOption("-s", option);
+    
 
-        assert x != null;
-        if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        int xCoordinate = Integer.parseInt(x) - 1;
-        int yCoordinate = Integer.parseInt(y) - 1;
-
-        if (!currentMap.isCoordinationValid(xCoordinate, yCoordinate))
-            return GameMenuMessages.INVALID_COORDINATE;
-
-        StateUnits newState;
-        switch (Objects.requireNonNull(state)) {
-            case "Standing" -> newState = StateUnits.Stan_Ground;
-            case "Defensive" -> newState = StateUnits.Defensive;
-            case "Offensive" -> newState = StateUnits.Aggressive;
-            default -> {
-                return GameMenuMessages.INVALID_STATE;
-            }
-        }
-
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
-        for (Unit unit : square.getUnits()) {
-            if (unit.getOwner().equals(DataBase.getCurrentGovernment())) {
-                unit.setState(newState);
-            }
-        }
-        return GameMenuMessages.SUCCESS;
-    }
-
-    public static GameMenuMessages attackController(String enemyX, String enemyY) {
-        if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        if (DataBase.getSelectedUnit().size() == 0) return GameMenuMessages.CHOSE_UNIT_FIRST;
-
-        int targetXInNum = Integer.parseInt(enemyX) - 1;
-        int targetYInNum = Integer.parseInt(enemyY) - 1;
-
-        if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
-            return GameMenuMessages.INVALID_COORDINATE;
-
-        int targetType = currentMap.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
-        if (targetType == 0)
-            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
-
-        ArrayList<Unit> currentUnits = DataBase.getSelectedUnit();
-        int currentUnitsX = currentUnits.get(0).getXCoordinate();
-        int currentUnitsY = currentUnits.get(0).getYCoordinate();
-        int unitRange = currentUnits.get(0).getAttackRange();
-
-        if(unitRange > Map.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)){
-            rangedAttackController(enemyX, enemyY);
-            return GameMenuMessages.SUCCESS;
-        }
-
-        int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        ArrayList<int[]> squaresOptimalForFight = currentMap.getSquaresWithinRange(targetXInNum, targetYInNum, unitRange, unitsZoneFromTarget);
-
-        boolean result = false;
-        for (int[] validCoord : squaresOptimalForFight) {
-            if (moveUnit(validCoord[0], validCoord[1])) {
-                if (targetType == 1) {
-                    double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
-                    DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-                } else
-                    DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
-
-                result = true;
-                break;
-            }
-        }
-        if (result)
-            return GameMenuMessages.SUCCESS;
-
-        return GameMenuMessages.NORMALATTACK_TARGET_NOT_IN_RANGE;
-    }
-
-    public static GameMenuMessages rangedAttackController(String enemyX, String enemyY) {
-        if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        int targetXInNum = Integer.parseInt(enemyX) - 1;
-        int targetYInNum = Integer.parseInt(enemyY) - 1;
-
-        if (DataBase.getSelectedUnit().size() == 0)
-            return GameMenuMessages.CHOSE_UNIT_FIRST;
-
-        if (!currentMap.isCoordinationValid(targetXInNum, targetYInNum))
-            return GameMenuMessages.INVALID_COORDINATE;
-
-        if (!currentMap.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
-            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
-
-        if (!DataBase.areSelectedUnitsRanged())
-            return GameMenuMessages.RANGEDATTACK_NON_ARCHER_SELECTION;
-
-        int currentUnitsX = DataBase.getSelectedUnit().get(0).getXCoordinate();
-        int currentUnitsY = DataBase.getSelectedUnit().get(0).getYCoordinate();
-
-        double distance = Map.getDistance(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        int unitRange = DataBase.getSelectedUnit().get(0).getAttackRange();
-
-        if (unitRange < distance)
-            return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
-
-        DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-        return GameMenuMessages.SUCCESS;
-    }
+   
 
     public static GameMenuMessages patrolController(String coordinates) {
         return null;

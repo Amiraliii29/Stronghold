@@ -524,7 +524,7 @@ public class Game extends Application{
 
         HashMap<String, Integer> resourceGenerate = new HashMap<>();
         for (int i = Math.min(blockX, finalBlockX); i <= Math.max(blockX, finalBlockX); i++) {
-            for (int j = Math.min(blockY, finalBlockY); j < Math.max(blockY, finalBlockY); j++) {
+            for (int j = Math.min(blockY, finalBlockY); j <= Math.max(blockY, finalBlockY); j++) {
                 if (squares[squareI + i][squareJ + j].getBuilding() instanceof Generator build &&
                         build.getXCoordinateLeft() == squareI + i && build.getYCoordinateUp() == squareJ + j) {
                     if (resourceGenerate.containsKey(build.getResourceGenerate().getName()))
@@ -723,7 +723,7 @@ public class Game extends Application{
         }
     }
 
-    private void move (int finalX, int finalY) {
+    public void move (int finalX, int finalY) {
         HashMap<String, Integer> unitNameAndCount = new HashMap<>();
 
         for (int i = 0; i < 8; i++) {
