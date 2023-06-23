@@ -328,4 +328,38 @@ public class DataBase {
     public static void setGame(Game game) {
         DataBase.game = game;
     }
+
+    public static HashMap<String , ArrayList<Unit>> getSelectedUnitsByType(){
+
+        HashMap<String , ArrayList<Unit>> unitsByType=new HashMap<>();
+        boolean isHandled;
+
+        for (Unit unit : selectedUnit) {
+                    
+            isHandled=false;
+            for (String unitName : unitsByType.keySet()) 
+                if(unit.getName().equals(unitName)){
+                    unitsByType.get(unitName).add(unit);
+                    isHandled=true;
+                    break;
+                }
+            
+            if(isHandled) continue;
+            
+            ArrayList<Unit> newTypeList=new ArrayList<>();
+            newTypeList.add(unit);
+            unitsByType.put(unit.getName(), newTypeList);
+        }
+
+        return unitsByType;
+    }
+
+    public static boolean isSelectedUnitOnTargetSquare(int squareX, int squareY){
+        if(selectedUnit.get(0).getXCoordinate()==squareX
+            && selectedUnit.get(0).getYCoordinate()==squareY) return true;
+        return false;
+    }
+
+
+
 }

@@ -721,7 +721,7 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
-    private void move (int finalX, int finalY) {
+    public void move (int finalX, int finalY) {
         for (int i = 0; i < 8; i++) {
             if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
             if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) continue;
@@ -786,6 +786,7 @@ public class Game extends Application{
 
         }
     }
+
 
     public static void loadImages() throws FileNotFoundException {
         //tiles :
