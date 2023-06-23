@@ -17,5 +17,12 @@
       <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="301.0" layoutY="121.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="32.0" layoutX="341.0" layoutY="120.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="24.0" layoutX="148.0" layoutY="119.0" onMouseClicked="#openWallBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="53.0" fitWidth="62.0" layoutX="141.0" layoutY="49.0" onDragDetected="#stockPileDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="78.0" layoutX="210.0" layoutY="56.0" onDragDetected="#woodCutterDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="78.0" layoutX="291.0" layoutY="62.0" onDragDetected="#stoneMineDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="46.0" layoutX="366.0" layoutY="46.0" onDragDetected="#cowDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="78.0" layoutX="417.0" layoutY="62.0" onDragDetected="#ironMineDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="78.0" layoutX="519.0" layoutY="56.0" onDragDetected="#pitchRigDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="59.0" fitWidth="78.0" layoutX="605.0" layoutY="62.0" onDragDetected="#shopDragDetected" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

@@ -17,5 +17,9 @@
       <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="301.0" layoutY="121.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="32.0" layoutX="341.0" layoutY="120.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="24.0" layoutX="148.0" layoutY="119.0" onMouseClicked="#openWallBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="65.0" fitWidth="78.0" layoutX="266.0" layoutY="54.0" onDragDetected="#cheeseDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="65.0" fitWidth="78.0" layoutX="373.0" layoutY="54.0" onDragDetected="#appleFarmDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="65.0" fitWidth="78.0" layoutX="480.0" layoutY="54.0" onDragDetected="#wheatFarmDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="65.0" fitWidth="78.0" layoutX="592.0" layoutY="54.0" onDragDetected="#hopsFarmDragDetected" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

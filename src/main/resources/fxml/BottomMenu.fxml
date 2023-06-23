@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="150.0" prefWidth="1115.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
+<AnchorPane prefHeight="150.0" prefWidth="1115.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
    <children>
       <ImageView fitHeight="151.0" fitWidth="1117.0" layoutX="-1.0" layoutY="-2.0">
          <image>
@@ -16,5 +16,13 @@
       <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="261.0" layoutY="121.0" onMouseClicked="#openVillageBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="301.0" layoutY="121.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="29.0" fitWidth="32.0" layoutX="341.0" layoutY="120.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="144.0" layoutY="65.0" onDragDetected="#stairDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="42.0" fitWidth="60.0" layoutX="177.0" layoutY="63.0" onDragDetected="#smallWallDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="241.0" layoutY="66.0" onDragDetected="#wallDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="51.0" fitWidth="73.0" layoutX="306.0" layoutY="61.0" onDragDetected="#strongWallDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="51.0" fitWidth="73.0" layoutX="383.0" layoutY="61.0" onDragDetected="#barackDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="51.0" fitWidth="73.0" layoutX="459.0" layoutY="62.0" onDragDetected="#mercenaryPostDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="51.0" fitWidth="58.0" layoutX="535.0" layoutY="62.0" onDragDetected="#armouryDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="596.0" layoutY="57.0" onMouseClicked="#openTowersBottomMenu" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

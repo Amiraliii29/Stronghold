@@ -3,8 +3,7 @@ package View;
 import Controller.CustomizeMapController;
 import Controller.GameMenuController;
 import Model.*;
-import Model.Buildings.Building;
-import Model.Buildings.Generator;
+import Model.Buildings.*;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
 import View.Controller.GetCoordinate;
@@ -65,6 +64,11 @@ public class Game extends Application{
     public static AnchorPane customizePane;
     private static Pane squareInfo;
     private static Pane selectedSquareInfo;
+    public static String defenceBuildingToCreateName = null;
+    public static String generatorBuildingToCreateName = null;
+    public static String barrackBuildingToCreateName = null;
+    public static String townBuildingToCreateName = null;
+    public static String stockPileBuildingToCreateName = null;
 
     public static Trees tree;
     public static Land land;
@@ -79,7 +83,7 @@ public class Game extends Application{
     private int squareJ;
     private int blockX;
     private int blockY;
-    private Building building;
+    public static Building building;
     private Timeline hoverTimeline;
     private double mouseX;
     private double mouseY;
@@ -325,9 +329,37 @@ public class Game extends Application{
             int nowY = (int) (Math.floor(endY / blockPixel));
 
             if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
-                if (building != null) {
-                    //TODO : put building
+                if (defenceBuildingToCreateName != null) {
+                    building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    defenceBuildingToCreateName = null;
+                    drawMap();
                 }
+                if(barrackBuildingToCreateName != null){
+                    building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    barrackBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(generatorBuildingToCreateName != null){
+                    building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    generatorBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(townBuildingToCreateName != null){
+                    building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    townBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(stockPileBuildingToCreateName != null){
+                    building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    stockPileBuildingToCreateName = null;
+                    drawMap();
+                }
+                building = null;
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 ArrayList<Unit> selectedUnit = new ArrayList<>();
                 for (int i = Math.min(blockX, nowX); i <= Math.max(blockX, nowX); i++) {
@@ -407,6 +439,8 @@ public class Game extends Application{
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
+            } else if(event.getCode() == KeyCode.E){
+                clear();
             }
         });
     }

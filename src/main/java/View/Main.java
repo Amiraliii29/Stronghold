@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import Controller.GameMenuController;
+import Model.Buildings.Barrack;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.Buildings.Generator;
@@ -57,11 +58,8 @@ public class Main extends Application {
 
 
         map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
-        Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
+        Barrack generator1 = Barrack.createBarrack(government, 30, 20, "MercenaryPost");
         map.getSquareFromMap(30, 20).setBuilding(generator1);
-        map.getSquareFromMap(31, 20).setBuilding(generator1);
-        map.getSquareFromMap(30, 21).setBuilding(generator1);
-        map.getSquareFromMap(31, 21).setBuilding(generator1);
 
         map.getSquareFromMap(50, 25).setBuilding(Generator.createGenerator(government, 50, 25, "IronMine"));
         Game game = new Game();

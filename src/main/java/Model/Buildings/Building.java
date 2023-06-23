@@ -33,6 +33,14 @@ public abstract class Building {
         Barrack.load();
     }
 
+    public void setxCoordinateLeft(int xCoordinateLeft) {
+        this.xCoordinateLeft = xCoordinateLeft;
+    }
+
+    public void setyCoordinateUp(int yCoordinateUp) {
+        this.yCoordinateUp = yCoordinateUp;
+    }
+
     public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
                     ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
         this.owner = owner;
