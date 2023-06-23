@@ -32,12 +32,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+
 public class SignUpMenu extends Application {
 
     TextField usernameField,nicknameField,sloganField,emailField,securityField,passwordVisibleField,repeatPasswordVisibleField;
     PasswordField passwordField,repeatPasswordField;
-    VBox userVbox,passwordVbox,emailVbox,nicknameVbox,questionVbox,sloganVBox;
-    Button signupButton,loginButton;
+    VBox userVbox,passwordVbox,emailVbox,nicknameVbox,questionVbox,sloganVBox,slogansVbox;
+    Button signupButton,loginButton,showSlogansButton;
     Label label,securityQuestion;
     Text userText,nicknameText,emailText,passwordText,securityText;
     CheckBox randomSloganBox,randomPasswordBox,changeQuestionBox,visiblePasswordsBox;
@@ -58,6 +59,7 @@ public class SignUpMenu extends Application {
         initializeMainVbox();
         initializeLabel();
         initializeFields();
+        initializeSloganVbox();
         initializeButtons();
         setFieldListeners();
         setVisibleFieldsBoinds();
@@ -87,6 +89,7 @@ public class SignUpMenu extends Application {
                                           text.setVisible(false);});
         fadeTrans.play();
     }
+
 
     private void initializeMainVbox(){
         mainPane.setAlignment( Pos.CENTER);
@@ -216,6 +219,25 @@ public class SignUpMenu extends Application {
         }
 
         return true;
+    }
+
+    private void initializeSloganVbox(){
+        slogansVbox= new VBox(0);
+        slogansVbox.setAlignment(Pos.CENTER);
+        slogansVbox.setStyle("-fx-background-color: rgba(79, 159, 36, 0.596);");
+        addSlogansToVbox();
+        componentsVbox.getChildren().add(slogansVbox);
+    }
+
+    private void addSlogansToVbox(){
+        for (String slogan: UserInfoOperator.getDefaultSlogans()) {
+            Text sloganText = new Text(slogan);
+            slogansVbox.getChildren().add(sloganText);
+            sloganText.getStyleClass().add("hover-effect");
+            sloganText.setOnMouseClicked(event -> {
+                sloganField.setText(sloganText.getText());
+            });
+        }
     }
 
     private boolean checkEmailValue(String value, boolean isOnSignUpProcess){
@@ -395,7 +417,5 @@ public class SignUpMenu extends Application {
         nicknameText.setVisible(false);
         securityText.setVisible(false);
     }
-
-
 
 }

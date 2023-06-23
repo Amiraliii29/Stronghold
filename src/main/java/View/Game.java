@@ -17,6 +17,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -94,7 +95,7 @@ public class Game extends Application{
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = 1115;
-        screenHeight = Math.ceil(screenBounds.getHeight()) - 40;
+        screenHeight = Math.ceil(screenBounds.getHeight()) - 50;
         leftX = (int) (Math.floor((screenBounds.getWidth() - screenWidth) / 2));
 
         blackRec = new Rectangle(0, 0, Color.BLACK);
@@ -476,8 +477,6 @@ public class Game extends Application{
             buildingImage.setFitWidth(building.getWidth() * blockPixel);
             buildingImage.setFitHeight(building.getLength() * blockPixel);
 
-            //TODO : buildings in edge
-
             pane.getChildren().add(buildingImage);
         }
 
@@ -548,6 +547,8 @@ public class Game extends Application{
 
             y += 40;
         }
+
+        initializeDetailsTextfields();
 
         y += 20;
         HashMap<String, Integer> unitCnt = new HashMap<>();
@@ -620,13 +621,51 @@ public class Game extends Application{
         } else {
             //TODO : change it !
             detail = FXMLLoader.load(
-                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/mercenaryPost.fxml")).toExternalForm()));
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
         }
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
 
         bottomPane.getChildren().add(detail);
+    }
+
+    private void initializeDetailsTextfields(){
+        for (int i = 0; i < 8; i++) {
+            TextField textField= new TextField();
+            textField.setLayoutY(93);
+            textField.setPrefWidth(36);
+            textField.setPrefHeight(18);
+            textField.setLayoutX(185+52*i);
+            detail.getChildren().add(textField);
+            switch (i + 1) {
+                case 1:
+                    BuildingInfo.one=textField;
+                    break;
+                case 2:
+                    BuildingInfo.two=textField;
+                    break;
+                case 3:
+                    BuildingInfo.three=textField;
+                    break;
+                case 4:
+                    BuildingInfo.four=textField;
+                    break;
+                case 5:
+                    BuildingInfo.five=textField;
+                    break;
+                case 6:
+                    BuildingInfo.six=textField;
+                    break;
+                case 7:
+                    BuildingInfo.seven=textField;
+                    break;
+            
+                default:
+                    BuildingInfo.eight=textField;
+                    break;
+            }
+        }
     }
 
     private void drawLeft() throws IOException {
