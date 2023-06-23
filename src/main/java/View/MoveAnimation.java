@@ -4,13 +4,16 @@ import Controller.GameMenuController;
 import Model.DataBase;
 import Model.Square;
 import Model.Units.Unit;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.util.Duration;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MoveAnimation extends Transition {
+public class MoveAnimation {
+    private Timeline timeline;
     private int squareI;
     private int squareJ;
     private Unit unit;
@@ -27,13 +30,16 @@ public class MoveAnimation extends Transition {
 
         squares = GameMenuController.moveUnit(unit, squareI, squareJ);
 
-        this.setCycleDuration(Duration.millis(8000.0 / unit.getSpeed()));
-        if (squares == null) this.setCycleCount(0);
-        else this.setCycleCount(squares.size());
+        timeline = new Timeline(new KeyFrame(Duration.millis(2000.0 / unit.getSpeed()), actionEvent -> {
+            move();
+        }));
+
+        if (squares == null) timeline.setCycleCount(0);
+        else timeline.setCycleCount(squares.size());
     }
 
-    @Override
-    protected void interpolate(double v) {
+
+    protected void move() {
         if (squares == null) return;
         if (squares.size() != 0) {
             for (Unit moveUnit : units)
@@ -51,5 +57,10 @@ public class MoveAnimation extends Transition {
 
             DataBase.getGame().drawMap();
         }
+    }
+
+
+    public void play() {
+        timeline.play();
     }
 }
