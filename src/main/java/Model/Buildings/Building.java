@@ -50,33 +50,6 @@ public abstract class Building {
         this.maximumHp=hp;
     }
 
-    public static String getBuildingCategoryByName(String buildingName){
-        for (String name : Generator.getGeneratorsName()) 
-            if(buildingName.equals(name)) return "Generator";
-                
-        for (String name : Barrack.getBarracksName()) 
-            if(buildingName.equals(name)) return "Barrack";
-                
-        for(String name : Defence.getDefencesName())
-            if(buildingName.equals(name)) return "Defence";
-
-        for(String name : TownBuilding.getTownBuildingsName())
-            if(buildingName.equals(name)) return "TownBuilding";
-
-        for(String name : Stockpile.getStockpilesName())
-            if(buildingName.equals(name)) return "Stockpile";
-
-        return null;
-    }
-
-    public int getMaximumHp(){
-        return maximumHp;
-    }
-
-    public int changeHP(int damage) {
-        hp -= damage;
-        return hp;
-    }
 
     public Government getOwner() {
         return owner;
@@ -122,13 +95,13 @@ public abstract class Building {
         return cost;
     }
 
+    public int getMaximumHp(){
+        return maximumHp;
+    }
+
     public boolean getCanPass(Boolean up) {
         if (!up) return canPass;
         return true;
-    }
-
-    public void changeCanPass(boolean state){
-        this.canPass=state;
     }
 
     public static LinkedList<String> getBuildingsNames() {
@@ -139,12 +112,29 @@ public abstract class Building {
         return buildings;
     }
 
+    public static String getBuildingCategoryByName(String buildingName){
+        if (Generator.getGeneratorsName().contains(buildingName)) return "Generator";
+        if (TownBuilding.getTownBuildingsName().contains(buildingName)) return "TownBuilding";
+        return "";
+    }
+
     public static Building getBuildingByName(String buildingName) {
         for (Building building : buildings)
             if (building.name.equals(buildingName))
                 return building;
         return null;
     }
+
+
+    public int changeHP(int damage) {
+        hp -= damage;
+        return hp;
+    }
+
+    public void changeCanPass(boolean state){
+        this.canPass=state;
+    }
+
 
     public static void load() {
         return;

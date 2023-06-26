@@ -117,75 +117,7 @@ public class FORDELETEGameMenuController {
         return false;
     }
 
-    public static GameMenuMessages putBuildingController(String x, String y, String buildingType) {
-        if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
 
-        int xInNum = Integer.parseInt(x) - 1;
-        int yInNum = Integer.parseInt(y) - 1;
-        Building targetBuilding = Building.getBuildingByName(buildingType);
-
-        if (!currentMap.isCoordinationValid(xInNum, yInNum))
-            return GameMenuMessages.INVALID_COORDINATE;
-
-        if (targetBuilding == null)
-            return GameMenuMessages.DROPBUILDING_INVALID_BUILDINGNAME;
-
-        if (!currentMap.canConstructBuildingInPlace(targetBuilding, xInNum, yInNum))
-            return GameMenuMessages.DROPBUILDING_INVALID_PLACE;
-
-        int buildingCost = targetBuilding.getCost();
-        if (buildingCost > currentGovernment.getMoney())
-            return GameMenuMessages.INSUFFICIENT_GOLD;
-
-        int resourceCount = targetBuilding.getNumberOfResource();
-        if (targetBuilding.getResource() != null)
-            if (currentGovernment.getResourceInStockpiles(targetBuilding.getResource()) < resourceCount)
-                return GameMenuMessages.INSUFFICIENT_RESOURCES;
-
-        if (targetBuilding instanceof Generator && ((Generator) targetBuilding).getNumberOfWorker() > currentGovernment.getFreeWorker())
-            return GameMenuMessages.NOT_ENOUGH_FREE_WORKER;
-
-        currentGovernment.changeMoney(-buildingCost);
-        if (targetBuilding.getResource() != null)
-            currentGovernment.removeFromStockpile(targetBuilding.getResource(), resourceCount);
-
-        Building newBuilding = constructBuildingForPlayer(buildingType, xInNum, yInNum);
-        currentMap.constructBuilding(newBuilding, xInNum, yInNum);
-        return GameMenuMessages.SUCCESS;
-    }
-
-    public static Building constructBuildingForPlayer(String buildingName, int x, int y) {
-        String buildingCategory = Building.getBuildingCategoryByName(buildingName);
-
-        switch (Objects.requireNonNull(buildingCategory)) {
-            case "Generator" -> {
-                Generator generator = Generator.createGenerator(currentGovernment, x, y, buildingName);
-                assert generator != null;
-                currentGovernment.changePopulation(generator.getNumberOfWorker());
-                currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
-                currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(), generator.getGeneratingRate());
-                currentGovernment.applyOxEffectOnStoneGeneration();
-                return generator;
-            }
-            case "TownBuilding" -> {
-                TownBuilding townBuilding = TownBuilding.createTownBuilding(currentGovernment, x, y, buildingName);
-                assert townBuilding != null;
-                currentGovernment.addToMaxPopulation(townBuilding.getCapacity());
-                currentGovernment.updateBuildingPopularity();
-                return townBuilding;
-            }
-            case "Stockpile" -> {
-                return Stockpile.createStockpile(currentGovernment, x, y, buildingName);
-            }
-            case "Barrack" -> {
-                return Barrack.createBarrack(currentGovernment, x, y, buildingName);
-            }
-            default -> {
-                return Defence.createDefence(currentGovernment, x, y, buildingName);
-            }
-        }
-    }
 
     public static GameMenuMessages selectBuildingController(String x, String y) {
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))

@@ -104,7 +104,7 @@
     },
     "name": "StoneCow",
     "width": 2,
-    "length": 1,
+    "length": 2,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["default","grass","plain","sand","meadow","highDensityMeadow","flatRock"],
@@ -157,8 +157,8 @@
       "storage": "Stockpile"
     },
     "name": "Quarry",
-    "width": 5,
-    "length": 5,
+    "width": 4,
+    "length": 4,
     "xCoordinateLeft": 0,
     
     "yCoordinateUp": 0,
@@ -218,7 +218,7 @@
       "storage": "Stockpile"
     },
     "name": "Armourer",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
@@ -250,7 +250,7 @@
       "storage": "Stockpile"
     },
     "name": "BlackSmith",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
@@ -282,7 +282,7 @@
       "storage": "Stockpile"
     },
     "name": "Fletcher",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
@@ -315,7 +315,7 @@
       "storage": "Stockpile"
     },
     "name": "PoleTurner",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
@@ -357,8 +357,8 @@
       "storage": "Stockpile"
     },
     "name": "Stable",
-    "width": 8,
-    "length": 4,
+    "width": 6,
+    "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
@@ -384,8 +384,8 @@
       "storage": "Stockpile"
     },
     "name": "Orchard",
-    "width": 10,
-    "length": 10,
+    "width": 3,
+    "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["highDensityMeadow","grass"],
@@ -411,8 +411,8 @@
       "storage": "Stockpile"
     },
     "name": "DairyFarm",
-    "width": 10,
-    "length": 10,
+    "width": 3,
+    "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["highDensityMeadow","grass"],
@@ -438,8 +438,8 @@
       "storage": "Stockpile"
     },
     "name": "HopsFarm",
-    "width": 8,
-    "length": 8,
+    "width": 3,
+    "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["highDensityMeadow","grass"],
@@ -492,8 +492,8 @@
       "storage": "Stockpile"
     },
     "name": "WheatFarm",
-    "width": 8,
-    "length": 8,
+    "width": 3,
+    "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
     "lands": ["highDensityMeadow","grass"],
@@ -525,7 +525,7 @@
       "storage": "Stockpile"
     },
     "name": "Bakery",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,
@@ -558,7 +558,7 @@
       "storage": "Stockpile"
     },
     "name": "Brewery",
-    "width": 4,
+    "width": 3,
     "length": 3,
     "xCoordinateLeft": 0,
     "yCoordinateUp": 0,

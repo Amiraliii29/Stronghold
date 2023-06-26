@@ -1,9 +1,9 @@
 package View;
 
 import Controller.CustomizeMapController;
-import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
@@ -37,11 +37,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +62,8 @@ public class Game extends Application{
     private static final Rectangle blackRec;
     private static final Rectangle selectSq;
 
-    public static Pane mainPane; // this pane contains all other panes such as pane
     private static Stage stage;
+    public static Pane mainPane; // this pane contains all other panes such as pane
     private static Pane pane;
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
@@ -73,6 +71,7 @@ public class Game extends Application{
     private static Pane selectedSquareInfo;
     private ImageView copiedBuilding;
     private Text errorText;
+    private static Pane errorPane;
 
     public static Trees tree;
     public static Land land;
@@ -89,6 +88,7 @@ public class Game extends Application{
     private int blockY;
     private Building building;
     private Timeline hoverTimeline;
+    private Timeline errorTimeline;
     private double mouseX;
     private double mouseY;
 
@@ -153,7 +153,7 @@ public class Game extends Application{
         blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
         blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
 
-        setHoverTimeline();
+        setTimelines();
 
         drawMap();
         drawBottom();
@@ -162,6 +162,8 @@ public class Game extends Application{
         stage.setFullScreen(true);
         stage.show();
     }
+
+
 
     public static void setXY(int x, int y) {
         selectedX = x;
@@ -184,7 +186,7 @@ public class Game extends Application{
         mainPane.getChildren().remove(selectedSquareInfo);
     }
 
-    private void setHoverTimeline() throws IOException {
+    private void setTimelines() throws IOException {
         squareInfo = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/SquareInfo.fxml")).toExternalForm()));
         squareInfo.setLayoutX(leftX + screenWidth + 50);
@@ -224,6 +226,11 @@ public class Game extends Application{
         }));
         hoverTimeline.setCycleCount(-1);
         hoverTimeline.play();
+
+        errorTimeline = new Timeline(new KeyFrame(Duration.seconds(3), actionEvent -> {
+            mainPane.getChildren().remove(errorPane);
+        }));
+        errorTimeline.setCycleCount(1);
     }
 
     public void keys() {
@@ -259,9 +266,15 @@ public class Game extends Application{
                 } else if (DataBase.getSelectedUnit() != null) {
 
                     move(squareI + blockX, squareJ + blockY);
+                    try {
+                        showSelectedSquares(blockX, blockY, DataBase.getSelectedUnit());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
                 } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                     //TODO : Show bound for building !
+                    DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
                         showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     } catch (IOException e) {
@@ -419,6 +432,8 @@ public class Game extends Application{
         });
     }
 
+
+
     public void drawMap() {
         squares = map.getSquares();
         pane.getChildren().clear();
@@ -512,8 +527,8 @@ public class Game extends Application{
         bottomPane.getChildren().add(detail);
 
         HashMap<String, Integer> resourceGenerate = new HashMap<>();
-        for (int i = Math.min(blockX, finalBlockX); i < Math.max(blockX, finalBlockX); i++) {
-            for (int j = Math.min(blockY, finalBlockY); j < Math.max(blockY, finalBlockY); j++) {
+        for (int i = Math.min(blockX, finalBlockX); i <= Math.max(blockX, finalBlockX); i++) {
+            for (int j = Math.min(blockY, finalBlockY); j <= Math.max(blockY, finalBlockY); j++) {
                 if (squares[squareI + i][squareJ + j].getBuilding() instanceof Generator build &&
                         build.getXCoordinateLeft() == squareI + i && build.getYCoordinateUp() == squareJ + j) {
                     if (resourceGenerate.containsKey(build.getResourceGenerate().getName()))
@@ -555,9 +570,8 @@ public class Game extends Application{
             y += 40;
         }
 
-        initializeDetailsTextfields();
+        initializeDetailsTextFields();
 
-        y += 20;
         HashMap<String, Integer> unitCnt = new HashMap<>();
         for (Unit unit : selectedUnit) {
             if (unitCnt.containsKey(unit.getName()))
@@ -572,44 +586,24 @@ public class Game extends Application{
         for (java.util.Map.Entry<String, Integer> set : unitCnt.entrySet()) {
             if (check == 8) break;
 
-            ImageView unitImage = new ImageView(units.get(set.getKey()));
-            unitImage.setLayoutX(10);
-            unitImage.setLayoutY(y);
-            unitImage.setFitWidth(30);
-            unitImage.setFitHeight(30);
-
-            Label unitLabel = new Label(set.getValue().toString());
-            unitLabel.setLayoutX(50);
-            unitLabel.setLayoutY(y);
-            unitLabel.setFont(new Font(20));
-            unitLabel.setAlignment(Pos.CENTER);
-            unitLabel.setPrefHeight(30);
-            unitLabel.setPrefWidth(30);
-            unitLabel.setTextFill(Color.WHITE);
-
-            selectedSquareInfo.getChildren().add(unitImage);
-            selectedSquareInfo.getChildren().add(unitLabel);
-
-
             ImageView unitImage2 = new ImageView(units.get(set.getKey()));
             unitImage2.setLayoutX(x);
             unitImage2.setLayoutY(32);
             unitImage2.setFitWidth(50);
             unitImage2.setFitHeight(56);
 
+            BuildingInfo.getTextFields().get(check).setText(set.getValue().toString());
+
             detail.getChildren().add(unitImage2);
 
             BuildingInfo.imagesOrder.add(set.getKey());
 
-
             x += 50;
-            y += 40;
             check++;
         }
 
-        for (int i = check; i < 8; i++) {
+        for (int i = check; i < 8; i++)
             BuildingInfo.getTextFields().get(i).setVisible(false);
-        }
 
         mainPane.getChildren().add(selectedSquareInfo);
     }
@@ -625,54 +619,33 @@ public class Game extends Application{
         } else if (building.getName().equals("EngineerGuild")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
-        } else {
-            //TODO : change it !
+        } else if (building.getName().equals("DrawBridge")
+                || building.getName().equals("SmallStoneGate")
+                || building.getName().equals("BigStoneGate")) {
+
             detail = FXMLLoader.load(
-                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
-        }
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Gate.fxml")).toExternalForm()));
+        } else if (building instanceof Defence) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Repair.fxml")).toExternalForm()));
+        } else if (building.getName().equals("BlackSmith")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BlackSmith.fxml")).toExternalForm()));
+        } else if (building.getName().equals("Fletcher")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Fletcher.fxml")).toExternalForm()));
+        } else if (building.getName().equals("PoleTurner")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/PoleTurner.fxml")).toExternalForm()));
+        } else if (building.getName().equals("DairyFarm")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
+        } else return;
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
 
         bottomPane.getChildren().add(detail);
-    }
-
-    private void initializeDetailsTextfields(){
-        for (int i = 0; i < 8; i++) {
-            TextField textField= new TextField();
-            textField.setLayoutY(93);
-            textField.setPrefWidth(36);
-            textField.setPrefHeight(18);
-            textField.setLayoutX(185+52*i);
-            detail.getChildren().add(textField);
-            switch (i + 1) {
-                case 1:
-                    BuildingInfo.one=textField;
-                    break;
-                case 2:
-                    BuildingInfo.two=textField;
-                    break;
-                case 3:
-                    BuildingInfo.three=textField;
-                    break;
-                case 4:
-                    BuildingInfo.four=textField;
-                    break;
-                case 5:
-                    BuildingInfo.five=textField;
-                    break;
-                case 6:
-                    BuildingInfo.six=textField;
-                    break;
-                case 7:
-                    BuildingInfo.seven=textField;
-                    break;
-            
-                default:
-                    BuildingInfo.eight=textField;
-                    break;
-            }
-        }
     }
 
     private void drawLeft() throws IOException {
@@ -728,10 +701,60 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
+    public void showErrorText(String errorText) {
+        mainPane.getChildren().remove(errorPane);
+
+        errorPane = new Pane();
+        errorPane.setLayoutY(screenHeight + 30);
+        errorPane.setPrefHeight(30);
+        errorPane.setPrefWidth(leftX);
+
+        Label error = new Label(errorText);
+        error.setTextFill(Color.RED);
+        error.setFont(new Font(10));
+        error.setLayoutX(0);
+        error.setLayoutY(0);
+
+        errorPane.getChildren().add(error);
+        mainPane.getChildren().add(errorPane);
+
+        errorTimeline.playFromStart();
+    }
+
+    private void initializeDetailsTextFields(){
+        for (int i = 0; i < 8; i++) {
+            TextField textField= new TextField();
+            textField.setLayoutY(93);
+            textField.setPrefWidth(36);
+            textField.setPrefHeight(18);
+            textField.setLayoutX(185+52*i);
+            detail.getChildren().add(textField);
+            switch (i + 1) {
+                case 1 -> BuildingInfo.one = textField;
+                case 2 -> BuildingInfo.two = textField;
+                case 3 -> BuildingInfo.three = textField;
+                case 4 -> BuildingInfo.four = textField;
+                case 5 -> BuildingInfo.five = textField;
+                case 6 -> BuildingInfo.six = textField;
+                case 7 -> BuildingInfo.seven = textField;
+                default -> BuildingInfo.eight = textField;
+            }
+        }
+    }
+
     public void move (int finalX, int finalY) {
+        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+
         for (int i = 0; i < 8; i++) {
             if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) continue;
+            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
+                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
+                else
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
+
+                continue;
+            }
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");
@@ -742,36 +765,29 @@ public class Game extends Application{
 
         ArrayList<Unit> allUnits = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            ArrayList<Unit> selectedUnit = new ArrayList<>();
 
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText() == null || BuildingInfo.getTextFields().get(i).getText().equals("")) {
-                for (Unit unit : DataBase.getSelectedUnit()) {
-                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i)))
-                        selectedUnit.add(unit);
-                }
-            } else {
-                int j = 0;
-                int max = Integer.parseInt(BuildingInfo.getTextFields().get(i).getText());
-                for (Unit unit : DataBase.getSelectedUnit()) {
-                    if (j == max) break;
-                    if (unit.getName().equals(BuildingInfo.imagesOrder.get(i))) {
-                        selectedUnit.add(unit);
-                        j++;
-                    }
+        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
+            ArrayList<Square> squaresChecked = new ArrayList<>();
+
+            for (Unit unit : DataBase.getSelectedUnit()) {
+                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
+
+                squaresChecked.add(unit.getSquare());
+                ArrayList<Unit> selectedUnit = new ArrayList<>();
+
+                for (Unit squareUnit : unit.getSquare().getUnits()) {
+                    if (set.getValue() == 0) break;
+                    if (!squareUnit.getName().equals(set.getKey())) continue;
+
+                    selectedUnit.add(squareUnit);
+                    set.setValue(set.getValue() - 1);
                 }
 
-                if (j != max) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Large Selection");
-                    alert.setHeaderText("You Dont Have That Many Unit In This Square!");
-                    continue;
+                if (selectedUnit.size() != 0)  {
+                    allUnits.addAll(selectedUnit);
+                    moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
                 }
             }
-            allUnits.addAll(selectedUnit);
-
-            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
         }
 
         DataBase.setSelectedUnit(allUnits);

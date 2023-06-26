@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import Controller.GameMenuController;
-import Model.Buildings.Building;
-import Model.Buildings.Defence;
-import Model.Buildings.Generator;
+import Model.Buildings.*;
 import Model.DataBase;
 import Model.Government;
 import Model.Map;
@@ -25,21 +23,31 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+       kiarashStart(stage);
+    }
+
+    private void kiarashStart(Stage stage) throws Exception {
        Unit.load();
        Building.load();
        Resource.load();
        Game.loadImages();
        Government government = new Government(10000);
        DataBase.setCurrentGovernment(government);
+       GameMenuController.setCurrentGovernment();
 
 
-    //    Map.loadMap("for test");
-    //    Map map = DataBase.getSelectedMap();
+       //    Map.loadMap("for test");
+       //    Map map = DataBase.getSelectedMap();
 
 
        Map map = new Map("for test", 200, 200);
        DataBase.setSelectedMap(map);
        GameMenuController.setMap(map);
+
+       Game game = new Game();
+       DataBase.setGame(game);
+       GameMenuController.setGame(game);
+       game.start(stage);
 
 
        Troop.createTroop(government,"Lord", 2, 2);
@@ -64,11 +72,21 @@ public class Main extends Application {
        map.getSquareFromMap(30, 21).setBuilding(generator1);
        map.getSquareFromMap(31, 21).setBuilding(generator1);
 
-       map.getSquareFromMap(50, 25).setBuilding(Generator.createGenerator(government, 50, 25, "IronMine"));
-       Game game = new Game();
-       DataBase.setGame(game);
-       game.start(stage);
+       Generator generator2 = Generator.createGenerator(government, 10, 10, "DairyFarm");
+       map.getSquareFromMap(10, 10).setBuilding(generator2);
 
-        // new SignUpMenu().start(stage);
+       Generator generator3 = Generator.createGenerator(government, 20, 10, "HopsFarm");
+       map.getSquareFromMap(20, 10).setBuilding(generator3);
+
+       Stockpile stockpile1 = Stockpile.createStockpile(government, 5, 5, "Stockpile");
+       map.getSquareFromMap(5, 5).setBuilding(stockpile1);
+
+       Barrack barrack = Barrack.createBarrack(government, 20, 20, "MercenaryPost");
+       map.getSquareFromMap(20,20).setBuilding(barrack);
+
+       map.getSquareFromMap(50, 25).setBuilding(Generator.createGenerator(government, 50, 25, "IronMine"));
+
+
+       // new SignUpMenu().start(stage);
     }
 }

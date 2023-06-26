@@ -29,7 +29,7 @@ public class Barrack extends Building {
         for (Barrack barrack : barracks) {
             barracksName.add(barrack.name);
             buildings.add(barrack);
-            barracksName.add(barrack.name);
+            buildingsNames.add(barrack.name);
         }
     }
 

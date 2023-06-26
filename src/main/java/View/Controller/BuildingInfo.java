@@ -92,8 +92,16 @@ public class BuildingInfo {
         GameMenuController.createUnitController("Knight");
     }
 
-    public void disband(MouseEvent mouseEvent) {
+    public void stanGround(MouseEvent mouseEvent) {
+        GameMenuController.setUnitModeController("stanGround");
+    }
 
+    public void defensive(MouseEvent mouseEvent) {
+        GameMenuController.setUnitModeController("defensive");
+    }
+
+    public void aggressive(MouseEvent mouseEvent) {
+        GameMenuController.setUnitModeController("Aggressive");
     }
 
     public void stop(MouseEvent mouseEvent) {
@@ -108,15 +116,40 @@ public class BuildingInfo {
 
     }
 
-    public void stanGround(MouseEvent mouseEvent) {
-        GameMenuController.setUnitModeController("stanGround");
+    public void disband(MouseEvent mouseEvent) {
+
     }
 
-    public void defensive(MouseEvent mouseEvent) {
-        GameMenuController.setUnitModeController("defensive");
+    public void repair(MouseEvent mouseEvent) {
     }
 
-    public void aggressive(MouseEvent mouseEvent) {
-        GameMenuController.setUnitModeController("Aggressive");
+    public void close(MouseEvent mouseEvent) {
+    }
+
+    public void open(MouseEvent mouseEvent) {
+    }
+
+    public void sword(MouseEvent mouseEvent) {
+    }
+
+    public void mace(MouseEvent mouseEvent) {
+    }
+
+    public void bow(MouseEvent mouseEvent) {
+    }
+
+    public void crossBow(MouseEvent mouseEvent) {
+    }
+
+    public void spear(MouseEvent mouseEvent) {
+    }
+
+    public void pike(MouseEvent mouseEvent) {
+    }
+
+    public void leatherArmour(MouseEvent mouseEvent) {
+    }
+
+    public void cheese(MouseEvent mouseEvent) {
     }
 }
