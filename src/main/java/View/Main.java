@@ -24,6 +24,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
        Unit.load();
        Building.load();
        Resource.load();
