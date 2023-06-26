@@ -1,6 +1,7 @@
 package View.Controller;
 
 import Model.Buildings.Building;
+import Model.Buildings.TownBuilding;
 import Model.DataBase;
 import View.Game;
 import View.Main;
@@ -9,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -90,7 +92,9 @@ public class GameGraphicController {
     }
 
     private static void fillPopularityFactorsMenuLabelsAndImages() throws MalformedURLException, FileNotFoundException {
-        int foodNumberInt = DataBase.getCurrentGovernment().getFood() * 4;
+        DataBase.getCurrentGovernment().updateBuildingPopularity();
+
+        int foodNumberInt = (DataBase.getCurrentGovernment().getFood()) * 4;
         int taxNumberInt = 0;
         int tax = DataBase.getCurrentGovernment().getTax();
         if (tax <= 0) taxNumberInt += (tax * (-2) + 1);
@@ -102,32 +106,32 @@ public class GameGraphicController {
         int totalNumberInt = foodNumberInt + fearNumberInt + religionNumberInt + taxNumberInt;
 
         foodImage.setLayoutX(200);
-        foodImage.setY(27);
+        foodImage.setY(25);
         foodNumber.setLayoutX(170);
         foodNumber.setLayoutY(39);
 
         taxImage.setLayoutX(200);
-        taxImage.setLayoutY(66);
+        taxImage.setLayoutY(63);
         taxNumber.setLayoutX(170);
         taxNumber.setLayoutY(78);
 
         fearImage.setLayoutX(200);
-        fearImage.setLayoutY(138);
+        fearImage.setLayoutY(135);
         fearNumber.setLayoutX(170);
         fearNumber.setLayoutY(150);
 
         religionImage.setLayoutX(412);
-        religionImage.setLayoutY(27);
+        religionImage.setLayoutY(25);
         religionNumber.setLayoutX(378);
         religionNumber.setLayoutY(39);
 
         totalImage.setLayoutX(492);
-        totalImage.setLayoutY(180);
+        totalImage.setLayoutY(175);
         totalNumber.setLayoutX(538);
         totalNumber.setLayoutY(192);
 
         popularityFactorsPane.getChildren().addAll(foodImage , foodNumber , fearImage , fearNumber , religionImage
-        , religionNumber , taxNumber , taxImage );
+        , religionNumber , taxNumber , taxImage , totalNumber , totalImage);
 
         foodNumber = new Label(fearNumberInt + "");
         if(foodNumberInt > 0)
@@ -170,6 +174,49 @@ public class GameGraphicController {
             totalImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/pokerFace.png")));
         else
             totalImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
+
+        // place sliders to change rates
+        Slider foodSlider = new Slider(-2 , 2  , 0);
+        foodSlider.setLayoutX(290);
+        foodSlider.setLayoutY(40);
+        foodSlider.setPrefWidth(90);
+
+        foodSlider.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int foodRate = (int) Math.floor(foodSlider.getValue());
+                DataBase.getCurrentGovernment().setFood(foodRate);
+            }
+        });
+
+        Slider taxSlider = new Slider(-3 , 8 , 0);
+        taxSlider.setLayoutX(300);
+        taxSlider.setLayoutY(80);
+        taxSlider.setPrefWidth(90);
+
+        taxSlider.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int taxRate = (int) Math.floor(taxSlider.getValue());
+                DataBase.getCurrentGovernment().setTax(taxRate);
+            }
+        });
+
+        Slider fearSlider = new Slider(-3 , 8 , 0);
+        fearSlider.setLayoutX(360);
+        fearSlider.setLayoutY(150);
+        fearSlider.setPrefWidth(90);
+
+        fearSlider.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int fearRate = (int) Math.floor(fearSlider.getValue());
+                DataBase.getCurrentGovernment().setFear(fearRate);
+            }
+        });
+
+
+        popularityFactorsPane.getChildren().addAll(foodSlider , taxSlider , fearSlider);
     }
 
     public void openConstructorBuildingsMenu(MouseEvent ignoredMouseEvent) throws IOException {

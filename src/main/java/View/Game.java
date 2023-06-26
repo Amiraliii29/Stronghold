@@ -645,6 +645,7 @@ public class Game extends Application{
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
         } else if (building.getName().equals("Shop")) {
+            
 
         } else {
             //TODO : change it !
