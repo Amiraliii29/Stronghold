@@ -686,7 +686,7 @@ public class Game extends Application{
 
         Label error = new Label(errorText);
         error.setTextFill(Color.RED);
-        error.setFont(new Font(20));
+        error.setFont(new Font(10));
         error.setLayoutX(0);
         error.setLayoutY(0);
 

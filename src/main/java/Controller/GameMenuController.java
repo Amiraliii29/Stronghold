@@ -13,8 +13,6 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 import View.Game;
 import View.Enums.Messages.GameMenuMessages;
-import javafx.scene.chart.PieChart.Data;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -42,6 +40,10 @@ public class GameMenuController {
 
     public static void setCurrentGovernment() {
         currentGovernment = DataBase.getCurrentGovernment();
+    }
+
+    public static void setGame(Game game) {
+        GameMenuController.game = game;
     }
 
 
@@ -152,8 +154,6 @@ public class GameMenuController {
 
 
     public static boolean constructBuilding(Building building) {
-        if (true) return true; // TODO : Need to remove !
-
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
             game.showErrorText("Can't Build Here!");
 
@@ -170,7 +170,8 @@ public class GameMenuController {
         else {
             currentGovernment.changeMoney(-building.getCost());
             currentGovernment.removeFromStockpile(building.getResource(), building.getNumberOfResource());
-            switch (Objects.requireNonNull(Building.getBuildingCategoryByName(building.getName()))) {
+
+            switch (Building.getBuildingCategoryByName(building.getName())) {
                 case "Generator" -> {
                     assert building instanceof Generator;
                     Generator generator = (Generator) building;
@@ -190,7 +191,7 @@ public class GameMenuController {
             return true;
         }
 
-        return false;
+        return true; // TODO : make it false
     }
 
 
