@@ -11,8 +11,12 @@ import Model.Units.Siege;
 import Model.Units.StateUnits;
 import Model.Units.Troop;
 import Model.Units.Unit;
+import View.Controller.BuildingInfo;
 import View.Game;
 import View.Enums.Messages.GameMenuMessages;
+import javafx.scene.control.Alert;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -50,7 +54,27 @@ public class GameMenuController {
 
 
 
-    public static ArrayList<ArrayList<Unit>> separateUnits(HashMap<String, Integer> unitNameAndCount) {
+
+    public static ArrayList<ArrayList<Unit>> separateUnits() {
+        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+
+        for (int i = 0; i < 8; i++) {
+            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
+            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
+                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
+                else
+                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
+
+                continue;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText("Use Only 0-9");
+            return null ;
+        }
+
         ArrayList<ArrayList<Unit>> allUnits = new ArrayList<>();
 
         for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
@@ -228,19 +252,55 @@ public class GameMenuController {
             return true;
         }
 
+        map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());//TODO : DELETE
         return true; // TODO : make it false
     }
 
 
     public static void disbandUnit() {
-        ArrayList<Unit> units = DataBase.getSelectedUnit();
-        if (units.size() == 0) return;
+        ArrayList<ArrayList<Unit>> allUnits = separateUnits();
+        if (allUnits == null) return;
 
-
-
-        currentGovernment.changeFreeWorkers(units.size());
-
+        for (ArrayList<Unit> selectedUnit : allUnits) {
+            currentGovernment.changeFreeWorkers(selectedUnit.size());
+            squares[selectedUnit.get(0).getXCoordinate()][selectedUnit.get(0).getYCoordinate()].removeAllUnit(selectedUnit.get(0));
+        }
     }
+
+    public static void modifyGates(boolean open) {
+        DataBase.getSelectedBuilding().changeCanPass(open);
+    }
+
+    public static void repair() {
+        Building selectedBuilding = DataBase.getSelectedBuilding();
+        if (selectedBuilding.getMaximumHp() == selectedBuilding.getHp()) return;
+
+        Resource stone = Resource.getResourceByName("Stone");
+        double damage = (selectedBuilding.getMaximumHp() - selectedBuilding.getHp()) / (selectedBuilding.getMaximumHp() * 1.0);
+        int stoneNumber = (int) (Math.ceil(damage * selectedBuilding.getNumberOfResource()));
+
+        if (currentGovernment.getResourceInStockpiles(stone) >= stoneNumber) {
+            currentGovernment.removeFromStockpile(stone, stoneNumber);
+            selectedBuilding.changeHP(selectedBuilding.getHp() - selectedBuilding.getMaximumHp());
+
+            try {
+                game.showBuildingDetail(selectedBuilding);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void changeProduct(String product) {
+        Building selectedBuilding = DataBase.getSelectedBuilding();
+        if (!(selectedBuilding instanceof Generator)) return;
+
+        Resource last = ((Generator) selectedBuilding).getResourceGenerate();
+        currentGovernment.addToGenerationRate(product, ((Generator) selectedBuilding).getGeneratingRate());
+        currentGovernment.removeFromResourceGenerationRate(last.getName(), ((Generator) selectedBuilding).getGeneratingRate());
+    }
+
+
 
     private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {
         Game game=DataBase.getGame();

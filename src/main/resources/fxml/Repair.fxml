@@ -20,16 +20,6 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Label alignment="CENTER" layoutX="39.0" layoutY="41.0" prefHeight="35.0" prefWidth="37.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" layoutX="105.0" layoutY="42.0" prefHeight="35.0" prefWidth="38.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
       <Label alignment="CENTER" layoutX="77.0" layoutY="37.0" prefHeight="46.0" prefWidth="28.0" text="/">
          <font>
             <Font size="18.0" />

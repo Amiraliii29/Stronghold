@@ -639,7 +639,9 @@ public class Game extends Application{
         mainPane.getChildren().add(selectedSquareInfo);
     }
 
-    private void showBuildingDetail(Building building) throws IOException {
+    public void showBuildingDetail(Building building) throws IOException {
+        mainPane.getChildren().remove(detail);
+
         if (building.getName().equals("MercenaryPost")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
@@ -672,6 +674,27 @@ public class Game extends Application{
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
         } else return;
+
+        if (building instanceof Defence) {
+            Label hp = new Label(String.valueOf(building.getHp()));
+            hp.setLayoutX(39);
+            hp.setLayoutY(41);
+            hp.setPrefWidth(35);
+            hp.setPrefHeight(37);
+            hp.setFont(new Font(18));
+            hp.setAlignment(Pos.CENTER);
+
+            Label maxHp = new Label(String.valueOf(building.getMaximumHp()));
+            maxHp.setLayoutX(105);
+            maxHp.setLayoutY(41);
+            maxHp.setPrefWidth(35);
+            maxHp.setPrefHeight(37);
+            maxHp.setFont(new Font(18));
+            maxHp.setAlignment(Pos.CENTER);
+
+            detail.getChildren().add(hp);
+            detail.getChildren().add(maxHp);
+        }
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
@@ -778,27 +801,9 @@ public class Game extends Application{
     }
 
     public void move (int finalX, int finalY) {
-        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
+        if (allUnits == null) return;
 
-        for (int i = 0; i < 8; i++) {
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
-                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
-                else
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
-
-                continue;
-            }
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Use Only 0-9");
-            return;
-        }
-
-
-        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits(unitNameAndCount);
         ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
 

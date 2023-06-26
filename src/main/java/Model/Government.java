@@ -186,6 +186,12 @@ public class Government {
         requestsIAsked.add(tradeRequest);
     }
 
+    public void removeFromResourceGenerationRate(String resource, int cnt) {
+        if (!resourceGenerationRate.containsKey(resource)) return;
+
+        resourceGenerationRate.put(resource, resourceGenerationRate.get(resource) - cnt);
+    }
+
     public ArrayList<Stockpile> getStockpiles() {
         return stockpiles;
     }
