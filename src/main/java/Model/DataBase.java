@@ -17,10 +17,14 @@ import Model.Units.Unit;
 import View.Game;
 import View.LoginMenu;
 import View.ShopMenu;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 public class DataBase {
     private static Game game;
+
+    private  static  final Clipboard clipboard;
     private static ArrayList<Government> governments;
     private static final ArrayList<Map> maps;
     private static Government currentGovernment;
@@ -35,6 +39,7 @@ public class DataBase {
 
 
     static {
+        clipboard= Clipboard.getSystemClipboard();
         JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
         governments = new ArrayList<>();
         maps = new ArrayList<>();
@@ -274,6 +279,29 @@ public class DataBase {
         if (selectedUnit.get(0).getAttackRange() > 1)
             return true;
         else return false;
+    }
+
+    public static void handleEndOfTurnFights() {
+//        for (Unit unit : GameMenuController.getAllUnits()) {
+//            GameMenuController.setCurrentGovernment(unit.getOwner());
+//            currentGovernment = unit.getOwner();
+//            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
+//            if (targetCoord != null) {
+//                selectedUnit.clear();
+//                selectedUnit.add(unit);
+//                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
+//                unit.setDidFight(true);
+//            }
+//        }
+    }
+    public static void copyStringToClipboard(String targetString){
+        ClipboardContent content=new ClipboardContent();
+        content.putString(targetString);
+        clipboard.setContent(content);
+    }
+
+    public static String readClipboardString() {
+        return clipboard.getString();
     }
 
     public static int[] getEnemyClosestBuilding(int currentX, int currentY) {

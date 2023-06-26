@@ -22,7 +22,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-       kiarashStart(stage);
+
+    //    kiarashStart(stage);
+       new SignUpMenu().start(stage);
     }
 
     private void kiarashStart(Stage stage) throws Exception {
@@ -86,6 +88,6 @@ public class Main extends Application {
        map.getSquareFromMap(50, 25).setBuilding(Generator.createGenerator(government, 50, 25, "IronMine"));
 
 
-       // new SignUpMenu().start(stage);
+       
     }
 }
