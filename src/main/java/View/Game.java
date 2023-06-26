@@ -86,7 +86,7 @@ public class Game extends Application{
     private static AnchorPane detail;
     private static int selectedX;
     private static int selectedY;
-    private static ArrayList<Government> governmentsInGame = new ArrayList<>();
+    private  ArrayList<Government> governmentsInGame = new ArrayList<>();
 
     private Scene scene;
     public Map map;
@@ -135,7 +135,7 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
-    public static void addToGovernmentsInGame(Government government){
+    public  void addToGovernmentsInGame(Government government){
         governmentsInGame.add(government);
     }
 
@@ -180,9 +180,9 @@ public class Game extends Application{
 
     private void placeGovernmentsKeep() {
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Place Governments Keep Respectively");
-        alert.showAndWait();
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setContentText("Place Governments Keep Respectively");
+//        alert.showAndWait();
 
     }
 
@@ -267,19 +267,7 @@ public class Game extends Application{
                 robot.mouseMove(Math.min(Math.max(minX, x), maxX), y);
             }
         });
-        if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
-            scene.setOnMouseClicked(event -> {
-                double endX = event.getX();
-                double endY = event.getY();
-                int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
-                int nowY = (int) (Math.floor(endY / blockPixel));
 
-                building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                squares[squareI + nowX][squareJ + nowY].setBuilding(building);
-                keepOwnerGovernmentsCounter++;
-                drawMap();
-            });
-        }
 
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
@@ -290,7 +278,18 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
-                if (customizePane != null) {
+                if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
+                    double endX = event.getX();
+                    double endY = event.getY();
+                    int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+                    int nowY = (int) (Math.floor(endY / blockPixel));
+
+                    building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    keepOwnerGovernmentsCounter++;
+                    drawMap();
+                }
+                else if (customizePane != null) {
                     if (tree != null)
                         CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
                     else if (land != null)

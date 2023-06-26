@@ -281,7 +281,7 @@ public class DataBase {
         else return false;
     }
 
-    public static void handleEndOfTurnFights() {
+//    public static void handleEndOfTurnFights() {
 //        for (Unit unit : GameMenuController.getAllUnits()) {
 //            GameMenuController.setCurrentGovernment(unit.getOwner());
 //            currentGovernment = unit.getOwner();
@@ -293,7 +293,7 @@ public class DataBase {
 //                unit.setDidFight(true);
 //            }
 //        }
-    }
+//    }
     public static void copyStringToClipboard(String targetString){
         ClipboardContent content=new ClipboardContent();
         content.putString(targetString);

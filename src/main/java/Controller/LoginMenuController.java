@@ -115,9 +115,7 @@ public class LoginMenuController {
 //        }
         else {
             User.setCurrentUser(targetUser);
-            DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
-
-            new MainMenu().start(DataBase.getMainStage());
+            new MainMenu().start(SignUpMenu.stage);
         }
     }
 
@@ -189,7 +187,6 @@ public class LoginMenuController {
 
                     try {
                         DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
-                        User.setCurrentUser(User.getUserByUserName(userName));
                         new MainMenu().start(SignUpMenu.stage);
                     } catch (Exception e) {
                         throw new RuntimeException(e);

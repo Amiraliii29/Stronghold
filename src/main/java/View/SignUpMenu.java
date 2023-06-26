@@ -52,7 +52,7 @@ public class SignUpMenu extends Application {
     public void start(Stage stage) throws Exception {
         StackPane Pane = FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
             mainPane=Pane;
-            this.stage=stage;
+            SignUpMenu.stage =stage;
             stage.setFullScreen(true);
         Scene scene = new Scene(Pane);
         stage.setScene(scene);
