@@ -1,61 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="221.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
+<AnchorPane prefHeight="221.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
    <children>
       <ImageView fitHeight="221.0" fitWidth="606.0" layoutX="-3.0">
          <image>
             <Image url="@../Images/menu-backgrounds/PopularityFactorsMenu.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="foodImage" fitHeight="33.0" fitWidth="32.0" layoutX="200.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="taxImage" fitHeight="33.0" fitWidth="32.0" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="crowdingImage" fitHeight="33.0" fitWidth="32.0" layoutX="200.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="fearImage" fitHeight="33.0" fitWidth="32.0" layoutX="200.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="religionImage" fitHeight="33.0" fitWidth="32.0" layoutX="412.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="aleImage" fitHeight="33.0" fitWidth="32.0" layoutX="420.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="foodNumber" layoutX="170.0" layoutY="39.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="taxNumber" layoutX="170.0" layoutY="78.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="crowdingNumber" layoutX="170.0" layoutY="111.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="fearNumber" layoutX="170.0" layoutY="150.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="religionNumber" layoutX="378.0" layoutY="39.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <Label fx:id="aleNumber" layoutX="378.0" layoutY="78.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="13.0" />
-         </font>
-      </Label>
-      <ImageView fx:id="totalImage" fitHeight="33.0" fitWidth="32.0" layoutX="492.0" layoutY="184.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="totalNumber" layoutX="538.0" layoutY="192.0" prefHeight="18.0" prefWidth="49.0" text="Label">
-         <font>
-            <Font name="American Typewriter" size="14.0" />
-         </font>
-      </Label>
       <ImageView fitHeight="39.0" fitWidth="41.0" layoutX="14.0" layoutY="173.0" onMouseClicked="#exitPopularityFactorsMenu" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

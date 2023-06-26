@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="150.0" prefWidth="1092.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="1115.0" layoutX="-10.0" layoutY="4.0" pickOnBounds="true">
+         <image>
+            <Image url="@../Images/menu-backgrounds/gatesBottomMenu.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="54.0" fitWidth="63.0" layoutX="192.0" layoutY="69.0" onDragDetected="#smallStoneGateDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="54.0" fitWidth="88.0" layoutX="262.0" layoutY="70.0" onDragDetected="#bigStoneGateDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="54.0" fitWidth="68.0" layoutX="361.0" layoutY="70.0" onDragDetected="#drawBridgeDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="54.0" fitWidth="68.0" layoutX="482.0" layoutY="71.0" onDragDetected="#trapDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="628.0" layoutY="70.0" onDragDetected="#ditchDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="628.0" layoutY="98.0" onDragDetected="#fillDitchDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="30.0" fitWidth="36.0" layoutX="174.0" layoutY="125.0" onMouseClicked="#openConstructorBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="29.0" fitWidth="26.0" layoutX="219.0" layoutY="126.0" onMouseClicked="#openFoodBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="20.0" fitWidth="28.0" layoutX="254.0" layoutY="130.0" onMouseClicked="#openVillageBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="23.0" fitWidth="29.0" layoutX="292.0" layoutY="125.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="21.0" fitWidth="32.0" layoutX="334.0" layoutY="125.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="30.0" fitWidth="38.0" layoutX="138.0" layoutY="83.0" onMouseClicked="#openWallBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="21.0" fitWidth="28.0" layoutX="137.0" layoutY="129.0" onMouseClicked="#openWallBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>

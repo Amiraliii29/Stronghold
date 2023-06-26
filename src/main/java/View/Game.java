@@ -5,8 +5,10 @@ import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.Buildings.Generator;
+import Model.Buildings.*;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
+import View.Controller.GameGraphicController;
 import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -72,6 +74,11 @@ public class Game extends Application{
     private ImageView copiedBuilding;
     private Text errorText;
     private static Pane errorPane;
+    public static String defenceBuildingToCreateName = null;
+    public static String generatorBuildingToCreateName = null;
+    public static String barrackBuildingToCreateName = null;
+    public static String townBuildingToCreateName = null;
+    public static String stockPileBuildingToCreateName = null;
 
     public static Trees tree;
     public static Land land;
@@ -86,7 +93,7 @@ public class Game extends Application{
     private int squareJ;
     private int blockX;
     private int blockY;
-    private Building building;
+    public static Building building;
     private Timeline hoverTimeline;
     private Timeline errorTimeline;
     private double mouseX;
@@ -162,8 +169,6 @@ public class Game extends Application{
         stage.setFullScreen(true);
         stage.show();
     }
-
-
 
     public static void setXY(int x, int y) {
         selectedX = x;
@@ -346,9 +351,37 @@ public class Game extends Application{
             int nowY = (int) (Math.floor(endY / blockPixel));
 
             if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
-                if (building != null) {
-                    //TODO : put building
+                if (defenceBuildingToCreateName != null) {
+                    building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    defenceBuildingToCreateName = null;
+                    drawMap();
                 }
+                if(barrackBuildingToCreateName != null){
+                    building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    barrackBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(generatorBuildingToCreateName != null){
+                    building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    generatorBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(townBuildingToCreateName != null){
+                    building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    townBuildingToCreateName = null;
+                    drawMap();
+                }
+                if(stockPileBuildingToCreateName != null){
+                    building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    stockPileBuildingToCreateName = null;
+                    drawMap();
+                }
+                building = null;
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 ArrayList<Unit> selectedUnit = new ArrayList<>();
                 for (int i = Math.min(blockX, nowX); i <= Math.max(blockX, nowX); i++) {
@@ -432,8 +465,6 @@ public class Game extends Application{
         });
     }
 
-
-
     public void drawMap() {
         squares = map.getSquares();
         pane.getChildren().clear();
@@ -511,9 +542,9 @@ public class Game extends Application{
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BottomMenu.fxml")).toExternalForm()));
         bottomPane.setLayoutX(leftX);
         bottomPane.setLayoutY(screenHeight - 60);
-//        todo uncomment when code finished
 
-//        GameGraphicController.setPopularityGoldPopulation();
+        GameGraphicController.setPopularityGoldPopulation();
+
         mainPane.getChildren().add(bottomPane);
     }
 
