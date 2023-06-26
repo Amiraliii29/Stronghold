@@ -39,6 +39,7 @@ public class JsonConverter {
     public static void removeUsernameJsonData(User user, String dirFromSrc) throws ParseException{
         JSONArray userData=getUsersDataInJson(dirFromSrc);
         int index=getUserIndexInJsonArray(user,dirFromSrc);
+        if(index!=-1)
         userData.remove(index);
         try{
             File file=new File(dirFromSrc);

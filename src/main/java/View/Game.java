@@ -72,6 +72,7 @@ public class Game extends Application{
     private static Pane squareInfo;
     private static Pane selectedSquareInfo;
     private ImageView copiedBuilding;
+    public static String copiedBuildingName;
     private Text errorText;
     private static Pane errorPane;
     public static String defenceBuildingToCreateName = null;
@@ -168,6 +169,7 @@ public class Game extends Application{
 
         stage.setFullScreen(true);
         stage.show();
+        
     }
 
     public static void setXY(int x, int y) {
@@ -413,6 +415,9 @@ public class Game extends Application{
         });
 
         scene.setOnKeyPressed(event -> {
+            final KeyCombination keyCombinationShiftC = new KeyCodeCombination(
+                                    KeyCode.C, KeyCombination.CONTROL_DOWN);
+
             if (event.getCode() == KeyCode.I) {
                 if (blockPixel < 35) {
                     blockPixel += 5;
@@ -462,6 +467,13 @@ public class Game extends Application{
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
             }
+            else if (keyCombinationShiftC.match(event)){
+                showCopiedBuildingImage();
+                System.out.println("lol");
+            }
+            copiedBuildingName=Building.getBuildings().get(0).getName();
+            showCopiedBuildingImage();
+            
         });
     }
 
@@ -842,22 +854,30 @@ public class Game extends Application{
     }
 
     public void addCopiedBuildingListener(){
-        final KeyCombination keyCombinationShiftV = new KeyCodeCombination(
-                    KeyCode.V, KeyCombination.CONTROL_DOWN);
-            
-            errorText.requestFocus();
-            errorText.setOnKeyPressed(new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-        if (keyCombinationShiftV.match(event)) {
-            
-        }
-    }
-});
+        copiedBuilding.setOnDragDetected(event -> {
+            switch(Building.getBuildingCategoryByName(copiedBuildingName)){
+                case "Barrack":
+                Game.barrackBuildingToCreateName = copiedBuildingName;
+                break;
+
+                case "TownBuilding":
+                Game.townBuildingToCreateName = copiedBuildingName;
+                break;
+
+                case "Generator":
+                Game.generatorBuildingToCreateName = copiedBuildingName;
+                break;
+
+                default:
+                Game.stockPileBuildingToCreateName = copiedBuildingName;
+                break;
+            }
+        });
     }
 
+
     private void showCopiedBuildingImage(){
-        Image buildingImage=buildings.get(DataBase.readClipboardString());
+        Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
         instanciateCopiedBuilding(buildingImage);
     }
 
@@ -868,6 +888,7 @@ public class Game extends Application{
         copiedBuilding.setFitWidth(50);
         copiedBuilding.setFitHeight(50);
         pane.getChildren().add(copiedBuilding);
+        addCopiedBuildingListener();
     }
 
     public static void loadImages() throws FileNotFoundException {
