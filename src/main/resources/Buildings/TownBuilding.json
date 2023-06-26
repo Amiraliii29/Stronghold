@@ -1,4 +1,4 @@
-  [
+[
   {
     "capacity": 0,
     "popularityRate": 2,
@@ -91,6 +91,21 @@
     "hp": 300,
     "numberOfResource": 5,
     "cost": 50,
+    "canPass": false
+  },
+  {
+    "capacity": 0,
+    "popularityRate": 0,
+    "resource": null,
+    "name": "SiegeTent",
+    "width": 1,
+    "length": 1,
+    "xCoordinateLeft": 0,
+    "yCoordinateUp": 0,
+    "lands": ["grass","default","highDensityMeadow","meadow","plain","sand"],
+    "hp": 500,
+    "numberOfResource": 0,
+    "cost": 0,
     "canPass": false
   }
 ]

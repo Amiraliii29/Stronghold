@@ -255,21 +255,6 @@
   },
   {
     "range": 0,
-    "capacity": 0,
-    "resource": null,
-    "name": "SiegeTent",
-    "width": 2,
-    "length": 2,
-    "xCoordinateLeft": 0,
-    "yCoordinateUp": 0,
-    "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
-    "hp": 500,
-    "numberOfResource": 0,
-    "cost": 0,
-    "canPass": false
-  },
-  {
-    "range": 0,
     "capacity": 10000,
     "resource": {
       "name": "Wood",
