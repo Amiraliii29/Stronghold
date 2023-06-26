@@ -73,7 +73,6 @@ public class Game extends Application{
     private static Pane selectedSquareInfo;
     private ImageView copiedBuilding;
     public static String copiedBuildingName;
-    private Text errorText;
     private static Pane errorPane;
     public static String defenceBuildingToCreateName = null;
     public static String generatorBuildingToCreateName = null;
@@ -416,7 +415,7 @@ public class Game extends Application{
 
         scene.setOnKeyPressed(event -> {
             final KeyCombination keyCombinationShiftC = new KeyCodeCombination(
-                                    KeyCode.C, KeyCombination.CONTROL_DOWN);
+                KeyCode.C,KeyCombination.CONTROL_ANY);
 
             if (event.getCode() == KeyCode.I) {
                 if (blockPixel < 35) {
@@ -447,7 +446,7 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.C) {
+            } else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
                 if (customizePane == null) {
                     try {
                         building = null;
@@ -469,10 +468,11 @@ public class Game extends Application{
             }
             else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
-                System.out.println("lol");
             }
-            copiedBuildingName=Building.getBuildings().get(0).getName();
-            showCopiedBuildingImage();
+            // System.out.println("kir");
+            // copiedBuildingName=Building.getBuildings().get(0).getName();
+            // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
+            // showCopiedBuildingImage();
             
         });
     }
@@ -855,6 +855,7 @@ public class Game extends Application{
 
     public void addCopiedBuildingListener(){
         copiedBuilding.setOnDragDetected(event -> {
+            Game.building = Building.getBuildingByName(copiedBuildingName);
             switch(Building.getBuildingCategoryByName(copiedBuildingName)){
                 case "Barrack":
                 Game.barrackBuildingToCreateName = copiedBuildingName;
@@ -868,15 +869,21 @@ public class Game extends Application{
                 Game.generatorBuildingToCreateName = copiedBuildingName;
                 break;
 
+                case "Defence":
+                Game.defenceBuildingToCreateName = copiedBuildingName;
+                break;
+
                 default:
                 Game.stockPileBuildingToCreateName = copiedBuildingName;
                 break;
             }
         });
+        System.out.println(copiedBuildingName);
     }
 
-
     private void showCopiedBuildingImage(){
+
+        copiedBuildingName=DataBase.getSelectedBuilding().getName();
         Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
         instanciateCopiedBuilding(buildingImage);
     }
@@ -884,10 +891,10 @@ public class Game extends Application{
     private void instanciateCopiedBuilding(Image buildingImage){
         copiedBuilding=new ImageView(buildingImage);
         copiedBuilding.setLayoutX(screenWidth+leftX);
-        copiedBuilding.setLayoutY(screenHeight-50);
-        copiedBuilding.setFitWidth(50);
-        copiedBuilding.setFitHeight(50);
-        pane.getChildren().add(copiedBuilding);
+        copiedBuilding.setLayoutY(screenHeight-100);
+        copiedBuilding.setFitWidth(100);
+        copiedBuilding.setFitHeight(100);
+        mainPane.getChildren().add(copiedBuilding);
         addCopiedBuildingListener();
     }
 
