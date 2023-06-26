@@ -1,22 +1,20 @@
-package View;
+package View.Controller;
 
+import View.Controller.ShopMenuController;
 import Model.*;
 import View.Enums.Messages.TradeMenuMessages;
+import View.Game;
 import View.ShopMenu;
-import com.sun.security.auth.UnixNumericUserPrincipal;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -40,7 +38,8 @@ public class TradeMenuController {
     private static TradeRequest selectedTradeRequest;
     private static Button selectedRequestsRejectButton;
     private static Button getSelectedRequestsAcceptButton;
-    private static AnchorPane tradeMenuHistoryPane;
+    public static AnchorPane tradeMenuHistoryPane = new AnchorPane();
+    public static AnchorPane tradeNewRequestPane = new AnchorPane();
 
 
 
@@ -74,31 +73,8 @@ public class TradeMenuController {
     }
 
 
-    public static String showNotificationsController() {
-        String toReturn = "new trade request notifications:\n";
-        int counter = 1;
-
-        for (TradeRequest requestNotification : DataBase.getCurrentGovernment().getRequestNotifications()) {
-            if (requestNotification.getGovernmentThatRequested().equals(DataBase.getCurrentGovernment())) {
-                toReturn += counter + ". " + requestNotification.getGovernmentThatHasBeenAsked().getOwner().getUsername()
-                        + " has accepted your request for " + requestNotification.getResource().getName() +
-                        " and has a message for you: " + requestNotification.getAcceptanceMessage() + "\n";
-                counter++;
-            } else if (requestNotification.getGovernmentThatHasBeenAsked().equals(DataBase.getCurrentGovernment())) {
-                toReturn += counter + ". " + requestNotification.getGovernmentThatRequested().getOwner().getUsername() +
-                        " has requested you for " + requestNotification.getAmount() + " of " +
-                        requestNotification.getResource().getName() + " for price " + requestNotification.getPrice() +
-                        " , message: " + requestNotification.getMessage() + "\n";
-                counter++;
-            }
-        }
-        DataBase.getCurrentGovernment().getRequestNotifications().clear();
-        return toReturn;
-    }
-
     public void openNewRequestPage(MouseEvent mouseEvent) throws IOException {
-        Stage stage = DataBase.getTradeMenuStage();
-        AnchorPane tradeMenuPane = FXMLLoader.load(
+        tradeNewRequestPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeNewRequest.fxml").toExternalForm()));
 
 
@@ -108,40 +84,42 @@ public class TradeMenuController {
                 governmentsInGameOtherThanCurrentUser.add(government);
         }
 
+        tradeNewRequestPane.setLayoutX(Game.leftX);
+        tradeNewRequestPane.setLayoutY(0);
+        tradeNewRequestPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
+        Game.mainPane.getChildren().add(tradeNewRequestPane);
+//todo uncomment
         //setGovernmentsName in menu
-        if(1 <= governmentsInGameOtherThanCurrentUser.size())
-            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
-        else
-            User1.setVisible(false);
-        if(2 <= governmentsInGameOtherThanCurrentUser.size())
-            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
-        else
-            User2.setVisible(false);
-        if(3 <= governmentsInGameOtherThanCurrentUser.size())
-            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
-        else
-            User3.setVisible(false);
-        if(4 <= governmentsInGameOtherThanCurrentUser.size())
-            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
-        else
-            User4.setVisible(false);
-        if(5 <= governmentsInGameOtherThanCurrentUser.size())
-            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
-        else
-            User5.setVisible(false);
-        if(6 <= governmentsInGameOtherThanCurrentUser.size())
-            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
-        else
-            User6.setVisible(false);
-        if(7 <= governmentsInGameOtherThanCurrentUser.size())
-            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
-        else
-            User7.setVisible(false);
-
-        Scene scene = new Scene(tradeMenuPane);
-
-        stage.setScene(scene);
-        stage.show();
+//        if(1 <= governmentsInGameOtherThanCurrentUser.size())
+//            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
+//        else
+//            User1.setVisible(false);
+//        if(2 <= governmentsInGameOtherThanCurrentUser.size())
+//            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
+//        else
+//            User2.setVisible(false);
+//        if(3 <= governmentsInGameOtherThanCurrentUser.size())
+//            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
+//        else
+//            User3.setVisible(false);
+//        if(4 <= governmentsInGameOtherThanCurrentUser.size())
+//            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
+//        else
+//            User4.setVisible(false);
+//        if(5 <= governmentsInGameOtherThanCurrentUser.size())
+//            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
+//        else
+//            User5.setVisible(false);
+//        if(6 <= governmentsInGameOtherThanCurrentUser.size())
+//            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
+//        else
+//            User6.setVisible(false);
+//        if(7 <= governmentsInGameOtherThanCurrentUser.size())
+//            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
+//        else
+//            User7.setVisible(false);
 
     }
 
@@ -149,11 +127,10 @@ public class TradeMenuController {
         Stage stage = DataBase.getTradeMenuStage();
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
-
-        Scene scene = new Scene(tradeMenuHistoryPane);
-
-        stage.setScene(scene);
-        stage.show();
+        tradeMenuHistoryPane.setLayoutX(Game.leftX);
+        tradeMenuHistoryPane.setLayoutY(0);
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
+        Game.mainPane.getChildren().add(tradeMenuHistoryPane);
     }
 
 
@@ -472,23 +449,27 @@ public class TradeMenuController {
     }
 
     public void back(MouseEvent mouseEvent) throws IOException {
-        AnchorPane tradeMenuPane = FXMLLoader.load(
-                new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
+        Game.mainPane.getChildren().remove(tradeNewRequestPane);
+        Game.mainPane.getChildren().remove(tradeMenuHistoryPane);
 
-        Scene scene = new Scene(tradeMenuPane);
-        Stage stage = DataBase.getTradeMenuStage();
-        stage.setScene(scene);
-        stage.show();
+        ShopMenuController.tradePane = FXMLLoader.load(
+                new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
+        ShopMenuController.tradePane.setLayoutX(Game.leftX);
+        ShopMenuController.tradePane.setLayoutY(0);
+        Game.mainPane.getChildren().add(ShopMenuController.tradePane);
     }
 
     public void showRequestsIhaveSent(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(tradeMenuHistoryPane);
+
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
+        tradeMenuHistoryPane.setLayoutX(Game.leftX);
+        tradeMenuHistoryPane.setLayoutY(0);
+        tradeMenuHistoryPane.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        Scene scene = new Scene(tradeMenuHistoryPane);
-        Stage stage = DataBase.getTradeMenuStage();
-        stage.setScene(scene);
-        stage.show();
+        Game.mainPane.getChildren().add(tradeMenuHistoryPane);
 
         for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsIAsked().size() ; i++) {
             TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsIAsked().get(i);
@@ -528,13 +509,14 @@ public class TradeMenuController {
     }
 
     public void showRequestsIhaveRecieved(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(tradeMenuHistoryPane);
+
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
+        tradeMenuHistoryPane.setLayoutX(Game.leftX);
+        tradeMenuHistoryPane.setLayoutY(0);
 
-        Scene scene = new Scene(tradeMenuHistoryPane);
-        Stage stage = DataBase.getTradeMenuStage();
-        stage.setScene(scene);
-        stage.show();
+        Game.mainPane.getChildren().add(tradeMenuHistoryPane);
 
         for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsAskedFromMe().size() ; i++) {
             TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsAskedFromMe().get(i);
@@ -625,5 +607,9 @@ public class TradeMenuController {
             }
         }
 
+    }
+
+    public void closeTradeMenu(MouseEvent mouseEvent) {
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
     }
 }

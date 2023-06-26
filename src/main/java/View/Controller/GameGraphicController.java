@@ -65,8 +65,8 @@ public class GameGraphicController {
                 try {
                     popularityFactorsPane = FXMLLoader.load(
                             new URL(Main.class.getResource("/fxml/PopularityFactorsMenu.fxml").toExternalForm()));
-                    popularityFactorsPane.setLayoutX(Game.leftX + 677);
-                    popularityFactorsPane.setLayoutY(Game.screenHeight - 280);
+                    popularityFactorsPane.setLayoutX(Game.leftX +  512);
+                    popularityFactorsPane.setLayoutY(Game.screenHeight - 285);
                     Game.mainPane.getChildren().add(popularityFactorsPane);
                     fillPopularityFactorsMenuLabelsAndImages();
                 } catch (IOException e) {

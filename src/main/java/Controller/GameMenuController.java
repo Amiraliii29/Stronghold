@@ -202,7 +202,8 @@ public class GameMenuController {
 
 
         currentGovernment.changeFreeWorkers(units.size());
-        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
+        // todo uncomment
+//        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
     }
 
     private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {

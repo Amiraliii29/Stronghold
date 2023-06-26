@@ -45,7 +45,7 @@ public class SignUpMenu extends Application {
     VBox componentsVbox;
     StackPane mainPane;
 
-    Stage stage;
+    public static  Stage stage;
     int questionIndex=1;
 
     @Override
