@@ -14,6 +14,7 @@ import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -24,6 +25,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -32,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -67,6 +72,9 @@ public class Game extends Application{
     public static AnchorPane customizePane;
     private static Pane squareInfo;
     private static Pane selectedSquareInfo;
+    private ImageView copiedBuilding;
+    public static String copiedBuildingName;
+    private Text errorText;
     private static Pane errorPane;
     public static String defenceBuildingToCreateName = null;
     public static String generatorBuildingToCreateName = null;
@@ -162,6 +170,7 @@ public class Game extends Application{
 
         stage.setFullScreen(true);
         stage.show();
+        
     }
 
     public static void setXY(int x, int y) {
@@ -407,6 +416,9 @@ public class Game extends Application{
         });
 
         scene.setOnKeyPressed(event -> {
+            final KeyCombination keyCombinationShiftC = new KeyCodeCombination(
+                                    KeyCode.C, KeyCombination.CONTROL_DOWN);
+
             if (event.getCode() == KeyCode.I) {
                 if (blockPixel < 35) {
                     blockPixel += 5;
@@ -456,6 +468,13 @@ public class Game extends Application{
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
             }
+            else if (keyCombinationShiftC.match(event)){
+                showCopiedBuildingImage();
+                System.out.println("lol");
+            }
+            copiedBuildingName=Building.getBuildings().get(0).getName();
+            showCopiedBuildingImage();
+            
         });
     }
 
@@ -830,6 +849,44 @@ public class Game extends Application{
         if (selectedX != -1 && selectedY != -1) {
 
         }
+    }
+
+    public void addCopiedBuildingListener(){
+        copiedBuilding.setOnDragDetected(event -> {
+            switch(Building.getBuildingCategoryByName(copiedBuildingName)){
+                case "Barrack":
+                Game.barrackBuildingToCreateName = copiedBuildingName;
+                break;
+
+                case "TownBuilding":
+                Game.townBuildingToCreateName = copiedBuildingName;
+                break;
+
+                case "Generator":
+                Game.generatorBuildingToCreateName = copiedBuildingName;
+                break;
+
+                default:
+                Game.stockPileBuildingToCreateName = copiedBuildingName;
+                break;
+            }
+        });
+    }
+
+
+    private void showCopiedBuildingImage(){
+        Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
+        instanciateCopiedBuilding(buildingImage);
+    }
+
+    private void instanciateCopiedBuilding(Image buildingImage){
+        copiedBuilding=new ImageView(buildingImage);
+        copiedBuilding.setLayoutX(screenWidth+leftX);
+        copiedBuilding.setLayoutY(screenHeight-50);
+        copiedBuilding.setFitWidth(50);
+        copiedBuilding.setFitHeight(50);
+        pane.getChildren().add(copiedBuilding);
+        addCopiedBuildingListener();
     }
 
     public static void loadImages() throws FileNotFoundException {

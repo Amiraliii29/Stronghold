@@ -554,6 +554,9 @@ public class GameGraphicController {
         Game.generatorBuildingToCreateName = "OilSmelter";
     }
 
+    public void setCopiedBuildingName(String Name){
+        
+    }
 
     public void exitPopularityFactorsMenu(MouseEvent mouseEvent) {
         Game.mainPane.getChildren().remove(popularityFactorsPane);

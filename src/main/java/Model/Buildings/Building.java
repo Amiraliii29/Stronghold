@@ -121,6 +121,7 @@ public abstract class Building {
 
     public static String getBuildingCategoryByName(String buildingName){
         if (Generator.getGeneratorsName().contains(buildingName)) return "Generator";
+        if (Barrack.getBarracksName().contains(buildingName)) return "Barrack";
         if (TownBuilding.getTownBuildingsName().contains(buildingName)) return "TownBuilding";
         return "";
     }
