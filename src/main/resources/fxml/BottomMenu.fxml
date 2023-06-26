@@ -24,5 +24,8 @@
       <ImageView fitHeight="51.0" fitWidth="73.0" layoutX="459.0" layoutY="62.0" onDragDetected="#mercenaryPostDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="51.0" fitWidth="58.0" layoutX="535.0" layoutY="62.0" onDragDetected="#armouryDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="596.0" layoutY="57.0" onMouseClicked="#openTowersBottomMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="301.0" layoutY="119.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="642.0" layoutY="61.0" onMouseClicked="#openDefenciveBuildingsBottomMenu" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="25.0" fitWidth="31.0" layoutX="595.0" layoutY="93.0" onMouseClicked="#openGatesBottomMenu" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

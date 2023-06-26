@@ -20,7 +20,7 @@
       <ImageView fitHeight="23.0" fitWidth="29.0" layoutX="302.0" layoutY="123.0" onMouseClicked="#openDefenceBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="25.0" fitWidth="32.0" layoutX="344.0" layoutY="122.0" onMouseClicked="#openKitchenBuildingsMenu" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="44.0" fitWidth="85.0" layoutX="222.0" layoutY="73.0" onDragDetected="#stableDragDetected" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="44.0" fitWidth="85.0" layoutX="379.0" layoutY="83.0" onDragDetected="#enginnerGuildDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="44.0" fitWidth="85.0" layoutX="379.0" layoutY="83.0" onDragDetected="#engineerGuildDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="44.0" fitWidth="85.0" layoutX="518.0" layoutY="75.0" onDragDetected="#oilSmelterDragDetected" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

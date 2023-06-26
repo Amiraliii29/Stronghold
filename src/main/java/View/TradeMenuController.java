@@ -102,43 +102,41 @@ public class TradeMenuController {
                 new URL(ShopMenu.class.getResource("/fxml/TradeNewRequest.fxml").toExternalForm()));
 
 
-//         todo uncomment the code below when the signup is completed        amirali
+        governmentsInGameOtherThanCurrentUser = new ArrayList<>();
+        for (Government government : DataBase.getGovernments()) {
+            if(!government.equals(DataBase.getCurrentGovernment()))
+                governmentsInGameOtherThanCurrentUser.add(government);
+        }
 
-//        governmentsInGameOtherThanCurrentUser = new ArrayList<>();
-//        for (Government government : DataBase.getGovernments()) {
-//            if(!government.equals(DataBase.getCurrentGovernment()))
-//                governmentsInGameOtherThanCurrentUser.add(government);
-//        }
-//
-//        //setGovernmentsName in menu
-//        if(1 <= governmentsInGameOtherThanCurrentUser.size())
-//            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
-//        else
-//            User1.setVisible(false);
-//        if(2 <= governmentsInGameOtherThanCurrentUser.size())
-//            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
-//        else
-//            User2.setVisible(false);
-//        if(3 <= governmentsInGameOtherThanCurrentUser.size())
-//            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
-//        else
-//            User3.setVisible(false);
-//        if(4 <= governmentsInGameOtherThanCurrentUser.size())
-//            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
-//        else
-//            User4.setVisible(false);
-//        if(5 <= governmentsInGameOtherThanCurrentUser.size())
-//            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
-//        else
-//            User5.setVisible(false);
-//        if(6 <= governmentsInGameOtherThanCurrentUser.size())
-//            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
-//        else
-//            User6.setVisible(false);
-//        if(7 <= governmentsInGameOtherThanCurrentUser.size())
-//            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
-//        else
-//            User7.setVisible(false);
+        //setGovernmentsName in menu
+        if(1 <= governmentsInGameOtherThanCurrentUser.size())
+            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
+        else
+            User1.setVisible(false);
+        if(2 <= governmentsInGameOtherThanCurrentUser.size())
+            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
+        else
+            User2.setVisible(false);
+        if(3 <= governmentsInGameOtherThanCurrentUser.size())
+            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
+        else
+            User3.setVisible(false);
+        if(4 <= governmentsInGameOtherThanCurrentUser.size())
+            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
+        else
+            User4.setVisible(false);
+        if(5 <= governmentsInGameOtherThanCurrentUser.size())
+            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
+        else
+            User5.setVisible(false);
+        if(6 <= governmentsInGameOtherThanCurrentUser.size())
+            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
+        else
+            User6.setVisible(false);
+        if(7 <= governmentsInGameOtherThanCurrentUser.size())
+            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
+        else
+            User7.setVisible(false);
 
         Scene scene = new Scene(tradeMenuPane);
 
@@ -408,72 +406,69 @@ public class TradeMenuController {
 
     public void selectGovernment(MouseEvent mouseEvent) {
 
-        //         todo uncomment the code below when the signup is completed        amirali
-
-
-//        if(User1.isSelected()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(0);
-//            User2.setSelected(false);
-//            User3.setSelected(false);
-//            User4.setSelected(false);
-//            User5.setSelected(false);
-//            User6.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User2.isSelected() && 2 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(1);
-//            User1.setSelected(false);
-//            User3.setSelected(false);
-//            User4.setSelected(false);
-//            User5.setSelected(false);
-//            User6.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User3.isSelected() && 3 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(2);
-//            User1.setSelected(false);
-//            User2.setSelected(false);
-//            User4.setSelected(false);
-//            User5.setSelected(false);
-//            User6.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User4.isSelected() && 4 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(3);
-//            User1.setSelected(false);
-//            User3.setSelected(false);
-//            User2.setSelected(false);
-//            User5.setSelected(false);
-//            User6.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User5.isSelected() && 5 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(4);
-//            User1.setSelected(false);
-//            User3.setSelected(false);
-//            User4.setSelected(false);
-//            User2.setSelected(false);
-//            User6.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User6.isSelected() && 6 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(5);
-//            User1.setSelected(false);
-//            User3.setSelected(false);
-//            User4.setSelected(false);
-//            User5.setSelected(false);
-//            User2.setSelected(false);
-//            User7.setSelected(false);
-//        }
-//        else if(User7.isSelected() && 7 <= governmentsInGameOtherThanCurrentUser.size()){
-//            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(6);
-//            User1.setSelected(false);
-//            User3.setSelected(false);
-//            User4.setSelected(false);
-//            User5.setSelected(false);
-//            User6.setSelected(false);
-//            User2.setSelected(false);
-//        }
+        if(User1.isSelected()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(0);
+            User2.setSelected(false);
+            User3.setSelected(false);
+            User4.setSelected(false);
+            User5.setSelected(false);
+            User6.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User2.isSelected() && 2 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(1);
+            User1.setSelected(false);
+            User3.setSelected(false);
+            User4.setSelected(false);
+            User5.setSelected(false);
+            User6.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User3.isSelected() && 3 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(2);
+            User1.setSelected(false);
+            User2.setSelected(false);
+            User4.setSelected(false);
+            User5.setSelected(false);
+            User6.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User4.isSelected() && 4 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(3);
+            User1.setSelected(false);
+            User3.setSelected(false);
+            User2.setSelected(false);
+            User5.setSelected(false);
+            User6.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User5.isSelected() && 5 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(4);
+            User1.setSelected(false);
+            User3.setSelected(false);
+            User4.setSelected(false);
+            User2.setSelected(false);
+            User6.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User6.isSelected() && 6 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(5);
+            User1.setSelected(false);
+            User3.setSelected(false);
+            User4.setSelected(false);
+            User5.setSelected(false);
+            User2.setSelected(false);
+            User7.setSelected(false);
+        }
+        else if(User7.isSelected() && 7 <= governmentsInGameOtherThanCurrentUser.size()){
+            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(6);
+            User1.setSelected(false);
+            User3.setSelected(false);
+            User4.setSelected(false);
+            User5.setSelected(false);
+            User6.setSelected(false);
+            User2.setSelected(false);
+        }
     }
 
     public void back(MouseEvent mouseEvent) throws IOException {

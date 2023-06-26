@@ -6,6 +6,7 @@ import Model.*;
 import Model.Buildings.*;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
+import View.Controller.GameGraphicController;
 import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -535,9 +536,9 @@ public class Game extends Application{
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BottomMenu.fxml")).toExternalForm()));
         bottomPane.setLayoutX(leftX);
         bottomPane.setLayoutY(screenHeight - 60);
-//        todo uncomment when code finished
 
-//        GameGraphicController.setPopularityGoldPopulation();
+        GameGraphicController.setPopularityGoldPopulation();
+
         mainPane.getChildren().add(bottomPane);
     }
 
@@ -643,6 +644,8 @@ public class Game extends Application{
         } else if (building.getName().equals("EngineerGuild")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
+        } else if (building.getName().equals("Shop")) {
+
         } else {
             //TODO : change it !
             detail = FXMLLoader.load(
