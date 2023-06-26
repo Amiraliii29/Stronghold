@@ -20,6 +20,7 @@ import java.util.Objects;
 public class GameMenuController {
     private static Game game;
     private static Map map;
+    private static Square[][] squares;
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> path;
     private static Government currentGovernment;
@@ -32,6 +33,7 @@ public class GameMenuController {
 
     public static void setMap(Map map) {
         GameMenuController.map = map;
+        squares = map.getSquares();
     }
 
     public static void setCurrentMap() {
@@ -48,7 +50,43 @@ public class GameMenuController {
 
 
 
+    public static ArrayList<ArrayList<Unit>> separateUnits(HashMap<String, Integer> unitNameAndCount) {
+        ArrayList<ArrayList<Unit>> allUnits = new ArrayList<>();
+
+        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
+            ArrayList<Square> squaresChecked = new ArrayList<>();
+
+            for (Unit unit : DataBase.getSelectedUnit()) {
+                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
+
+                squaresChecked.add(unit.getSquare());
+                ArrayList<Unit> selectedUnit = new ArrayList<>();
+
+                for (Unit squareUnit : unit.getSquare().getUnits()) {
+                    if (set.getValue() == 0) break;
+                    if (!squareUnit.getName().equals(set.getKey())) continue;
+
+                    selectedUnit.add(squareUnit);
+                    set.setValue(set.getValue() - 1);
+                }
+
+                if (selectedUnit.size() != 0) allUnits.add(selectedUnit);
+            }
+        }
+
+        return allUnits;
+    }
+
     public static ArrayList<Square> moveUnit(Unit unit, int x, int y) {
+        if (squares[x][y].getBuilding() != null) {
+            if (squares[x][y].getBuilding() instanceof Defence &&
+                    squares[x][y].getUnits().size() >= ((Defence) squares[x][y].getBuilding()).getCapacity())
+                return null;
+
+            if (!(squares[x][y].getBuilding() instanceof Defence))
+                return null;
+        }
+
         allWays = new ArrayList<>();
         path = new ArrayList<>();
 
@@ -71,82 +109,81 @@ public class GameMenuController {
     }
 
     private static boolean move(Unit unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
-        // conditions
         if (!map.isCoordinationValid(x, y))
             return false;
 
-        if (!map.getSquareFromMap(x, y).canPass())
+        if (!squares[x][y].canPass())
             return false;
 
-        if (map.getSquareFromMap(x, y).getBuilding() != null
-                && !map.getSquareFromMap(x, y).getBuilding().getName().equals("Trap")) {
-            if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")) {
+        if (up) {
 
-                if (!map.getSquareFromMap(x, y).getBuilding().getCanPass(up)
-                        || map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
-                    return false;
-                return true;
-
-            } else if (!unit.getName().equals("Assassin")) {
-
-                if (!(map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                        || map.getSquareFromMap(x, y).getBuilding().getCanPass(up)))
-                    return false;
-
+            if (squares[x][y].getBuilding() != null && squares[x][y].getBuilding() instanceof Defence) {
+                if (squares[x][y].getBuilding().getName().equals("Stair"))
+                    up = false;
+            } else if (squares[x][y].getBuilding() == null) {
                 LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
-                if (map.getSquareFromMap(x, y).getBuilding().getName().equals("Stair"))
-                    up = !up;
+                if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
+                    up = false;
+                else if (!unit.getName().equals("Assassin")) return false;
+            } else return false;
 
-                else if (map.getSquareFromMap(x, y).getUnits().contains(ladderMan)
-                        && unit instanceof Troop && ((Troop) unit).isClimbLadder())
-                    up = !up;
+        } else if (!up) {
 
-                if (up && !(map.getSquareFromMap(x, y).getBuilding() instanceof Defence))
+            if (squares[x][y].getBuilding() != null) {
+                if (squares[x][y].getBuilding() instanceof Defence ) {
+                    if (squares[x][y].getBuilding().getName().equals("Stair"))
+                        up = true;
+                    else if (!unit.getName().equals("Assassin") && !squares[x][y].getBuilding().getCanPass()) return false;
+                }
+
+                else if (!squares[x][y].getBuilding().getCanPass()) return false;
+
+                else if (squares[x][y].getBuilding().getName().equals("DrawBridge")
+                        || squares[x][y].getBuilding().getName().equals("SmallStoneGate")
+                        || squares[x][y].getBuilding().getName().equals("BigStoneGate"))
+                    up = up;//nothing
+
+                else if ((unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")))
                     return false;
 
-                if (!up && (map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                        && !map.getSquareFromMap(x, y).getBuilding().getCanPass(false)))
-                    return false;
+                else return false;
+
+            } else {
+                LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
+                if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
+                    up = true;
             }
+
         }
 
+
+
         if (speed >= 0 && x == xFin && y == yFin) {
-            if (map.getSquareFromMap(x, y).getBuilding() != null
-                    && map.getSquareFromMap(x, y).getBuilding() instanceof Defence
-                    && map.getSquareFromMap(x, y).getUnits()
-                            .size() >= ((Defence) map.getSquareFromMap(x, y).getBuilding()).getCapacity())
-                return false;
-
-            if (map.getSquareFromMap(x, y).getBuilding() != null
-                    && map.getSquareFromMap(x, y).getBuilding().getCanPass(up))
-                return false;
-
             allWays.add(new ArrayList<>(path));
             return true;
         }
 
-        if (speed == 0)
-            return false;
+        if (speed == 0) return false;
 
         if (x < map.getWidth() - 1) {
-            path.add(map.getSquareFromMap(x + 1, y));
+            path.add(squares[x + 1][y]);
             move(unit, x + 1, y, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(map.getSquareFromMap(x + 1, y)));
+            path.remove(path.lastIndexOf(squares[x + 1][y]));
         }
         if (x > 0) {
-            path.add(map.getSquareFromMap(x - 1, y));
+            path.add(squares[x - 1][y]);
             move(unit, x - 1, y, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(map.getSquareFromMap(x - 1, y)));
+            path.remove(path.lastIndexOf(squares[x - 1][y]));
         }
         if (y < map.getLength() - 1) {
-            path.add(map.getSquareFromMap(x, y + 1));
+            path.add(squares[x][y + 1]);
             move(unit, x, y + 1, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(map.getSquareFromMap(x, y + 1)));
+            path.remove(path.lastIndexOf(squares[x][y + 1]));
         }
         if (y > 0) {
-            path.add(map.getSquareFromMap(x, y - 1));
+            path.add(squares[x][y - 1]);
             move(unit, x, y - 1, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(map.getSquareFromMap(x, y - 1)));
+            path.remove(path.lastIndexOf(squares[x][y - 1]));
         }
 
         return allWays.size() != 0;
@@ -202,7 +239,7 @@ public class GameMenuController {
 
 
         currentGovernment.changeFreeWorkers(units.size());
-        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
+
     }
 
     private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {
@@ -380,5 +417,4 @@ public class GameMenuController {
         }
         return GameMenuMessages.SUCCESS;
     }
-
 }

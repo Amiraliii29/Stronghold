@@ -269,8 +269,8 @@
     "canPass": false
   },
   {
-    "range": 9,
-    "capacity": 50,
+    "range": 0,
+    "capacity": 10000,
     "resource": {
       "name": "Wood",
       "price": 100,
@@ -285,7 +285,7 @@
     "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
     "hp": 1000,
     "numberOfResource": 3,
-    "cost": 0,
+    "cost": 20,
     "canPass": true
   }
 ]

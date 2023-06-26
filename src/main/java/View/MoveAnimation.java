@@ -6,10 +6,7 @@ import Model.Square;
 import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.Transition;
 import javafx.util.Duration;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MoveAnimation {

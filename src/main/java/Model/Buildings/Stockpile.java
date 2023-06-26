@@ -16,9 +16,9 @@ import java.util.Map;
 public class Stockpile extends Building {
     private static final ArrayList<String> stockpilesName;
     private static ArrayList<Stockpile> stockpiles;
-    private transient HashMap<String, Integer> resources;
-    private transient final ArrayList<String> resourcesStored;
-    private transient final int capacity;//how many resource in one slot of stockpile
+    private HashMap<String, Integer> resources;
+    private final ArrayList<String> resourcesStored;
+    private final int capacity;//how many resource in one slot of stockpile
 
     static {
         try {

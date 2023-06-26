@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class Defence extends Building {
     private static ArrayList<Defence> defences;
     private static final ArrayList<String> defencesName;
-    private transient final int range;
-    private transient final int capacity;
+    private final int range;
+    private final int capacity;
 
     static {
         try {

@@ -1,6 +1,7 @@
 package View;
 
 import Controller.CustomizeMapController;
+import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
@@ -458,11 +459,14 @@ public class Game extends Application{
         });
     }
 
+
+
     public void drawMap() {
         squares = map.getSquares();
         pane.getChildren().clear();
 
         ArrayList<Building> buildingsInMap = new ArrayList<>();
+        ArrayList<ImageView> unitImageView = new ArrayList<>();
 
         boolean check;
         int k = leftX, l = 0;
@@ -502,7 +506,7 @@ public class Game extends Application{
                         unitImage.setLayoutY(l);
                         unitImage.setFitHeight(blockPixel);
                         unitImage.setFitWidth(blockPixel);
-                        pane.getChildren().add(unitImage);
+                        unitImageView.add(unitImage);
                     }
 
                     if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding()))
@@ -525,6 +529,9 @@ public class Game extends Application{
 
             pane.getChildren().add(buildingImage);
         }
+
+        for (ImageView imageView : unitImageView)
+            pane.getChildren().add(imageView);
 
         pane.getChildren().add(selectSq);
         selectSq.setVisible(false);
@@ -681,6 +688,8 @@ public class Game extends Application{
     }
 
     private void drawSquareInfo(Square square, Label landLabel, Label treeLabel, Label buildingLabel) throws IOException {
+        squareInfo.getChildren().clear();
+
         landLabel.setText(Land.getName(square.getLand()));
         landLabel.setTextFill(Color.WHITE);
 
@@ -745,6 +754,8 @@ public class Game extends Application{
         errorTimeline.playFromStart();
     }
 
+
+
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {
             TextField textField= new TextField();
@@ -787,34 +798,16 @@ public class Game extends Application{
         }
 
 
-        ArrayList<Unit> allUnits = new ArrayList<>();
+        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits(unitNameAndCount);
+        ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
 
-        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
-            ArrayList<Square> squaresChecked = new ArrayList<>();
-
-            for (Unit unit : DataBase.getSelectedUnit()) {
-                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
-
-                squaresChecked.add(unit.getSquare());
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
-
-                for (Unit squareUnit : unit.getSquare().getUnits()) {
-                    if (set.getValue() == 0) break;
-                    if (!squareUnit.getName().equals(set.getKey())) continue;
-
-                    selectedUnit.add(squareUnit);
-                    set.setValue(set.getValue() - 1);
-                }
-
-                if (selectedUnit.size() != 0)  {
-                    allUnits.addAll(selectedUnit);
-                    moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
-                }
-            }
+        for (ArrayList<Unit> selectedUnit : allUnits) {
+            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
+            unitForDataBase.addAll(selectedUnit);
         }
 
-        DataBase.setSelectedUnit(allUnits);
+        DataBase.setSelectedUnit(unitForDataBase);
 
         for (MoveAnimation animation : moveAnimations)
             animation.play();
