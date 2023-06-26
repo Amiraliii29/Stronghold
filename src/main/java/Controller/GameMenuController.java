@@ -1,7 +1,6 @@
 package Controller;
 
-import Model.Buildings.Barrack;
-import Model.Buildings.Defence;
+import Model.Buildings.*;
 import Model.DataBase;
 import Model.Government;
 import Model.Map;
@@ -14,8 +13,6 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 import View.Game;
 import View.Enums.Messages.GameMenuMessages;
-import javafx.scene.chart.PieChart.Data;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -27,12 +24,14 @@ public class GameMenuController {
     private static ArrayList<Square> path;
     private static Government currentGovernment;
 
-    public static void setMap(Map map) {
-        GameMenuController.map = map;
-    }
+
 
     public static Map getMap() {
         return map;
+    }
+
+    public static void setMap(Map map) {
+        GameMenuController.map = map;
     }
 
     public static void setCurrentMap() {
@@ -42,6 +41,12 @@ public class GameMenuController {
     public static void setCurrentGovernment() {
         currentGovernment = DataBase.getCurrentGovernment();
     }
+
+    public static void setGame(Game game) {
+        GameMenuController.game = game;
+    }
+
+
 
     public static ArrayList<Square> moveUnit(Unit unit, int x, int y) {
         allWays = new ArrayList<>();
@@ -145,6 +150,59 @@ public class GameMenuController {
         }
 
         return allWays.size() != 0;
+    }
+
+
+    public static boolean constructBuilding(Building building) {
+        if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
+            game.showErrorText("Can't Build Here!");
+
+        else if (building.getCost() > currentGovernment.getMoney())
+            game.showErrorText("You Don't Have Enough Money!");
+
+        else if (building.getResource() != null &&
+                currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
+            game.showErrorText("Don't Have Enough Material!");
+
+        else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
+            game.showErrorText("Not Enough Free Worker!");
+
+        else {
+            currentGovernment.changeMoney(-building.getCost());
+            currentGovernment.removeFromStockpile(building.getResource(), building.getNumberOfResource());
+
+            switch (Building.getBuildingCategoryByName(building.getName())) {
+                case "Generator" -> {
+                    assert building instanceof Generator;
+                    Generator generator = (Generator) building;
+                    currentGovernment.changePopulation(generator.getNumberOfWorker());
+                    currentGovernment.changeFreeWorkers(-generator.getNumberOfWorker());
+                    currentGovernment.addToGenerationRate(generator.getResourceGenerate().getName(), generator.getGeneratingRate());
+                    currentGovernment.applyOxEffectOnStoneGeneration();
+                }
+                case "TownBuilding" -> {
+                    assert building instanceof TownBuilding;
+                    TownBuilding townBuilding = (TownBuilding) building;
+                    currentGovernment.addToMaxPopulation(townBuilding.getCapacity());
+                    currentGovernment.updateBuildingPopularity();
+                }
+            }
+            map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());
+            return true;
+        }
+
+        return true; // TODO : make it false
+    }
+
+
+    public static void disbandUnit() {
+        ArrayList<Unit> units = DataBase.getSelectedUnit();
+        if (units.size() == 0) return;
+
+
+
+        currentGovernment.changeFreeWorkers(units.size());
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
     }
 
     private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {

@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resource;
 import com.google.gson.Gson;
@@ -61,6 +62,7 @@ public class Stockpile extends Building {
     public ArrayList<String> getResourcesStored() {
         return resourcesStored;
     }
+
 
     public static void addResource(ArrayList<Stockpile> stockpiles, Resource resource, int number) {
         for (Stockpile stockpile : stockpiles) {
@@ -130,6 +132,8 @@ public class Stockpile extends Building {
         return number == 0;
     }
 
+
+
     private void addToHashMap(String resource, int number) {
         if (resources.containsKey(resource))
             resources.put(resource, resources.get(resource) + number);
@@ -156,12 +160,15 @@ public class Stockpile extends Building {
         }
     }
 
+
+
     public static Stockpile createStockpile(Government owner, int xCoordinateLeft, int yCoordinateUp, String stockpileName) {
         for (Stockpile stockpile : stockpiles) {
             if (stockpile.name.equals(stockpileName)) {
                 Stockpile newStockpile = new Stockpile(owner, stockpile.name, stockpile.width, stockpile.length, xCoordinateLeft,
                         yCoordinateUp, stockpile.lands, stockpile.hp, stockpile.resource, stockpile.numberOfResource, stockpile.cost,
                         stockpile.canPass, stockpile.resourcesStored, stockpile.capacity);
+                if (!GameMenuController.constructBuilding(newStockpile)) return null;
                 if (owner != null) {
                     if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
                     else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);

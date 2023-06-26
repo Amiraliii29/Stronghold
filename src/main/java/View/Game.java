@@ -1,8 +1,10 @@
 package View;
 
 import Controller.CustomizeMapController;
-import Controller.GameMenuController;
 import Model.*;
+import Model.Buildings.Building;
+import Model.Buildings.Defence;
+import Model.Buildings.Generator;
 import Model.Buildings.*;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
@@ -29,15 +31,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -644,14 +643,28 @@ public class Game extends Application{
         } else if (building.getName().equals("EngineerGuild")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
-        } else if (building.getName().equals("Shop")) {
-            
+        } else if (building.getName().equals("DrawBridge")
+                || building.getName().equals("SmallStoneGate")
+                || building.getName().equals("BigStoneGate")) {
 
-        } else {
-            //TODO : change it !
             detail = FXMLLoader.load(
-                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
-        }
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Gate.fxml")).toExternalForm()));
+        } else if (building instanceof Defence) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Repair.fxml")).toExternalForm()));
+        } else if (building.getName().equals("BlackSmith")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BlackSmith.fxml")).toExternalForm()));
+        } else if (building.getName().equals("Fletcher")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Fletcher.fxml")).toExternalForm()));
+        } else if (building.getName().equals("PoleTurner")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/PoleTurner.fxml")).toExternalForm()));
+        } else if (building.getName().equals("DairyFarm")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
+        } else return;
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
@@ -722,7 +735,7 @@ public class Game extends Application{
 
         Label error = new Label(errorText);
         error.setTextFill(Color.RED);
-        error.setFont(new Font(20));
+        error.setFont(new Font(10));
         error.setLayoutX(0);
         error.setLayoutY(0);
 
@@ -731,8 +744,6 @@ public class Game extends Application{
 
         errorTimeline.playFromStart();
     }
-
-
 
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {

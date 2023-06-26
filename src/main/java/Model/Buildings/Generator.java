@@ -48,6 +48,7 @@ public class Generator extends Building {
         this.numberOfWorker = numberOfWorker;
     }
 
+
     public int getUsingRate() {
         return usingRate;
     }
@@ -72,18 +73,22 @@ public class Generator extends Building {
         return generatorsName;
     }
 
+
+
     public static Generator createGenerator(Government owner, int xCoordinateLeft, int yCoordinateUp, String generatorName) {
         for (Generator generator : generators) {
             if (generator.name.equals(generatorName)) {
                 Generator newGenerator = new Generator(owner, generator.name, generator.width, generator.length, xCoordinateLeft, yCoordinateUp,
                         generator.lands, generator.hp, generator.resource, generator.numberOfResource, generator.cost, generator.canPass,
                         generator.usingRate, generator.generatingRate, generator.resourceGenerate, generator.resourceNeed, generator.numberOfWorker);
+                if (!GameMenuController.constructBuilding(newGenerator)) return null;
                 if (owner != null) owner.addBuildings(newGenerator);
                 return newGenerator;
             }
         }
         return null;
     }
+
 
     public static void load() {
         return;

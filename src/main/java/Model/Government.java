@@ -320,6 +320,8 @@ public class Government {
     }
 
     public boolean removeFromStockpile(Resource resource, int number) {
+        if (resource == null) return true;
+
         if (Resource.getResourcesName().contains(resource.getName()))
             return Stockpile.removeResource(stockpiles, resource, number);
         else if (Resource.getFoodsName().contains(resource.getName()))
