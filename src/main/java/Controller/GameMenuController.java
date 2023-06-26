@@ -195,6 +195,16 @@ public class GameMenuController {
     }
 
 
+    public static void disbandUnit() {
+        ArrayList<Unit> units = DataBase.getSelectedUnit();
+        if (units.size() == 0) return;
+
+
+
+        currentGovernment.changeFreeWorkers(units.size());
+        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).removeAllUnit(units.get(0));
+    }
+
     private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {
         Game game=DataBase.getGame();
         if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))

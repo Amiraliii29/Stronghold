@@ -3,6 +3,7 @@ package View;
 import Controller.CustomizeMapController;
 import Model.*;
 import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
@@ -611,11 +612,28 @@ public class Game extends Application{
         } else if (building.getName().equals("EngineerGuild")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/EngineerGuild.fxml")).toExternalForm()));
-        } else {
-            //TODO : change it !
+        } else if (building.getName().equals("DrawBridge")
+                || building.getName().equals("SmallStoneGate")
+                || building.getName().equals("BigStoneGate")) {
+
             detail = FXMLLoader.load(
-                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
-        }
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Gate.fxml")).toExternalForm()));
+        } else if (building instanceof Defence) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Repair.fxml")).toExternalForm()));
+        } else if (building.getName().equals("BlackSmith")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/BlackSmith.fxml")).toExternalForm()));
+        } else if (building.getName().equals("Fletcher")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/Fletcher.fxml")).toExternalForm()));
+        } else if (building.getName().equals("PoleTurner")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/PoleTurner.fxml")).toExternalForm()));
+        } else if (building.getName().equals("DairyFarm")) {
+            detail = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
+        } else return;
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
