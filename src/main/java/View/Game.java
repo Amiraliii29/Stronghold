@@ -1,7 +1,6 @@
 package View;
 
 import Controller.CustomizeMapController;
-import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Generator;
@@ -29,15 +28,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -699,8 +695,6 @@ public class Game extends Application{
 
         errorTimeline.playFromStart();
     }
-
-
 
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {

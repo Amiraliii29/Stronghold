@@ -54,12 +54,16 @@ public class TownBuilding extends Building {
         return townBuildingsName;
     }
 
+
+
     public static TownBuilding createTownBuilding(Government owner, int xCoordinateLeft, int yCoordinateUp, String townBuildingName) {
         for (TownBuilding townBuilding : townBuildings) {
             if (townBuilding.name.equals(townBuildingName)) {
                 TownBuilding newTownBuilding = new TownBuilding(owner, townBuilding.name, townBuilding.width, townBuilding.length, xCoordinateLeft,
                         yCoordinateUp, townBuilding.lands, townBuilding.hp, townBuilding.resource, townBuilding.numberOfResource, townBuilding.cost,
                         townBuilding.canPass, townBuilding.capacity, townBuilding.popularityRate);
+
+                if (!GameMenuController.constructBuilding(newTownBuilding)) return null;
                 if (owner != null) owner.addBuildings(newTownBuilding);
                 return newTownBuilding;
             }

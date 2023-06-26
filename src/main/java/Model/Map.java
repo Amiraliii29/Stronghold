@@ -25,6 +25,8 @@ public class Map {
     private final int width;
     private final int length;
 
+
+
     public Map(String name, int width, int length) {
         this.name = name;
         this.width = width;
@@ -37,6 +39,8 @@ public class Map {
             }
         }
     }
+
+
 
     public Square[][] getSquares() {
         return squares;
