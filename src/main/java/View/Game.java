@@ -14,12 +14,10 @@ import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -27,7 +25,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -36,7 +33,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -394,13 +390,14 @@ public class Game extends Application{
                     }
                 }
 
-                if (selectedUnit.size() != 0)
+                if (selectedUnit.size() != 0) {
                     DataBase.setSelectedUnit(selectedUnit);
 
-                try {
-                    showSelectedSquares(nowX, nowY, selectedUnit);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    try {
+                        showSelectedSquares(nowX, nowY, selectedUnit);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });

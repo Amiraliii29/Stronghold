@@ -13,7 +13,6 @@ import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class GameMenuController {
     private static Game game;
@@ -246,9 +245,9 @@ public class GameMenuController {
             return true;
         }
 
-        map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());//TODO : DELETE
-        return true; // TODO : make it false
+        return false;
     }
+
 
 
     public static void disbandUnit() {
@@ -391,8 +390,37 @@ public class GameMenuController {
 
 
 
-    public static void buildSiege() {
+    public static void buildSiege(String siegeName) {
+        ArrayList<ArrayList<Unit>> allUnits = separateUnits();
+        if (allUnits == null) return;
 
+        ArrayList<Unit> engineerUnit = null;
+        for (ArrayList<Unit> selectedUnit : allUnits) {
+            if (selectedUnit.get(0) instanceof Engineer) {
+                engineerUnit = selectedUnit;
+                break;
+            }
+        }
+
+        Siege siege = Siege.createSiege(currentGovernment, siegeName, -1 , -1);
+        if (siege == null || engineerUnit == null) return;
+
+        int x = engineerUnit.get(0).getXCoordinate();
+        int y = engineerUnit.get(0).getYCoordinate();
+
+        if (siege.getEngineerNeed() > engineerUnit.size())
+            game.showErrorText("Not Enough Engineer!");
+        else if (siege.getCost() > currentGovernment.getMoney())
+            game.showErrorText("Not Enough Money!");
+        else if (squares[x][y].getBuilding() != null && !squares[x][y].getBuilding().getName().equals("CircularTower")
+                && !squares[x][y].getBuilding().getName().equals("SquareTower"))
+            game.showErrorText("Can't Build Siege Here!");
+        else {
+            currentGovernment.changeMoney(-siege.getCost());
+            DataBase.removeUnit(engineerUnit.get(0), siege.getEngineerNeed());
+            Siege.createSiege(currentGovernment, siegeName, x, y);
+            game.drawMap();
+        }
     }
 
     private static void trainTroopsForGovernment(int count, Unit unit, Barrack selectedBarrack) {
@@ -453,7 +481,7 @@ public class GameMenuController {
 
     private static boolean doesUnitsHaveWeapons(int count, Unit unit) {
         if (!(unit instanceof Troop)) return true;
-        ArrayList<Resource> neededWeapons = new ArrayList<>(((Troop) unit).getWeapons());
+        ArrayList<Resource> neededWeapons = ((Troop) unit).getWeapons();
 
         for (Resource resource : neededWeapons) {
             if (currentGovernment.getResourceInStockpiles(resource) < count)
