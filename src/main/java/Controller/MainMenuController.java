@@ -32,6 +32,7 @@ public class MainMenuController {
 
     public void openProfileMenu(MouseEvent mouseEvent) throws Exception {
         new ProfileMenu().start(SignUpMenu.stage);
+        System.out.println("ff");
     }
 
     public void logout(MouseEvent mouseEvent) throws Exception {

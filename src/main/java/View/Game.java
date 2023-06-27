@@ -304,7 +304,6 @@ public class Game extends Application{
             double startY = event.getY();
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
-            System.out.println(map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment()));
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
