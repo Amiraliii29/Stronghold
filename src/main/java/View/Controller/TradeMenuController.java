@@ -79,7 +79,7 @@ public class TradeMenuController {
 
 
         governmentsInGameOtherThanCurrentUser = new ArrayList<>();
-        for (Government government : DataBase.getGovernments()) {
+        for (Government government : DataBase.getGame().getGovernmentsInGame()) {
             if(!government.equals(DataBase.getCurrentGovernment()))
                 governmentsInGameOtherThanCurrentUser.add(government);
         }
@@ -90,41 +90,39 @@ public class TradeMenuController {
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
         Game.mainPane.getChildren().add(tradeNewRequestPane);
-//todo uncomment
         //setGovernmentsName in menu
-//        if(1 <= governmentsInGameOtherThanCurrentUser.size())
-//            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
-//        else
-//            User1.setVisible(false);
-//        if(2 <= governmentsInGameOtherThanCurrentUser.size())
-//            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
-//        else
-//            User2.setVisible(false);
-//        if(3 <= governmentsInGameOtherThanCurrentUser.size())
-//            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
-//        else
-//            User3.setVisible(false);
-//        if(4 <= governmentsInGameOtherThanCurrentUser.size())
-//            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
-//        else
-//            User4.setVisible(false);
-//        if(5 <= governmentsInGameOtherThanCurrentUser.size())
-//            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
-//        else
-//            User5.setVisible(false);
-//        if(6 <= governmentsInGameOtherThanCurrentUser.size())
-//            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
-//        else
-//            User6.setVisible(false);
-//        if(7 <= governmentsInGameOtherThanCurrentUser.size())
-//            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
-//        else
-//            User7.setVisible(false);
+        if(1 <= governmentsInGameOtherThanCurrentUser.size())
+            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
+        else
+            User1.setVisible(false);
+        if(2 <= governmentsInGameOtherThanCurrentUser.size())
+            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
+        else
+            User2.setVisible(false);
+        if(3 <= governmentsInGameOtherThanCurrentUser.size())
+            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
+        else
+            User3.setVisible(false);
+        if(4 <= governmentsInGameOtherThanCurrentUser.size())
+            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
+        else
+            User4.setVisible(false);
+        if(5 <= governmentsInGameOtherThanCurrentUser.size())
+            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
+        else
+            User5.setVisible(false);
+        if(6 <= governmentsInGameOtherThanCurrentUser.size())
+            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
+        else
+            User6.setVisible(false);
+        if(7 <= governmentsInGameOtherThanCurrentUser.size())
+            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
+        else
+            User7.setVisible(false);
 
     }
 
     public void openPreviousRequestsPage(MouseEvent mouseEvent) throws IOException {
-        Stage stage = DataBase.getTradeMenuStage();
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
         tradeMenuHistoryPane.setLayoutX(Game.leftX);
@@ -205,7 +203,7 @@ public class TradeMenuController {
     }
 
     public void selectMetalArmor(MouseEvent mouseEvent) {
-        selectedItem = Resource.getResourceByName("MetalArmor");
+        selectedItem = Resource.getResourceByName("MetalArmour");
         selectedItemName.setText("MetalArmour");
     }
 
@@ -229,8 +227,8 @@ public class TradeMenuController {
         selectedItemName.setText("Pitch");
     }
     public void selectLeatherArmor(MouseEvent mouseEvent){
-        selectedItem = Resource.getResourceByName("LeatherArmor");
-        selectedItemName.setText("LeatherArmor");
+        selectedItem = Resource.getResourceByName("LeatherArmour");
+        selectedItemName.setText("LeatherArmour");
     }
 
     public static TradeMenuMessages sendTradeRequestController( int priceInt) {

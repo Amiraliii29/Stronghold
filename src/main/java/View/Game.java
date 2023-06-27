@@ -38,6 +38,7 @@ import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ public class Game extends Application{
     private static Stage stage;
     public static Pane mainPane; // this pane contains all other panes such as pane
     private static Pane pane;
+    private ImageView attackIcon;
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
     private static Tooltip tooltip;
@@ -133,6 +135,10 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
+    public  void addToGovernmentsInGame(Government government){
+        governmentsInGame.add(government);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
@@ -173,10 +179,30 @@ public class Game extends Application{
         placeGovernmentsKeep();
     }
 
+    public ArrayList<Government> getGovernmentsInGame() {
+        return governmentsInGame;
+    }
 
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
 
-    public  void addToGovernmentsInGame(Government government){
-        governmentsInGame.add(government);
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
 
     private void placeGovernmentsKeep() {
@@ -249,12 +275,12 @@ public class Game extends Application{
             }
         });
 
+
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
-
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
@@ -265,8 +291,7 @@ public class Game extends Application{
                         CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
                     drawMap();
-                } else if (DataBase.getSelectedUnit() != null) {
-
+                } else if (DataBase.getSelectedUnit() != null && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
                     move(squareI + blockX, squareJ + blockY);
                     try {
                         showSelectedSquares(blockX, blockY, DataBase.getSelectedUnit());
@@ -274,7 +299,12 @@ public class Game extends Application{
                         throw new RuntimeException(e);
                     }
 
-                } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
+                } else if (DataBase.getSelectedUnit() != null && map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
+                    String targetX=Integer.toString(squareI + blockX);
+                    String targetY=Integer.toString(squareJ + blockY);
+                    GameMenuController.AttackBySelectedUnits(targetX,targetY);
+                }
+                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                     //TODO : Show bound for building !
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
@@ -365,26 +395,31 @@ public class Game extends Application{
                     building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
                     defenceBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
                     barrackBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
                     generatorBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
                     townBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
                     stockPileBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 building = null;
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
@@ -451,7 +486,9 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
+            }else if(event.getCode() == KeyCode.E){
+                clear();
+            }else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
                 if (customizePane == null) {
                     try {
                         building = null;
@@ -756,29 +793,7 @@ public class Game extends Application{
         tooltip.show(mainPane, x, y);
     }
 
-    public void drawNextTurnButton() {
-        nextTurnButton.setLayoutX(leftX + 997);
-        nextTurnButton.setLayoutY(screenHeight - 65);
-        nextTurnButton.setText("Next Turn");
-        nextTurnButton.setOnMouseClicked(event -> {
-            turnUserNumber++;
-            turnUserNumber %= governmentsInGame.size();
-
-            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
-            GameMenuController.setCurrentGovernment();
-            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
-        });
-
-        turnUser.setLayoutX(leftX + 1014);
-        turnUser.setLayoutY(screenHeight - 30);
-        turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
-
-        mainPane.getChildren().addAll(nextTurnButton , turnUser);
-    }
-
-    public void showErrorText(String errorText) {
+    public static void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -794,18 +809,9 @@ public class Game extends Application{
 
         errorPane.getChildren().add(error);
         mainPane.getChildren().add(errorPane);
-
-        errorTimeline.playFromStart();
+//todo uncomment
+//        errorTimeline.playFromStart();
     }
-
-    private void showCopiedBuildingImage(){
-        if (DataBase.getSelectedBuilding() == null) return;
-        copiedBuildingName = DataBase.getSelectedBuilding().getName();
-        Image buildingImage = buildings.get(DataBase.getSelectedBuilding().getName());
-        instanciateCopiedBuilding(buildingImage);
-    }
-
-
 
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {
@@ -892,6 +898,15 @@ public class Game extends Application{
                 break;
             }
         });
+        System.out.println(copiedBuildingName);
+    }
+
+
+    private void showCopiedBuildingImage(){
+        mainPane.getChildren().remove(copiedBuilding);
+        copiedBuildingName=DataBase.getSelectedBuilding().getName();
+        Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
+        instanciateCopiedBuilding(buildingImage);
     }
 
     private void instanciateCopiedBuilding(Image buildingImage){
@@ -900,7 +915,7 @@ public class Game extends Application{
         copiedBuilding.setLayoutY(screenHeight-100);
         copiedBuilding.setFitWidth(100);
         copiedBuilding.setFitHeight(100);
-        mainPane.getChildren().add(copiedBuilding);
+        setTimelineForImageView(8, copiedBuilding, "Building Copied");
         addCopiedBuildingListener();
     }
 
@@ -930,5 +945,30 @@ public class Game extends Application{
             Image image = new Image(new FileInputStream("src/main/resources/Images/resources/" + resource.getName() + ".png"));
             resources.put(resource.getName(), image);
         }
+    }
+
+    public void setAttackIcon(){
+        Image attackImage=null;
+        try {
+            attackImage = new Image(new FileInputStream("src/main/resources/images/Icon/attack.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        attackIcon=new ImageView(attackImage);
+        attackIcon.setLayoutX(screenWidth/2);
+        attackIcon.setFitWidth(100);
+        attackIcon.setFitHeight(100);
+        setTimelineForImageView(5, attackIcon,"Attack Started");
+    }
+
+    private void setTimelineForImageView(int time,ImageView imageView,String errorText){
+        showErrorText(errorText);
+        mainPane.getChildren().add(imageView);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000*time),
+                actionEvent -> {
+                    mainPane.getChildren().remove(imageView);
+                }));
+        timeline.setDelay(Duration.millis(0));
+        timeline.play();
     }
 }

@@ -212,8 +212,9 @@ public class Map {
     public boolean doesSquareContainEnemyUnits(int x, int y, Government owner) {
         Square targetSquare = squares[x][y];
 
-        for (Unit unit : targetSquare.getUnits())
+        for (Unit unit : targetSquare.getUnits()){
             if (!DataBase.isUnitFriendly(owner, unit)) return true;
+        }
 
         return false;
     }

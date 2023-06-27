@@ -169,7 +169,6 @@ public class DataBase {
         ArrayList<Unit> enemyUnits = selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
         Unit randomEnemy;
         int randomEnemyIndex;
-
         for (Unit unit : selectedUnit) {
             if (enemyUnits.size() == 0) break;
 //            if (unit.getDidFight() || unit.getAttackRange() < (int) Math.floor(distance))
@@ -179,7 +178,6 @@ public class DataBase {
             randomEnemy = enemyUnits.get(randomEnemyIndex);
 
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
-
             if (randomEnemy.getHitPoint() <= 0) {
                 selectedMap.getSquareFromMap(randomEnemy.getXCoordinate(), randomEnemy.getYCoordinate()).removeUnit(randomEnemy);
                 enemyUnits.remove(randomEnemyIndex);

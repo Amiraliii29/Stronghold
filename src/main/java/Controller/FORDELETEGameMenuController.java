@@ -117,8 +117,6 @@ public class FORDELETEGameMenuController {
         return false;
     }
 
-
-
     public static GameMenuMessages selectBuildingController(String x, String y) {
         if (!Orders.isInputInteger(x) || !Orders.isInputInteger(y))
             return GameMenuMessages.WRONG_FORMAT_COORDINATE;
