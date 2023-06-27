@@ -6,11 +6,7 @@ import Model.Government;
 import Model.Map;
 import Model.Resource;
 import Model.Square;
-import Model.Units.LadderMan;
-import Model.Units.Siege;
-import Model.Units.StateUnits;
-import Model.Units.Troop;
-import Model.Units.Unit;
+import Model.Units.*;
 import View.Controller.BuildingInfo;
 import View.Game;
 import javafx.scene.control.Alert;
@@ -298,6 +294,22 @@ public class GameMenuController {
         currentGovernment.removeFromResourceGenerationRate(last.getName(), ((Generator) selectedBuilding).getGeneratingRate());
     }
 
+    public static void setUnitModeController(String state) {
+        StateUnits newState;
+        switch (state) {
+            case "Standing" -> newState = StateUnits.Stan_Ground;
+            case "Defensive" -> newState = StateUnits.Defensive;
+            case "Aggressive" -> newState = StateUnits.Aggressive;
+            default -> {
+                return ;
+            }
+        }
+
+        for (Unit unit : DataBase.getSelectedUnit())
+            unit.setState(newState);
+    }
+
+
 
 
     private static void attackBySingleType(String enemyX, String enemyY) {
@@ -377,37 +389,51 @@ public class GameMenuController {
         }
     }
 
-    private static void trainTroopsForGovernment(int count, Troop targetTroop, Barrack selectedBarrack) {
+
+
+    public static void buildSiege() {
+
+    }
+
+    private static void trainTroopsForGovernment(int count, Unit unit, Barrack selectedBarrack) {
         int barrackX = selectedBarrack.getXCoordinateLeft();
         int barrackY = selectedBarrack.getYCoordinateUp();
 
-        currentGovernment.changeMoney(-count * targetTroop.getCost());
-
-        for (Resource weapon : targetTroop.getWeapons()) {
-            currentGovernment.removeFromStockpile(weapon, count);
-        }
+        currentGovernment.changeMoney(-count * unit.getCost());
+        currentGovernment.changeFreeWorkers(-count);
 
         for (int i = 0; i < count; i++) {
-            Troop newTroop = Troop.createTroop(currentGovernment, targetTroop.getName(), barrackX, barrackY);
-            // addToAllUnits(newTroop);
+            if (unit.getName().equals("Engineer")) {
+                Engineer.createEngineer(currentGovernment, barrackX, barrackY);
+            } else if (unit.getName().equals("LadderMan")) {
+                LadderMan.createLadderMan(currentGovernment, barrackX, barrackY);
+            } else if (unit.getName().equals("Tunneler")) {
+                Tunneler.createTunneler(currentGovernment, barrackX, barrackY);
+            } else {
+                Troop.createTroop(currentGovernment, unit.getName() , barrackX, barrackY);
+            }
         }
-
-        currentGovernment.changeFreeWorkers(-count);
     }
     
     public static void createUnitController(String type) {
-        int countInNum = 1;
-        Troop targetTroop = Troop.getTroopByName(type);
+        //won't create Siege !!!
 
-        assert targetTroop != null;
-        int totalCost = targetTroop.getCost() * countInNum;
+        int countInNum = 1;
+        Unit unit;
+
+        if (type.equals("Engineer"))
+            unit = Engineer.createEngineer(currentGovernment, -1, -1);
+        else if (type.equals("LadderMan"))
+            unit = LadderMan.createLadderMan(currentGovernment, -1, -1);
+        else if (type.equals("Tunneler"))
+            unit = Tunneler.createTunneler(currentGovernment, -1, -1);
+        else
+            unit = Troop.getTroopByName(type);
+
+        assert unit != null;
+        int totalCost = unit.getCost() * countInNum;
         if (currentGovernment.getMoney() < totalCost){
             game.showErrorText("Not enough gold!");
-            return ;
-        }
-
-        if (!doesHaveUnitsWeapons(countInNum, targetTroop)){
-            game.showErrorText("Insufficient weapons!");
             return ;
         }
 
@@ -416,55 +442,28 @@ public class GameMenuController {
             return ;
         }
 
-        Barrack selectedBarrack=(Barrack) DataBase.getSelectedBuilding();
-        trainTroopsForGovernment(countInNum, targetTroop, selectedBarrack);
-    }
-
-    private static boolean doesHaveUnitsWeapons(int count, Troop targetTroop) {
-        ArrayList<Resource> neededWeapons = new ArrayList<>(targetTroop.getWeapons());
-
-        for (Resource resource : neededWeapons) {
-            resource.changeCount(count - resource.getCount());
+        if (!doesUnitsHaveWeapons(countInNum, unit)){
+            game.showErrorText("Insufficient weapons!");
+            return ;
         }
 
+        Barrack selectedBarrack = (Barrack) DataBase.getSelectedBuilding();
+        trainTroopsForGovernment(countInNum, unit, selectedBarrack);
+    }
+
+    private static boolean doesUnitsHaveWeapons(int count, Unit unit) {
+        if (!(unit instanceof Troop)) return true;
+        ArrayList<Resource> neededWeapons = new ArrayList<>(((Troop) unit).getWeapons());
+
         for (Resource resource : neededWeapons) {
-            if (currentGovernment.getResourceInStockpiles(resource) < resource.getCount())
+            if (currentGovernment.getResourceInStockpiles(resource) < count)
                 return false;
         }
 
+        for (Resource resource : neededWeapons) {
+            currentGovernment.removeFromStockpile(resource, count);
+        }
+
         return true;
-    }
-
-    public static void setUnitModeController(String option) {
-        String x = Orders.findFlagOption("-x", option);
-        String y = Orders.findFlagOption("-y", option);
-        String state = Orders.findFlagOption("-s", option);
-
-        // assert x != null;
-        // if (!x.matches("^\\d+$") || !Objects.requireNonNull(y).matches("^\\d+$"))
-        //     return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        int xCoordinate = Integer.parseInt(x) - 1;
-        int yCoordinate = Integer.parseInt(y) - 1;
-
-        // if (!map.isCoordinationValid(xCoordinate, yCoordinate))
-        //     return GameMenuMessages.INVALID_COORDINATE;
-
-        StateUnits newState;
-        switch (Objects.requireNonNull(state)) {
-            case "Standing" -> newState = StateUnits.Stan_Ground;
-            case "Defensive" -> newState = StateUnits.Defensive;
-            case "Offensive" -> newState = StateUnits.Aggressive;
-            default -> {
-                return ;
-            }
-        }
-
-        Square square = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
-        for (Unit unit : square.getUnits()) {
-            if (unit.getOwner().equals(DataBase.getCurrentGovernment())) {
-                unit.setState(newState);
-            }
-        }
     }
 }

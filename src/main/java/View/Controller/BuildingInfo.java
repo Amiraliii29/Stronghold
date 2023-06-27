@@ -102,11 +102,11 @@ public class BuildingInfo {
     }
 
     public void stanGround(MouseEvent ignoredMouseEvent) {
-        GameMenuController.setUnitModeController("stanGround");
+        GameMenuController.setUnitModeController("Standing");
     }
 
     public void defensive(MouseEvent ignoredMouseEvent) {
-        GameMenuController.setUnitModeController("defensive");
+        GameMenuController.setUnitModeController("Defensive");
     }
 
     public void aggressive(MouseEvent ignoredMouseEvent) {
