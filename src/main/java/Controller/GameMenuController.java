@@ -382,6 +382,7 @@ public class GameMenuController {
             DataBase.setSelectedUnit(unitsByType.get(unitType));
             attackBySingleType(enemyX, enemyY);
         }
+        game.drawMap();
     }
 
 
