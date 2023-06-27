@@ -23,7 +23,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-    //    kiarashStart(stage);
+//        kiarashStart(stage);
        new SignUpMenu().start(stage);
     }
 

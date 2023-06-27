@@ -1,6 +1,7 @@
 package View;
 
 import Controller.CustomizeMapController;
+import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
@@ -19,6 +20,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -101,6 +103,9 @@ public class Game extends Application{
     private double mouseX;
     private double mouseY;
     private int keepOwnerGovernmentsCounter = 0;
+    private int turnUserNumber = 0;
+    private Button nextTurnButton = new Button();
+    private Label turnUser = new Label();
 
 
     static {
@@ -170,12 +175,35 @@ public class Game extends Application{
 
         drawMap();
         drawBottom();
+        drawNextTurnButton();
         keys();
 
         stage.setFullScreen(true);
         stage.show();
 
         placeGovernmentsKeep();
+    }
+
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
+            
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
 
     private void placeGovernmentsKeep() {
@@ -278,18 +306,7 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
-                if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
-                    double endX = event.getX();
-                    double endY = event.getY();
-                    int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
-                    int nowY = (int) (Math.floor(endY / blockPixel));
-
-                    building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
-                    keepOwnerGovernmentsCounter++;
-                    drawMap();
-                }
-                else if (customizePane != null) {
+                if (customizePane != null) {
                     if (tree != null)
                         CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
                     else if (land != null)
@@ -315,11 +332,24 @@ public class Game extends Application{
                     }
                 }
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
-                selectSq.setX(leftX + blockX * blockPixel);
-                selectSq.setY(blockY * blockPixel);
-                selectSq.setWidth(blockPixel);
-                selectSq.setHeight(blockPixel);
-                selectSq.setVisible(true);
+                if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
+                    double endX = event.getX();
+                    double endY = event.getY();
+                    int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+                    int nowY = (int) (Math.floor(endY / blockPixel));
+
+                    building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    keepOwnerGovernmentsCounter++;
+                    drawMap();
+                }
+                else {
+                    selectSq.setX(leftX + blockX * blockPixel);
+                    selectSq.setY(blockY * blockPixel);
+                    selectSq.setWidth(blockPixel);
+                    selectSq.setHeight(blockPixel);
+                    selectSq.setVisible(true);
+                }
             }
 
         });
