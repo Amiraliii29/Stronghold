@@ -359,7 +359,7 @@ public class GameGraphicController {
 
     public void stockPileDragDetected(MouseEvent ignoredMouseEvent) {
         Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Stockpile";
+        Game.stockPileBuildingToCreateName = "Stockpile";
     }
 
     public void woodCutterDragDetected(MouseEvent ignoredMouseEvent) {
@@ -394,7 +394,7 @@ public class GameGraphicController {
 
     public void armouryDragDetected(MouseEvent ignoredMouseEvent) {
         Game.building = Building.getBuildingByName("Stable");
-        Game.barrackBuildingToCreateName = "Armoury";
+        Game.stockPileBuildingToCreateName = "Armoury";
     }
 
     public void fletcherDragDetected(MouseEvent ignoredMouseEvent) {
