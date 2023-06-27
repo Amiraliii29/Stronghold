@@ -75,7 +75,6 @@ public class Game extends Application{
     private static Pane selectedSquareInfo;
     private ImageView copiedBuilding;
     public static String copiedBuildingName;
-    private Text errorText;
     private static Pane errorPane;
     public static String defenceBuildingToCreateName = null;
     public static String generatorBuildingToCreateName = null;
@@ -191,7 +190,7 @@ public class Game extends Application{
         nextTurnButton.setOnMouseClicked(event -> {
             turnUserNumber++;
             turnUserNumber %= governmentsInGame.size();
-            
+
             turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
             DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
             GameMenuController.setCurrentGovernment();
@@ -472,7 +471,7 @@ public class Game extends Application{
 
         scene.setOnKeyPressed(event -> {
             final KeyCombination keyCombinationShiftC = new KeyCodeCombination(
-                                    KeyCode.C, KeyCombination.CONTROL_DOWN);
+                KeyCode.C,KeyCombination.CONTROL_ANY);
 
             if (event.getCode() == KeyCode.I) {
                 if (blockPixel < 35) {
@@ -503,7 +502,7 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.C) {
+            } else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
                 if (customizePane == null) {
                     try {
                         building = null;
@@ -525,11 +524,12 @@ public class Game extends Application{
             }
             else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
-                System.out.println("lol");
             }
-            copiedBuildingName=Building.getBuildings().get(0).getName();
-            showCopiedBuildingImage();
-
+            // System.out.println("kir");
+            // copiedBuildingName=Building.getBuildings().get(0).getName();
+            // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
+            // showCopiedBuildingImage();
+            
         });
     }
 
@@ -538,6 +538,7 @@ public class Game extends Application{
         pane.getChildren().clear();
 
         ArrayList<Building> buildingsInMap = new ArrayList<>();
+        ArrayList<ImageView> unitImageView = new ArrayList<>();
 
         boolean check;
         int k = leftX, l = 0;
@@ -577,7 +578,7 @@ public class Game extends Application{
                         unitImage.setLayoutY(l);
                         unitImage.setFitHeight(blockPixel);
                         unitImage.setFitWidth(blockPixel);
-                        pane.getChildren().add(unitImage);
+                        unitImageView.add(unitImage);
                     }
 
                     if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding()))
@@ -600,6 +601,9 @@ public class Game extends Application{
 
             pane.getChildren().add(buildingImage);
         }
+
+        for (ImageView imageView : unitImageView)
+            pane.getChildren().add(imageView);
 
         pane.getChildren().add(selectSq);
         selectSq.setVisible(false);
@@ -707,7 +711,9 @@ public class Game extends Application{
         mainPane.getChildren().add(selectedSquareInfo);
     }
 
-    private void showBuildingDetail(Building building) throws IOException {
+    public void showBuildingDetail(Building building) throws IOException {
+        mainPane.getChildren().remove(detail);
+
         if (building.getName().equals("MercenaryPost")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
@@ -744,6 +750,27 @@ public class Game extends Application{
             ShopMenu.openShopMenu(new Stage());
         }else return;
 
+        if (building instanceof Defence) {
+            Label hp = new Label(String.valueOf(building.getHp()));
+            hp.setLayoutX(39);
+            hp.setLayoutY(41);
+            hp.setPrefWidth(35);
+            hp.setPrefHeight(37);
+            hp.setFont(new Font(18));
+            hp.setAlignment(Pos.CENTER);
+
+            Label maxHp = new Label(String.valueOf(building.getMaximumHp()));
+            maxHp.setLayoutX(105);
+            maxHp.setLayoutY(41);
+            maxHp.setPrefWidth(35);
+            maxHp.setPrefHeight(37);
+            maxHp.setFont(new Font(18));
+            maxHp.setAlignment(Pos.CENTER);
+
+            detail.getChildren().add(hp);
+            detail.getChildren().add(maxHp);
+        }
+
         detail.setLayoutX(115);
         detail.setLayoutY(30);
 
@@ -759,6 +786,8 @@ public class Game extends Application{
     }
 
     private void drawSquareInfo(Square square, Label landLabel, Label treeLabel, Label buildingLabel) throws IOException {
+        squareInfo.getChildren().clear();
+
         landLabel.setText(Land.getName(square.getLand()));
         landLabel.setTextFill(Color.WHITE);
 
@@ -845,54 +874,18 @@ public class Game extends Application{
     }
 
     public void move (int finalX, int finalY) {
-        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
+        if (allUnits == null) return;
 
-        for (int i = 0; i < 8; i++) {
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
-                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
-                else
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
-
-                continue;
-            }
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Use Only 0-9");
-            return;
-        }
-
-
-        ArrayList<Unit> allUnits = new ArrayList<>();
+        ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
 
-        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
-            ArrayList<Square> squaresChecked = new ArrayList<>();
-
-            for (Unit unit : DataBase.getSelectedUnit()) {
-                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
-
-                squaresChecked.add(unit.getSquare());
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
-
-                for (Unit squareUnit : unit.getSquare().getUnits()) {
-                    if (set.getValue() == 0) break;
-                    if (!squareUnit.getName().equals(set.getKey())) continue;
-
-                    selectedUnit.add(squareUnit);
-                    set.setValue(set.getValue() - 1);
-                }
-
-                if (selectedUnit.size() != 0)  {
-                    allUnits.addAll(selectedUnit);
-                    moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
-                }
-            }
+        for (ArrayList<Unit> selectedUnit : allUnits) {
+            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
+            unitForDataBase.addAll(selectedUnit);
         }
 
-        DataBase.setSelectedUnit(allUnits);
+        DataBase.setSelectedUnit(unitForDataBase);
 
         for (MoveAnimation animation : moveAnimations)
             animation.play();
@@ -914,6 +907,7 @@ public class Game extends Application{
 
     public void addCopiedBuildingListener(){
         copiedBuilding.setOnDragDetected(event -> {
+            Game.building = Building.getBuildingByName(copiedBuildingName);
             switch(Building.getBuildingCategoryByName(copiedBuildingName)){
                 case "Barrack":
                 Game.barrackBuildingToCreateName = copiedBuildingName;
@@ -927,6 +921,10 @@ public class Game extends Application{
                 Game.generatorBuildingToCreateName = copiedBuildingName;
                 break;
 
+                case "Defence":
+                Game.defenceBuildingToCreateName = copiedBuildingName;
+                break;
+
                 default:
                 Game.stockPileBuildingToCreateName = copiedBuildingName;
                 break;
@@ -936,6 +934,8 @@ public class Game extends Application{
 
 
     private void showCopiedBuildingImage(){
+
+        copiedBuildingName=DataBase.getSelectedBuilding().getName();
         Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
         instanciateCopiedBuilding(buildingImage);
     }
@@ -943,10 +943,10 @@ public class Game extends Application{
     private void instanciateCopiedBuilding(Image buildingImage){
         copiedBuilding=new ImageView(buildingImage);
         copiedBuilding.setLayoutX(screenWidth+leftX);
-        copiedBuilding.setLayoutY(screenHeight-50);
-        copiedBuilding.setFitWidth(50);
-        copiedBuilding.setFitHeight(50);
-        pane.getChildren().add(copiedBuilding);
+        copiedBuilding.setLayoutY(screenHeight-100);
+        copiedBuilding.setFitWidth(100);
+        copiedBuilding.setFitHeight(100);
+        mainPane.getChildren().add(copiedBuilding);
         addCopiedBuildingListener();
     }
 

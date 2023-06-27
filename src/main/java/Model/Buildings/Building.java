@@ -107,9 +107,8 @@ public abstract class Building {
         return maximumHp;
     }
 
-    public boolean getCanPass(Boolean up) {
-        if (!up) return canPass;
-        return true;
+    public boolean getCanPass() {
+        return canPass;
     }
 
     public static LinkedList<String> getBuildingsNames() {
@@ -124,6 +123,7 @@ public abstract class Building {
         if (Generator.getGeneratorsName().contains(buildingName)) return "Generator";
         if (Barrack.getBarracksName().contains(buildingName)) return "Barrack";
         if (TownBuilding.getTownBuildingsName().contains(buildingName)) return "TownBuilding";
+        if (Defence.getDefencesName().contains(buildingName)) return "Defence";
         return "";
     }
 

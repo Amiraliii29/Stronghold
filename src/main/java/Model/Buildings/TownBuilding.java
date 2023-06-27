@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class TownBuilding extends Building {
     private static ArrayList<TownBuilding> townBuildings;
     private static ArrayList<String> townBuildingsName;
-    private transient int capacity;
-    private transient int popularityRate;
+    private int capacity;
+    private int popularityRate;
 
     static {
         try {
