@@ -23,7 +23,7 @@
     "yCoordinateUp": 0,
     "lands": ["default","grass","plain","sand","meadow","highDensityMeadow"],
     "hp": 200,
-    "numberOfResource": 10,
+    "numberOfResource": 0,
     "cost": 0,
     "canPass": false
   },
