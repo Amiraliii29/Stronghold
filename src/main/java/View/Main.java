@@ -44,9 +44,9 @@ public class Main extends Application {
        Map.loadMap("for test");
 
 
-//       Map map = new Map("for test", 200, 200);
-//       DataBase.setSelectedMap(map);
-//       GameMenuController.setMap(map);
+    //   Map map = new Map("for test", 200, 200);
+    //   DataBase.setSelectedMap(map);
+    //   GameMenuController.setMap(map);
 
        Game game = new Game();
        DataBase.setGame(game);
@@ -75,11 +75,10 @@ public class Main extends Application {
         Siege.createSiege(government,"BatteringRam",16,16);
 
 
+        // map.getSquareFromMap(4, 4).addUnit(Troop.createTroop(government2,"Knight", 4, 4));
 
-
-
-//       map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
-//       Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
+    //   map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
+    //   Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
 //       map.getSquareFromMap(30, 20).setBuilding(generator1);
 //       map.getSquareFromMap(31, 20).setBuilding(generator1);
 //       map.getSquareFromMap(30, 21).setBuilding(generator1);
