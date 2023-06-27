@@ -212,8 +212,9 @@ public class Map {
     public boolean doesSquareContainEnemyUnits(int x, int y, Government owner) {
         Square targetSquare = squares[x][y];
 
-        for (Unit unit : targetSquare.getUnits())
+        for (Unit unit : targetSquare.getUnits()){
             if (!DataBase.isUnitFriendly(owner, unit)) return true;
+        }
 
         return false;
     }
@@ -244,6 +245,13 @@ public class Map {
             if (f.exists() && !f.isDirectory()) {
                 DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
                 GameMenuController.setMap(DataBase.getSelectedMap());
+
+                for (int i = 0; i < DataBase.getSelectedMap().getWidth() + 1; i++) {
+                    for (int j = 0; j < DataBase.getSelectedMap().getLength() + 1; j++) {
+                        DataBase.getSelectedMap().squares[i][j].newUnits();
+                    }
+                }
+
             } else {
                 DataBase.setSelectedMap(null);
                 GameMenuController.setMap(null);

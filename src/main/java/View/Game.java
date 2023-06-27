@@ -14,7 +14,6 @@ import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -28,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -37,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -305,7 +302,7 @@ public class Game extends Application{
             double startY = event.getY();
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
-
+            System.out.println(map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment()));
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
@@ -316,8 +313,7 @@ public class Game extends Application{
                         CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
                     drawMap();
-                } else if (DataBase.getSelectedUnit() != null) {
-
+                } else if (DataBase.getSelectedUnit() != null && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
                     move(squareI + blockX, squareJ + blockY);
                     try {
                         showSelectedSquares(blockX, blockY, DataBase.getSelectedUnit());
@@ -325,7 +321,12 @@ public class Game extends Application{
                         throw new RuntimeException(e);
                     }
 
-                } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
+                } else if (DataBase.getSelectedUnit() != null && map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
+                    String targetX=Integer.toString(squareI + blockX);
+                    String targetY=Integer.toString(squareJ + blockY);
+                    GameMenuController.AttackBySelectedUnits(targetX,targetY);
+                }
+                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                     //TODO : Show bound for building !
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
@@ -342,7 +343,8 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY, "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY + 3, "Granary");
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
@@ -414,35 +416,30 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
                 if (defenceBuildingToCreateName != null) {
                     building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     defenceBuildingToCreateName = null;
                     drawMap();
                     GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     barrackBuildingToCreateName = null;
                     drawMap();
                     GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     generatorBuildingToCreateName = null;
                     drawMap();
                     GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     townBuildingToCreateName = null;
                     drawMap();
                     GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     stockPileBuildingToCreateName = null;
                     drawMap();
                     GameGraphicController.setPopularityGoldPopulation();
@@ -458,13 +455,14 @@ public class Game extends Application{
                     }
                 }
 
-                if (selectedUnit.size() != 0)
+                if (selectedUnit.size() != 0) {
                     DataBase.setSelectedUnit(selectedUnit);
 
-                try {
-                    showSelectedSquares(nowX, nowY, selectedUnit);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    try {
+                        showSelectedSquares(nowX, nowY, selectedUnit);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
@@ -532,17 +530,18 @@ public class Game extends Application{
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
-            }
-            else if (keyCombinationShiftC.match(event)){
+            } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             }
-            // System.out.println("kir");
+            // System.out.println("...");
             // copiedBuildingName=Building.getBuildings().get(0).getName();
             // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
             // showCopiedBuildingImage();
             
         });
     }
+
+
 
     public void drawMap() {
         squares = map.getSquares();
@@ -723,7 +722,7 @@ public class Game extends Application{
     }
 
     public void showBuildingDetail(Building building) throws IOException {
-        mainPane.getChildren().remove(detail);
+        bottomPane.getChildren().remove(detail);
 
         if (building.getName().equals("MercenaryPost")) {
             detail = FXMLLoader.load(
@@ -843,7 +842,7 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
-    public static void showErrorText(String errorText) {
+    public void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -884,22 +883,29 @@ public class Game extends Application{
         }
     }
 
-    public void move (int finalX, int finalY) {
+    public boolean move (int finalX, int finalY) {
         ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
-        if (allUnits == null) return;
+        if (allUnits == null) return false;
 
         ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
+        boolean check = false;
 
         for (ArrayList<Unit> selectedUnit : allUnits) {
-            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
+            MoveAnimation moveAnimation = new MoveAnimation(selectedUnit, finalX, finalY);
+            moveAnimations.add(moveAnimation);
             unitForDataBase.addAll(selectedUnit);
+
+            if (moveAnimation.getSquares() != null && moveAnimation.getSquares().size() != 0)
+                check = true;
         }
 
         DataBase.setSelectedUnit(unitForDataBase);
 
         for (MoveAnimation animation : moveAnimations)
             animation.play();
+
+        return check;
     }
 
     private void moveGetCoordinate() {
@@ -941,11 +947,12 @@ public class Game extends Application{
                 break;
             }
         });
+        System.out.println(copiedBuildingName);
     }
 
 
     private void showCopiedBuildingImage(){
-
+        mainPane.getChildren().remove(copiedBuilding);
         copiedBuildingName=DataBase.getSelectedBuilding().getName();
         Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
         instanciateCopiedBuilding(buildingImage);

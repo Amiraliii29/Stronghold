@@ -153,20 +153,6 @@ public class DataBase {
 
 
 
-    public static void handleEndOfTurnFights() {
-//        for (Unit unit : GameMenuController.getAllUnits()) {
-//            GameMenuController.setCurrentGovernment(unit.getOwner());
-//            currentGovernment = unit.getOwner();
-//            int[] targetCoord = selectedMap.getAnEnemyCoordInRange(unit);
-//            if (targetCoord != null) {
-//                selectedUnit.clear();
-//                selectedUnit.add(unit);
-//                GameMenuController.attackController(Integer.toString(targetCoord[0] + 1), Integer.toString(targetCoord[1] + 1));
-//                unit.setDidFight(true);
-//            }
-//        }
-    }
-
     public static void attackBuildingBySelectedUnits(int xUnderAttack, int yUnderAttack) {
         Building buildingUnderAttack = selectedMap.getSquareFromMap(xUnderAttack, yUnderAttack).getBuilding();
 
@@ -183,7 +169,6 @@ public class DataBase {
         ArrayList<Unit> enemyUnits = selectedMap.getSquareUnfriendlyUnits(currentGovernment, xUnderAttack, yUnderAttack);
         Unit randomEnemy;
         int randomEnemyIndex;
-
         for (Unit unit : selectedUnit) {
             if (enemyUnits.size() == 0) break;
 //            if (unit.getDidFight() || unit.getAttackRange() < (int) Math.floor(distance))
@@ -193,7 +178,6 @@ public class DataBase {
             randomEnemy = enemyUnits.get(randomEnemyIndex);
 
             performFightBetweenTwoUnits(distance, unit, randomEnemy);
-
             if (randomEnemy.getHitPoint() <= 0) {
                 selectedMap.getSquareFromMap(randomEnemy.getXCoordinate(), randomEnemy.getYCoordinate()).removeUnit(randomEnemy);
                 enemyUnits.remove(randomEnemyIndex);
@@ -241,6 +225,18 @@ public class DataBase {
             if (selectedUnit.get(i).equals(unit) && unit.getHitPoint() == selectedUnit.get(i).getHitPoint()){
                 selectedUnit.remove(i);
                 break;
+            }
+        }
+    }
+
+    public static void removeUnit(Unit unit, int cnt) {
+        for (int i = 0; i < selectedUnit.size(); i++) {
+            if (selectedUnit.get(i).equals(unit) && unit.getXCoordinate() == selectedUnit.get(i).getXCoordinate()
+                    &&unit.getYCoordinate() == selectedUnit.get(i).getYCoordinate()){
+                selectedUnit.remove(i);
+                i--;
+                cnt--;
+                if (cnt == 0) break;
             }
         }
     }

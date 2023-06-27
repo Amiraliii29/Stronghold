@@ -10,6 +10,7 @@ import Model.DataBase;
 import Model.Government;
 import Model.Map;
 import Model.Resource;
+import Model.User;
 import Model.Units.Siege;
 import Model.Units.Troop;
 import Model.Units.Unit;
@@ -24,8 +25,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-//        kiarashStart(stage);
-       new SignUpMenu().start(stage);
+        kiarashStart(stage);
+//       new SignUpMenu().start(stage);
     }
 
     private void kiarashStart(Stage stage) throws Exception {
@@ -34,17 +35,18 @@ public class Main extends Application {
        Resource.load();
        Game.loadImages();
        Government government = new Government(10000);
+       government.setOwner(User.getUsers().get(0));
+       Government government2 = new Government(10000);
+       government.setOwner(User.getUsers().get(1));
        DataBase.setCurrentGovernment(government);
        GameMenuController.setCurrentGovernment();
 
-
-       //    Map.loadMap("for test");
-       //    Map map = DataBase.getSelectedMap();
+       Map.loadMap("for test");
 
 
-       Map map = new Map("for test", 200, 200);
-       DataBase.setSelectedMap(map);
-       GameMenuController.setMap(map);
+    //   Map map = new Map("for test", 200, 200);
+    //   DataBase.setSelectedMap(map);
+    //   GameMenuController.setMap(map);
 
        Game game = new Game();
        DataBase.setGame(game);
@@ -53,6 +55,7 @@ public class Main extends Application {
 
 
        Troop.createTroop(government,"Lord", 2, 2);
+       
        Troop.createTroop(government, "Slave", 0, 0);
        Troop.createTroop(government, "Slave", 0, 199);
        Troop.createTroop(government, "Slave", 199, 0);
@@ -72,11 +75,10 @@ public class Main extends Application {
         Siege.createSiege(government,"BatteringRam",16,16);
 
 
+        // map.getSquareFromMap(4, 4).addUnit(Troop.createTroop(government2,"Knight", 4, 4));
 
-
-
-//       map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
-//       Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
+    //   map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
+    //   Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
 //       map.getSquareFromMap(30, 20).setBuilding(generator1);
 //       map.getSquareFromMap(31, 20).setBuilding(generator1);
 //       map.getSquareFromMap(30, 21).setBuilding(generator1);
