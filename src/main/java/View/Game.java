@@ -823,7 +823,7 @@ public class Game extends Application{
         turnUser.setLayoutX(leftX + 1014);
         turnUser.setLayoutY(screenHeight - 30);
         turnUser.setTextFill(Color.BLUEVIOLET);
-//        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
 
         mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
@@ -878,22 +878,29 @@ public class Game extends Application{
         }
     }
 
-    public void move (int finalX, int finalY) {
+    public boolean move (int finalX, int finalY) {
         ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
-        if (allUnits == null) return;
+        if (allUnits == null) return false;
 
         ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
+        boolean check = false;
 
         for (ArrayList<Unit> selectedUnit : allUnits) {
-            moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
+            MoveAnimation moveAnimation = new MoveAnimation(selectedUnit, finalX, finalY);
+            moveAnimations.add(moveAnimation);
             unitForDataBase.addAll(selectedUnit);
+
+            if (moveAnimation.getSquares() != null && moveAnimation.getSquares().size() != 0)
+                check = true;
         }
 
         DataBase.setSelectedUnit(unitForDataBase);
 
         for (MoveAnimation animation : moveAnimations)
             animation.play();
+
+        return check;
     }
 
     private void moveGetCoordinate() {
