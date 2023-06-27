@@ -8,6 +8,7 @@ import Model.Resource;
 import Model.Square;
 import Model.Units.*;
 import View.Controller.BuildingInfo;
+import View.Controller.GameGraphicController;
 import View.Game;
 import javafx.scene.control.Alert;
 import java.io.IOException;
@@ -431,6 +432,7 @@ public class GameMenuController {
 
         currentGovernment.changeMoney(-count * unit.getCost());
         currentGovernment.changeFreeWorkers(-count);
+        GameGraphicController.setPopularityGoldPopulation();
 
         for (int i = 0; i < count; i++) {
             if (unit.getName().equals("Engineer")) {

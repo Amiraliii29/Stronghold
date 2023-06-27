@@ -275,7 +275,6 @@ public class Game extends Application{
             }
         });
 
-
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
@@ -304,8 +303,9 @@ public class Game extends Application{
                     String targetY=Integer.toString(squareJ + blockY);
                     GameMenuController.AttackBySelectedUnits(targetX,targetY);
                 }
-                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
-                    //TODO : Show bound for building !
+                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null
+                        && squares[squareI + blockX][squareJ + blockY].getBuilding().getOwner().equals(DataBase.getCurrentGovernment())) {
+
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
                         showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
@@ -321,11 +321,12 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 5 ,  squareJ + nowY + 5 , "Stockpile");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX - 5, squareJ + nowY - 5 , "Granary");
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 100);
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 25);
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 100);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6 ,  squareJ + nowY, "Stockpile");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 80);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 75);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6, squareJ + nowY + 3 , "Granary");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 75);
+
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
@@ -513,10 +514,7 @@ public class Game extends Application{
             } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             }
-            // System.out.println("...");
-            // copiedBuildingName=Building.getBuildings().get(0).getName();
-            // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
-            // showCopiedBuildingImage();
+
             
         });
     }
@@ -796,7 +794,7 @@ public class Game extends Application{
         tooltip.show(mainPane, x, y);
     }
 
-    public  void showErrorText(String errorText) {
+    public void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -815,6 +813,8 @@ public class Game extends Application{
 
         errorTimeline.playFromStart();
     }
+
+
 
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {
@@ -865,14 +865,14 @@ public class Game extends Application{
     private void moveGetCoordinate() {
         new GetCoordinate();
         if (selectedX != -1 && selectedY != -1) {
-
+            move(selectedX, selectedY);
         }
     }
 
     private void attackGetCoordinate() {
         new GetCoordinate();
         if (selectedX != -1 && selectedY != -1) {
-
+            GameMenuController.AttackBySelectedUnits(String.valueOf(selectedX), String.valueOf(selectedY));
         }
     }
 
@@ -903,7 +903,6 @@ public class Game extends Application{
         });
         System.out.println(copiedBuildingName);
     }
-
 
     private void showCopiedBuildingImage(){
         mainPane.getChildren().remove(copiedBuilding);
