@@ -57,7 +57,9 @@ public class GameGraphicController {
         else if(popularityInt < 25)
             popularityInBottomMenu.setTextFill(Color.RED);
 
-        Game.bottomPane.getChildren().add(popularityInBottomMenu);
+        if(!Game.bottomPane.getChildren().contains(popularityInBottomMenu)){
+            Game.bottomPane.getChildren().add(popularityInBottomMenu);
+        }
 
         popularityInBottomMenu.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -79,13 +81,15 @@ public class GameGraphicController {
         goldsInBottomMenu.setText((int)DataBase.getCurrentGovernment().getMoney() + "");
         goldsInBottomMenu.setLayoutX(894);
         goldsInBottomMenu.setLayoutY(96);
-        Game.bottomPane.getChildren().add(goldsInBottomMenu);
+        if(!Game.bottomPane.getChildren().contains(goldsInBottomMenu))
+            Game.bottomPane.getChildren().add(goldsInBottomMenu);
 
         //show population
         populationInBottomMenu.setText(DataBase.getCurrentGovernment().getPopulation() + "/128" );
         populationInBottomMenu.setLayoutX(886);
         populationInBottomMenu.setLayoutY(112);
-        Game.bottomPane.getChildren().add(populationInBottomMenu);
+        if(!Game.bottomPane.getChildren().contains(populationInBottomMenu))
+            Game.bottomPane.getChildren().add(populationInBottomMenu);
 
 
 
