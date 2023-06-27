@@ -211,15 +211,15 @@ public class GameMenuController {
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
             game.showErrorText("Can't Build Here!");
 
-        else if (building.getCost() > currentGovernment.getMoney())
-            game.showErrorText("You Don't Have Enough Money!");
-
-        else if (building.getResource() != null &&
-                currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
-            game.showErrorText("Don't Have Enough Material!");
-
-        else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
-            game.showErrorText("Not Enough Free Worker!");
+//        else if (building.getCost() > currentGovernment.getMoney())
+//            game.showErrorText("You Don't Have Enough Money!");
+//
+//        else if (building.getResource() != null &&
+//                currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
+//            game.showErrorText("Don't Have Enough Material!");
+//
+//        else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
+//            game.showErrorText("Not Enough Free Worker!");
 
         else {
             currentGovernment.changeMoney(-building.getCost());
@@ -244,7 +244,6 @@ public class GameMenuController {
             map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());
             return true;
         }
-
         return false;
     }
 

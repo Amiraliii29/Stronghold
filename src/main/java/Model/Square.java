@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 public class Square {
     private static final HashMap<String, Boolean> canPass;
-    private final ArrayList<Unit> units;
-    private Building building;
+    private transient ArrayList<Unit> units;
+    private transient Building building;
     private Land land;
     private String cliffDirection;
     private Trees tree;
@@ -100,6 +100,10 @@ public class Square {
 
     public void setTreeAmount(int treeAmount) {
         this.treeAmount = treeAmount;
+    }
+
+    public void newUnits() {
+        units = new ArrayList<>();
     }
 
 

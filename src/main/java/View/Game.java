@@ -272,7 +272,6 @@ public class Game extends Application{
             }
         });
 
-
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
@@ -315,7 +314,8 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY, "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY + 3, "Granary");
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
@@ -387,31 +387,26 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
                 if (defenceBuildingToCreateName != null) {
                     building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     defenceBuildingToCreateName = null;
                     drawMap();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     barrackBuildingToCreateName = null;
                     drawMap();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     generatorBuildingToCreateName = null;
                     drawMap();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     townBuildingToCreateName = null;
                     drawMap();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     stockPileBuildingToCreateName = null;
                     drawMap();
                 }
@@ -499,11 +494,10 @@ public class Game extends Application{
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
-            }
-            else if (keyCombinationShiftC.match(event)){
+            } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             }
-            // System.out.println("kir");
+            // System.out.println("...");
             // copiedBuildingName=Building.getBuildings().get(0).getName();
             // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
             // showCopiedBuildingImage();
@@ -692,7 +686,7 @@ public class Game extends Application{
     }
 
     public void showBuildingDetail(Building building) throws IOException {
-        mainPane.getChildren().remove(detail);
+        bottomPane.getChildren().remove(detail);
 
         if (building.getName().equals("MercenaryPost")) {
             detail = FXMLLoader.load(
@@ -829,7 +823,7 @@ public class Game extends Application{
         turnUser.setLayoutX(leftX + 1014);
         turnUser.setLayoutY(screenHeight - 30);
         turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+//        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
 
         mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
@@ -852,6 +846,13 @@ public class Game extends Application{
         mainPane.getChildren().add(errorPane);
 
         errorTimeline.playFromStart();
+    }
+
+    private void showCopiedBuildingImage(){
+        if (DataBase.getSelectedBuilding() == null) return;
+        copiedBuildingName = DataBase.getSelectedBuilding().getName();
+        Image buildingImage = buildings.get(DataBase.getSelectedBuilding().getName());
+        instanciateCopiedBuilding(buildingImage);
     }
 
 
@@ -934,14 +935,6 @@ public class Game extends Application{
                 break;
             }
         });
-    }
-
-
-    private void showCopiedBuildingImage(){
-
-        copiedBuildingName=DataBase.getSelectedBuilding().getName();
-        Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
-        instanciateCopiedBuilding(buildingImage);
     }
 
     private void instanciateCopiedBuilding(Image buildingImage){

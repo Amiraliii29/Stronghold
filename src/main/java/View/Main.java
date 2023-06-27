@@ -24,8 +24,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-//        kiarashStart(stage);
-       new SignUpMenu().start(stage);
+        kiarashStart(stage);
+//       new SignUpMenu().start(stage);
     }
 
     private void kiarashStart(Stage stage) throws Exception {
@@ -37,14 +37,12 @@ public class Main extends Application {
        DataBase.setCurrentGovernment(government);
        GameMenuController.setCurrentGovernment();
 
-
-       //    Map.loadMap("for test");
-       //    Map map = DataBase.getSelectedMap();
+       Map.loadMap("for test");
 
 
-       Map map = new Map("for test", 200, 200);
-       DataBase.setSelectedMap(map);
-       GameMenuController.setMap(map);
+//       Map map = new Map("for test", 200, 200);
+//       DataBase.setSelectedMap(map);
+//       GameMenuController.setMap(map);
 
        Game game = new Game();
        DataBase.setGame(game);
