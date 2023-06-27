@@ -863,14 +863,24 @@ public class Game extends Application{
     }
 
     private void moveGetCoordinate() {
-        new GetCoordinate();
+        GetCoordinate getCoordinate = new GetCoordinate();
+        try {
+            getCoordinate.start(getCoordinate.stage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (selectedX != -1 && selectedY != -1) {
             move(selectedX, selectedY);
         }
     }
 
     private void attackGetCoordinate() {
-        new GetCoordinate();
+        GetCoordinate getCoordinate = new GetCoordinate();
+        try {
+            getCoordinate.start(getCoordinate.stage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (selectedX != -1 && selectedY != -1) {
             GameMenuController.AttackBySelectedUnits(String.valueOf(selectedX), String.valueOf(selectedY));
         }

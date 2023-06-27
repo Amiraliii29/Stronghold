@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane opacity="0.3" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GetCoordinate">
+<AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GetCoordinate">
    <children>
       <TextField layoutX="85.0" layoutY="41.0" prefHeight="30.0" prefWidth="30.0" fx:id="xCoordinate" />
       <TextField fx:id="yCoordinate" layoutX="85.0" layoutY="85.0" prefHeight="30.0" prefWidth="30.0" />
@@ -22,8 +22,8 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button layoutX="100.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#select" prefHeight="26.0" prefWidth="59.0" style="-fx-background-color: transient;" text="Select" />
-      <Button layoutY="1.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="26.0" prefWidth="30.0" style="-fx-background-color: transient;">
+      <Button layoutX="100.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#select" prefHeight="26.0" prefWidth="59.0" style="-fx-background-color: tranparent;" text="Select" />
+      <Button layoutY="1.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="26.0" prefWidth="30.0" style="-fx-background-color: transparent;">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
