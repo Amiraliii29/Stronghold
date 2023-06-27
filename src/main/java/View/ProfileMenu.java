@@ -57,7 +57,7 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
-    boolean isProfileShown=true;
+    boolean isProfileShown;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
@@ -73,16 +73,18 @@ public class ProfileMenu extends Application {
     StackPane mainPane;
     Stage stage;
 
-    {
-        User.setCurrentUser(User.getUsers().get(0));
-        ProfileMenuController.setCurrentUser(User.getUsers().get(0));
-    }
+    // {
+    //     User.setCurrentUser(User.getUsers().get(0));
+    //     ProfileMenuController.setCurrentUser(User.getUsers().get(0));
+    // }
 
     @Override
     public void start(Stage stage) throws Exception {
         StackPane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
+        isProfileShown=true;
+        ProfileMenuController.setCurrentUser(User.getCurrentUser());
         this.mainPane = Pane;
         this.stage = stage;
         stage.setFullScreen(true);
@@ -232,7 +234,8 @@ public class ProfileMenu extends Application {
     }
 
     private void showProfileProtocol(){
-        mainPane.getChildren().remove(bigVbox);
+        if(mainPane.getChildren().size()>0)
+            mainPane.getChildren().remove(bigVbox);
         initializeMainVbox();
         initalizeLabel();
         initializeAvatarSection();
@@ -429,7 +432,7 @@ public class ProfileMenu extends Application {
             });
         back.setOnMouseClicked(event -> {
             try {
-                new MainMenu().start(SignUpMenu.stage);
+                new MainMenu().start(stage);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

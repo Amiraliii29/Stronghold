@@ -343,6 +343,7 @@ public class GameMenuController {
                     DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
 
                 result = true;
+                game.setAttackIcon();
                 break;
             }
         }
@@ -372,7 +373,7 @@ public class GameMenuController {
         }
 
         DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-        return ;
+        game.setAttackIcon();
     }
 
     public static void AttackBySelectedUnits(String enemyX, String enemyY){
@@ -473,7 +474,7 @@ public class GameMenuController {
     private static boolean doesUnitsHaveWeapons(int count, Unit unit) {
         if (!(unit instanceof Troop)) return true;
         ArrayList<Resource> neededWeapons = ((Troop) unit).getWeapons();
-
+        if(neededWeapons==null) return true;
         for (Resource resource : neededWeapons) {
             if (currentGovernment.getResourceInStockpiles(resource) < count)
                 return false;
