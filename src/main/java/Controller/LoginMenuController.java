@@ -9,11 +9,13 @@ import View.Enums.Messages.SignUpMenuMessages;
 import View.Input_Output;
 import View.LoginMenu;
 import View.MainMenu;
+import View.SignUpMenu;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
@@ -58,7 +60,7 @@ public class LoginMenuController {
 
     public void login(MouseEvent mouseEvent) throws Exception {
         String userName = username.getText();
-        String passWord = password.getText();
+        String passWord = UserInfoOperator.encodeStringToSha256(password.getText());;
         if (userName == null || passWord == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));
             username.setText("");
@@ -113,9 +115,7 @@ public class LoginMenuController {
 //        }
         else {
             User.setCurrentUser(targetUser);
-            DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
-
-            new MainMenu().start(DataBase.getMainStage());
+            new MainMenu().start(SignUpMenu.stage);
         }
     }
 
@@ -170,7 +170,7 @@ public class LoginMenuController {
         confirm.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(!user.getSecurityQuestion().equals(securityAnswer)){
+                if(!user.getSecurityQuestion().equals(securityAnswer.getText())){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText("login error");
                     alert.setContentText("incorrect answer to security question");
@@ -187,8 +187,7 @@ public class LoginMenuController {
 
                     try {
                         DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
-                        User.setCurrentUser(User.getUserByUserName(userName));
-                        new MainMenu().start(DataBase.getMainStage());
+                        new MainMenu().start(SignUpMenu.stage);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -197,7 +196,8 @@ public class LoginMenuController {
         });
     }
 
-    public void back(MouseEvent mouseEvent) {
-        //todo back to sign up menu
+    public void back(MouseEvent mouseEvent) throws Exception {
+        Stage stage = SignUpMenu.stage;
+        new SignUpMenu().start(stage);
     }
 }

@@ -107,9 +107,8 @@ public abstract class Building {
         return maximumHp;
     }
 
-    public boolean getCanPass(Boolean up) {
-        if (!up) return canPass;
-        return true;
+    public boolean getCanPass() {
+        return canPass;
     }
 
     public static LinkedList<String> getBuildingsNames() {

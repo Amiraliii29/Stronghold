@@ -45,14 +45,14 @@ public class SignUpMenu extends Application {
     VBox componentsVbox;
     StackPane mainPane;
 
-    Stage stage;
+    public static  Stage stage;
     int questionIndex=1;
 
     @Override
     public void start(Stage stage) throws Exception {
         StackPane Pane = FXMLLoader.load(SignUpMenu.class.getResource("/fxml/SignUpMenu.fxml"));
             mainPane=Pane;
-            this.stage=stage;
+            SignUpMenu.stage =stage;
             stage.setFullScreen(true);
         Scene scene = new Scene(Pane);
         stage.setScene(scene);

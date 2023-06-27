@@ -1,5 +1,6 @@
 package Model.Buildings;
 
+import Controller.GameMenuController;
 import Model.Government;
 import Model.Resource;
 import com.google.gson.Gson;
@@ -61,6 +62,7 @@ public class Barrack extends Building {
                 Barrack newBarrack = new Barrack(owner, barrack.name, barrack.width, barrack.length, xCoordinateLeft,
                         yCoordinateUp, barrack.lands, barrack.hp, barrack.resource, barrack.numberOfResource, barrack.cost,
                         barrack.canPass, barrack.troops);
+                if (!GameMenuController.constructBuilding(newBarrack)) return null;
                 if (owner != null) owner.addBuildings(newBarrack);
                 return newBarrack;
             }

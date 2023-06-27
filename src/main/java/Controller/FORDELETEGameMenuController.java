@@ -50,8 +50,8 @@ public class FORDELETEGameMenuController {
         //automatic fights
         ArrayList<Government> governments = DataBase.getGovernments();
         int index = governments.indexOf(currentGovernment);
-        if (index == governments.size() - 1)
-            DataBase.handleEndOfTurnFights();
+//        if (index == governments.size() - 1)
+//            DataBase.handleEndOfTurnFights();
 
         //change government
         if (index == governments.size() - 1)

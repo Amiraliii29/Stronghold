@@ -6,10 +6,7 @@ import Model.Square;
 import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.Transition;
 import javafx.util.Duration;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MoveAnimation {
@@ -34,7 +31,7 @@ public class MoveAnimation {
             move();
         }));
 
-        if (squares == null) timeline.setCycleCount(0);
+        if (squares == null || squares.size() == 0) timeline.setCycleCount(0);
         else timeline.setCycleCount(squares.size());
     }
 
@@ -62,5 +59,9 @@ public class MoveAnimation {
 
     public void play() {
         timeline.play();
+    }
+
+    public ArrayList<Square> getSquares() {
+        return squares;
     }
 }

@@ -47,7 +47,7 @@ public class Government {
         requestsIAsked = new ArrayList<>();
     }
 
-    public Government(double money) {
+    public  Government(double money) {
         this.money = money;
         this.food = 0;
         this.popularity = 0;
@@ -184,6 +184,12 @@ public class Government {
 
     public void addToRequestsIAsked(TradeRequest tradeRequest){
         requestsIAsked.add(tradeRequest);
+    }
+
+    public void removeFromResourceGenerationRate(String resource, int cnt) {
+        if (!resourceGenerationRate.containsKey(resource)) return;
+
+        resourceGenerationRate.put(resource, resourceGenerationRate.get(resource) - cnt);
     }
 
     public ArrayList<Stockpile> getStockpiles() {

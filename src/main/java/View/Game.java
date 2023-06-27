@@ -14,12 +14,12 @@ import View.Controller.GetCoordinate;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -27,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -36,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -86,9 +84,10 @@ public class Game extends Application{
     private static AnchorPane detail;
     private static int selectedX;
     private static int selectedY;
+    private  ArrayList<Government> governmentsInGame = new ArrayList<>();
 
     private Scene scene;
-    private final Map map;
+    public Map map;
     private Square[][] squares;
     private int squareI;
     private int squareJ;
@@ -99,6 +98,10 @@ public class Game extends Application{
     private Timeline errorTimeline;
     private double mouseX;
     private double mouseY;
+    private int keepOwnerGovernmentsCounter = 0;
+    private int turnUserNumber = 0;
+    private Button nextTurnButton = new Button();
+    private Label turnUser = new Label();
 
 
     static {
@@ -133,7 +136,6 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
-
     @Override
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
@@ -165,11 +167,27 @@ public class Game extends Application{
 
         drawMap();
         drawBottom();
+        drawNextTurnButton();
         keys();
 
         stage.setFullScreen(true);
         stage.show();
-        
+
+        placeGovernmentsKeep();
+    }
+
+
+
+    public  void addToGovernmentsInGame(Government government){
+        governmentsInGame.add(government);
+    }
+
+    private void placeGovernmentsKeep() {
+
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setContentText("Place Governments Keep Respectively");
+//        alert.showAndWait();
+
     }
 
     public static void setXY(int x, int y) {
@@ -293,11 +311,25 @@ public class Game extends Application{
                     }
                 }
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
-                selectSq.setX(leftX + blockX * blockPixel);
-                selectSq.setY(blockY * blockPixel);
-                selectSq.setWidth(blockPixel);
-                selectSq.setHeight(blockPixel);
-                selectSq.setVisible(true);
+                if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
+                    double endX = event.getX();
+                    double endY = event.getY();
+                    int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+                    int nowY = (int) (Math.floor(endY / blockPixel));
+
+                    building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY, "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY + 3, "Granary");
+                    keepOwnerGovernmentsCounter++;
+                    drawMap();
+                }
+                else {
+                    selectSq.setX(leftX + blockX * blockPixel);
+                    selectSq.setY(blockY * blockPixel);
+                    selectSq.setWidth(blockPixel);
+                    selectSq.setHeight(blockPixel);
+                    selectSq.setVisible(true);
+                }
             }
 
         });
@@ -359,31 +391,26 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
                 if (defenceBuildingToCreateName != null) {
                     building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     defenceBuildingToCreateName = null;
                     drawMap();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     barrackBuildingToCreateName = null;
                     drawMap();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     generatorBuildingToCreateName = null;
                     drawMap();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     townBuildingToCreateName = null;
                     drawMap();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
-                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     stockPileBuildingToCreateName = null;
                     drawMap();
                 }
@@ -398,13 +425,14 @@ public class Game extends Application{
                     }
                 }
 
-                if (selectedUnit.size() != 0)
+                if (selectedUnit.size() != 0) {
                     DataBase.setSelectedUnit(selectedUnit);
 
-                try {
-                    showSelectedSquares(nowX, nowY, selectedUnit);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    try {
+                        showSelectedSquares(nowX, nowY, selectedUnit);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
@@ -470,11 +498,10 @@ public class Game extends Application{
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
-            }
-            else if (keyCombinationShiftC.match(event)){
+            } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             }
-            // System.out.println("kir");
+            // System.out.println("...");
             // copiedBuildingName=Building.getBuildings().get(0).getName();
             // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
             // showCopiedBuildingImage();
@@ -482,11 +509,14 @@ public class Game extends Application{
         });
     }
 
+
+
     public void drawMap() {
         squares = map.getSquares();
         pane.getChildren().clear();
 
         ArrayList<Building> buildingsInMap = new ArrayList<>();
+        ArrayList<ImageView> unitImageView = new ArrayList<>();
 
         boolean check;
         int k = leftX, l = 0;
@@ -526,7 +556,7 @@ public class Game extends Application{
                         unitImage.setLayoutY(l);
                         unitImage.setFitHeight(blockPixel);
                         unitImage.setFitWidth(blockPixel);
-                        pane.getChildren().add(unitImage);
+                        unitImageView.add(unitImage);
                     }
 
                     if (squares[i][j].getBuilding() != null && !buildingsInMap.contains(squares[i][j].getBuilding()))
@@ -549,6 +579,9 @@ public class Game extends Application{
 
             pane.getChildren().add(buildingImage);
         }
+
+        for (ImageView imageView : unitImageView)
+            pane.getChildren().add(imageView);
 
         pane.getChildren().add(selectSq);
         selectSq.setVisible(false);
@@ -656,7 +689,9 @@ public class Game extends Application{
         mainPane.getChildren().add(selectedSquareInfo);
     }
 
-    private void showBuildingDetail(Building building) throws IOException {
+    public void showBuildingDetail(Building building) throws IOException {
+        bottomPane.getChildren().remove(detail);
+
         if (building.getName().equals("MercenaryPost")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/MercenaryPost.fxml")).toExternalForm()));
@@ -688,7 +723,31 @@ public class Game extends Application{
         } else if (building.getName().equals("DairyFarm")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
-        } else return;
+        } else if(building.getName().equals("Shop")){
+            System.out.println("shop clicked");
+            ShopMenu.openShopMenu(new Stage());
+        }else return;
+
+        if (building instanceof Defence) {
+            Label hp = new Label(String.valueOf(building.getHp()));
+            hp.setLayoutX(39);
+            hp.setLayoutY(41);
+            hp.setPrefWidth(35);
+            hp.setPrefHeight(37);
+            hp.setFont(new Font(18));
+            hp.setAlignment(Pos.CENTER);
+
+            Label maxHp = new Label(String.valueOf(building.getMaximumHp()));
+            maxHp.setLayoutX(105);
+            maxHp.setLayoutY(41);
+            maxHp.setPrefWidth(35);
+            maxHp.setPrefHeight(37);
+            maxHp.setFont(new Font(18));
+            maxHp.setAlignment(Pos.CENTER);
+
+            detail.getChildren().add(hp);
+            detail.getChildren().add(maxHp);
+        }
 
         detail.setLayoutX(115);
         detail.setLayoutY(30);
@@ -705,6 +764,8 @@ public class Game extends Application{
     }
 
     private void drawSquareInfo(Square square, Label landLabel, Label treeLabel, Label buildingLabel) throws IOException {
+        squareInfo.getChildren().clear();
+
         landLabel.setText(Land.getName(square.getLand()));
         landLabel.setTextFill(Color.WHITE);
 
@@ -749,6 +810,28 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
+
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
+    }
+
     public void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
@@ -790,58 +873,29 @@ public class Game extends Application{
         }
     }
 
-    public void move (int finalX, int finalY) {
-        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
+    public boolean move (int finalX, int finalY) {
+        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
+        if (allUnits == null) return false;
 
-        for (int i = 0; i < 8; i++) {
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
-                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
-                else
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
-
-                continue;
-            }
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Use Only 0-9");
-            return;
-        }
-
-
-        ArrayList<Unit> allUnits = new ArrayList<>();
+        ArrayList<Unit> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
+        boolean check = false;
 
-        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
-            ArrayList<Square> squaresChecked = new ArrayList<>();
+        for (ArrayList<Unit> selectedUnit : allUnits) {
+            MoveAnimation moveAnimation = new MoveAnimation(selectedUnit, finalX, finalY);
+            moveAnimations.add(moveAnimation);
+            unitForDataBase.addAll(selectedUnit);
 
-            for (Unit unit : DataBase.getSelectedUnit()) {
-                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
-
-                squaresChecked.add(unit.getSquare());
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
-
-                for (Unit squareUnit : unit.getSquare().getUnits()) {
-                    if (set.getValue() == 0) break;
-                    if (!squareUnit.getName().equals(set.getKey())) continue;
-
-                    selectedUnit.add(squareUnit);
-                    set.setValue(set.getValue() - 1);
-                }
-
-                if (selectedUnit.size() != 0)  {
-                    allUnits.addAll(selectedUnit);
-                    moveAnimations.add(new MoveAnimation(selectedUnit, finalX, finalY));
-                }
-            }
+            if (moveAnimation.getSquares() != null && moveAnimation.getSquares().size() != 0)
+                check = true;
         }
 
-        DataBase.setSelectedUnit(allUnits);
+        DataBase.setSelectedUnit(unitForDataBase);
 
         for (MoveAnimation animation : moveAnimations)
             animation.play();
+
+        return check;
     }
 
     private void moveGetCoordinate() {

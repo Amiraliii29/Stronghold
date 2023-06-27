@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="350.0" prefWidth="516.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.TradeMenuController">
+<AnchorPane prefHeight="350.0" prefWidth="516.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.TradeMenuController">
    <children>
       <ImageView fitHeight="362.0" fitWidth="621.0" preserveRatio="true">
          <image>
@@ -20,12 +19,17 @@
             <Font name="American Typewriter" size="24.0" />
          </font>
       </Label>
-      <Button layoutX="204.0" layoutY="175.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="213.0" text="Create new trade request" onMouseClicked="#openNewRequestPage">
+      <Button layoutX="204.0" layoutY="175.0" mnemonicParsing="false" onMouseClicked="#openNewRequestPage" prefHeight="28.0" prefWidth="213.0" text="Create new trade request">
          <font>
             <Font name="American Typewriter" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="204.0" layoutY="217.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="213.0" text="Show previous requests" onMouseClicked="#openPreviousRequestsPage">
+      <Button layoutX="204.0" layoutY="217.0" mnemonicParsing="false" onMouseClicked="#openPreviousRequestsPage" prefHeight="26.0" prefWidth="213.0" text="Show previous requests">
+         <font>
+            <Font name="American Typewriter" size="15.0" />
+         </font>
+      </Button>
+      <Button layoutX="276.0" layoutY="259.0" mnemonicParsing="false" onMouseClicked="#closeTradeMenu" prefHeight="28.0" prefWidth="70.0" text="Close">
          <font>
             <Font name="American Typewriter" size="15.0" />
          </font>

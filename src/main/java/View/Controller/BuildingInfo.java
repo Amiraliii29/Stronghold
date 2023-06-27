@@ -1,14 +1,12 @@
 package View.Controller;
 
-import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
 import Controller.GameMenuController;
-import Model.DataBase;
 
 public class BuildingInfo {
     public static ArrayList<String> imagesOrder;
@@ -36,120 +34,143 @@ public class BuildingInfo {
     }
 
 
-    public void archerBow(MouseEvent mouseEvent) {
+    public void archerBow(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("ArcherBow");
     }
 
-    public void slave(MouseEvent mouseEvent) {
+    public void slave(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("Slave");
     }
 
-    public void slinger(MouseEvent mouseEvent) {
+    public void slinger(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("Slinger");
     }
 
-    public void assassin(MouseEvent mouseEvent) {
+    public void assassin(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("Assassin");
     }
 
-    public void arabianSwordMan(MouseEvent mouseEvent) {
+    public void arabianSwordMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("ArabianSwordMan");
     }
 
-    public void horseArcher(MouseEvent mouseEvent) {
+    public void horseArcher(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("HorseArcher");
     }
 
-    public void fireThrower(MouseEvent mouseEvent) {
+    public void fireThrower(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("FireThrower");
     }
 
-    public void archer(MouseEvent mouseEvent) {
+    public void archer(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("Archer");
     }
 
-    public void spearMan(MouseEvent mouseEvent) {
+    public void spearMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("SpearMan");
     }
 
-    public void maceMan(MouseEvent mouseEvent) {
+    public void maceMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("MaceMan");
     }
 
-    public void crossBowMan(MouseEvent mouseEvent) {
+    public void crossBowMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("CrossBowMan");
     }
 
-    public void pikeMan(MouseEvent mouseEvent) {
+    public void pikeMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("PikeMan");
     }
 
-    public void swordMan(MouseEvent mouseEvent) {
+    public void swordMan(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("SwordMan");
     }
 
-    public void knight(MouseEvent mouseEvent) {
+    public void knight(MouseEvent ignoredMouseEvent) {
         GameMenuController.createUnitController("Knight");
     }
 
-    public void stanGround(MouseEvent mouseEvent) {
-        GameMenuController.setUnitModeController("stanGround");
+    public void ladderMan(MouseEvent ignoredMouseEvent) {
+        GameMenuController.createUnitController("LadderMan");
     }
 
-    public void defensive(MouseEvent mouseEvent) {
-        GameMenuController.setUnitModeController("defensive");
+    public void engineer(MouseEvent ignoredMouseEvent) {
+        GameMenuController.createUnitController("Engineer");
     }
 
-    public void aggressive(MouseEvent mouseEvent) {
+    public void tunneler(MouseEvent ignoredMouseEvent) {
+        GameMenuController.createUnitController("Tunneler");
+    }
+
+    public void stanGround(MouseEvent ignoredMouseEvent) {
+        GameMenuController.setUnitModeController("Standing");
+    }
+
+    public void defensive(MouseEvent ignoredMouseEvent) {
+        GameMenuController.setUnitModeController("Defensive");
+    }
+
+    public void aggressive(MouseEvent ignoredMouseEvent) {
         GameMenuController.setUnitModeController("Aggressive");
     }
 
-    public void stop(MouseEvent mouseEvent) {
+    public void stop(MouseEvent ignoredMouseEvent) {
 
     }
 
-    public void patrol(MouseEvent mouseEvent) {
+    public void patrol(MouseEvent ignoredMouseEvent) {
 
     }
 
-    public void attack(MouseEvent mouseEvent) {
+    public void attack(MouseEvent ignoredMouseEvent) {
 
     }
 
-    public void disband(MouseEvent mouseEvent) {
-
+    public void disband(MouseEvent ignoredMouseEvent) {
+        GameMenuController.disbandUnit();
     }
 
-    public void repair(MouseEvent mouseEvent) {
+    public void repair(MouseEvent ignoredMouseEvent) {
+        GameMenuController.repair();
     }
 
-    public void close(MouseEvent mouseEvent) {
+    public void close(MouseEvent ignoredMouseEvent) {
+        GameMenuController.modifyGates(false);
     }
 
-    public void open(MouseEvent mouseEvent) {
+    public void open(MouseEvent ignoredMouseEvent) {
+        GameMenuController.modifyGates(true);
     }
 
-    public void sword(MouseEvent mouseEvent) {
+    public void sword(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Sword");
     }
 
-    public void mace(MouseEvent mouseEvent) {
+    public void mace(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Mace");
     }
 
-    public void bow(MouseEvent mouseEvent) {
+    public void bow(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Bow");
     }
 
-    public void crossBow(MouseEvent mouseEvent) {
+    public void crossBow(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("CrossBow");
     }
 
-    public void spear(MouseEvent mouseEvent) {
+    public void spear(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Spear");
     }
 
-    public void pike(MouseEvent mouseEvent) {
+    public void pike(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Pike");
     }
 
-    public void leatherArmour(MouseEvent mouseEvent) {
+    public void leatherArmour(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("LeatherArmour");
     }
 
-    public void cheese(MouseEvent mouseEvent) {
+    public void cheese(MouseEvent ignoredMouseEvent) {
+        GameMenuController.changeProduct("Cheese");
     }
 }

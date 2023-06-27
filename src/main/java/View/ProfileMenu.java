@@ -427,6 +427,13 @@ public class ProfileMenu extends Application {
         changePassword.setOnMouseClicked(event -> {
             createChangePasswordDialog();
             });
+        back.setOnMouseClicked(event -> {
+            try {
+                new MainMenu().start(SignUpMenu.stage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void createChangePasswordDialog(){

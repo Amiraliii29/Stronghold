@@ -1,27 +1,22 @@
-package Controller;
+package View.Controller;
 
 import Model.DataBase;
-import Model.Government;
 import Model.Resource;
 import Model.User;
 import View.Enums.Messages.ShopMenuMessages;
+import View.Game;
 import View.ShopMenu;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 
 public class ShopMenuController {
@@ -32,6 +27,7 @@ public class ShopMenuController {
     private static HashMap<Resource, Integer> itemsBuyingPrice;
     private static HashMap<Resource, Integer> itemsSellingPrice;
     private static Resource selectedItem;
+    public static AnchorPane tradePane = new AnchorPane();
 
 
     static {
@@ -305,12 +301,16 @@ public class ShopMenuController {
             selectedItemName.setText("LeatherArmor");
         }
         public void openTradeMenu() throws IOException {
-            AnchorPane tradeMenuPane = FXMLLoader.load(
+            tradePane = FXMLLoader.load(
                     new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
+            tradePane.setLayoutX(Game.leftX);
+            tradePane.setLayoutY(0);
 
-            Scene scene = new Scene(tradeMenuPane);
-            Stage stage = DataBase.getTradeMenuStage();
-            stage.setScene(scene);
-            stage.show();
+            Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+            Game.mainPane.getChildren().add(tradePane);
         }
+
+    public void exitShopMenu(MouseEvent mouseEvent) {
+        Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+    }
 }

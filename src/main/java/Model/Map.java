@@ -83,22 +83,17 @@ public class Map {
 
 
     public boolean canConstructBuildingInPlace(Building building, int x, int y) {
-        boolean check = false;
         int width;
 
-        if (building.getName().equals("Keep")) width = building.getWidth()  + 4;
+        if (building.getName().equals("Keep")) width = building.getWidth()  + 3;
         else width = building.getWidth();
 
         for (int i = x; i < x + width; i++) {
             for (int j = y; j < y + building.getLength(); j++) {
-                for (String validLand : building.getLands()) {
-                    if (Land.getName(squares[i][j].getLand()).equals(validLand))
-                        check = true;
-                    if (squares[i][j].getBuilding() != null || squares[i][j].getTree() != null)
-                        return false;
-                }
-                if (!check) return false;
-                check = false;
+                if (!building.getLands().contains(Land.getName(squares[i][j].getLand()))
+                        || squares[i][j].getBuilding() != null
+                        || squares[i][j].getTree() != null)
+                    return false;
             }
         }
         return true;
@@ -250,6 +245,13 @@ public class Map {
             if (f.exists() && !f.isDirectory()) {
                 DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
                 GameMenuController.setMap(DataBase.getSelectedMap());
+
+                for (int i = 0; i < DataBase.getSelectedMap().getWidth() + 1; i++) {
+                    for (int j = 0; j < DataBase.getSelectedMap().getLength() + 1; j++) {
+                        DataBase.getSelectedMap().squares[i][j].newUnits();
+                    }
+                }
+
             } else {
                 DataBase.setSelectedMap(null);
                 GameMenuController.setMap(null);

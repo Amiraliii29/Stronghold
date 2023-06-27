@@ -1,6 +1,6 @@
 package Model;
 
-import Controller.ShopMenuController;
+import View.Controller.ShopMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
