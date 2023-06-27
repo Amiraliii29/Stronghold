@@ -36,29 +36,29 @@ public class ShopMenuController {
         itemsSellingPrice = new HashMap<>();
     }
 
-    public static Label meatAmount = new Label();
-    public static Label cheeseAmount = new Label();
-    public static Label appleAmount = new Label();
-    public static Label hopsAmount = new Label();
-    public static Label aleAmount = new Label();
-    public static Label wheatAmount = new Label();
-    public static Label flourAmount = new Label();
-    public static Label breadAmount = new Label();
-    public static Label swordAmount  = new Label();
-    public static Label spearAmount = new Label();
-    public static Label pikeAmount = new Label();
-    public static Label bowAmount = new Label();
-    public static Label maceAmount = new Label();
-    public static Label crossBowAmount = new Label();
-    public static Label metalArmorAmount = new Label();
-    public static Label leatherArmorAmount = new Label();
-    public static Label pitchAmount = new Label();
-    public static Label ironAmount = new Label();
-    public static Label woodAmount = new Label();
-    public static Label stoneAmount = new Label();
+    public Label meatAmount = new Label();
+    public Label cheeseAmount = new Label();
+    public Label appleAmount = new Label();
+    public Label hopsAmount = new Label();
+    public Label aleAmount = new Label();
+    public Label wheatAmount = new Label();
+    public Label flourAmount = new Label();
+    public  Label breadAmount = new Label();
+    public Label swordAmount  = new Label();
+    public Label spearAmount = new Label();
+    public Label pikeAmount = new Label();
+    public Label bowAmount = new Label();
+    public Label maceAmount = new Label();
+    public  Label crossBowAmount = new Label();
+    public  Label metalArmorAmount = new Label();
+    public  Label leatherArmorAmount = new Label();
+    public  Label pitchAmount = new Label();
+    public  Label ironAmount = new Label();
+    public  Label woodAmount = new Label();
+    public  Label stoneAmount = new Label();
     public Label selectedItemName;
 
-    public static void setItemsAmount(){
+    public void setItemsAmount(){
         
         meatAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Meat"))));
         cheeseAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Cheese"))));
@@ -74,12 +74,12 @@ public class ShopMenuController {
         bowAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Bow"))));
         maceAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Mace"))));
         crossBowAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("CrossBow"))));
-        metalArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("MetalArmor"))));
-        leatherArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("LeatherArmor"))));
-        pitchAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Pitch"))));
         ironAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Iron"))));
         woodAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Wood"))));
         stoneAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Stone"))));
+        metalArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("MetalArmour"))));
+        leatherArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("LeatherArmour"))));
+        pitchAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Pitch"))));
 
     }
 
@@ -87,19 +87,7 @@ public class ShopMenuController {
         items.add(resource);
     }
 
-    public static void setNewPrices() {
 
-    }
-
-    public static String showItemsController(){
-        String toReturn = "";
-        int itemsCounter = 1;
-        for (Resource item : items) {
-            toReturn += itemsCounter + ". " + item.getName() + " = " + item.getBuyPrice()  + " (gold)\n";
-            itemsCounter++;
-        }
-        return toReturn;
-    }
 
 
     public static ShopMenuMessages buyItemByNameController(String name) {
@@ -155,149 +143,158 @@ public class ShopMenuController {
 
     public void buy(MouseEvent mouseEvent) {
         ShopMenuMessages message = buyItemByNameController(selectedItem.getName());
-        Alert error = new Alert(Alert.AlertType.ERROR);
-        error.setHeaderText("buy item error");
         switch (message){
             case NO_ITEM_SELECTED -> {
-                error.setContentText("NO item selected!");
-                error.showAndWait();
+                Game.showErrorText("NO item selected!");
             }
             case NOT_ENOUGH_BALANCE -> {
-                error.setContentText("Not enough balance :|");
-                error.showAndWait();
+                Game.showErrorText("Not enough balance :|");
             }
             case NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE -> {
-                error.setContentText("Not enough free space in wareHouse :|");
-                error.showAndWait();
+                Game.showErrorText("Not enough free space in wareHouse :|");
             }
             case BUY_ITEM_SUCCESS -> {
-                Alert success = new Alert(Alert.AlertType.INFORMATION);
-                success.setHeaderText("Success");
-                success.setContentText("Item bought successfully");
-                success.showAndWait();
+                Game.showErrorText("Item bought successfully");
             }
         }
+        setItemsAmount();
+        GameGraphicController.setPopularityGoldPopulation();
     }
 
     public void sell(MouseEvent mouseEvent) {
         ShopMenuMessages message = sellItemByNameController(selectedItem.getName());
-        Alert error = new Alert(Alert.AlertType.ERROR);
-        error.setHeaderText("Sell item error");
 
         switch (message){
             case NO_ITEM_SELECTED -> {
-                error.setContentText("NO item selected!");
-                error.showAndWait();
+                Game.showErrorText("NO item selected!");
             }
             case NOT_ENOUGH_ITEM_IN_STOCKPILE -> {
-                error.setContentText("There is no " + selectedItem.getName() + " in warehouse");
-                error.showAndWait();
+                Game.showErrorText("There is no " + selectedItem.getName() + " in warehouse");
             }
             case SELL_ITEM_SUCCESS -> {
-                Alert success = new Alert(Alert.AlertType.INFORMATION);
-                success.setHeaderText("Success");
-                success.setContentText("Item Sold Successfully :)");
-                success.showAndWait();
+                Game.showErrorText("Item Sold Successfully :)");
             }
         }
+        setItemsAmount();
+        GameGraphicController.setPopularityGoldPopulation();
     }
     
         public void selectApples (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Apples");
             selectedItemName.setText("Apples");
         }
 
         public void selectWheat (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Wheat");
             selectedItemName.setText("Wheat");
         }
 
         public void selectAle (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Ale");
             selectedItemName.setText("Ale");
         }
 
         public void selectHops (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Hops");
             selectedItemName.setText("Hops");
         }
 
         public void selectFlour (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Flour");
             selectedItemName.setText("Flour");
         }
 
         public void selectBread (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Bread");
             selectedItemName.setText("Bread");
         }
 
         public void selectCheese (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Cheese");
             selectedItemName.setText("Cheese");
         }
 
         public void selectMeat (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Meat");
             selectedItemName.setText("Meat");
         }
 
         public void selectSword (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Sword");
             selectedItemName.setText("Sword");
         }
 
         public void selectSpear (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Spear");
             selectedItemName.setText("Spear");
         }
 
         public void selectPike (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Pike");
             selectedItemName.setText("Pike");
         }
 
         public void selectMace (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Mace");
             selectedItemName.setText("Mace");
         }
 
         public void selectBow (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Bow");
             selectedItemName.setText("Bow");
         }
 
         public void selectCrossBow (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("CrossBow");
             selectedItemName.setText("CrossBow");
         }
 
         public void selectMetalArmor (MouseEvent mouseEvent){
-            selectedItem = Resource.getResourceByName("MetalArmor");
+            setItemsAmount();
+            selectedItem = Resource.getResourceByName("MetalArmour");
             selectedItemName.setText("MetalArmour");
         }
 
         public void selectIron (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Iron");
             selectedItemName.setText("Iron");
         }
 
         public void selectStone (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Stone");
             selectedItemName.setText("Stone");
         }
 
         public void selectWood (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Wood");
             selectedItemName.setText("Wood");
         }
 
         public void selectPitch (MouseEvent mouseEvent){
+            setItemsAmount();
             selectedItem = Resource.getResourceByName("Pitch");
             selectedItemName.setText("Pitch");
         }
         public void selectLeatherArmor (MouseEvent mouseEvent){
-            selectedItem = Resource.getResourceByName("LeatherArmor");
+            setItemsAmount();
+            selectedItem = Resource.getResourceByName("LeatherArmour");
             selectedItemName.setText("LeatherArmor");
         }
         public void openTradeMenu() throws IOException {

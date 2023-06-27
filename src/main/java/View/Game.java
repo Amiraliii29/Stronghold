@@ -136,6 +136,10 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
+    public  void addToGovernmentsInGame(Government government){
+        governmentsInGame.add(government);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
@@ -176,10 +180,30 @@ public class Game extends Application{
         placeGovernmentsKeep();
     }
 
+    public ArrayList<Government> getGovernmentsInGame() {
+        return governmentsInGame;
+    }
 
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
 
-    public  void addToGovernmentsInGame(Government government){
-        governmentsInGame.add(government);
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
 
     private void placeGovernmentsKeep() {
@@ -271,6 +295,7 @@ public class Game extends Application{
                 robot.mouseMove(Math.min(Math.max(minX, x), maxX), y);
             }
         });
+
 
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
@@ -393,26 +418,31 @@ public class Game extends Application{
                     building = Defence.createDefence(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , defenceBuildingToCreateName);
                     defenceBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
                     barrackBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
                     generatorBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
                     townBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
                     stockPileBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 building = null;
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
@@ -479,7 +509,9 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
+            }else if(event.getCode() == KeyCode.E){
+                clear();
+            }else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
                 if (customizePane == null) {
                     try {
                         building = null;
@@ -810,29 +842,7 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
-    public void drawNextTurnButton() {
-        nextTurnButton.setLayoutX(leftX + 997);
-        nextTurnButton.setLayoutY(screenHeight - 65);
-        nextTurnButton.setText("Next Turn");
-        nextTurnButton.setOnMouseClicked(event -> {
-            turnUserNumber++;
-            turnUserNumber %= governmentsInGame.size();
-
-            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
-            GameMenuController.setCurrentGovernment();
-            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
-        });
-
-        turnUser.setLayoutX(leftX + 1014);
-        turnUser.setLayoutY(screenHeight - 30);
-        turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
-
-        mainPane.getChildren().addAll(nextTurnButton , turnUser);
-    }
-
-    public void showErrorText(String errorText) {
+    public static void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -848,8 +858,8 @@ public class Game extends Application{
 
         errorPane.getChildren().add(error);
         mainPane.getChildren().add(errorPane);
-
-        errorTimeline.playFromStart();
+//todo uncomment
+//        errorTimeline.playFromStart();
     }
 
     private void initializeDetailsTextFields(){
@@ -939,6 +949,7 @@ public class Game extends Application{
         });
         System.out.println(copiedBuildingName);
     }
+
 
     private void showCopiedBuildingImage(){
         mainPane.getChildren().remove(copiedBuilding);
