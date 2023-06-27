@@ -136,10 +136,6 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
-    public  void addToGovernmentsInGame(Government government){
-        governmentsInGame.add(government);
-    }
-
     @Override
     public void start(Stage stage) throws Exception {
         mainPane = new Pane();
@@ -180,26 +176,10 @@ public class Game extends Application{
         placeGovernmentsKeep();
     }
 
-    public void drawNextTurnButton() {
-        nextTurnButton.setLayoutX(leftX + 997);
-        nextTurnButton.setLayoutY(screenHeight - 65);
-        nextTurnButton.setText("Next Turn");
-        nextTurnButton.setOnMouseClicked(event -> {
-            turnUserNumber++;
-            turnUserNumber %= governmentsInGame.size();
 
-            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
-            GameMenuController.setCurrentGovernment();
-            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
-        });
 
-        turnUser.setLayoutX(leftX + 1014);
-        turnUser.setLayoutY(screenHeight - 30);
-        turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-
-        mainPane.getChildren().addAll(nextTurnButton , turnUser);
+    public  void addToGovernmentsInGame(Government government){
+        governmentsInGame.add(government);
     }
 
     private void placeGovernmentsKeep() {
@@ -830,6 +810,28 @@ public class Game extends Application{
         }
 
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
+    }
+
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
+
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
 
     public void showErrorText(String errorText) {
