@@ -102,7 +102,7 @@ public class Game extends Application{
     private double mouseY;
     private int keepOwnerGovernmentsCounter = 0;
     private int turnUserNumber = 0;
-    private Button nextTurnButton = new Button();
+    private Button nextTurnButton;
     private Label turnUser = new Label();
 
 
@@ -187,6 +187,7 @@ public class Game extends Application{
     }
 
     public void drawNextTurnButton() {
+        nextTurnButton = new Button();
         nextTurnButton.setLayoutX(leftX + 997);
         nextTurnButton.setLayoutY(screenHeight - 65);
         nextTurnButton.setText("Next Turn");
@@ -194,6 +195,9 @@ public class Game extends Application{
             turnUserNumber++;
             turnUserNumber %= governmentsInGame.size();
 
+            turnUser.setLayoutX(leftX + 1014);
+            turnUser.setLayoutY(screenHeight - 30);
+            turnUser.setTextFill(Color.BLUEVIOLET);
             turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
             DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
             GameMenuController.setCurrentGovernment();
@@ -209,10 +213,7 @@ public class Game extends Application{
     }
 
     private void placeGovernmentsKeep() {
-
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setContentText("Place Governments Keep Respectively");
-//        alert.showAndWait();
+        
 
     }
 
@@ -344,11 +345,11 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 5 ,  squareJ + nowY + 5 , "Stockpile");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX - 5, squareJ + nowY - 5 , "Granary");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI + nowX + 10 , squareJ + nowY + 10 , "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI + nowX - 10 , squareJ + nowY - 10 , "Granary");
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 100);
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 25);
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 100);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 200);
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
