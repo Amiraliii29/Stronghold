@@ -31,8 +31,9 @@ public class MainMenuController {
     }
 
     public void openProfileMenu(MouseEvent mouseEvent) throws Exception {
+        SignUpMenu.stage.setFullScreen(true);
         new ProfileMenu().start(SignUpMenu.stage);
-        System.out.println("ff");
+        SignUpMenu.stage.setFullScreen(true);
     }
 
     public void logout(MouseEvent mouseEvent) throws Exception {
