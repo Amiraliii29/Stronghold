@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class GetCoordinate extends Application {
-    private static Stage stage;
+    public Stage stage;
     public TextField xCoordinate;
     public TextField yCoordinate;
 

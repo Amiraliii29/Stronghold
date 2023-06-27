@@ -8,6 +8,7 @@ import Model.Resource;
 import Model.Square;
 import Model.Units.*;
 import View.Controller.BuildingInfo;
+import View.Controller.GameGraphicController;
 import View.Game;
 import javafx.scene.control.Alert;
 import java.io.IOException;
@@ -114,6 +115,8 @@ public class GameMenuController {
         int startX = unit.getXCoordinate();
         int startY = unit.getYCoordinate();
         boolean up = map.getSquareFromMap(startX, startY).getBuilding() instanceof Defence;
+        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher"))
+            up = false;
 
         if (move(unit, startX, startY, x, y, Unit.getMaxDistance(), up)) {
             int size = 1000;
@@ -386,6 +389,7 @@ public class GameMenuController {
             DataBase.setSelectedUnit(unitsByType.get(unitType));
             attackBySingleType(enemyX, enemyY);
         }
+        game.drawMap();
     }
 
 
@@ -429,6 +433,7 @@ public class GameMenuController {
 
         currentGovernment.changeMoney(-count * unit.getCost());
         currentGovernment.changeFreeWorkers(-count);
+        GameGraphicController.setPopularityGoldPopulation();
 
         for (int i = 0; i < count; i++) {
             if (unit.getName().equals("Engineer")) {

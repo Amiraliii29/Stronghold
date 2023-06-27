@@ -18,10 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -70,7 +67,7 @@ public class Game extends Application{
     private ImageView attackIcon;
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
-    private static Pane squareInfo;
+    private static Tooltip tooltip;
     private static Pane selectedSquareInfo;
     private ImageView copiedBuilding;
     public static String copiedBuildingName;
@@ -239,31 +236,11 @@ public class Game extends Application{
     }
 
     private void setTimelines() throws IOException {
-        squareInfo = FXMLLoader.load(
-                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/SquareInfo.fxml")).toExternalForm()));
-        squareInfo.setLayoutX(leftX + screenWidth + 50);
-        squareInfo.setLayoutY(50);
-
-        Label landLabel = new Label();
-        landLabel.setLayoutY(25);
-        landLabel.setAlignment(Pos.CENTER);
-        landLabel.setPrefHeight(25);
-        landLabel.setPrefWidth(100);
-        squareInfo.getChildren().add(landLabel);
-
-        Label treeLabel = new Label();
-        treeLabel.setLayoutY(75);
-        treeLabel.setAlignment(Pos.CENTER);
-        treeLabel.setPrefHeight(25);
-        treeLabel.setPrefWidth(100);
-        squareInfo.getChildren().add(treeLabel);
-
-        Label buildingLabel = new Label();
-        buildingLabel.setLayoutY(125);
-        buildingLabel.setAlignment(Pos.CENTER);
-        buildingLabel.setPrefHeight(25);
-        buildingLabel.setPrefWidth(100);
-        squareInfo.getChildren().add(buildingLabel);
+        tooltip = new Tooltip();
+        tooltip.setShowDelay(Duration.seconds(20));
+        tooltip.setWrapText(true);
+        Tooltip.install(mainPane, tooltip);
+        tooltip.hide();
 
         hoverTimeline = new Timeline(new KeyFrame(Duration.seconds(3), actionEvent -> {
             int nowX = (int) (Math.floor((mouseX - leftX) / blockPixel));
@@ -271,7 +248,7 @@ public class Game extends Application{
 
             try {
                 if (isCordInMap(mouseX, mouseY))
-                    drawSquareInfo(squares[nowX + squareI][squareJ + nowY], landLabel, treeLabel, buildingLabel);
+                    drawSquareInfo(squares[nowX + squareI][squareJ + nowY], mouseX, mouseY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -298,7 +275,6 @@ public class Game extends Application{
                 robot.mouseMove(Math.min(Math.max(minX, x), maxX), y);
             }
         });
-
 
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
@@ -328,8 +304,9 @@ public class Game extends Application{
                     String targetY=Integer.toString(squareJ + blockY);
                     GameMenuController.AttackBySelectedUnits(targetX,targetY);
                 }
-                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
-                    //TODO : Show bound for building !
+                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null
+                        && squares[squareI + blockX][squareJ + blockY].getBuilding().getOwner().equals(DataBase.getCurrentGovernment())) {
+
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
                         showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
@@ -345,11 +322,12 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI + nowX + 10 , squareJ + nowY + 10 , "Stockpile");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI + nowX - 10 , squareJ + nowY - 10 , "Granary");
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 100);
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 25);
-                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 200);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6 ,  squareJ + nowY, "Stockpile");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 80);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 75);
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6, squareJ + nowY + 3 , "Granary");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 75);
+
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
@@ -371,7 +349,6 @@ public class Game extends Application{
             if (customizePane == null && (endX < minX || endX > maxX)) {
                 robot.mouseMove(Math.min(Math.max(minX, endX), maxX), endY);
             }
-            mainPane.getChildren().remove(squareInfo);
 
             boolean draw = false;
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
@@ -476,7 +453,7 @@ public class Game extends Application{
             mouseX = event.getX();
             mouseY = event.getY();
 
-            mainPane.getChildren().remove(squareInfo);
+            tooltip.hide();
 
             hoverTimeline.playFromStart();
         });
@@ -538,10 +515,7 @@ public class Game extends Application{
             } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             }
-            // System.out.println("...");
-            // copiedBuildingName=Building.getBuildings().get(0).getName();
-            // DataBase.setSelectedBuilding(Building.getBuildingByName(copiedBuildingName));
-            // showCopiedBuildingImage();
+
             
         });
     }
@@ -771,7 +745,7 @@ public class Game extends Application{
             hp.setLayoutY(41);
             hp.setPrefWidth(35);
             hp.setPrefHeight(37);
-            hp.setFont(new Font(18));
+            hp.setFont(new Font(15));
             hp.setAlignment(Pos.CENTER);
 
             Label maxHp = new Label(String.valueOf(building.getMaximumHp()));
@@ -779,7 +753,7 @@ public class Game extends Application{
             maxHp.setLayoutY(41);
             maxHp.setPrefWidth(35);
             maxHp.setPrefHeight(37);
-            maxHp.setFont(new Font(18));
+            maxHp.setFont(new Font(15));
             maxHp.setAlignment(Pos.CENTER);
 
             detail.getChildren().add(hp);
@@ -800,18 +774,10 @@ public class Game extends Application{
         mainPane.getChildren().add(customizePane);
     }
 
-    private void drawSquareInfo(Square square, Label landLabel, Label treeLabel, Label buildingLabel) throws IOException {
-        squareInfo.getChildren().clear();
-
-        landLabel.setText(Land.getName(square.getLand()));
-        landLabel.setTextFill(Color.WHITE);
-
-        treeLabel.setText(Trees.getName(square.getTree()));
-        treeLabel.setTextFill(Color.WHITE);
-
-        if (square.getBuilding() != null) buildingLabel.setText(square.getBuilding().getName());
-        else buildingLabel.setText("--");
-        buildingLabel.setTextFill(Color.WHITE);
+    private void drawSquareInfo(Square square, double x, double y) throws IOException {
+        String text = "land : " + Land.getName(square.getLand()) + "\n";
+        if (square.getTree() != null) text += "tree : " + Trees.getName(square.getTree()) + "\n";
+        if (square.getBuilding() != null) text += "building : " + square.getBuilding().getName() + "\n";
 
         HashMap<Unit,Integer> unitCount = new HashMap<>();
         for (Unit unit : square.getUnits()) {
@@ -822,32 +788,14 @@ public class Game extends Application{
                 unitCount.put(unit, 1);
         }
 
-        int y = 175;
-        for (java.util.Map.Entry<Unit, Integer> set : unitCount.entrySet()) {
-            ImageView unitImage = new ImageView(units.get(set.getKey().getName()));
-            unitImage.setLayoutX(10);
-            unitImage.setLayoutY(y);
-            unitImage.setFitWidth(40);
-            unitImage.setFitHeight(40);
+        for (java.util.Map.Entry<Unit, Integer> set : unitCount.entrySet())
+            text += set.getKey().toString() + " count : " + set.getValue() + "\n";
 
-            Label unitCnt = new Label(set.getValue().toString());
-            unitCnt.setLayoutX(60);
-            unitCnt.setLayoutY(y);
-            unitCnt.setAlignment(Pos.CENTER);
-            unitCnt.setPrefHeight(40);
-            unitCnt.setPrefWidth(40);
-            unitCnt.setTextFill(Color.WHITE);
-
-            squareInfo.getChildren().add(unitImage);
-            squareInfo.getChildren().add(unitCnt);
-
-            y += 50;
-        }
-
-        if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
+        tooltip.setText(text);
+        tooltip.show(mainPane, x, y);
     }
 
-    public  void showErrorText(String errorText) {
+    public void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -914,16 +862,26 @@ public class Game extends Application{
     }
 
     private void moveGetCoordinate() {
-        new GetCoordinate();
+        GetCoordinate getCoordinate = new GetCoordinate();
+        try {
+            getCoordinate.start(getCoordinate.stage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (selectedX != -1 && selectedY != -1) {
-
+            move(selectedX, selectedY);
         }
     }
 
     private void attackGetCoordinate() {
-        new GetCoordinate();
+        GetCoordinate getCoordinate = new GetCoordinate();
+        try {
+            getCoordinate.start(getCoordinate.stage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (selectedX != -1 && selectedY != -1) {
-
+            GameMenuController.AttackBySelectedUnits(String.valueOf(selectedX), String.valueOf(selectedY));
         }
     }
 
@@ -954,7 +912,6 @@ public class Game extends Application{
         });
         System.out.println(copiedBuildingName);
     }
-
 
     private void showCopiedBuildingImage(){
         mainPane.getChildren().remove(copiedBuilding);

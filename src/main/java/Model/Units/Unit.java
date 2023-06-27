@@ -139,6 +139,20 @@ public abstract class Unit {
         return;
     }
 
+
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "name='" + name + '\'' +
+                ", speed=" + speed +
+                ", hitPoint=" + hitPoint +
+                ", damage=" + damage +
+                ", attackRange=" + attackRange +
+                ", stateUnits=" + stateUnits +
+                ", cost=" + cost +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
