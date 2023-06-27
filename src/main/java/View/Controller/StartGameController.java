@@ -20,8 +20,15 @@ public class StartGameController {
     public TextField user6Name;
     public TextField user7Name;
     public TextField user8Name;
+    private static int startGameFlag = 1;
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
+
+        Unit.load();
+        Building.load();
+        Resource.load();
+        Game.loadImages();
+
         String mapNameText = mapName.getText();
         String user2NameText = user2Name.getText();
         String user3NameText = user3Name.getText();
@@ -59,6 +66,7 @@ public class StartGameController {
         if(user2NameText != ""){
             User user2 = User.getUserByUserName(user2NameText);
             if(user2 == null){
+                startGameFlag = 0;
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Start Game error!");
                 alert.setContentText("Invalid User2 Name");
@@ -68,6 +76,7 @@ public class StartGameController {
                 government2.setOwner(user2);
                 DataBase.addGovernment(government2);
                 game.addToGovernmentsInGame(government2);
+                startGameFlag = 1;
             }
         }
         if(user3NameText != ""){
@@ -82,6 +91,9 @@ public class StartGameController {
                 government3.setOwner(user3);
                 DataBase.addGovernment(government3);
                 game.addToGovernmentsInGame(government3);
+                government3.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government3.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government3.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
         if(user4NameText != ""){
@@ -96,6 +108,9 @@ public class StartGameController {
                 government4.setOwner(user4);
                 DataBase.addGovernment(government4);
                 game.addToGovernmentsInGame(government4);
+                government4.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government4.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government4.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
         if(user5NameText != ""){
@@ -110,6 +125,9 @@ public class StartGameController {
                 government5.setOwner(user5);
                 DataBase.addGovernment(government5);
                 game.addToGovernmentsInGame(government5);
+                government5.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government5.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government5.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
         if(user6NameText != ""){
@@ -124,35 +142,49 @@ public class StartGameController {
                 government6.setOwner(user6);
                 DataBase.addGovernment(government6);
                 game.addToGovernmentsInGame(government6);
+                government6.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government6.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government6.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
         if(user7NameText != ""){
-            Government government7 = DataBase.getGovernmentByUserName(user7NameText);
-            if(government7 == null){
+            User user7 = User.getUserByUserName(user7NameText);
+            if(user7 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Start Game error!");
                 alert.setContentText("Invalid User7 Name");
                 alert.showAndWait();
+            }else {
+                Government government7 = new Government(1000);
+                government7.setOwner(user7);
+                DataBase.addGovernment(government7);
+                game.addToGovernmentsInGame(government7);
+                government7.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government7.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government7.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
-            game.addToGovernmentsInGame(government7);
         }
         if(user8NameText != ""){
-            Government government8 = DataBase.getGovernmentByUserName(user8NameText);
-            if(government8 == null){
+            User user8 = User.getUserByUserName(user6NameText);
+            if(user8 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Start Game error!");
-                alert.setContentText("Invalid User8 Name");
+                alert.setContentText("Invalid User6 Name");
                 alert.showAndWait();
+            }else {
+                Government government8 = new Government(1000);
+                government8.setOwner(user8);
+                DataBase.addGovernment(government8);
+                game.addToGovernmentsInGame(government8);
+                government8.addToStockpile(Resource.getResourceByName("Stone") , 100);
+                government8.addToStockpile(Resource.getResourceByName("Bread") , 25);
+                government8.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
-            game.addToGovernmentsInGame(government8);
         }
-        //start that fucking game
-        Unit.load();
-        Building.load();
-        Resource.load();
-        Game.loadImages();
 
-        game.start(SignUpMenu.stage);
+        //start that fucking game
+        if(startGameFlag == 1)
+            game.start(SignUpMenu.stage);
     }
 
     public void backToMainMenu(MouseEvent mouseEvent) throws Exception {

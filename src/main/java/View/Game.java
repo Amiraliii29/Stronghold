@@ -343,8 +343,11 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY, "Stockpile");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY + 3, "Granary");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 5 ,  squareJ + nowY + 5 , "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX - 5, squareJ + nowY - 5 , "Granary");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 100);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 25);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 100);
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }

@@ -27,13 +27,13 @@ public class TradeMenuController {
     public Label selectedItemAmount;
     public static TextField Message;
     public Label selectedItemName;
-    public CheckBox User1;
-    public CheckBox User2;
-    public CheckBox User3;
-    public CheckBox User4;
-    public CheckBox User5;
-    public CheckBox User6;
-    public CheckBox User7;
+    public CheckBox  User1 = new CheckBox();
+    public CheckBox User2 = new CheckBox();
+    public CheckBox User3 = new CheckBox();
+    public CheckBox User4 = new CheckBox();
+    public CheckBox User5 = new CheckBox();
+    public CheckBox User6 = new CheckBox();
+    public CheckBox User7 = new CheckBox();
 
     private static TradeRequest selectedTradeRequest;
     private static Button selectedRequestsRejectButton;
