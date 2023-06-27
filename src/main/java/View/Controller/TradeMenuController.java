@@ -1,6 +1,7 @@
 package View.Controller;
 
-import View.Controller.ShopMenuController;
+import Controller.GameMenuController;
+import Controller.Orders;
 import Model.*;
 import View.Enums.Messages.TradeMenuMessages;
 import View.Game;
@@ -12,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,22 +25,16 @@ public class TradeMenuController {
     private static Resource selectedItem;
     private static int itemAmount = 0;
     public Label selectedItemAmount;
-    public static TextField Message;
-    public Label selectedItemName;
-    public CheckBox  User1 = new CheckBox();
-    public CheckBox User2 = new CheckBox();
-    public CheckBox User3 = new CheckBox();
-    public CheckBox User4 = new CheckBox();
-    public CheckBox User5 = new CheckBox();
-    public CheckBox User6 = new CheckBox();
-    public CheckBox User7 = new CheckBox();
+    public TextField Message;
+    public Label selectedItemName ;
 
     private static TradeRequest selectedTradeRequest;
     private static Button selectedRequestsRejectButton;
     private static Button getSelectedRequestsAcceptButton;
     public static AnchorPane tradeMenuHistoryPane = new AnchorPane();
     public static AnchorPane tradeNewRequestPane = new AnchorPane();
-
+    public Label allGovernmentsName;
+    public TextField governmentName;
 
 
     public static TradeMenuMessages acceptTradeByRequest() {
@@ -74,6 +68,11 @@ public class TradeMenuController {
 
 
     public void openNewRequestPage(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
+
         tradeNewRequestPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeNewRequest.fxml").toExternalForm()));
 
@@ -91,38 +90,24 @@ public class TradeMenuController {
         Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
         Game.mainPane.getChildren().add(tradeNewRequestPane);
         //setGovernmentsName in menu
-        if(1 <= governmentsInGameOtherThanCurrentUser.size())
-            User1.setText(governmentsInGameOtherThanCurrentUser.get(0).getOwner().getUsername());
-        else
-            User1.setVisible(false);
-        if(2 <= governmentsInGameOtherThanCurrentUser.size())
-            User2.setText(governmentsInGameOtherThanCurrentUser.get(1).getOwner().getUsername());
-        else
-            User2.setVisible(false);
-        if(3 <= governmentsInGameOtherThanCurrentUser.size())
-            User3.setText(governmentsInGameOtherThanCurrentUser.get(2).getOwner().getUsername());
-        else
-            User3.setVisible(false);
-        if(4 <= governmentsInGameOtherThanCurrentUser.size())
-            User4.setText(governmentsInGameOtherThanCurrentUser.get(3).getOwner().getUsername());
-        else
-            User4.setVisible(false);
-        if(5 <= governmentsInGameOtherThanCurrentUser.size())
-            User5.setText(governmentsInGameOtherThanCurrentUser.get(4).getOwner().getUsername());
-        else
-            User5.setVisible(false);
-        if(6 <= governmentsInGameOtherThanCurrentUser.size())
-            User6.setText(governmentsInGameOtherThanCurrentUser.get(5).getOwner().getUsername());
-        else
-            User6.setVisible(false);
-        if(7 <= governmentsInGameOtherThanCurrentUser.size())
-            User7.setText(governmentsInGameOtherThanCurrentUser.get(6).getOwner().getUsername());
-        else
-            User7.setVisible(false);
+        String allGovernmentsNameString = "";
+        for (Government government : governmentsInGameOtherThanCurrentUser) {
+            allGovernmentsNameString += government.getOwner().getUsername() + "  |";
+        }
+        allGovernmentsName = new Label();
+        allGovernmentsName.setLayoutX(31);
+        allGovernmentsName.setLayoutY(122);
+        allGovernmentsName.setText(allGovernmentsNameString);
+        tradeNewRequestPane.getChildren().add(allGovernmentsName);
 
     }
 
     public void openPreviousRequestsPage(MouseEvent mouseEvent) throws IOException {
+        Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
+
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
         tradeMenuHistoryPane.setLayoutX(Game.leftX);
@@ -231,16 +216,17 @@ public class TradeMenuController {
         selectedItemName.setText("LeatherArmour");
     }
 
-    public static TradeMenuMessages sendTradeRequestController( int priceInt) {
+    public static TradeMenuMessages sendTradeRequestController( int priceInt , String message) {
         if (selectedItem == null)
             return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
         if(governmentToTrade== null)
             return TradeMenuMessages.INVALID_GOVERNMENT_NAME;
-        if(Message.getText() == null)
+        if (message == null)
             return TradeMenuMessages.ENTER_MESSAGE;
         else {
             TradeRequest tradeRequest = new TradeRequest(selectedItem, itemAmount , priceInt
-                    , Message.getText() , governmentToTrade , allRequests.size() + 1 , false);
+                    , message , governmentToTrade , GameMenuController.getGame().requestAndDonatesCounter , false);
+            GameMenuController.getGame().requestAndDonatesCounter++;
             //add to history
             governmentToTrade.addToRequestsAskedFromMe(tradeRequest);
             DataBase.getCurrentGovernment().addToRequestsIAsked(tradeRequest);
@@ -252,7 +238,8 @@ public class TradeMenuController {
         }
     }
     public void request(MouseEvent mouseEvent) {
-        TradeMenuMessages menuMessages = sendTradeRequestController( 0 );
+        String messageString = Message.getText();
+        TradeMenuMessages menuMessages = sendTradeRequestController( 0  , messageString);
         selectedItem = null;
         Message.setText("");
         itemAmount = 0;
@@ -261,33 +248,25 @@ public class TradeMenuController {
 
         switch (menuMessages){
             case NOT_ENOUGH_OPTIONS -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Send trade request error");
-                alert.setContentText("Please first select the item you want to trade");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Request Error" , ""
+                , "Please first select the item you want to trade" , Orders.redNotifErrorColor);
             }
             case INVALID_GOVERNMENT_NAME -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Send trade request error");
-                alert.setContentText("Please first select the government you want to trade with");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Request Error" , "" ,
+                        "Please first select the government you want to trade with" , Orders.redNotifErrorColor);
             }
             case SEND_REQUEST_SUCCESS -> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Success");
-                alert.setContentText("Trade request has been sent successfully");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Request Success" , "" ,
+                        "Trade request has been sent successfully" , Orders.greenNotifSuccesColor);
             }
             case ENTER_MESSAGE -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Send trade request error");
-                alert.setContentText("Enter your message");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Request Error" , "" ,
+                        "Message Field is empty" , Orders.redNotifErrorColor);
             }
         }
     }
 
-    public static TradeMenuMessages donateController() {
+    public static TradeMenuMessages donateController(String message) {
         if (selectedItem == null)
             return TradeMenuMessages.NOT_ENOUGH_OPTIONS;
         else if(governmentToTrade == null)
@@ -296,15 +275,17 @@ public class TradeMenuController {
             return TradeMenuMessages.INVALID_AMOUNT;
         else if (DataBase.getCurrentGovernment().getResourceInStockpiles(selectedItem) < itemAmount)
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
-        else if(Message.getText() == null)
+        else if(message == null)
             return TradeMenuMessages.ENTER_MESSAGE;
         else {
-            TradeRequest tradeRequest = new TradeRequest(selectedItem, itemAmount , 0, Message.getText() ,
-                    governmentToTrade , allRequests.size() + 1 , true);
+            TradeRequest tradeRequest = new TradeRequest(selectedItem, itemAmount , 0, message ,
+                    governmentToTrade , GameMenuController.getGame().requestAndDonatesCounter , true);
+            GameMenuController.getGame().requestAndDonatesCounter++;
 
             // remove from my stockpile and add to theirs
             DataBase.getCurrentGovernment().removeFromStockpile(selectedItem, itemAmount);
             governmentToTrade.addToStockpile(selectedItem ,  itemAmount);
+            System.out.println(governmentToTrade.getOwner().getUsername() + selectedItem.getName());
             // add to trade history
             DataBase.getCurrentGovernment().addToRequestsIAsked(tradeRequest);
             governmentToTrade.addToRequestsAskedFromMe(tradeRequest);
@@ -317,9 +298,9 @@ public class TradeMenuController {
     }
 
     public void donate(MouseEvent mouseEvent) {
-        TradeMenuMessages menuMessages = donateController();
+        String messageString = Message.getText();
+        TradeMenuMessages menuMessages = donateController(messageString);
 
-        selectedItem = null;
         Message.setText("");
         itemAmount = 0;
         selectedItemName.setText("");
@@ -327,43 +308,32 @@ public class TradeMenuController {
 
         switch (menuMessages){
             case NOT_ENOUGH_OPTIONS -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Donate error");
-                alert.setContentText("Please first select the item you want to donate");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Error" , "" ,
+                        "Please first select the item you want to donate" ,Orders.redNotifErrorColor );
             }
             case INVALID_GOVERNMENT_NAME -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Donate error");
-                alert.setContentText("Please first select the government you want to donate");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Error" , "" ,
+                        "Please first select the government you want to donate" , Orders.redNotifErrorColor);
             }
             case INVALID_AMOUNT -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Donate error");
-                alert.setContentText("Invalid amount");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Error" , ""
+                , "Invalid amount" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_RESOURCE_IN_STOCKPILE -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Donate error");
-                alert.setContentText("You don't have enough resource in stockpile to donate");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Error" , "" ,
+                        "You don't have enough resource in stockpile to donate" , Orders.redNotifErrorColor);
             }
             case DONATE_SUCCESS-> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Success");
-                alert.setContentText("you donated " + selectedItem.getName() + " successfully :]");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Success" , "" , "you donated " + selectedItem.getName()
+                        + " successfully :]" , Orders.greenNotifSuccesColor);
             }
             case ENTER_MESSAGE -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Donate error");
-                alert.setContentText("Enter your message");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Donate Error" , ""
+                , "Message Field is empty" , Orders.redNotifErrorColor);
             }
 
         }
+        selectedItem = null;
     }
 
     public void decreaseAmount(MouseEvent mouseEvent) {
@@ -380,69 +350,22 @@ public class TradeMenuController {
     }
 
     public void selectGovernment(MouseEvent mouseEvent) {
+        String governmentNameString = governmentName.getText();
 
-        if(User1.isSelected()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(0);
-            User2.setSelected(false);
-            User3.setSelected(false);
-            User4.setSelected(false);
-            User5.setSelected(false);
-            User6.setSelected(false);
-            User7.setSelected(false);
+        Government selectedGovernment = null;
+
+        for (Government government : governmentsInGameOtherThanCurrentUser) {
+            if(government.getOwner().getUsername().equals(governmentNameString))
+                selectedGovernment = government;
         }
-        else if(User2.isSelected() && 2 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(1);
-            User1.setSelected(false);
-            User3.setSelected(false);
-            User4.setSelected(false);
-            User5.setSelected(false);
-            User6.setSelected(false);
-            User7.setSelected(false);
+
+        if(selectedGovernment == null){
+            GameGraphicController.popUpAlert("Error" , "",
+                    "Invalid Government Name" , Orders.redNotifErrorColor);
+            governmentName.setText("");
         }
-        else if(User3.isSelected() && 3 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(2);
-            User1.setSelected(false);
-            User2.setSelected(false);
-            User4.setSelected(false);
-            User5.setSelected(false);
-            User6.setSelected(false);
-            User7.setSelected(false);
-        }
-        else if(User4.isSelected() && 4 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(3);
-            User1.setSelected(false);
-            User3.setSelected(false);
-            User2.setSelected(false);
-            User5.setSelected(false);
-            User6.setSelected(false);
-            User7.setSelected(false);
-        }
-        else if(User5.isSelected() && 5 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(4);
-            User1.setSelected(false);
-            User3.setSelected(false);
-            User4.setSelected(false);
-            User2.setSelected(false);
-            User6.setSelected(false);
-            User7.setSelected(false);
-        }
-        else if(User6.isSelected() && 6 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(5);
-            User1.setSelected(false);
-            User3.setSelected(false);
-            User4.setSelected(false);
-            User5.setSelected(false);
-            User2.setSelected(false);
-            User7.setSelected(false);
-        }
-        else if(User7.isSelected() && 7 <= governmentsInGameOtherThanCurrentUser.size()){
-            governmentToTrade = governmentsInGameOtherThanCurrentUser.get(6);
-            User1.setSelected(false);
-            User3.setSelected(false);
-            User4.setSelected(false);
-            User5.setSelected(false);
-            User6.setSelected(false);
-            User2.setSelected(false);
+        else{
+            governmentToTrade = selectedGovernment;
         }
     }
 
@@ -457,31 +380,31 @@ public class TradeMenuController {
         Game.mainPane.getChildren().add(ShopMenuController.tradePane);
     }
 
-    public void showRequestsIhaveSent(MouseEvent mouseEvent) throws IOException {
+    public void showRequestsIHaveSent(MouseEvent mouseEvent) throws IOException {
         Game.mainPane.getChildren().remove(tradeMenuHistoryPane);
 
         tradeMenuHistoryPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/TradeHistory.fxml").toExternalForm()));
         tradeMenuHistoryPane.setLayoutX(Game.leftX);
         tradeMenuHistoryPane.setLayoutY(0);
-        tradeMenuHistoryPane.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
         Game.mainPane.getChildren().add(tradeMenuHistoryPane);
 
         for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsIAsked().size() ; i++) {
             TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsIAsked().get(i);
-            String text = "Request -> ";
+            String text = "";
             Label label = new Label();
             label.setFont(new Font("American Typewriter" , 13));
-            label.setLayoutX(78);
+            label.setLayoutX(2);
             label.setLayoutY(140 + (25 * i));
 
             if(tradeRequest.isDonate())
                 text += "Donate -> ";
+            else
+                text += "Request -> ";
 
             text +=  "ID = "  + tradeRequest.getId();
-            text += " | Target Government =  " + tradeRequest.getGovernmentThatHasBeenAsked();
+            text += " | Target Government =  " + tradeRequest.getGovernmentThatHasBeenAsked().getOwner().getUsername();
             text += " | Item = " + tradeRequest.getResource().getName();
             text += " | Amount = " + tradeRequest.getAmount();
             text += " | Message = " + tradeRequest.getMessage();
@@ -506,7 +429,7 @@ public class TradeMenuController {
         }
     }
 
-    public void showRequestsIhaveRecieved(MouseEvent mouseEvent) throws IOException {
+    public void showRequestsIHaveRecieved(MouseEvent mouseEvent) throws IOException {
         Game.mainPane.getChildren().remove(tradeMenuHistoryPane);
 
         tradeMenuHistoryPane = FXMLLoader.load(
@@ -519,17 +442,22 @@ public class TradeMenuController {
         for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsAskedFromMe().size() ; i++) {
             TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsAskedFromMe().get(i);
             tradeRequest.setSeenByTargetUser(true);
-            String text = "Request -> ";
+            String text = "";
             Label label = new Label();
             label.setFont(new Font("American Typewriter" , 13));
-            label.setLayoutX(78);
+            label.setLayoutX(2);
             label.setLayoutY(140 + (25 * i));
 
             if(tradeRequest.isDonate())
                 text += "Donate -> ";
+            else
+                text += "Request -> ";
 
             text +=  "ID = "  + tradeRequest.getId();
-            text += " | Government that has Asked =  " + tradeRequest.getGovernmentThatRequested();
+            if(tradeRequest.isDonate())
+                text += " | Government that has donated =  " + tradeRequest.getGovernmentThatRequested().getOwner().getUsername();
+            else
+                text += " | Government that has Asked =  " + tradeRequest.getGovernmentThatRequested().getOwner().getUsername();
             text += " | Item = " + tradeRequest.getResource().getName();
             text += " | Amount = " + tradeRequest.getAmount();
             text += " | Message = " + tradeRequest.getMessage();
@@ -537,12 +465,12 @@ public class TradeMenuController {
             if(!tradeRequest.isDonate() && tradeRequest.isAccepted() == 2){
                 Button accept = new Button("accept");
                 accept.setFont(new Font("American Typewriter" , 10));
-                accept.setLayoutX(701);
+                accept.setLayoutX(880);
                 accept.setLayoutY(140 + (25 * i));
 
                 Button reject = new Button("reject");
                 reject.setFont(new Font("American Typewriter" , 10));
-                reject.setLayoutX(653);
+                reject.setLayoutX(830);
                 reject.setLayoutY(140 + (25 * i));
                 accept.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
@@ -583,25 +511,19 @@ public class TradeMenuController {
 
         switch (menuMessages){
             case NOT_ENOUGH_RESOURCE_IN_STOCKPILE -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("accept request error");
-                alert.setContentText("Not enough of " + selectedItem.getName() + " in wareHouse");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Accept Request Error"  , ""
+                , "Not enough of " + selectedItem.getName() + " in wareHouse" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_FREE_SPACE -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("accept request error");
-                alert.setContentText("Not enough free space in the " + selectedTradeRequest.getGovernmentThatRequested().getOwner().getUsername()
-                        + "'s wareHouse");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Accept Request Error" , "" ,
+                        "Not enough free space in the " + selectedTradeRequest.getGovernmentThatRequested().getOwner().getUsername()
+                                + "'s wareHouse" , Orders.redNotifErrorColor);
             }
             case ACCEPT_TRADE_SUCCESS -> {
                 tradeMenuHistoryPane.getChildren().removeAll(selectedRequestsRejectButton ,
                         getSelectedRequestsAcceptButton);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Success");
-                alert.setContentText("Request accepted successfully");
-                alert.showAndWait();
+                GameGraphicController.popUpAlert("Success" , "" ,
+                        "Request accepted successfully" , Orders.greenNotifSuccesColor);
             }
         }
 

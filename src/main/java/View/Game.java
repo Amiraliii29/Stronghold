@@ -8,9 +8,7 @@ import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Buildings.*;
 import Model.Units.Unit;
-import View.Controller.BuildingInfo;
-import View.Controller.GameGraphicController;
-import View.Controller.GetCoordinate;
+import View.Controller.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -38,7 +36,6 @@ import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,8 +96,8 @@ public class Game extends Application{
     private double mouseY;
     private int keepOwnerGovernmentsCounter = 0;
     private int turnUserNumber = 0;
-    private Button nextTurnButton;
     private Label turnUser = new Label();
+    public int requestAndDonatesCounter = 1;
 
 
     static {
@@ -170,7 +167,7 @@ public class Game extends Application{
 
         drawMap();
         drawBottom();
-        drawNextTurnButton();
+        drawTurnUser();
         keys();
 
         stage.setFullScreen(true);
@@ -183,30 +180,13 @@ public class Game extends Application{
         return governmentsInGame;
     }
 
-    public void drawNextTurnButton() {
-        nextTurnButton = new Button();
-        nextTurnButton.setLayoutX(leftX + 997);
-        nextTurnButton.setLayoutY(screenHeight - 65);
-        nextTurnButton.setText("Next Turn");
-        nextTurnButton.setOnMouseClicked(event -> {
-            turnUserNumber++;
-            turnUserNumber %= governmentsInGame.size();
-
-            turnUser.setLayoutX(leftX + 1014);
-            turnUser.setLayoutY(screenHeight - 30);
-            turnUser.setTextFill(Color.BLUEVIOLET);
-            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
-            GameMenuController.setCurrentGovernment();
-            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
-        });
-
+    public void drawTurnUser() {
         turnUser.setLayoutX(leftX + 1014);
         turnUser.setLayoutY(screenHeight - 30);
         turnUser.setTextFill(Color.BLUEVIOLET);
         turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
 
-        mainPane.getChildren().addAll(nextTurnButton , turnUser);
+        mainPane.getChildren().add(turnUser);
     }
 
     private void placeGovernmentsKeep() {
@@ -514,6 +494,41 @@ public class Game extends Application{
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
             } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
+            }else if(event.getCode() == KeyCode.N){
+                turnUserNumber++;
+                turnUserNumber %= governmentsInGame.size();
+
+                turnUser.setLayoutX(leftX + 1014);
+                turnUser.setLayoutY(screenHeight - 30);
+                turnUser.setTextFill(Color.BLUEVIOLET);
+                turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+                DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+                GameMenuController.setCurrentGovernment();
+                User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+                GameGraphicController.setPopularityGoldPopulation();
+            }else if(event.getCode() == KeyCode.S){
+                try {
+                    ShopMenu.openShopMenu();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }else if(event.getCode() == KeyCode.T){
+                Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+                Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+                Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+                Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
+
+                try {
+                    ShopMenuController.tradePane = FXMLLoader.load(
+                            new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                ShopMenuController.tradePane.setLayoutX(Game.leftX);
+                ShopMenuController.tradePane.setLayoutY(0);
+
+                Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+                Game.mainPane.getChildren().add(ShopMenuController.tradePane);
             }
 
             
@@ -735,8 +750,7 @@ public class Game extends Application{
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
         } else if(building.getName().equals("Shop")){
-            System.out.println("shop clicked");
-            ShopMenu.openShopMenu(new Stage());
+            ShopMenu.openShopMenu();
         }else return;
 
         if (building instanceof Defence) {
@@ -759,11 +773,11 @@ public class Game extends Application{
             detail.getChildren().add(hp);
             detail.getChildren().add(maxHp);
         }
-
-        detail.setLayoutX(115);
-        detail.setLayoutY(30);
-
-        bottomPane.getChildren().add(detail);
+        if(!building.getName().equals("Shop")) {
+            detail.setLayoutX(115);
+            detail.setLayoutY(30);
+            bottomPane.getChildren().add(detail);
+        }
     }
 
     private void drawLeft() throws IOException {

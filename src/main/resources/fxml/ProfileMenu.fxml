@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            fx:controller="View.SignUpMenu" prefHeight="-Infinity" stylesheets="@../Styles/styles.css" prefWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+            fx:controller="View.SignUpMenu" prefHeight="-Infinity" stylesheets="@../Styles/styles.css" prefWidth="-Infinity" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <ImageView fitHeight="1000" fitWidth="1650" layoutX="-1.0" layoutY="-1.0">
         <image>
             <Image url="@../Images/menu-backgrounds/03.jpg" />
