@@ -41,6 +41,7 @@ import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,7 @@ public class Game extends Application{
     private static Stage stage;
     public static Pane mainPane; // this pane contains all other panes such as pane
     private static Pane pane;
+    private ImageView attackIcon;
     public static AnchorPane bottomPane;
     public static AnchorPane customizePane;
     private static Pane squareInfo;
@@ -964,7 +966,7 @@ public class Game extends Application{
         copiedBuilding.setLayoutY(screenHeight-100);
         copiedBuilding.setFitWidth(100);
         copiedBuilding.setFitHeight(100);
-        mainPane.getChildren().add(copiedBuilding);
+        setTimelineForImageView(8, copiedBuilding, "Building Copied");
         addCopiedBuildingListener();
     }
 
@@ -994,5 +996,30 @@ public class Game extends Application{
             Image image = new Image(new FileInputStream("src/main/resources/Images/resources/" + resource.getName() + ".png"));
             resources.put(resource.getName(), image);
         }
+    }
+
+    public void setAttackIcon(){
+        Image attackImage=null;
+        try {
+            attackImage = new Image(new FileInputStream("src/main/resources/images/Icon/attack.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        attackIcon=new ImageView(attackImage);
+        attackIcon.setLayoutX(screenWidth/2);
+        attackIcon.setFitWidth(100);
+        attackIcon.setFitHeight(100);
+        setTimelineForImageView(5, attackIcon,"Attack Started");
+    }
+
+    private void setTimelineForImageView(int time,ImageView imageView,String errorText){
+        showErrorText(errorText);
+        mainPane.getChildren().add(imageView);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000*time),
+                actionEvent -> {
+                    mainPane.getChildren().remove(imageView);
+                }));
+        timeline.setDelay(Duration.millis(0));
+        timeline.play();
     }
 }
