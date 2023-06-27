@@ -18,6 +18,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -82,9 +84,10 @@ public class Game extends Application{
     private static AnchorPane detail;
     private static int selectedX;
     private static int selectedY;
+    private  ArrayList<Government> governmentsInGame = new ArrayList<>();
 
     private Scene scene;
-    private final Map map;
+    public Map map;
     private Square[][] squares;
     private int squareI;
     private int squareJ;
@@ -95,6 +98,10 @@ public class Game extends Application{
     private Timeline errorTimeline;
     private double mouseX;
     private double mouseY;
+    private int keepOwnerGovernmentsCounter = 0;
+    private int turnUserNumber = 0;
+    private Button nextTurnButton = new Button();
+    private Label turnUser = new Label();
 
 
     static {
@@ -129,6 +136,9 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
+    public  void addToGovernmentsInGame(Government government){
+        governmentsInGame.add(government);
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -161,11 +171,43 @@ public class Game extends Application{
 
         drawMap();
         drawBottom();
+        drawNextTurnButton();
         keys();
 
         stage.setFullScreen(true);
         stage.show();
-        
+
+        placeGovernmentsKeep();
+    }
+
+    public void drawNextTurnButton() {
+        nextTurnButton.setLayoutX(leftX + 997);
+        nextTurnButton.setLayoutY(screenHeight - 65);
+        nextTurnButton.setText("Next Turn");
+        nextTurnButton.setOnMouseClicked(event -> {
+            turnUserNumber++;
+            turnUserNumber %= governmentsInGame.size();
+
+            turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+            DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
+            GameMenuController.setCurrentGovernment();
+            User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+        });
+
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().addAll(nextTurnButton , turnUser);
+    }
+
+    private void placeGovernmentsKeep() {
+
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setContentText("Place Governments Keep Respectively");
+//        alert.showAndWait();
+
     }
 
     public static void setXY(int x, int y) {
@@ -250,6 +292,7 @@ public class Game extends Application{
             }
         });
 
+
         scene.setOnMousePressed(event -> {
             double startX = event.getX();
             double startY = event.getY();
@@ -285,11 +328,24 @@ public class Game extends Application{
                     }
                 }
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
-                selectSq.setX(leftX + blockX * blockPixel);
-                selectSq.setY(blockY * blockPixel);
-                selectSq.setWidth(blockPixel);
-                selectSq.setHeight(blockPixel);
-                selectSq.setVisible(true);
+                if(keepOwnerGovernmentsCounter < governmentsInGame.size()){
+                    double endX = event.getX();
+                    double endY = event.getY();
+                    int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
+                    int nowY = (int) (Math.floor(endY / blockPixel));
+
+                    building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
+                    squares[squareI + nowX][squareJ + nowY].setBuilding(building);
+                    keepOwnerGovernmentsCounter++;
+                    drawMap();
+                }
+                else {
+                    selectSq.setX(leftX + blockX * blockPixel);
+                    selectSq.setY(blockY * blockPixel);
+                    selectSq.setWidth(blockPixel);
+                    selectSq.setHeight(blockPixel);
+                    selectSq.setVisible(true);
+                }
             }
 
         });
@@ -689,7 +745,10 @@ public class Game extends Application{
         } else if (building.getName().equals("DairyFarm")) {
             detail = FXMLLoader.load(
                     new URL(Objects.requireNonNull(Game.class.getResource("/fxml/DairyFarm.fxml")).toExternalForm()));
-        } else return;
+        } else if(building.getName().equals("Shop")){
+            System.out.println("shop clicked");
+            ShopMenu.openShopMenu(new Stage());
+        }else return;
 
         if (building instanceof Defence) {
             Label hp = new Label(String.valueOf(building.getHp()));
@@ -873,8 +932,8 @@ public class Game extends Application{
                 break;
             }
         });
-        System.out.println(copiedBuildingName);
     }
+
 
     private void showCopiedBuildingImage(){
 

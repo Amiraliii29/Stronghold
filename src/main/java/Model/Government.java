@@ -47,7 +47,7 @@ public class Government {
         requestsIAsked = new ArrayList<>();
     }
 
-    public Government(double money) {
+    public  Government(double money) {
         this.money = money;
         this.food = 0;
         this.popularity = 0;
