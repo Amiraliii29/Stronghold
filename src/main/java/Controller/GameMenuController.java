@@ -33,6 +33,10 @@ public class GameMenuController {
         squares = map.getSquares();
     }
 
+    public static Game getGame() {
+        return game;
+    }
+
     public static void setCurrentMap() {
         map = DataBase.getSelectedMap();
     }
