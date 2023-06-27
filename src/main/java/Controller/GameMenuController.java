@@ -110,6 +110,8 @@ public class GameMenuController {
         int startX = unit.getXCoordinate();
         int startY = unit.getYCoordinate();
         boolean up = map.getSquareFromMap(startX, startY).getBuilding() instanceof Defence;
+        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher"))
+            up = false;
 
         if (move(unit, startX, startY, x, y, Unit.getMaxDistance(), up)) {
             int size = 1000;

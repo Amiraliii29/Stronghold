@@ -823,7 +823,7 @@ public class Game extends Application{
         turnUser.setLayoutX(leftX + 1014);
         turnUser.setLayoutY(screenHeight - 30);
         turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
+//        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn"); // TODO : uncomment
 
         mainPane.getChildren().addAll(nextTurnButton , turnUser);
     }
