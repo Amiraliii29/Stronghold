@@ -1,6 +1,7 @@
 package View;
 
 import Controller.CustomizeMapController;
+import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
@@ -258,7 +259,7 @@ public class Game extends Application{
             double startY = event.getY();
             blockX = (int) (Math.floor((startX - leftX) / blockPixel));
             blockY = (int) (Math.floor(startY / blockPixel));
-
+            System.out.println(map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment()));
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
@@ -269,8 +270,7 @@ public class Game extends Application{
                         CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
                     drawMap();
-                } else if (DataBase.getSelectedUnit() != null) {
-
+                } else if (DataBase.getSelectedUnit() != null && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
                     move(squareI + blockX, squareJ + blockY);
                     try {
                         showSelectedSquares(blockX, blockY, DataBase.getSelectedUnit());
@@ -278,7 +278,12 @@ public class Game extends Application{
                         throw new RuntimeException(e);
                     }
 
-                } else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
+                } else if (DataBase.getSelectedUnit() != null && map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
+                    String targetX=Integer.toString(squareI + blockX);
+                    String targetY=Integer.toString(squareJ + blockY);
+                    GameMenuController.AttackBySelectedUnits(targetX,targetY);
+                }
+                else if (squares[squareI + blockX][squareJ + blockY].getBuilding() != null) {
                     //TODO : Show bound for building !
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     try {
@@ -882,7 +887,7 @@ public class Game extends Application{
     }
 
     private void showCopiedBuildingImage(){
-
+        mainPane.getChildren().remove(copiedBuilding);
         copiedBuildingName=DataBase.getSelectedBuilding().getName();
         Image buildingImage=buildings.get(DataBase.getSelectedBuilding().getName());
         instanciateCopiedBuilding(buildingImage);

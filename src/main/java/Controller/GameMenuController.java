@@ -207,8 +207,8 @@ public class GameMenuController {
     private static void attackBySingleType(String enemyX, String enemyY) {
         Game game=DataBase.getGame();
 
-        int targetXInNum = Integer.parseInt(enemyX) - 1;
-        int targetYInNum = Integer.parseInt(enemyY) - 1;
+        int targetXInNum = Integer.parseInt(enemyX);
+        int targetYInNum = Integer.parseInt(enemyY);
 
         int targetType = map.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
 
@@ -221,15 +221,15 @@ public class GameMenuController {
             rangedAttackController(enemyX, enemyY);
             return ;
         }
-
+        
         int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
         ArrayList<int[]> squaresOptimalForFight = map.getSquaresWithinRange(targetXInNum, targetYInNum,
                 unitRange, unitsZoneFromTarget);
 
         boolean result = false;
+        System.out.println(squaresOptimalForFight.size());
         for (int[] validCoord : squaresOptimalForFight) {
-            game.move(validCoord[0], validCoord[1]);
-            if (DataBase.isSelectedUnitOnTargetSquare(validCoord[0], validCoord[1])) {
+            if (game.move(validCoord[0], validCoord[1])) {
                 if (targetType == 1) {
                     double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
                     DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
@@ -248,16 +248,12 @@ public class GameMenuController {
 
     private static void rangedAttackController(String enemyX, String enemyY) {
 
-        int targetXInNum = Integer.parseInt(enemyX) - 1;
-        int targetYInNum = Integer.parseInt(enemyY) - 1;
+        int targetXInNum = Integer.parseInt(enemyX);
+        int targetYInNum = Integer.parseInt(enemyY);
 
         if (DataBase.getSelectedUnit().size() == 0)
             return ;
-
-        if (!DataBase.areSelectedUnitsRanged())
-            return ;
         
-
         int currentUnitsX = DataBase.getSelectedUnit().get(0).getXCoordinate();
         int currentUnitsY = DataBase.getSelectedUnit().get(0).getYCoordinate();
 
@@ -277,7 +273,7 @@ public class GameMenuController {
         HashMap <String , ArrayList<Unit>> unitsByType=DataBase.getSelectedUnitsByType();
         for (String unitType : unitsByType.keySet()) {
             DataBase.setSelectedUnit(unitsByType.get(unitType));
-            attackBySingleType(unitType, unitType);
+            attackBySingleType(enemyX, enemyY);
         }
     }
 

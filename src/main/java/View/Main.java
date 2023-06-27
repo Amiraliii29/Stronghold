@@ -10,6 +10,7 @@ import Model.DataBase;
 import Model.Government;
 import Model.Map;
 import Model.Resource;
+import Model.User;
 import Model.Units.Troop;
 import Model.Units.Unit;
 import javafx.application.Application;
@@ -33,6 +34,9 @@ public class Main extends Application {
        Resource.load();
        Game.loadImages();
        Government government = new Government(10000);
+       government.setOwner(User.getUsers().get(0));
+       Government government2 = new Government(10000);
+       government.setOwner(User.getUsers().get(1));
        DataBase.setCurrentGovernment(government);
        GameMenuController.setCurrentGovernment();
 
@@ -52,6 +56,7 @@ public class Main extends Application {
 
 
        Troop.createTroop(government,"Lord", 2, 2);
+       
        Troop.createTroop(government, "Slave", 0, 0);
        Troop.createTroop(government, "Slave", 0, 199);
        Troop.createTroop(government, "Slave", 199, 0);
@@ -65,7 +70,7 @@ public class Main extends Application {
        Troop.createTroop(government, "Slave", 1, 1);
 
 
-
+            map.getSquareFromMap(4, 4).addUnit(Troop.createTroop(government2,"Knight", 4, 4));
        map.getSquareFromMap(180, 7).setBuilding(Defence.createDefence(government, 180, 7, "CircularTower"));
        Generator generator1 = Generator.createGenerator(government, 30, 20, "WoodCutter");
        map.getSquareFromMap(30, 20).setBuilding(generator1);
