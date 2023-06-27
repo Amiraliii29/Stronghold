@@ -123,6 +123,7 @@ public abstract class Building {
         if (Generator.getGeneratorsName().contains(buildingName)) return "Generator";
         if (Barrack.getBarracksName().contains(buildingName)) return "Barrack";
         if (TownBuilding.getTownBuildingsName().contains(buildingName)) return "TownBuilding";
+        if (Defence.getDefencesName().contains(buildingName)) return "Defence";
         return "";
     }
 

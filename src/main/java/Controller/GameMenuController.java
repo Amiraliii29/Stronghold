@@ -13,9 +13,7 @@ import Model.Units.Troop;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
 import View.Game;
-import View.Enums.Messages.GameMenuMessages;
 import javafx.scene.control.Alert;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -302,23 +300,13 @@ public class GameMenuController {
 
 
 
-    private static GameMenuMessages attackBySingleType(String enemyX, String enemyY) {
+    private static void attackBySingleType(String enemyX, String enemyY) {
         Game game=DataBase.getGame();
-        if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
-
-        if (DataBase.getSelectedUnit().size() == 0)
-            return GameMenuMessages.CHOSE_UNIT_FIRST;
 
         int targetXInNum = Integer.parseInt(enemyX) - 1;
         int targetYInNum = Integer.parseInt(enemyY) - 1;
 
-        if (!map.isCoordinationValid(targetXInNum, targetYInNum))
-            return GameMenuMessages.INVALID_COORDINATE;
-
         int targetType = map.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
-        if (targetType == 0)
-            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
 
         ArrayList<Unit> currentUnits = DataBase.getSelectedUnit();
         int currentUnitsX = currentUnits.get(0).getXCoordinate();
@@ -327,7 +315,7 @@ public class GameMenuController {
 
         if (unitRange > Map.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)) {
             rangedAttackController(enemyX, enemyY);
-            return GameMenuMessages.SUCCESS;
+            return ;
         }
 
         int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
@@ -349,26 +337,22 @@ public class GameMenuController {
             }
         }
         if (result)
-            return GameMenuMessages.SUCCESS;
+            return ;
 
-        return GameMenuMessages.NORMALATTACK_TARGET_NOT_IN_RANGE;
+        game.showErrorText("TARGET NOT IN RANGE");
     }
 
-    private static GameMenuMessages rangedAttackController(String enemyX, String enemyY) {
-        if (!Orders.isInputInteger(enemyY) || !Orders.isInputInteger(enemyX))
-            return GameMenuMessages.WRONG_FORMAT_COORDINATE;
+    private static void rangedAttackController(String enemyX, String enemyY) {
 
         int targetXInNum = Integer.parseInt(enemyX) - 1;
         int targetYInNum = Integer.parseInt(enemyY) - 1;
 
         if (DataBase.getSelectedUnit().size() == 0)
-            return GameMenuMessages.CHOSE_UNIT_FIRST;
-
-        if (!map.doesSquareContainEnemyUnits(targetXInNum, targetYInNum, currentGovernment))
-            return GameMenuMessages.ATTACK_NO_ENEMY_IN_AREA;
+            return ;
 
         if (!DataBase.areSelectedUnitsRanged())
-            return GameMenuMessages.RANGEDATTACK_NON_ARCHER_SELECTION;
+            return ;
+
 
         int currentUnitsX = DataBase.getSelectedUnit().get(0).getXCoordinate();
         int currentUnitsY = DataBase.getSelectedUnit().get(0).getYCoordinate();
@@ -376,11 +360,13 @@ public class GameMenuController {
         double distance = Map.getDistance(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
         int unitRange = DataBase.getSelectedUnit().get(0).getAttackRange();
 
-        if (unitRange < distance)
-            return GameMenuMessages.RANGEDATTACK_TARGET_NOT_IN_RANGE;
+        if (unitRange < distance){
+            game.showErrorText("Enemy out of Range");
+            return ;
+        }
 
         DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-        return GameMenuMessages.SUCCESS;
+        return ;
     }
 
     public static void AttackBySelectedUnits(String enemyX, String enemyY){
@@ -409,24 +395,29 @@ public class GameMenuController {
         currentGovernment.changeFreeWorkers(-count);
     }
     
-    public static GameMenuMessages createUnitController(String type) {
+    public static void createUnitController(String type) {
         int countInNum = 1;
         Troop targetTroop = Troop.getTroopByName(type);
 
         assert targetTroop != null;
         int totalCost = targetTroop.getCost() * countInNum;
-        if (currentGovernment.getMoney() < totalCost)
-            return GameMenuMessages.INSUFFICIENT_GOLD;
+        if (currentGovernment.getMoney() < totalCost){
+            game.showErrorText("Not enough gold!");
+            return ;
+        }
 
-        if (!doesHaveUnitsWeapons(countInNum, targetTroop))
-            return GameMenuMessages.INSUFFICIENT_RESOURCES;
+        if (!doesHaveUnitsWeapons(countInNum, targetTroop)){
+            game.showErrorText("Insufficient weapons!");
+            return ;
+        }
 
-        if (currentGovernment.getFreeWorker() < countInNum)
-            return GameMenuMessages.CREATEUNIT_INSUFFICIENT_FREEPOP;
+        if (currentGovernment.getFreeWorker() < countInNum){
+            game.showErrorText("Insufficient population!");
+            return ;
+        }
 
         Barrack selectedBarrack=(Barrack) DataBase.getSelectedBuilding();
         trainTroopsForGovernment(countInNum, targetTroop, selectedBarrack);
-        return GameMenuMessages.SUCCESS;
     }
 
     private static boolean doesHaveUnitsWeapons(int count, Troop targetTroop) {
@@ -444,7 +435,7 @@ public class GameMenuController {
         return true;
     }
 
-    public static GameMenuMessages setUnitModeController(String option) {
+    public static void setUnitModeController(String option) {
         String x = Orders.findFlagOption("-x", option);
         String y = Orders.findFlagOption("-y", option);
         String state = Orders.findFlagOption("-s", option);
@@ -465,7 +456,7 @@ public class GameMenuController {
             case "Defensive" -> newState = StateUnits.Defensive;
             case "Offensive" -> newState = StateUnits.Aggressive;
             default -> {
-                return GameMenuMessages.INVALID_STATE;
+                return ;
             }
         }
 
@@ -475,6 +466,5 @@ public class GameMenuController {
                 unit.setState(newState);
             }
         }
-        return GameMenuMessages.SUCCESS;
     }
 }
