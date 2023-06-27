@@ -344,8 +344,11 @@ public class Game extends Application{
                     int nowY = (int) (Math.floor(endY / blockPixel));
 
                     building = Defence.createDefence(governmentsInGame.get(keepOwnerGovernmentsCounter) , squareI +  nowX, squareJ + nowY, "Keep");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY, "Stockpile");
-                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 3, squareJ + nowY + 3, "Granary");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 5 ,  squareJ + nowY + 5 , "Stockpile");
+                    Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX - 5, squareJ + nowY - 5 , "Granary");
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 100);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 25);
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Wood") , 100);
                     keepOwnerGovernmentsCounter++;
                     drawMap();
                 }
@@ -843,7 +846,7 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
-    public static void showErrorText(String errorText) {
+    public  void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -859,8 +862,8 @@ public class Game extends Application{
 
         errorPane.getChildren().add(error);
         mainPane.getChildren().add(errorPane);
-//todo uncomment
-//        errorTimeline.playFromStart();
+
+        errorTimeline.playFromStart();
     }
 
     private void initializeDetailsTextFields(){

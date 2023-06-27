@@ -1,5 +1,6 @@
 package View.Controller;
 
+import Controller.GameMenuController;
 import Model.DataBase;
 import Model.Resource;
 import Model.User;
@@ -145,16 +146,16 @@ public class ShopMenuController {
         ShopMenuMessages message = buyItemByNameController(selectedItem.getName());
         switch (message){
             case NO_ITEM_SELECTED -> {
-                Game.showErrorText("NO item selected!");
+                GameMenuController.getGame().showErrorText("NO item selected!");
             }
             case NOT_ENOUGH_BALANCE -> {
-                Game.showErrorText("Not enough balance :|");
+                GameMenuController.getGame().showErrorText("Not enough balance :|");
             }
             case NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE -> {
-                Game.showErrorText("Not enough free space in wareHouse :|");
+                GameMenuController.getGame().showErrorText("Not enough free space in wareHouse :|");
             }
             case BUY_ITEM_SUCCESS -> {
-                Game.showErrorText("Item bought successfully");
+                GameMenuController.getGame().showErrorText("Item bought successfully");
             }
         }
         setItemsAmount();
@@ -166,13 +167,13 @@ public class ShopMenuController {
 
         switch (message){
             case NO_ITEM_SELECTED -> {
-                Game.showErrorText("NO item selected!");
+                GameMenuController.getGame().showErrorText("NO item selected!");
             }
             case NOT_ENOUGH_ITEM_IN_STOCKPILE -> {
-                Game.showErrorText("There is no " + selectedItem.getName() + " in warehouse");
+                GameMenuController.getGame().showErrorText("There is no " + selectedItem.getName() + " in warehouse");
             }
             case SELL_ITEM_SUCCESS -> {
-                Game.showErrorText("Item Sold Successfully :)");
+                GameMenuController.getGame().showErrorText("Item Sold Successfully :)");
             }
         }
         setItemsAmount();
