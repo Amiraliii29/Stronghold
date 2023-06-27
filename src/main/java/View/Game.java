@@ -183,6 +183,10 @@ public class Game extends Application{
         placeGovernmentsKeep();
     }
 
+    public ArrayList<Government> getGovernmentsInGame() {
+        return governmentsInGame;
+    }
+
     public void drawNextTurnButton() {
         nextTurnButton.setLayoutX(leftX + 997);
         nextTurnButton.setLayoutY(screenHeight - 65);
@@ -413,30 +417,35 @@ public class Game extends Application{
                     squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     defenceBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(barrackBuildingToCreateName != null){
                     building = Barrack.createBarrack(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , barrackBuildingToCreateName);
                     squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     barrackBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(generatorBuildingToCreateName != null){
                     building = Generator.createGenerator(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , generatorBuildingToCreateName);
                     squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     generatorBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(townBuildingToCreateName != null){
                     building = TownBuilding.createTownBuilding(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , townBuildingToCreateName);
                     squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     townBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 if(stockPileBuildingToCreateName != null){
                     building = Stockpile.createStockpile(DataBase.getCurrentGovernment() ,squareI +  nowX , squareJ +  nowY , stockPileBuildingToCreateName);
                     squares[squareI + nowX][squareJ + nowY].setBuilding(building);
                     stockPileBuildingToCreateName = null;
                     drawMap();
+                    GameGraphicController.setPopularityGoldPopulation();
                 }
                 building = null;
             } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
@@ -502,7 +511,9 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            } else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
+            }else if(event.getCode() == KeyCode.E){
+                clear();
+            }else if (event.getCode() == KeyCode.C && !keyCombinationShiftC.match(event)) {
                 if (customizePane == null) {
                     try {
                         building = null;
@@ -832,7 +843,7 @@ public class Game extends Application{
         if (!mainPane.getChildren().contains(squareInfo)) mainPane.getChildren().add(squareInfo);
     }
 
-    public void showErrorText(String errorText) {
+    public static void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
         errorPane = new Pane();
@@ -848,8 +859,8 @@ public class Game extends Application{
 
         errorPane.getChildren().add(error);
         mainPane.getChildren().add(errorPane);
-
-        errorTimeline.playFromStart();
+//todo uncomment
+//        errorTimeline.playFromStart();
     }
 
     private void initializeDetailsTextFields(){

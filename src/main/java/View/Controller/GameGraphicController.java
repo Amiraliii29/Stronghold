@@ -27,9 +27,9 @@ import java.net.URL;
 
 // this class has been created by amirali for bottom menu controller
 public class GameGraphicController {
-    public static Label popularityInBottomMenu;
-    public static Label goldsInBottomMenu;
-    public static Label populationInBottomMenu;
+    public static Label popularityInBottomMenu = new Label();
+    public static Label goldsInBottomMenu = new Label();
+    public static Label populationInBottomMenu = new Label();
     private static AnchorPane popularityFactorsPane;
     public static ImageView foodImage = new ImageView();
     public static ImageView taxImage = new ImageView();
@@ -49,7 +49,7 @@ public class GameGraphicController {
 
     public static void setPopularityGoldPopulation(){
         int popularityInt = DataBase.getCurrentGovernment().getPopularity();
-        popularityInBottomMenu = new Label(popularityInt + "/100");
+        popularityInBottomMenu.setText(popularityInt + "/100");
         popularityInBottomMenu.setLayoutX(913);
         popularityInBottomMenu.setLayoutY(78);
         if(popularityInt > 75)
@@ -76,13 +76,13 @@ public class GameGraphicController {
         });
 
         //show gold
-        goldsInBottomMenu = new Label((int)DataBase.getCurrentGovernment().getMoney() + "");
+        goldsInBottomMenu.setText((int)DataBase.getCurrentGovernment().getMoney() + "");
         goldsInBottomMenu.setLayoutX(894);
         goldsInBottomMenu.setLayoutY(96);
         Game.bottomPane.getChildren().add(goldsInBottomMenu);
 
         //show population
-        populationInBottomMenu = new Label(DataBase.getCurrentGovernment().getPopulation() + "/128" );
+        populationInBottomMenu.setText(DataBase.getCurrentGovernment().getPopulation() + "/128" );
         populationInBottomMenu.setLayoutX(886);
         populationInBottomMenu.setLayoutY(112);
         Game.bottomPane.getChildren().add(populationInBottomMenu);
@@ -141,6 +141,14 @@ public class GameGraphicController {
         else
             foodImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
 
+        if(foodNumberInt > 0)
+            foodNumber.setTextFill(Color.GREEN);
+        else if(foodNumberInt == 0)
+            foodNumber.setTextFill(Color.YELLOW);
+        else
+            foodNumber.setTextFill(Color.RED);
+
+
         taxNumber.setText(taxNumberInt + "");
 
         if(taxNumberInt > 0)
@@ -149,6 +157,13 @@ public class GameGraphicController {
             taxImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/pokerFace.png")));
         else
             taxImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
+
+        if(taxNumberInt > 0)
+            taxNumber.setTextFill(Color.GREEN);
+        else if(taxNumberInt == 0)
+            taxNumber.setTextFill(Color.YELLOW);
+        else
+            taxNumber.setTextFill(Color.RED);
 
         fearNumber.setText(fearNumberInt + "");
 
@@ -159,6 +174,13 @@ public class GameGraphicController {
         else
             fearImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
 
+        if(fearNumberInt > 0)
+            fearNumber.setTextFill(Color.GREEN);
+        else if(fearNumberInt == 0)
+            fearNumber.setTextFill(Color.YELLOW);
+        else
+            fearNumber.setTextFill(Color.RED);
+
         religionNumber.setText(religionNumberInt + "");
         if(religionNumberInt > 0)
             religionImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/happyFace.png")));
@@ -167,6 +189,13 @@ public class GameGraphicController {
         else
             religionImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
 
+        if(religionNumberInt > 0)
+            religionNumber.setTextFill(Color.GREEN);
+        else if(religionNumberInt == 0)
+            religionNumber.setTextFill(Color.YELLOW);
+        else
+            religionNumber.setTextFill(Color.GREEN);
+
         totalNumber.setText(totalNumberInt + "");
         if(totalNumberInt > 0)
             totalImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/happyFace.png")));
@@ -174,6 +203,13 @@ public class GameGraphicController {
             totalImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/pokerFace.png")));
         else
             totalImage.setImage(new Image(new FileInputStream("src/main/resources/Images/avatars/sadFace.png")));
+
+        if(totalNumberInt > 0)
+            totalNumber.setTextFill(Color.GREEN);
+        else if(foodNumberInt == 0)
+            totalNumber.setTextFill(Color.YELLOW);
+        else
+            totalNumber.setTextFill(Color.RED);
 
         // place sliders to change rates
         Slider foodSlider = new Slider(-2 , 2  , 0);
@@ -186,6 +222,7 @@ public class GameGraphicController {
             public void handle(MouseEvent event) {
                 int foodRate = (int) Math.floor(foodSlider.getValue());
                 DataBase.getCurrentGovernment().setFood(foodRate);
+                setPopularityGoldPopulation();
             }
         });
 
@@ -199,6 +236,7 @@ public class GameGraphicController {
             public void handle(MouseEvent event) {
                 int taxRate = (int) Math.floor(taxSlider.getValue());
                 DataBase.getCurrentGovernment().setTax(taxRate);
+                setPopularityGoldPopulation();
             }
         });
 
@@ -212,6 +250,7 @@ public class GameGraphicController {
             public void handle(MouseEvent event) {
                 int fearRate = (int) Math.floor(fearSlider.getValue());
                 DataBase.getCurrentGovernment().setFear(fearRate);
+                setPopularityGoldPopulation();
             }
         });
 

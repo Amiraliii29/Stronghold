@@ -39,14 +39,9 @@ public class ShopMenu extends Application {
         shopPane.setLayoutY(0);
         shopPane.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-//        todo uncommnet
-//        ShopMenuController.setItemsAmount();
+//      ShopMenuController.setItemsAmount();
         Game.mainPane.getChildren().add(shopPane);
     }
 
 
-    private static void showItems(){
-        String toPrint = ShopMenuController.showItemsController();
-        System.out.print(toPrint);
-    }
 }
