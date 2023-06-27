@@ -211,15 +211,15 @@ public class GameMenuController {
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
             game.showErrorText("Can't Build Here!");
 
-//        else if (building.getCost() > currentGovernment.getMoney())
-//            game.showErrorText("You Don't Have Enough Money!");
-//
-//        else if (building.getResource() != null &&
-//                currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
-//            game.showErrorText("Don't Have Enough Material!");
-//
-//        else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
-//            game.showErrorText("Not Enough Free Worker!");
+        else if (building.getCost() > currentGovernment.getMoney())
+            game.showErrorText("You Don't Have Enough Money!");
+
+        else if (building.getResource() != null &&
+                currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
+            game.showErrorText("Don't Have Enough Material!");
+
+        else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
+            game.showErrorText("Not Enough Free Worker!");
 
         else {
             currentGovernment.changeMoney(-building.getCost());
@@ -431,15 +431,17 @@ public class GameMenuController {
 
         for (int i = 0; i < count; i++) {
             if (unit.getName().equals("Engineer")) {
-                Engineer.createEngineer(currentGovernment, barrackX, barrackY);
+                Engineer.createEngineer(currentGovernment, barrackX - 1, barrackY - 1);
             } else if (unit.getName().equals("LadderMan")) {
-                LadderMan.createLadderMan(currentGovernment, barrackX, barrackY);
+                LadderMan.createLadderMan(currentGovernment, barrackX - 1, barrackY - 1);
             } else if (unit.getName().equals("Tunneler")) {
-                Tunneler.createTunneler(currentGovernment, barrackX, barrackY);
+                Tunneler.createTunneler(currentGovernment, barrackX - 1, barrackY - 1);
             } else {
-                Troop.createTroop(currentGovernment, unit.getName() , barrackX, barrackY);
+                Troop.createTroop(currentGovernment, unit.getName() , barrackX - 1, barrackY - 1);
             }
         }
+
+        game.drawMap();
     }
     
     public static void createUnitController(String type) {
@@ -459,23 +461,17 @@ public class GameMenuController {
 
         assert unit != null;
         int totalCost = unit.getCost() * countInNum;
-        if (currentGovernment.getMoney() < totalCost){
+
+        if (currentGovernment.getMoney() < totalCost)
             game.showErrorText("Not enough gold!");
-            return ;
-        }
-
-        if (currentGovernment.getFreeWorker() < countInNum){
+        else if (currentGovernment.getFreeWorker() < countInNum)
             game.showErrorText("Insufficient population!");
-            return ;
-        }
-
-        if (!doesUnitsHaveWeapons(countInNum, unit)){
+        else if (!doesUnitsHaveWeapons(countInNum, unit))
             game.showErrorText("Insufficient weapons!");
-            return ;
+        else {
+            Barrack selectedBarrack = (Barrack) DataBase.getSelectedBuilding();
+            trainTroopsForGovernment(countInNum, unit, selectedBarrack);
         }
-
-        Barrack selectedBarrack = (Barrack) DataBase.getSelectedBuilding();
-        trainTroopsForGovernment(countInNum, unit, selectedBarrack);
     }
 
     private static boolean doesUnitsHaveWeapons(int count, Unit unit) {
