@@ -257,7 +257,8 @@ public class Game extends Application{
                         CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
 
                     drawMap();
-                } else if (DataBase.getSelectedUnit() != null && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
+                } else if (DataBase.getSelectedUnit() != null && DataBase.getSelectedUnit().size() != 0
+                        && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
                     move(squareI + blockX, squareJ + blockY);
                     try {
                         showSelectedSquares(blockX, blockY, DataBase.getSelectedUnit());
@@ -265,7 +266,8 @@ public class Game extends Application{
                         throw new RuntimeException(e);
                     }
 
-                } else if (DataBase.getSelectedUnit() != null && map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
+                } else if (DataBase.getSelectedUnit() != null && DataBase.getSelectedUnit().size() != 0
+                        && map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getCurrentGovernment())) {
                     String targetX=Integer.toString(squareI + blockX);
                     String targetY=Integer.toString(squareJ + blockY);
                     GameMenuController.AttackBySelectedUnits(targetX,targetY);
@@ -491,9 +493,11 @@ public class Game extends Application{
                 turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
                 if (GameMenuController.nextTurn()) {
                     endGame();
+                    drawMap();
                     return;
                 }
                 GameGraphicController.setPopularityGoldPopulation();
+                drawMap();
             }else if(event.getCode() == KeyCode.S){
                 try {
                     ShopMenu.openShopMenu();
@@ -611,6 +615,7 @@ public class Game extends Application{
     }
 
     private void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<Unit> selectedUnit) throws IOException {
+        DataBase.setSelectedUnit(null);
         bottomPane.getChildren().remove(detail);
         detail = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/ShowSelectedSquares.fxml")).toExternalForm()));
@@ -702,6 +707,7 @@ public class Game extends Application{
     }
 
     public void showBuildingDetail(Building building) throws IOException {
+        DataBase.setSelectedUnit(null);
         bottomPane.getChildren().remove(detail);
 
         if (building.getName().equals("MercenaryPost")) {
