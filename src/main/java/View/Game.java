@@ -133,6 +133,7 @@ public class Game extends Application{
         land = null;
         DataBase.setSelectedUnit(null);
     }
+
     public  void addToGovernmentsInGame(Government government){
         governmentsInGame.add(government);
     }
@@ -173,26 +174,10 @@ public class Game extends Application{
 
         stage.setFullScreen(true);
         stage.show();
-
-        placeGovernmentsKeep();
     }
 
     public ArrayList<Government> getGovernmentsInGame() {
         return governmentsInGame;
-    }
-
-    public void drawTurnUser() {
-        turnUser.setLayoutX(leftX + 1014);
-        turnUser.setLayoutY(screenHeight - 30);
-        turnUser.setTextFill(Color.BLUEVIOLET);
-        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-
-        mainPane.getChildren().add(turnUser);
-    }
-
-    private void placeGovernmentsKeep() {
-        
-
     }
 
     public static void setXY(int x, int y) {
@@ -532,8 +517,6 @@ public class Game extends Application{
                 Game.mainPane.getChildren().remove(ShopMenu.shopPane);
                 Game.mainPane.getChildren().add(ShopMenuController.tradePane);
             }
-
-            
         });
     }
 
@@ -811,6 +794,15 @@ public class Game extends Application{
         tooltip.show(mainPane, x, y);
     }
 
+    public void drawTurnUser() {
+        turnUser.setLayoutX(leftX + 1014);
+        turnUser.setLayoutY(screenHeight - 30);
+        turnUser.setTextFill(Color.BLUEVIOLET);
+        turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
+
+        mainPane.getChildren().add(turnUser);
+    }
+
     public void showErrorText(String errorText) {
         mainPane.getChildren().remove(errorPane);
 
@@ -830,6 +822,8 @@ public class Game extends Application{
 
         errorTimeline.playFromStart();
     }
+
+
 
     private void initializeDetailsTextFields(){
         for (int i = 0; i < 8; i++) {
