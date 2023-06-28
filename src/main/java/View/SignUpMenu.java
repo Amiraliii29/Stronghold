@@ -146,7 +146,7 @@ public class SignUpMenu extends Application {
         
         if(proceed)
             try {
-                Request request=new Request(null, NormalRequest.SIGNUP);
+                Request request=new Request(NormalRequest.SIGNUP);
                 request.addToArguments("Username", username);
                 request.addToArguments("Password", passWord);
                 request.addToArguments("Email", email);

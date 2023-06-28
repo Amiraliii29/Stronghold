@@ -19,10 +19,17 @@ public class Request {
 
 
 
-    public Request(GameRequest gameRequest, NormalRequest normalRequest) {
+    public Request(NormalRequest normalRequest) {
+        token = userToken;
+        this.gameRequest = null;
+        this.normalRequest = normalRequest;
+        argument = new HashMap<>();
+    }
+
+    public Request(GameRequest gameRequest) {
         token = userToken;
         this.gameRequest = gameRequest;
-        this.normalRequest = normalRequest;
+        this.normalRequest = null;
         argument = new HashMap<>();
     }
 
