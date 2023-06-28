@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import Controller.SignUpMenuController;
+
 public class HandleConnection extends Thread{
     private final String token;
     private final Socket socket;
@@ -56,7 +58,21 @@ public class HandleConnection extends Thread{
 
 
     private void requestHandler(Request request) {
+        
+        String result="";
 
+        if(request.normalRequest.equals(NormalRequest.SIGNUP))
+            result=SignUpMenuController.handleSignupRequest(request.argument);
+        //TODO: FILL THE REST IF&ELSES
+
+
+
+        
+        try {
+            dataOutputStream.writeUTF(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

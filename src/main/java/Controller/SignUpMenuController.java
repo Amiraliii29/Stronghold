@@ -2,6 +2,7 @@ package Controller;
 
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.regex.Matcher;
 
@@ -15,7 +16,7 @@ public class SignUpMenuController {
     private static int failedAttempts;
     private static int failurePenalty;
 
-    //username password email slogan
+
     public static SignUpMenuMessages createUserController(String userName, String passWord,
                                                           String nickName, String passWordConfirmation, String email, String slogan,String securityAnswer) throws NoSuchAlgorithmException {
         email = email.toLowerCase();
@@ -73,45 +74,6 @@ public class SignUpMenuController {
         return SignUpMenuMessages.SUCCESFUL_LOGIN;
     }
 
-    // public static SignUpMenuMessages forgotMyPassWordController(String email, String securityAnswer) throws NoSuchAlgorithmException {
-    //     User targetUser = User.getUserByEmail(email);
-    //     if (targetUser == null)
-    //         return SignUpMenuMessages.INVALID_EMAIL_FORGET_PASSWORD_ERROR;
-
-    //     if (!targetUser.getSecurityQuestion().equals(securityAnswer))
-    //         return SignUpMenuMessages.INCORRECT_SECURITY_FORGET_PASSWORD_ERROR;
-
-    //     String newPassword = SignUpMenu.getNewPasswordFromUser();
-    //     newPassword = UserInfoOperator.encodeStringToSha256(newPassword);
-
-    //     targetUser.setPassword(newPassword);
-    //     UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
-    //     return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
-    // }
-
-    // public static SignUpMenuMessages handleNewPasswordEntry(String password, String passwordRepeat) {
-
-    //     if (password == null)
-    //         return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
-
-    //     if (password.equals("random")) {
-    //         password = UserInfoOperator.generateRandomPassword();
-    //         passwordRepeat = SignUpMenu.confirmRandomPassword(password);
-    //     }
-
-    //     if (passwordRepeat == null)
-    //         return SignUpMenuMessages.EMPTY_FIELDS_FORGET_PASSWORD_ERROR;
-
-    //     if (!UserInfoOperator.isPasswordRepeatedCorrectly(password, passwordRepeat))
-    //         return SignUpMenuMessages.INCORRECT_REPEAT_FORGET_PASSWORD_ERROR;
-
-    //     if (!UserInfoOperator.isPasswordStrong(password))
-    //         return SignUpMenuMessages.WEAK_PASSWORD_ERROR;
-
-
-    //     return SignUpMenuMessages.SUCCESFUL_FORGET_PASSWORD;
-    // }
-
     public static void setNewPenalty() {
         failedAttempts++;
         failurePenalty = failedAttempts * 5;
@@ -125,8 +87,6 @@ public class SignUpMenuController {
         Timer timerObj = new Timer(true);
         timerObj.scheduleAtFixedRate(new PenaltyTimer(), 0, 1000);
     }
-
-   
 
     public static SignUpMenuMessages UserSecurityAnswerController(String securityAnswerComponents, User user) {
 
@@ -151,5 +111,27 @@ public class SignUpMenuController {
 
     public static void decreasePenalty() {
         failurePenalty--;
+    }
+
+    public static String handleSignupRequest(HashMap<String,String> signupArguments){
+        String username=signupArguments.get("Username");
+        String password=signupArguments.get("Password");
+        String email=signupArguments.get("Email");
+        String slogan=signupArguments.get("Slogan");
+        String nickname=signupArguments.get("Nickname");
+        String securityAnswer=signupArguments.get("Security");
+        
+        if(User.getUserByUserName(username) != null)
+            return "DUPLICATE_USERNAME";
+        
+        if(User.getUserByEmail(email) != null)
+            return "DUPLICATE_EMAIL";
+
+        try {
+            createUserController(username, password, nickname, password, email, slogan, securityAnswer);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "SUCCESS";
     }
 }
