@@ -295,7 +295,8 @@ public class Game extends Application{
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 75);
                     Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6, squareJ + nowY + 3 , "Granary");
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 75);
-                    Troop.createTroop(governmentsInGame.get(keepOwnerGovernmentsCounter), "Lord", squareI + nowX, squareJ + nowY);
+
+                    governmentsInGame.get(keepOwnerGovernmentsCounter).setLord(squareI + nowX, squareJ + nowY);
 
                     keepOwnerGovernmentsCounter++;
                     drawMap();

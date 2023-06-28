@@ -88,7 +88,7 @@ public class GameGraphicController {
             Game.bottomPane.getChildren().add(goldsInBottomMenu);
 
         //show population
-        populationInBottomMenu.setText(DataBase.getCurrentGovernment().getPopulation() + "/128" );
+        populationInBottomMenu.setText(DataBase.getCurrentGovernment().getFreeWorker() + "/128");
         populationInBottomMenu.setLayoutX(886);
         populationInBottomMenu.setLayoutY(112);
         if(!Game.bottomPane.getChildren().contains(populationInBottomMenu))
