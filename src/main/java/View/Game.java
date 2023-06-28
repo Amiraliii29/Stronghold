@@ -489,9 +489,7 @@ public class Game extends Application{
                 turnUser.setLayoutY(screenHeight - 30);
                 turnUser.setTextFill(Color.BLUEVIOLET);
                 turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-                DataBase.setCurrentGovernment(governmentsInGame.get(turnUserNumber));
-                GameMenuController.setCurrentGovernment();
-                User.setCurrentUser(governmentsInGame.get(turnUserNumber).getOwner());
+                GameMenuController.nextTurn();
                 GameGraphicController.setPopularityGoldPopulation();
             }else if(event.getCode() == KeyCode.S){
                 try {

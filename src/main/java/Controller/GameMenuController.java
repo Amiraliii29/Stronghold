@@ -9,19 +9,27 @@ import Model.Square;
 import Model.Units.*;
 import View.Controller.BuildingInfo;
 import View.Controller.GameGraphicController;
+import View.Enums.Messages.GameMenuMessages;
 import View.Game;
 import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GameMenuController {
     private static Game game;
     private static Map map;
     private static Square[][] squares;
+    private static ArrayList<Unit> allUnits;
     private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> path;
     private static Government currentGovernment;
+
+
+    static {
+        allUnits = new ArrayList<>();
+    }
 
 
 
@@ -48,6 +56,77 @@ public class GameMenuController {
 
     public static void setGame(Game game) {
         GameMenuController.game = game;
+    }
+
+    public static ArrayList<Unit> getAllUnits() {
+        return allUnits;
+    }
+
+
+
+    public static boolean nextTurn() {
+        //automatic fights
+        ArrayList<Government> governments = DataBase.getGovernments();
+        int index = governments.indexOf(currentGovernment);
+//        if (index == governments.size() - 1)
+//            DataBase.handleEndOfTurnFights();
+
+        //change government
+        if (index == governments.size() - 1)
+            currentGovernment = governments.get(0);
+        else
+            currentGovernment = governments.get(index + 1);
+
+        DataBase.setCurrentGovernment(currentGovernment);
+        DataBase.setSelectedBuilding(null);
+
+        //work with government
+        currentGovernment.addAndRemoveFromGovernment();
+        DataBase.generateResourcesForCurrentGovernment();
+        DataBase.setSelectedUnit(new ArrayList<>());
+
+        return checkForEnd();
+    }
+
+    public static boolean checkForEnd() {
+        ArrayList<Government> governments = DataBase.getGovernments();
+        Square[][] allSquares = DataBase.getSelectedMap().getSquares();
+
+        for (int i = 0; i < governments.size(); i++) {
+            if (governments.get(i).getLord().getHitPoint() <= 0) {
+                //destroy every thing for this government
+                for (Square[] allSquare : allSquares) {
+                    for (int k = 0; k < allSquares[0].length; k++) {
+                        if (allSquare[k].getBuilding() != null
+                                && allSquare[k].getBuilding().getOwner().equals(governments.get(i))) {
+                            allSquare[k].getBuilding().changeHP(-100000);
+                            DataBase.removeDestroyedBuildings(allSquare[k].getBuilding());
+                        }
+                        for (int l = 0; l < allSquare[k].getUnits().size(); l++) {
+                            if (allSquare[k].getUnits().get(l).getOwner().equals(governments.get(i))) {
+                                allSquare[k].removeUnit(allSquare[k].getUnits().get(l));
+                                l--;
+                            }
+                        }
+                    }
+                }
+                governments.remove(i);
+                i--;
+            }
+        }
+
+        allUnits = new ArrayList<>();
+
+        for (Square[] allSquare : allSquares) {
+            for (int k = 0; k < allSquares[0].length; k++) {
+                for (Unit unit : allSquare[k].getUnits()) {
+                    allUnits.add(unit);
+                }
+            }
+        }
+        //if both lord die in one turn !!! //TODO
+        if (governments.size() == 1) return true;
+        return false;
     }
 
 

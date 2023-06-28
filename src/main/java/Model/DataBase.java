@@ -190,10 +190,8 @@ public class DataBase {
     private static void performFightBetweenTwoUnits(Double distance, Unit attacker, Unit deffender) {
         deffender.changeHitPoint(attacker.getDamage());
 
-//        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance) && !deffender.getDidFight()) {
-//            attacker.changeHitPoint(deffender.getDamage());
-//            deffender.setDidFight(true);
-//        }
+        if (Math.ceil(deffender.getAttackRange()) >= Math.floor(distance))
+            attacker.changeHitPoint(deffender.getDamage());
     }
 
     public static boolean isUnitFriendly(Government owner, Unit unit) {
