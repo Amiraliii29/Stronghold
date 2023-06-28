@@ -24,6 +24,9 @@ import Controller.Orders;
 import Controller.ProfileMenuController;
 import Controller.UserComparator;
 import Controller.UserInfoOperator;
+import Main.Client;
+import Main.NormalRequest;
+import Main.Request;
 import Model.User;
 import View.Enums.Commands.ProfileMenuCommands;
 import View.Enums.Messages.ProfileMenuMessages;
@@ -528,22 +531,24 @@ public class ProfileMenu extends Application {
 
     private void submitChanges() {
         ProfileMenuMessages usernameResult=null,emailResult=null,nicknameResult=null,sloganResult=null;
+                Request request=new Request(NormalRequest.CHANGE_PROFILE_FIELDS);
 
-            try {
-                if (checkUsernameValue(usernameField.getText(), true))
-                   usernameResult=ProfileMenuController.changeUsername(usernameField.getText());
+        //TODO: CHECK DUPLICATION
+
+        if (checkUsernameValue(usernameField.getText(), true))
+            request.addToArguments("Username", usernameField.getText());
                 
-                if (checkEmailValue(emailField.getText(), true))
-                    emailResult=ProfileMenuController.changeEmail(emailField.getText());
+        if (checkEmailValue(emailField.getText(), true))
+            request.addToArguments("Email", usernameField.getText());
 
-                if (checkNicknameValue(nicknameField.getText(), true))
-                    nicknameResult=ProfileMenuController.changeNickname(nicknameField.getText());
+        if (checkNicknameValue(nicknameField.getText(), true))
+            request.addToArguments("Nickname", usernameField.getText());
 
-                sloganResult=ProfileMenuController.changeSlogan(sloganField.getText());
+        request.addToArguments("Slogan", usernameField.getText());
+            
+        Client.client.sendRequestToServer(request);
+        //TODO: GET THE RESULTS SENT AND NOTIFY USER
 
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
 
         String output="The fields Below Changed Succesfuly:\n";
 

@@ -68,7 +68,7 @@ public class ProfileMenuController {
         return ProfileMenuMessages.SUCCESFUL_CHANGE_PASSWORD;
     }
 
-    public static ProfileMenuMessages changeUsername(String newUsername) throws NoSuchAlgorithmException {
+    public static ProfileMenuMessages changeUsername(String newUsername,boolean applyChange) throws NoSuchAlgorithmException {
         if(newUsername==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
 
@@ -78,12 +78,8 @@ public class ProfileMenuController {
         if(newUsername.equals(currentUser.getUsername()))
           return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
 
-        if(User.getUserByUserName(newUsername)!=null)
-          return ProfileMenuMessages.DUPLICATE_USERNAME_ERROR;
-
-        
-        currentUser.setUsername(newUsername);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+        if(applyChange)
+            currentUser.setUsername(newUsername);
         return ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME;
     }
 
@@ -97,9 +93,6 @@ public class ProfileMenuController {
 
         if(newEmail.equals(currentUser.getEmail()))
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
-
-        if(User.getUserByEmail(newEmail)!=null)
-            return ProfileMenuMessages.DUPLICATE_EMAIL_ERROR;
         
         currentUser.setEmail(newEmail);
         UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
