@@ -9,12 +9,13 @@ public class Client {
     private final ServerAction serverAction;
     private final DataOutputStream dataOutputStream;
     private final DataInputStream dataInputStream;
-    public static Client thisClient;
+    public static Client client;
 
     public Client(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
+        client=this;
 
         serverAction = new ServerAction(socket, dataInputStream , dataOutputStream);
         serverAction.start();
@@ -22,6 +23,22 @@ public class Client {
 
     public DataOutputStream getDataOutputStream() {
         return dataOutputStream;
+    }
+    public void sendRequestToServer(Request request){
+        try {
+            dataOutputStream.writeUTF(request.toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getServerResponse(){
+       try {
+        return dataInputStream.readUTF();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return null;
     }
 
     public DataInputStream getDataInputStream() {
