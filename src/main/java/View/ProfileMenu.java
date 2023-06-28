@@ -482,11 +482,9 @@ public class ProfileMenu extends Application {
     private void changePassword(String oldPassword,String newPssword, String passwordRepeat){
         
         ProfileMenuMessages result=null;
-        try {
-            result=ProfileMenuController.changePassword(oldPassword, passwordRepeat, oldPassword);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        
+        result=ProfileMenuController.changePassword(oldPassword, passwordRepeat, oldPassword);
+       
 
         switch (result) {
             case EMPTY_FIELDS_ERROR:
@@ -529,7 +527,6 @@ public class ProfileMenu extends Application {
     private void submitChanges() {
         ProfileMenuMessages usernameResult=null,emailResult=null,nicknameResult=null,sloganResult=null;
 
-            try {
                 if (checkUsernameValue(usernameField.getText(), true))
                    usernameResult=ProfileMenuController.changeUsername(usernameField.getText());
                 
@@ -541,9 +538,7 @@ public class ProfileMenu extends Application {
 
                 sloganResult=ProfileMenuController.changeSlogan(sloganField.getText());
 
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+        
 
         String output="The fields Below Changed Succesfuly:\n";
 
@@ -619,7 +614,7 @@ public class ProfileMenu extends Application {
         String color = Orders.yellowNotifErrorColor;
         if (isOnSignUpProcess)
             color = Orders.redNotifErrorColor;
-
+        
         if (!UserInfoOperator.isUsernameFormatValid(value)) {
             sendTextNotification(usernameText, "[a-zA-z0-9] and '_' +min 3 size", color,
                     usernameVbox);

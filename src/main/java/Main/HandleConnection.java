@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
 
 public class HandleConnection extends Thread{
@@ -63,6 +64,9 @@ public class HandleConnection extends Thread{
 
         if(request.normalRequest.equals(NormalRequest.SIGNUP))
             result=SignUpMenuController.handleSignupRequest(request.argument);
+
+        else if(request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
+            result=ProfileMenuController.handleProfileFieldsChange(request.argument);
         //TODO: FILL THE REST IF&ELSES
 
 
