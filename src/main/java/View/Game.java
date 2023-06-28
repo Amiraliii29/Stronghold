@@ -489,7 +489,10 @@ public class Game extends Application{
                 turnUser.setLayoutY(screenHeight - 30);
                 turnUser.setTextFill(Color.BLUEVIOLET);
                 turnUser.setText(governmentsInGame.get(turnUserNumber).getOwner().getUsername() + "'s turn");
-                GameMenuController.nextTurn();
+                if (GameMenuController.nextTurn()) {
+                    endGame();
+                    return;
+                }
                 GameGraphicController.setPopularityGoldPopulation();
             }else if(event.getCode() == KeyCode.S){
                 try {
@@ -819,6 +822,10 @@ public class Game extends Application{
         mainPane.getChildren().add(errorPane);
 
         errorTimeline.playFromStart();
+    }
+
+    private void endGame() {
+
     }
 
 
