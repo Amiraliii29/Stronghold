@@ -248,19 +248,19 @@ public class TradeMenuController {
 
         switch (menuMessages){
             case NOT_ENOUGH_OPTIONS -> {
-                GameGraphicController.popUpAlert("Request Error" , ""
+                GameGraphicController.popUpAlert("Main.Request Error" , ""
                 , "Please first select the item you want to trade" , Orders.redNotifErrorColor);
             }
             case INVALID_GOVERNMENT_NAME -> {
-                GameGraphicController.popUpAlert("Request Error" , "" ,
+                GameGraphicController.popUpAlert("Main.Request Error" , "" ,
                         "Please first select the government you want to trade with" , Orders.redNotifErrorColor);
             }
             case SEND_REQUEST_SUCCESS -> {
-                GameGraphicController.popUpAlert("Request Success" , "" ,
+                GameGraphicController.popUpAlert("Main.Request Success" , "" ,
                         "Trade request has been sent successfully" , Orders.greenNotifSuccesColor);
             }
             case ENTER_MESSAGE -> {
-                GameGraphicController.popUpAlert("Request Error" , "" ,
+                GameGraphicController.popUpAlert("Main.Request Error" , "" ,
                         "Message Field is empty" , Orders.redNotifErrorColor);
             }
         }
@@ -401,7 +401,7 @@ public class TradeMenuController {
             if(tradeRequest.isDonate())
                 text += "Donate -> ";
             else
-                text += "Request -> ";
+                text += "Main.Request -> ";
 
             text +=  "ID = "  + tradeRequest.getId();
             text += " | Target Government =  " + tradeRequest.getGovernmentThatHasBeenAsked().getOwner().getUsername();
@@ -451,7 +451,7 @@ public class TradeMenuController {
             if(tradeRequest.isDonate())
                 text += "Donate -> ";
             else
-                text += "Request -> ";
+                text += "Main.Request -> ";
 
             text +=  "ID = "  + tradeRequest.getId();
             if(tradeRequest.isDonate())
@@ -511,11 +511,11 @@ public class TradeMenuController {
 
         switch (menuMessages){
             case NOT_ENOUGH_RESOURCE_IN_STOCKPILE -> {
-                GameGraphicController.popUpAlert("Accept Request Error"  , ""
+                GameGraphicController.popUpAlert("Accept Main.Request Error"  , ""
                 , "Not enough of " + selectedItem.getName() + " in wareHouse" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_FREE_SPACE -> {
-                GameGraphicController.popUpAlert("Accept Request Error" , "" ,
+                GameGraphicController.popUpAlert("Accept Main.Request Error" , "" ,
                         "Not enough free space in the " + selectedTradeRequest.getGovernmentThatRequested().getOwner().getUsername()
                                 + "'s wareHouse" , Orders.redNotifErrorColor);
             }
@@ -523,7 +523,7 @@ public class TradeMenuController {
                 tradeMenuHistoryPane.getChildren().removeAll(selectedRequestsRejectButton ,
                         getSelectedRequestsAcceptButton);
                 GameGraphicController.popUpAlert("Success" , "" ,
-                        "Request accepted successfully" , Orders.greenNotifSuccesColor);
+                        "Main.Request accepted successfully" , Orders.greenNotifSuccesColor);
             }
         }
 
