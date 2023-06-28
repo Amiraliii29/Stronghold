@@ -26,7 +26,9 @@ public class Request {
         argument = new HashMap<>();
     }
 
-
+    public void addToArguments(String key,String value){
+        argument.put(key, value);
+    }
 
     public boolean verify(String token) {
         return this.token.equals(token);

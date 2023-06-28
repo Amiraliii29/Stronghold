@@ -1,11 +1,15 @@
 package View;
 
+import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
+import Main.Client;
+import Main.NormalRequest;
+import Main.Request;
 import Model.User;
 import Controller.Orders;
 import View.Enums.Commands.SignUpMenuCommands;
@@ -90,7 +94,6 @@ public class SignUpMenu extends Application {
         fadeTrans.play();
     }
 
-
     private void initializeMainVbox(){
         mainPane.setAlignment( Pos.CENTER);
         
@@ -128,6 +131,7 @@ public class SignUpMenu extends Application {
         String slogan=sloganField.getText();
         String securityAnswer=securityField.getText();
 
+
         boolean proceed=true;
         if(!checkUsernameValue(username, true))
             proceed=false;
@@ -142,8 +146,19 @@ public class SignUpMenu extends Application {
         
         if(proceed)
             try {
-                SignUpMenuController.createUserController(username, passWord, nickname, passWord, email, slogan, securityAnswer);
-                new LoginMenu().start(stage);
+                Request request=new Request(null, NormalRequest.SIGNUP);
+                request.addToArguments("Username", username);
+                request.addToArguments("Password", passWord);
+                request.addToArguments("Email", email);
+                request.addToArguments("Nickname", nickname);
+                request.addToArguments("Slogan", slogan);
+                request.addToArguments("Security", securityAnswer);
+       
+                Client.client.sendRequestToServer(request);
+                String response=Client.client.getServerResponse();
+
+                if(wasResponseSuccessfull(response))
+                    new LoginMenu().start(stage);
             } catch ( Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -249,11 +264,6 @@ public class SignUpMenu extends Application {
             return false;
         }
 
-        if(User.getUserByEmail(value) != null){
-            sendTextNotification(emailText, "Email already in use",color, emailVbox);
-            return false;
-        }
-
         return true;
     }
 
@@ -295,10 +305,6 @@ public class SignUpMenu extends Application {
             return false;
         }
 
-        else if(User.getUserByUserName(value) != null){
-            sendTextNotification(userText, "username already in use, suggest:"+UserInfoOperator.addRandomizationToString(value),Orders.yellowNotifErrorColor, userVbox);
-            return false;
-        }
         return true;
     }
 
@@ -416,6 +422,21 @@ public class SignUpMenu extends Application {
         emailText.setVisible(false);
         nicknameText.setVisible(false);
         securityText.setVisible(false);
+    }
+
+    private boolean wasResponseSuccessfull(String response){
+        
+        if(response.equals("DUPLICATE_EMAIL")){
+            sendTextNotification(emailText, "Email already in use",Orders.redNotifErrorColor, emailVbox);
+            return false;
+        }
+
+        if(response.equals("DUPLICATE_USERNAME")){
+            sendTextNotification(userText, "Username already in use",Orders.redNotifErrorColor, userVbox);
+            return false;
+        }
+
+        return true;
     }
 
 }
