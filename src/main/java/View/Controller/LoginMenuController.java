@@ -2,6 +2,10 @@ package View.Controller;
 
 import Controller.SignUpMenuController;
 import Controller.UserInfoOperator;
+import Main.Client;
+import Main.GameRequest;
+import Main.NormalRequest;
+import Main.Request;
 import Model.DataBase;
 import Model.Government;
 import Model.Map;
@@ -12,6 +16,7 @@ import View.Input_Output;
 import View.LoginMenu;
 import View.MainMenu;
 import View.SignUpMenu;
+import com.google.gson.Gson;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.lang.ref.Cleaner;
 import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -46,8 +52,11 @@ public class LoginMenuController {
             alert.setContentText("please fill username and password fields");
             alert.showAndWait();
         }
-
-        User targetUser = User.getUserByUserName(userName);
+        Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.argument.put("userName" , userName );
+        Client.thisClient.getDataOutputStream().writeUTF(request.toJson());
+        String json = Client.thisClient.getDataInputStream().readUTF();
+        User targetUser = new Gson().fromJson(json , User.class);
 
         if (targetUser == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));

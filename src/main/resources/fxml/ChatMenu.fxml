@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="343.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.ChatController">
+   <children>
+      <ImageView fitHeight="346.0" fitWidth="297.0" layoutY="-3.0">
+         <image>
+            <Image url="@../Images/menu-backgrounds/ChatMenuBackground.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="102.0" layoutY="60.0" text="Chat Menu">
+         <font>
+            <Font name="American Typewriter" size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="105.0" layoutY="113.0" mnemonicParsing="false" onMouseClicked="#enterPublicChat" prefHeight="26.0" prefWidth="94.0" text="Public Chat">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="104.0" layoutY="159.0" mnemonicParsing="false" onMouseClicked="#enterPrivateChat" text="Private Chat">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="105.0" layoutY="210.0" mnemonicParsing="false" onMouseClicked="#enterRoomChat" prefHeight="26.0" prefWidth="94.0" text="Room">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

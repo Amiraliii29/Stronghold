@@ -20,5 +20,11 @@ public class Client {
         serverAction.start();
     }
 
+    public DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
+    }
 
+    public DataInputStream getDataInputStream() {
+        return dataInputStream;
+    }
 }
