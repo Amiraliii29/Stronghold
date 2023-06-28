@@ -2,7 +2,6 @@ package View.Controller;
 
 import Model.DataBase;
 import View.Game;
-import View.Main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.net.URL;
 
 public class GetCoordinate extends Application {

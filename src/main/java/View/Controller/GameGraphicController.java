@@ -1,15 +1,13 @@
 package View.Controller;
 
 import Model.Buildings.Building;
-import Model.Buildings.TownBuilding;
 import Model.DataBase;
 import View.Game;
-import View.Main;
+import Main.Main;
 import View.ShopMenu;
 import View.SignUpMenu;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

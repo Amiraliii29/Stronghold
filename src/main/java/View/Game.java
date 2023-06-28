@@ -616,7 +616,6 @@ public class Game extends Application{
     }
 
     private void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<Unit> selectedUnit) throws IOException {
-        DataBase.setSelectedUnit(null);
         bottomPane.getChildren().remove(detail);
         detail = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/ShowSelectedSquares.fxml")).toExternalForm()));
