@@ -9,6 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import Controller.SignUpMenuController;
+import Model.User;
+import com.google.gson.Gson;
 
 public class HandleConnection extends Thread{
     private final String token;
@@ -57,14 +59,19 @@ public class HandleConnection extends Thread{
     }
 
 
-    private void requestHandler(Request request) {
+    private void requestHandler(Request request) throws IOException {
         
         String result="";
 
         if(request.normalRequest.equals(NormalRequest.SIGNUP))
             result=SignUpMenuController.handleSignupRequest(request.argument);
         //TODO: FILL THE REST IF&ELSES
-
+        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)){
+            String userName = request.argument.get("userName");
+            User user = User.getUserByUserName(userName);
+            String json = new Gson().toJson(user , User.class);
+            dataOutputStream.writeUTF(json);
+        }
 
 
         

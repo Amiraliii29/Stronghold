@@ -4,7 +4,6 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 
-import Controller.LoginMenuController;
 import Controller.Orders;
 import Controller.UserInfoOperator;
 import Model.DataBase;
