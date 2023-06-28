@@ -6,16 +6,18 @@ import Model.DataBase;
 import View.Game;
 import View.Main;
 import View.ShopMenu;
+import View.SignUpMenu;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -65,6 +67,7 @@ public class GameGraphicController {
             @Override
             public void handle(MouseEvent event) {
                 try {
+                    Game.mainPane.getChildren().remove(popularityFactorsPane);
                     popularityFactorsPane = FXMLLoader.load(
                             new URL(Main.class.getResource("/fxml/PopularityFactorsMenu.fxml").toExternalForm()));
                     popularityFactorsPane.setLayoutX(Game.leftX +  512);
@@ -227,6 +230,13 @@ public class GameGraphicController {
                 int foodRate = (int) Math.floor(foodSlider.getValue());
                 DataBase.getCurrentGovernment().setFood(foodRate);
                 setPopularityGoldPopulation();
+                try {
+                    fillPopularityFactorsMenuLabelsAndImages();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -241,6 +251,13 @@ public class GameGraphicController {
                 int taxRate = (int) Math.floor(taxSlider.getValue());
                 DataBase.getCurrentGovernment().setTax(taxRate);
                 setPopularityGoldPopulation();
+                try {
+                    fillPopularityFactorsMenuLabelsAndImages();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -255,6 +272,13 @@ public class GameGraphicController {
                 int fearRate = (int) Math.floor(fearSlider.getValue());
                 DataBase.getCurrentGovernment().setFear(fearRate);
                 setPopularityGoldPopulation();
+                try {
+                    fillPopularityFactorsMenuLabelsAndImages();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -603,5 +627,19 @@ public class GameGraphicController {
 
     public void exitPopularityFactorsMenu(MouseEvent mouseEvent) {
         Game.mainPane.getChildren().remove(popularityFactorsPane);
+    }
+
+    public static void  popUpAlert(String title,String header,String outputText,String Color){
+        Dialog dialog=new Dialog<>();
+        dialog.initOwner(SignUpMenu.stage);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        DialogPane dialogPane = dialog.getDialogPane();
+        Text output=new Text(outputText);
+        VBox vbox=new VBox(8, output);
+        vbox.setStyle("-fx-background-color:"+Color);
+        dialogPane.setContent(vbox);
+        dialogPane.getButtonTypes().addAll(ButtonType.OK);
+        dialog.showAndWait();
     }
 }

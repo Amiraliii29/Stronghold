@@ -2,6 +2,7 @@ package View;
 
 import View.Controller.ShopMenuController;
 import Model.Resource;
+import View.Controller.TradeMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,8 +32,12 @@ public class ShopMenu extends Application {
 
 
 
-    public static void openShopMenu(Stage stage) throws IOException {
+    public static void openShopMenu() throws IOException {
 
+        Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+        Game.mainPane.getChildren().remove(ShopMenuController.tradePane);
         shopPane = FXMLLoader.load(
                 new URL(ShopMenu.class.getResource("/fxml/ShopMenu.fxml").toExternalForm()));
         shopPane.setLayoutX(Game.leftX);
