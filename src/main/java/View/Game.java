@@ -7,6 +7,7 @@ import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.Buildings.Generator;
 import Model.Buildings.*;
+import Model.Units.Troop;
 import Model.Units.Unit;
 import View.Controller.BuildingInfo;
 import View.Controller.GameGraphicController;
@@ -326,6 +327,7 @@ public class Game extends Application{
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Stone") , 75);
                     Stockpile.createStockpile(governmentsInGame.get(keepOwnerGovernmentsCounter), squareI + nowX + 6, squareJ + nowY + 3 , "Granary");
                     governmentsInGame.get(keepOwnerGovernmentsCounter).addToStockpile(Resource.getResourceByName("Bread") , 75);
+                    Troop.createTroop(governmentsInGame.get(keepOwnerGovernmentsCounter), "Lord", squareI + nowX, squareJ + nowY);
 
                     keepOwnerGovernmentsCounter++;
                     drawMap();
