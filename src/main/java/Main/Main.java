@@ -10,12 +10,13 @@ import javafx.stage.Stage;
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try {
-            System.out.println("started !");
-            new Client("localhost", 8000);
+            Client client = new Client("localhost", 8000);
+            Client.thisClient = client;
         } catch (IOException ignored) {
         }
+        new SignUpMenu().start(new Stage());
     }
 }
 

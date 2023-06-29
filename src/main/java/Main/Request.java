@@ -34,8 +34,6 @@ public class Request {
         this.normalRequest = normalRequest;
     }
 
-
-
     public boolean verify(String token) {
         return this.token.equals(token);
     }

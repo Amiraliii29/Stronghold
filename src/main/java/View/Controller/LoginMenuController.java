@@ -1,5 +1,11 @@
-package Controller;
+package View.Controller;
 
+import Controller.SignUpMenuController;
+import Controller.UserInfoOperator;
+import Main.Client;
+import Main.GameRequest;
+import Main.NormalRequest;
+import Main.Request;
 import Model.DataBase;
 import Model.Government;
 import Model.Map;
@@ -10,6 +16,7 @@ import View.Input_Output;
 import View.LoginMenu;
 import View.MainMenu;
 import View.SignUpMenu;
+import com.google.gson.Gson;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.lang.ref.Cleaner;
 import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -29,38 +37,11 @@ public class LoginMenuController {
     private TextField securityAnswer;
     private Label securityQuestionLabel;
 
-    public static LoginMenuMessages startGameController(String mapName) {
-        Map.loadMap(mapName);
-        Map selectedMap = DataBase.getSelectedMap();
 
-        if(mapName == null)
-            return LoginMenuMessages.NO_MAP_NAME;
-        else if(DataBase.getSelectedMap() == null)
-            return LoginMenuMessages.INVALID_MAP_NAME;
-        else{
-            int usersCount = selectedMap.getGovernmentsInMap().size();
-            for (int i = 0 ; i < usersCount ; i++){
-                Input_Output.outPut("please enter player number" + i + "'s name:");
-                String userName = Input_Output.getInput();
-                if(User.getUserByUserName(userName) == null) {
-                    Input_Output.outPut("Invalid username");
-                    i--;
-                } else
-                    selectedMap.getGovernmentsInMap().get(i).setOwner(User.getUserByUserName(userName));
-            }
-            DataBase.newGovernments();
-            for (Government government : selectedMap.getGovernmentsInMap()) {
-                DataBase.addGovernment(government);
-            }
-//            GameMenuController.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(0));
-            DataBase.setCurrentGovernment(selectedMap.getGovernmentsInMap().get(0));
-            return LoginMenuMessages.START_GAME_SUCCESS;
-        }
-    }
 
     public void login(MouseEvent mouseEvent) throws Exception {
         String userName = username.getText();
-        String passWord = UserInfoOperator.encodeStringToSha256(password.getText());;
+        String passWord = UserInfoOperator.encodeStringToSha256(password.getText());
         if (userName == null || passWord == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));
             username.setText("");
@@ -71,9 +52,11 @@ public class LoginMenuController {
             alert.setContentText("please fill username and password fields");
             alert.showAndWait();
         }
-
-//        passWord = UserInfoOperator.encodeStringToSha256(passWord); todo
-        User targetUser = User.getUserByUserName(userName);
+        Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.argument.put("userName" , userName );
+        Client.thisClient.getDataOutputStream().writeUTF(request.toJson());
+        String json = Client.thisClient.getDataInputStream().readUTF();
+        User targetUser = new Gson().fromJson(json , User.class);
 
         if (targetUser == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));
