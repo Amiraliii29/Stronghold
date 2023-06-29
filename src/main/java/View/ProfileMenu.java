@@ -530,10 +530,8 @@ public class ProfileMenu extends Application {
     }
 
     private void submitChanges() {
-        ProfileMenuMessages usernameResult=null,emailResult=null,nicknameResult=null,sloganResult=null;
-                Request request=new Request(NormalRequest.CHANGE_PROFILE_FIELDS);
 
-        //TODO: CHECK DUPLICATION
+        Request request=new Request(NormalRequest.CHANGE_PROFILE_FIELDS);
 
         if (checkUsernameValue(usernameField.getText(), true))
             request.addToArguments("Username", usernameField.getText());
@@ -547,26 +545,25 @@ public class ProfileMenu extends Application {
         request.addToArguments("Slogan", usernameField.getText());
             
         Client.client.sendRequestToServer(request);
-        //TODO: GET THE RESULTS SENT AND NOTIFY USER
+        String result= Client.client.getServerResponse();
 
 
         String output="The fields Below Changed Succesfuly:\n";
 
-                if(usernameResult!=null)
-            if(usernameResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME)) 
-                output=output.concat("Username Field\n");
+        if(result.contains("Username"))
+            output=output.concat("Username Field\n");
             
-                if(emailResult!=null)
-            if(emailResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL)) 
-                output=output.concat("Email Field\n");
 
-                if(nicknameResult!=null)
-            if(nicknameResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME)) 
-                output=output.concat("Nickname Field\n");
+        if(result.contains("Email")) 
+            output=output.concat("Email Field\n");
 
-                if(sloganResult!=null)
-            if(sloganResult.equals(ProfileMenuMessages.SUCCESFUL_REMOVE_SLOGAN)) 
-                output=output.concat("Slogan Field\n");
+
+        if(result.contains("Nickname")) 
+            output=output.concat("Nickname Field\n");
+
+
+        if(result.contains("Slogan")) 
+            output=output.concat("Slogan Field\n");
 
         createNotificationDialog("Result","Change Fileds Result:", output,Orders.yellowNotifErrorColor);
     }
