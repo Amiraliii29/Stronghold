@@ -22,7 +22,7 @@ public class Tunneler extends Unit{
         newTunneler.xCoordinate = xCoordinate;
         newTunneler.yCoordinate = yCoordinate;
         if (xCoordinate >= 0 && yCoordinate >= 0)
-            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTunneler);
+            owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTunneler);
         return newTunneler;
     }
 }
