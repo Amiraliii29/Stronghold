@@ -34,6 +34,13 @@ public class Request {
         this.normalRequest = normalRequest;
     }
 
+
+
+    public void addToArguments(String arg1, String arg2) {
+        argument.put(arg1, arg2);
+    }
+
+
     public boolean verify(String token) {
         return this.token.equals(token);
     }

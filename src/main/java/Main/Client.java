@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Client {
+    public static Client client;
     private final ServerAction serverAction;
     private final DataOutputStream dataOutputStream;
     private final DataInputStream dataInputStream;
-    public static Client client;
+
 
     public Client(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
-        client=this;
+        client = this;
 
         serverAction = new ServerAction(socket, dataInputStream , dataOutputStream);
         serverAction.start();
