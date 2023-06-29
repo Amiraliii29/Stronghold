@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Government {
+    private final DataBase dataBase;
     private final ArrayList<Stockpile> stockpiles;
     private final ArrayList<Stockpile> armoury;
     private final ArrayList<Stockpile> granary;
@@ -47,7 +48,8 @@ public class Government {
         requestsIAsked = new ArrayList<>();
     }
 
-    public  Government(double money) {
+    public  Government(DataBase dataBase, double money) {
+        this.dataBase = dataBase;
         this.money = money;
         this.food = 0;
         this.popularity = 0;
@@ -263,6 +265,38 @@ public class Government {
         changeFreeWorkers(popularity * 3);
     }
 
+    public void generateResource() {
+        Model.Map map = dataBase.getSelectedMap();
+
+        for (String s : resourceGenerationRate.keySet()) {
+            if (s.equals("Wood")) {
+                Square[][] squares = map.getSquares();
+                int changeAmount = resourceGenerationRate.get(s);
+                outer:
+                for (int i = 0; i < map.getLength(); i++) {
+                    for (int j = 0; j < map.getWidth(); j++) {
+                        if (changeAmount < 0)
+                            break outer;
+                        if (changeAmount > squares[i][j].getTreeAmount()) {
+                            squares[i][j].changeTreeAmount(squares[i][j].getTreeAmount());
+                            addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), squares[i][j].getTreeAmount());
+                            changeAmount -= squares[i][j].getTreeAmount();
+                        } else {
+                            squares[i][j].changeTreeAmount(changeAmount);
+                            addToStockpile(Objects.requireNonNull(Resource.createResource("Wood")), changeAmount);
+                            changeAmount = 0;
+                        }
+                    }
+                }
+            } else {
+                Integer resourceRate = resourceGenerationRate.get(s);
+                Resource targetResource = Resource.getResourceByName(s);
+                assert targetResource != null;
+                addToStockpile(targetResource, resourceRate);
+            }
+        }
+    }
+
     private void setFoodFactors() {
         foodCount = 0;
         ArrayList<String> names = new ArrayList<>();
@@ -293,7 +327,6 @@ public class Government {
         for (int i = 0; i < numberForRemove; i++) {
             if (!removeFromStockpile(Objects.requireNonNull(Resource.createResource(Resource.getFoodsName().get(i % 4))), 1))
                 numberForRemove++;
-            //need to be checked//TODO
         }
     }
 

@@ -1,35 +1,27 @@
 package Main;
 
-import java.io.FileNotFoundException;
+import Controller.JsonConverter;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
-import View.SignUpMenu;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        load();
+
         ServerSocket serverSocket = new ServerSocket(8000);
         System.out.println("Server Started!");
         while (true) {
             Socket socket = serverSocket.accept();
             System.out.println("Connected!");
 
-            HandleConnection handleConnection = new HandleConnection(socket);
-            handleConnection.start();
+            Client client = new Client(socket);
+            client.start();
         }
     }
-}
 
-//public class Main extends Application {
-//    public static void main(String[] args) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-//        launch(args);
-//    }
-//
-//    @Override
-//    public void start(Stage stage) throws Exception {
-//        new SignUpMenu().start(stage);
-//    }
-//}
+    private static void load() {
+        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
+    }
+}

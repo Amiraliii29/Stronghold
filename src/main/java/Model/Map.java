@@ -1,12 +1,10 @@
 package Model;
 
-import Controller.GameMenuController;
+import Controller.DeleteGameMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import Controller.Orders;
 import Model.Buildings.Building;
-import Model.Buildings.Defence;
 import Model.Units.Unit;
 
 import java.io.File;
@@ -70,15 +68,6 @@ public class Map {
         return x < width && x >= 0 && y >= 0 && y < length;
     }
 
-
-
-    public void setGovernmentsInMap(int count) {
-        this.governmentsInMap = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Government government = new Government(2000);
-            governmentsInMap.add(government);
-        }
-    }
 
 
 
@@ -162,7 +151,7 @@ public class Map {
         ArrayList<Unit> enemyUnits = new ArrayList<>();
 
         for (Unit unit : targetSquare.getUnits())
-            if (!DataBase.isUnitFriendly(ownGovernment, unit)) enemyUnits.add(unit);
+            if (!unit.getOwner().equals(ownGovernment)) enemyUnits.add(unit);
 
         return enemyUnits;
     }
@@ -176,7 +165,7 @@ public class Map {
             return 1;
 
         if (targetBuilding != null)
-            if (!DataBase.isBuildingFriendly(ownGovernment, targetBuilding))
+            if (!targetBuilding.getOwner().equals(ownGovernment))
                 return 2;
 
         return 0;
@@ -213,7 +202,7 @@ public class Map {
         Square targetSquare = squares[x][y];
 
         for (Unit unit : targetSquare.getUnits()){
-            if (!DataBase.isUnitFriendly(owner, unit)) return true;
+            if (!unit.getOwner().equals(owner)) return true;
         }
 
         return false;
@@ -236,29 +225,26 @@ public class Map {
         }
     }
 
-    public static void loadMap(String fileName) {
+    public static Map loadMap(String fileName) {
         try {
             Gson gson = new Gson();
             Type type = new TypeToken<Map>() {}.getType();
             String fileAddress = "src/main/resources/Map/" + fileName + ".json";
             File f = new File(fileAddress);
             if (f.exists() && !f.isDirectory()) {
-                DataBase.setSelectedMap(gson.fromJson(new FileReader(fileAddress), type));
-                GameMenuController.setMap(DataBase.getSelectedMap());
+                Map map = gson.fromJson(new FileReader(fileAddress), type);
 
-                for (int i = 0; i < DataBase.getSelectedMap().getWidth() + 1; i++) {
-                    for (int j = 0; j < DataBase.getSelectedMap().getLength() + 1; j++) {
-                        DataBase.getSelectedMap().squares[i][j].newUnits();
+                for (int i = 0; i < map.getWidth() + 1; i++) {
+                    for (int j = 0; j < map.getLength() + 1; j++) {
+                        map.squares[i][j].newUnits();
                     }
                 }
 
-            } else {
-                DataBase.setSelectedMap(null);
-                GameMenuController.setMap(null);
+                return map;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

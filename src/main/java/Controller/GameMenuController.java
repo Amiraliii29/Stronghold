@@ -1,184 +1,34 @@
 package Controller;
 
-import Model.Buildings.*;
-import Model.DataBase;
-import Model.Government;
-import Model.Map;
-import Model.Resource;
-import Model.Square;
+import Main.Result;
+import Main.ResultEnums;
+import Main.UserDataBase;
+import Model.*;
+import Model.Buildings.Building;
+import Model.Buildings.Defence;
+import Model.Buildings.Generator;
+import Model.Buildings.TownBuilding;
 import Model.Units.*;
-import View.Controller.BuildingInfo;
-import View.Controller.GameGraphicController;
-import View.Enums.Messages.GameMenuMessages;
-import View.Game;
-import javafx.scene.control.Alert;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
 
 public class GameMenuController {
-    private static Game game;
-    private static Map map;
-    private static Square[][] squares;
-    private static ArrayList<Unit> allUnits;
-    private static ArrayList<ArrayList<Square>> allWays;
-    private static ArrayList<Square> path;
-    private static Government currentGovernment;
+    private UserDataBase userDataBase;
+    private Map map;
+    private Square[][] squares;
+    private ArrayList<ArrayList<Square>> allWays;
+    private ArrayList<Square> path;
 
 
-    static {
-        allUnits = new ArrayList<>();
-    }
-
-
-
-    public static Map getMap() {
-        return map;
-    }
-
-    public static void setMap(Map map) {
-        GameMenuController.map = map;
+    public GameMenuController(UserDataBase userDataBase) {
+        this.userDataBase = userDataBase;
+        map = userDataBase.getDataBase().getSelectedMap();
         squares = map.getSquares();
     }
 
-    public static Game getGame() {
-        return game;
-    }
 
-    public static void setCurrentMap() {
-        map = DataBase.getSelectedMap();
-    }
-
-    public static void setCurrentGovernment() {
-        currentGovernment = DataBase.getCurrentGovernment();
-    }
-
-    public static void setGame(Game game) {
-        GameMenuController.game = game;
-    }
-
-    public static ArrayList<Unit> getAllUnits() {
-        return allUnits;
-    }
-
-
-
-    public static boolean nextTurn() {
-        //automatic fights
-        ArrayList<Government> governments = DataBase.getGovernments();
-        int index = governments.indexOf(currentGovernment);
-//        if (index == governments.size() - 1)
-//            DataBase.handleEndOfTurnFights();
-
-        //change government
-        if (index == governments.size() - 1)
-            currentGovernment = governments.get(0);
-        else
-            currentGovernment = governments.get(index + 1);
-
-        DataBase.setCurrentGovernment(currentGovernment);
-        DataBase.setSelectedBuilding(null);
-
-        //work with government
-        currentGovernment.addAndRemoveFromGovernment();
-        DataBase.generateResourcesForCurrentGovernment();
-        DataBase.setSelectedUnit(new ArrayList<>());
-
-        return checkForEnd();
-    }
-
-    public static boolean checkForEnd() {
-        ArrayList<Government> governments = DataBase.getGovernments();
-        Square[][] allSquares = DataBase.getSelectedMap().getSquares();
-
-        for (int i = 0; i < governments.size(); i++) {
-            if (governments.get(i).getLord().getHitPoint() <= 0) {
-                //destroy every thing for this government
-                for (Square[] allSquare : allSquares) {
-                    for (int k = 0; k < allSquares[0].length; k++) {
-                        if (allSquare[k].getBuilding() != null
-                                && allSquare[k].getBuilding().getOwner().equals(governments.get(i))) {
-                            allSquare[k].getBuilding().changeHP(-100000);
-                            DataBase.removeDestroyedBuildings(allSquare[k].getBuilding());
-                        }
-                        for (int l = 0; l < allSquare[k].getUnits().size(); l++) {
-                            if (allSquare[k].getUnits().get(l).getOwner().equals(governments.get(i))) {
-                                allSquare[k].removeUnit(allSquare[k].getUnits().get(l));
-                                l--;
-                            }
-                        }
-                    }
-                }
-                governments.remove(i);
-                i--;
-            }
-        }
-
-        allUnits = new ArrayList<>();
-
-        for (Square[] allSquare : allSquares) {
-            for (int k = 0; k < allSquares[0].length; k++) {
-                for (Unit unit : allSquare[k].getUnits()) {
-                    allUnits.add(unit);
-                }
-            }
-        }
-        //if both lord die in one turn !!! //TODO
-        if (governments.size() == 1) return true;
-        return false;
-    }
-
-
-
-
-    public static ArrayList<ArrayList<Unit>> separateUnits() {
-        HashMap<String, Integer> unitNameAndCount = new HashMap<>();
-
-        for (int i = 0; i < 8; i++) {
-            if (!BuildingInfo.getTextFields().get(i).isVisible()) break;
-            if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d*$")) {
-                if (BuildingInfo.getTextFields().get(i).getText().matches("^\\d+$"))
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), Integer.parseInt(BuildingInfo.getTextFields().get(i).getText()));
-                else
-                    unitNameAndCount.put(BuildingInfo.imagesOrder.get(i), -1);
-
-                continue;
-            }
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText("Use Only 0-9");
-            return null ;
-        }
-
-        ArrayList<ArrayList<Unit>> allUnits = new ArrayList<>();
-
-        for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
-            ArrayList<Square> squaresChecked = new ArrayList<>();
-
-            for (Unit unit : DataBase.getSelectedUnit()) {
-                if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
-
-                squaresChecked.add(unit.getSquare());
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
-
-                for (Unit squareUnit : unit.getSquare().getUnits()) {
-                    if (set.getValue() == 0) break;
-                    if (!squareUnit.getName().equals(set.getKey())) continue;
-
-                    selectedUnit.add(squareUnit);
-                    set.setValue(set.getValue() - 1);
-                }
-
-                if (selectedUnit.size() != 0) allUnits.add(selectedUnit);
-            }
-        }
-
-        return allUnits;
-    }
-
-    public static ArrayList<Square> moveUnit(Unit unit, int x, int y) {
+    public ArrayList<Square> moveUnit(Unit unit, int x, int y) {
         if (squares[x][y].getBuilding() != null) {
             if (squares[x][y].getBuilding() instanceof Defence &&
                     squares[x][y].getUnits().size() >= ((Defence) squares[x][y].getBuilding()).getCapacity())
@@ -211,7 +61,7 @@ public class GameMenuController {
             return null;
     }
 
-    private static boolean move(Unit unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
+    private boolean move(Unit unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
         if (!map.isCoordinationValid(x, y))
             return false;
 
@@ -224,7 +74,7 @@ public class GameMenuController {
                 if (squares[x][y].getBuilding().getName().equals("Stair"))
                     up = false;
             } else if (squares[x][y].getBuilding() == null) {
-                LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
+                LadderMan ladderMan = LadderMan.createLadderMan(userDataBase.getGovernment(), -1, -1);
                 if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
                     up = false;
                 else if (!unit.getName().equals("Assassin")) return false;
@@ -252,7 +102,7 @@ public class GameMenuController {
                 else return false;
 
             } else {
-                LadderMan ladderMan = LadderMan.createLadderMan(DataBase.getCurrentGovernment(), -1, -1);
+                LadderMan ladderMan = LadderMan.createLadderMan(userDataBase.getGovernment(), -1, -1);
                 if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
                     up = true;
             }
@@ -293,19 +143,21 @@ public class GameMenuController {
     }
 
 
-    public static boolean constructBuilding(Building building) {
+    public boolean constructBuilding(Building building) {
+        Government currentGovernment = userDataBase.getGovernment();
+
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
-            game.showErrorText("Can't Build Here!");
+            userDataBase.getDataBase().updateClient(new Result(ResultEnums.CANT_BUILD_HERE));
 
         else if (building.getCost() > currentGovernment.getMoney())
-            game.showErrorText("You Don't Have Enough Money!");
+            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_MONEY));
 
         else if (building.getResource() != null &&
                 currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
-            game.showErrorText("Don't Have Enough Material!");
+            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_MATERIAL));
 
         else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
-            game.showErrorText("Not Enough Free Worker!");
+            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_FREE_WORKER));
 
         else {
             currentGovernment.changeMoney(-building.getCost());
@@ -328,6 +180,7 @@ public class GameMenuController {
                 }
             }
             map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());
+            userDataBase.getDataBase().updateClient(new Result(ResultEnums.SUCCESS));
             return true;
         }
         return false;
@@ -391,187 +244,5 @@ public class GameMenuController {
 
         for (Unit unit : DataBase.getSelectedUnit())
             unit.setState(newState);
-    }
-
-
-
-
-    private static void attackBySingleType(String enemyX, String enemyY) {
-        Game game=DataBase.getGame();
-
-        int targetXInNum = Integer.parseInt(enemyX);
-        int targetYInNum = Integer.parseInt(enemyY);
-
-        int targetType = map.getSquareUnfriendlyBelongingsType(currentGovernment, targetXInNum, targetYInNum);
-
-        ArrayList<Unit> currentUnits = DataBase.getSelectedUnit();
-        int currentUnitsX = currentUnits.get(0).getXCoordinate();
-        int currentUnitsY = currentUnits.get(0).getYCoordinate();
-        int unitRange = currentUnits.get(0).getAttackRange();
-
-        if (unitRange > Map.getDistance(currentUnitsX, currentUnitsY, targetXInNum, targetYInNum)) {
-            rangedAttackController(enemyX, enemyY);
-            return ;
-        }
-        
-        int unitsZoneFromTarget = Map.getCartesianZone(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        ArrayList<int[]> squaresOptimalForFight = map.getSquaresWithinRange(targetXInNum, targetYInNum,
-                unitRange, unitsZoneFromTarget);
-
-        boolean result = false;
-        System.out.println(squaresOptimalForFight.size());
-        for (int[] validCoord : squaresOptimalForFight) {
-            if (game.move(validCoord[0], validCoord[1])) {
-                if (targetType == 1) {
-                    double distance = Map.getDistance(targetXInNum, targetYInNum, validCoord[0], validCoord[1]);
-                    DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-                } else
-                    DataBase.attackBuildingBySelectedUnits(targetXInNum, targetYInNum);
-
-                result = true;
-                game.setAttackIcon();
-                break;
-            }
-        }
-        if (result)
-            return ;
-
-        game.showErrorText("TARGET NOT IN RANGE");
-    }
-
-    private static void rangedAttackController(String enemyX, String enemyY) {
-
-        int targetXInNum = Integer.parseInt(enemyX);
-        int targetYInNum = Integer.parseInt(enemyY);
-
-        if (DataBase.getSelectedUnit().size() == 0)
-            return ;
-        
-        int currentUnitsX = DataBase.getSelectedUnit().get(0).getXCoordinate();
-        int currentUnitsY = DataBase.getSelectedUnit().get(0).getYCoordinate();
-
-        double distance = Map.getDistance(targetXInNum, targetYInNum, currentUnitsX, currentUnitsY);
-        int unitRange = DataBase.getSelectedUnit().get(0).getAttackRange();
-
-        if (unitRange < distance){
-            game.showErrorText("Enemy out of Range");
-            return ;
-        }
-
-        DataBase.attackEnemyBySelectedUnits(distance, targetXInNum, targetYInNum);
-        game.setAttackIcon();
-    }
-
-    public static void AttackBySelectedUnits(String enemyX, String enemyY){
-        HashMap <String , ArrayList<Unit>> unitsByType=DataBase.getSelectedUnitsByType();
-        for (String unitType : unitsByType.keySet()) {
-            DataBase.setSelectedUnit(unitsByType.get(unitType));
-            attackBySingleType(enemyX, enemyY);
-        }
-        game.drawMap();
-    }
-
-
-
-    public static void buildSiege(String siegeName) {
-        ArrayList<ArrayList<Unit>> allUnits = separateUnits();
-        if (allUnits == null) return;
-
-        ArrayList<Unit> engineerUnit = null;
-        for (ArrayList<Unit> selectedUnit : allUnits) {
-            if (selectedUnit.get(0) instanceof Engineer) {
-                engineerUnit = selectedUnit;
-                break;
-            }
-        }
-
-        Siege siege = Siege.createSiege(currentGovernment, siegeName, -1 , -1);
-        if (siege == null || engineerUnit == null) return;
-
-        int x = engineerUnit.get(0).getXCoordinate();
-        int y = engineerUnit.get(0).getYCoordinate();
-
-        if (siege.getEngineerNeed() > engineerUnit.size())
-            game.showErrorText("Not Enough Engineer!");
-        else if (siege.getCost() > currentGovernment.getMoney())
-            game.showErrorText("Not Enough Money!");
-        else if (squares[x][y].getBuilding() != null && !squares[x][y].getBuilding().getName().equals("CircularTower")
-                && !squares[x][y].getBuilding().getName().equals("SquareTower"))
-            game.showErrorText("Can't Build Siege Here!");
-        else {
-            currentGovernment.changeMoney(-siege.getCost());
-            DataBase.removeUnit(engineerUnit.get(0), siege.getEngineerNeed());
-            Siege.createSiege(currentGovernment, siegeName, x, y);
-            game.drawMap();
-        }
-    }
-
-    private static void trainTroopsForGovernment(int count, Unit unit, Barrack selectedBarrack) {
-        int barrackX = selectedBarrack.getXCoordinateLeft();
-        int barrackY = selectedBarrack.getYCoordinateUp();
-
-        currentGovernment.changeMoney(-count * unit.getCost());
-        currentGovernment.changeFreeWorkers(-count);
-        GameGraphicController.setPopularityGoldPopulation();
-
-        for (int i = 0; i < count; i++) {
-            if (unit.getName().equals("Engineer")) {
-                Engineer.createEngineer(currentGovernment, barrackX - 1, barrackY - 1);
-            } else if (unit.getName().equals("LadderMan")) {
-                LadderMan.createLadderMan(currentGovernment, barrackX - 1, barrackY - 1);
-            } else if (unit.getName().equals("Tunneler")) {
-                Tunneler.createTunneler(currentGovernment, barrackX - 1, barrackY - 1);
-            } else {
-                Troop.createTroop(currentGovernment, unit.getName() , barrackX - 1, barrackY - 1);
-            }
-        }
-
-        game.drawMap();
-    }
-    
-    public static void createUnitController(String type) {
-        //won't create Siege !!!
-
-        int countInNum = 1;
-        Unit unit;
-
-        if (type.equals("Engineer"))
-            unit = Engineer.createEngineer(currentGovernment, -1, -1);
-        else if (type.equals("LadderMan"))
-            unit = LadderMan.createLadderMan(currentGovernment, -1, -1);
-        else if (type.equals("Tunneler"))
-            unit = Tunneler.createTunneler(currentGovernment, -1, -1);
-        else
-            unit = Troop.getTroopByName(type);
-
-        assert unit != null;
-        int totalCost = unit.getCost() * countInNum;
-
-        if (currentGovernment.getMoney() < totalCost)
-            game.showErrorText("Not enough gold!");
-        else if (currentGovernment.getFreeWorker() < countInNum)
-            game.showErrorText("Insufficient population!");
-        else if (!doesUnitsHaveWeapons(countInNum, unit))
-            game.showErrorText("Insufficient weapons!");
-        else {
-            Barrack selectedBarrack = (Barrack) DataBase.getSelectedBuilding();
-            trainTroopsForGovernment(countInNum, unit, selectedBarrack);
-        }
-    }
-
-    private static boolean doesUnitsHaveWeapons(int count, Unit unit) {
-        if (!(unit instanceof Troop)) return true;
-        ArrayList<Resource> neededWeapons = ((Troop) unit).getWeapons();
-        if(neededWeapons==null) return true;
-        for (Resource resource : neededWeapons) {
-            if (currentGovernment.getResourceInStockpiles(resource) < count)
-                return false;
-        }
-
-        for (Resource resource : neededWeapons) {
-            currentGovernment.removeFromStockpile(resource, count);
-        }
-
-        return true;
     }
 }

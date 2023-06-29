@@ -1,5 +1,7 @@
 package Main;
 
+import Model.User;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,24 +10,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import Controller.ProfileMenuController;
-import Controller.SignUpMenuController;
-import Model.User;
-import com.google.gson.Gson;
-
-public class HandleConnection extends Thread{
+public class Client extends Thread{
     private final String token;
     private final Socket socket;
     private final DataInputStream dataInputStream;
     private final DataOutputStream dataOutputStream;
+    private User user;
+    private UserDataBase userDataBase;
 
 
-    public HandleConnection(Socket socket) throws IOException {
+    public Client(Socket socket) throws IOException {
         this.socket = socket;
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-        token = encodePassword(generatePassword());
+        token = encodeToken(generateToken());
     }
 
 
@@ -60,30 +59,8 @@ public class HandleConnection extends Thread{
     }
 
 
-    private void requestHandler(Request request) throws IOException {
-        
-        String result="";
+    private void requestHandler(Request request) {
 
-        if(request.normalRequest.equals(NormalRequest.SIGNUP))
-            result=SignUpMenuController.handleSignupRequest(request.argument);
-
-        else if(request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
-            result=ProfileMenuController.handleProfileFieldsChange(request.argument);
-        //TODO: FILL THE REST IF&ELSES
-        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)){
-            String userName = request.argument.get("userName");
-            User user = User.getUserByUserName(userName);
-            String json = new Gson().toJson(user , User.class);
-            dataOutputStream.writeUTF(json);
-        }
-
-
-        
-        try {
-            dataOutputStream.writeUTF(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -101,9 +78,27 @@ public class HandleConnection extends Thread{
         return dataOutputStream;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public UserDataBase getUserDataBase() {
+        return userDataBase;
+    }
 
 
-    private static String generatePassword() {
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUserDataBase(UserDataBase userDataBase) {
+        this.userDataBase = userDataBase;
+    }
+
+
+    private static String generateToken() {
         String alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         String specialChars = "!@#$%^&*()_+";
         String symbols = "~`-={}[]\\|;:'\",.<>?/";
@@ -121,7 +116,7 @@ public class HandleConnection extends Thread{
         return password.toString();
     }
 
-    private static String encodePassword(String password) {
+    private static String encodeToken(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = digest.digest(password.getBytes());
