@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -98,4 +99,37 @@ public class Client {
         
     }
  
+    private void startReadingFile(String pathToStore){
+        FileOutputStream fout=null;
+        try {
+            fout = new FileOutputStream(pathToStore);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+            int i;
+            try {
+                while ( (i = this.dataInputStream.read()) > -1) {
+                    try {
+                        fout.write(i);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+                fout.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fout.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
 }
