@@ -48,15 +48,6 @@ public class Client {
         return recentResponse;
     }
 
-    public String getServerResponse(){
-       try {
-        return dataInputStream.readUTF();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    return null;
-    }
-
     public DataInputStream getDataInputStream() {
         return dataInputStream;
     }
