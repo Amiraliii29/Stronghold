@@ -54,8 +54,8 @@ public class LoginMenuController {
         }
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.argument.put("userName" , userName );
-        Client.thisClient.getDataOutputStream().writeUTF(request.toJson());
-        String json = Client.thisClient.getDataInputStream().readUTF();
+        Client.client.getDataOutputStream().writeUTF(request.toJson());
+        String json = Client.client.getDataInputStream().readUTF();
         User targetUser = new Gson().fromJson(json , User.class);
 
         if (targetUser == null){
@@ -170,6 +170,7 @@ public class LoginMenuController {
 
                     try {
                         DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
+                        User.setCurrentUser(user);
                         new MainMenu().start(SignUpMenu.stage);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
