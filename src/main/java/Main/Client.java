@@ -29,9 +29,6 @@ public class Client {
         serverResponseListener.start();
     }
 
-    public DataOutputStream getDataOutputStream() {
-        return dataOutputStream;
-    }
     public void sendRequestToServer(Request request){
         try {
             dataOutputStream.writeUTF(request.toJson());
@@ -46,10 +43,6 @@ public class Client {
 
     public String getRecentResponse(){
         return recentResponse;
-    }
-
-    public DataInputStream getDataInputStream() {
-        return dataInputStream;
     }
 
     public void updateUserData(){
