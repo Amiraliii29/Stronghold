@@ -415,14 +415,16 @@ public class ProfileMenu extends Application {
             sloganField.setText("");
             sloganField.setPromptText("slogan is empty");
             User.getCurrentUser().setSlogan("");
-            Client.client.sendRequestToServer(new Request(NormalRequest.REMOVE_SLOGAN));
+            Client.client.sendRequestToServer(new Request(NormalRequest.REMOVE_SLOGAN),false);
             Client.client.updateUserData();
         });
 
         displayScoreBoard.setOnMouseClicked(event -> {
             if(isProfileShown)
                 showScoreBoardProtocol();
-            else showScoreBoardProtocol();
+            else 
+                showProfileProtocol();
+                
                 isProfileShown=!isProfileShown;
                 });
 
@@ -509,11 +511,14 @@ public class ProfileMenu extends Application {
                 break;
 
             default:
+                Request request=new Request(NormalRequest.CHANGE_PASSWORD);
+                request.addToArguments("New_Password", newPssword);
+                request.addToArguments("Old_Password", oldPassword);
+                Client.client.sendRequestToServer(request,false);
+                Client.client.updateUserData();
                 createNotificationDialog("Result","Password Change Result:","Password was changed Succesfully",Orders.greenNotifSuccesColor);
                 break;
         }
-        Client.client.sendRequestToServer(new Request(NormalRequest.CHANGE_PASSWORD));
-        Client.client.updateUserData();
     }
 
     private void setStartingTexts() {
@@ -535,15 +540,15 @@ public class ProfileMenu extends Application {
             request.addToArguments("Username", usernameField.getText());
                 
         if (checkEmailValue(emailField.getText(), true))
-            request.addToArguments("Email", usernameField.getText());
+            request.addToArguments("Email", emailField.getText());
 
         if (checkNicknameValue(nicknameField.getText(), true))
-            request.addToArguments("Nickname", usernameField.getText());
+            request.addToArguments("Nickname", nicknameField.getText());
 
-        request.addToArguments("Slogan", usernameField.getText());
+        request.addToArguments("Slogan", sloganField.getText());
             
-        Client.client.sendRequestToServer(request);
-        String result= Client.client.getServerResponse();
+        Client.client.sendRequestToServer(request,true);
+        String result= Client.client.getRecentResponse();
 
 
         String output="The fields Below Changed Succesfuly:\n";

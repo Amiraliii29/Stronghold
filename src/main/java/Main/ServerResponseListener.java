@@ -31,10 +31,11 @@ public class ServerResponseListener extends Thread {
 
     private boolean handleResponse(String response){
 
-        setResponseReceived(true);
-
-        if(!response.contains("AUTO"))
+    
+        if(!response.contains("AUTO")){
+            setResponseReceived(true);
             return false;
+        }    
         
 
         //TODO: FILL AUTO RESPONSES

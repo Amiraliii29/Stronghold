@@ -154,8 +154,8 @@ public class SignUpMenu extends Application {
                 request.addToArguments("Slogan", slogan);
                 request.addToArguments("Security", securityAnswer);
        
-                Client.client.sendRequestToServer(request);
-                String response=Client.client.getServerResponse();
+                Client.client.sendRequestToServer(request,true);
+                String response=Client.client.getRecentResponse();
 
                 if(wasResponseSuccessfull(response))
                     new LoginMenu().start(stage);
@@ -263,7 +263,6 @@ public class SignUpMenu extends Application {
             sendTextNotification(emailText, "Invalid email format",color, emailVbox);
             return false;
         }
-
         return true;
     }
 
