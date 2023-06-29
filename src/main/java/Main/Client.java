@@ -11,9 +11,11 @@ import Model.User;
 
 public class Client {
     public static Client client;
+    private String recentResponse;
     private final ServerAction serverAction;
     private final DataOutputStream dataOutputStream;
     private final DataInputStream dataInputStream;
+    private final ServerResponseListener serverResponseListener;
 
 
     public Client(String host, int port) throws IOException {
@@ -21,9 +23,10 @@ public class Client {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
         client = this;
-
+        serverResponseListener=new ServerResponseListener(dataInputStream, client);
         serverAction = new ServerAction(socket, dataInputStream , dataOutputStream);
         serverAction.start();
+        serverResponseListener.start();
     }
 
     public DataOutputStream getDataOutputStream() {
@@ -35,6 +38,14 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRecentResponse(String response){
+        this.recentResponse=response;
+    }
+
+    public String getRecentResponse(){
+        return recentResponse;
     }
 
     public String getServerResponse(){
