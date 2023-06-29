@@ -8,6 +8,9 @@ import java.net.Socket;
 import com.google.gson.Gson;
 
 import Model.User;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class Client {
     public static Client client;
@@ -29,12 +32,18 @@ public class Client {
         serverResponseListener.start();
     }
 
-    public void sendRequestToServer(Request request){
+    public void sendRequestToServer(Request request,boolean waitForResponse){
         try {
+            serverResponseListener.setResponseReceived(false);
             dataOutputStream.writeUTF(request.toJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(waitForResponse)
+            while (!serverResponseListener.isResponseReceived()) 
+                new Timeline(new KeyFrame(Duration.millis(50), event-> {})).play();
+            
     }
 
     public void setRecentResponse(String response){
@@ -48,8 +57,8 @@ public class Client {
     public void updateUserData(){
         Request request=new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.addToArguments("Username", User.getCurrentUser().getUsername());
-        sendRequestToServer(request);
-        String response=getServerResponse();
+        sendRequestToServer(request,true);
+        String response=recentResponse;
         User updatedUserData=new Gson().fromJson(response, User.class);
         User.setCurrentUser(updatedUserData);
     }
