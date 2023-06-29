@@ -4,6 +4,7 @@ import Model.User;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -194,4 +195,31 @@ public class Client extends Thread{
             }
     }
 
+    public void sendFile (String fileAddress) {
+        int i;
+        FileInputStream fis=null;
+        try {
+            fis = new FileInputStream ("/path/to/your/image.jpg");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+         try {
+            while ((i = fis.read()) > -1)
+                try {
+                    dataOutputStream.write(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }  
+    }
+ 
 }
