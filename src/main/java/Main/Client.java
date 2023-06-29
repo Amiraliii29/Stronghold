@@ -5,6 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
+import Model.User;
+
 public class Client {
     public static Client client;
     private final ServerAction serverAction;
@@ -44,5 +48,14 @@ public class Client {
 
     public DataInputStream getDataInputStream() {
         return dataInputStream;
+    }
+
+    public void updateUserData(){
+        Request request=new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.addToArguments("Username", User.getCurrentUser().getUsername());
+        sendRequestToServer(request);
+        String response=getServerResponse();
+        User updatedUserData=new Gson().fromJson(response, User.class);
+        User.setCurrentUser(updatedUserData);
     }
 }

@@ -415,12 +415,8 @@ public class ProfileMenu extends Application {
             sloganField.setText("");
             sloganField.setPromptText("slogan is empty");
             User.getCurrentUser().setSlogan("");
-            try {
-                UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
-            } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            Client.client.sendRequestToServer(new Request(NormalRequest.REMOVE_SLOGAN));
+            Client.client.updateUserData();
         });
 
         displayScoreBoard.setOnMouseClicked(event -> {
@@ -516,6 +512,8 @@ public class ProfileMenu extends Application {
                 createNotificationDialog("Result","Password Change Result:","Password was changed Succesfully",Orders.greenNotifSuccesColor);
                 break;
         }
+        Client.client.sendRequestToServer(new Request(NormalRequest.CHANGE_PASSWORD));
+        Client.client.updateUserData();
     }
 
     private void setStartingTexts() {
@@ -566,6 +564,11 @@ public class ProfileMenu extends Application {
             output=output.concat("Slogan Field\n");
 
         createNotificationDialog("Result","Change Fileds Result:", output,Orders.yellowNotifErrorColor);
+        
+        if(result.contains("Username"))
+            User.getCurrentUser().setUsername(usernameField.getText());
+
+        Client.client.updateUserData();
     }
 
     private void setFieldListeners() {
