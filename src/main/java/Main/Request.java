@@ -12,6 +12,11 @@ public class Request {
     public HashMap<String, String> argument;
 
 
+    {
+        token = userToken;
+        argument = new HashMap<>();
+    }
+
 
     public static void setUserToken(String userToken) {
         Request.userToken = userToken;
@@ -19,23 +24,22 @@ public class Request {
 
 
 
-    public Request(NormalRequest normalRequest) {
-        token = userToken;
-        this.gameRequest = null;
-        this.normalRequest = normalRequest;
-        argument = new HashMap<>();
-    }
-
     public Request(GameRequest gameRequest) {
-        token = userToken;
         this.gameRequest = gameRequest;
         this.normalRequest = null;
-        argument = new HashMap<>();
     }
 
-    public void addToArguments(String key,String value){
-        argument.put(key, value);
+    public Request(NormalRequest normalRequest) {
+        this.gameRequest = null;
+        this.normalRequest = normalRequest;
     }
+
+
+
+    public void addToArguments(String arg1, String arg2) {
+        argument.put(arg1, arg2);
+    }
+
 
     public boolean verify(String token) {
         return this.token.equals(token);
