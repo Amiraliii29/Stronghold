@@ -4,44 +4,39 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import Model.User;
-import View.ProfileMenu;
 import View.Enums.Messages.ProfileMenuMessages;
 
 public class ProfileMenuController {
 
-    private static User currentUser;
-    
-    public static void setCurrentUser(User user){
-        currentUser=user;
-    }
+   
 
-    public static String displayEntireProfile() {
+    public static String displayEntireProfile(User user) {
         String output="";
-        output=output.concat(displaySolgan()+"\n");
-        output=output.concat(displayRank()+"\n");
-        output=output.concat(displayHighscore()+"\n");
+        output=output.concat(displaySolgan(user)+"\n");
+        output=output.concat(displayRank(user)+"\n");
+        output=output.concat(displayHighscore(user)+"\n");
         return output;
     }
 
-    public static String displaySolgan() {
-        String slogan=currentUser.getSlogan();
+    public static String displaySolgan(User user) {
+        String slogan=user.getSlogan();
         if(slogan.equals(""))
             return "slogan is empty!";
         
         return "your slogan is: "+slogan;
     }
 
-    public static String displayRank() {
-        int rank=currentUser.getRank();
+    public static String displayRank(User user) {
+        int rank=user.getRank();
         return "your rank is: "+rank;
     }
 
-    public static String displayHighscore() {
-        int highscore=currentUser.getHighScore();
+    public static String displayHighscore(User user) {
+        int highscore=user.getHighScore();
         return "your highscore is: "+highscore;
     }
 
-    public static ProfileMenuMessages changePassword(String oldPassword,String newPassword,String passwordConfirmation)  {
+    public static ProfileMenuMessages changePassword(String oldPassword,String newPassword,String passwordConfirmation,User user)  {
 
         if(oldPassword==null || newPassword ==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
@@ -49,11 +44,10 @@ public class ProfileMenuController {
         try {
             oldPassword=UserInfoOperator.encodeStringToSha256(oldPassword);
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if(!oldPassword.equals(currentUser.getPassword()))
+        if(!oldPassword.equals(user.getPassword()))
             return ProfileMenuMessages.INCORRECT_PASSWORD_ERROR;
 
         if(!UserInfoOperator.isPasswordStrong(newPassword))
@@ -62,7 +56,6 @@ public class ProfileMenuController {
         try {
             newPassword=UserInfoOperator.encodeStringToSha256(newPassword);
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -72,47 +65,45 @@ public class ProfileMenuController {
         try {
             passwordConfirmation=UserInfoOperator.encodeStringToSha256(passwordConfirmation);
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         if(!passwordConfirmation.equals(newPassword))
             return ProfileMenuMessages.INCORRECT_PASSWORD_VERIFICATION_ERROR;
         
-        currentUser.setPassword(newPassword);
+        user.setPassword(newPassword);
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_CHANGE_PASSWORD;
     }
 
-    public static ProfileMenuMessages changeUsername(String newUsername)  {
+    public static ProfileMenuMessages changeUsername(String newUsername,User user)  {
         if(newUsername==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
 
         if(!UserInfoOperator.isUsernameFormatValid(newUsername))
           return ProfileMenuMessages.INVALID_USERNAME_ERROR;
 
-        if(newUsername.equals(currentUser.getUsername()))
+        if(newUsername.equals(user.getUsername()))
           return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
 
         if(User.getUserByUserName(newUsername)!=null)
           return ProfileMenuMessages.DUPLICATE_USERNAME_ERROR;
 
         
-        currentUser.setUsername(newUsername);
+        user.setUsername(newUsername);
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME;
     }
 
-    public static ProfileMenuMessages changeEmail(String newEmail)  {
+    public static ProfileMenuMessages changeEmail(String newEmail,User user)  {
 
         if(newEmail==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
@@ -120,64 +111,64 @@ public class ProfileMenuController {
         if(!UserInfoOperator.isEmailFormatValid(newEmail))
             return ProfileMenuMessages.INVALID_EMAIL_ERROR;
 
-        if(newEmail.equals(currentUser.getEmail()))
+        if(newEmail.equals(user.getEmail()))
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
 
         if(User.getUserByEmail(newEmail)!=null)
             return ProfileMenuMessages.DUPLICATE_EMAIL_ERROR;
         
-        currentUser.setEmail(newEmail);
+        user.setEmail(newEmail);
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL;
     }
 
-    public static ProfileMenuMessages changeNickname(String newNickname)  {
+    public static ProfileMenuMessages changeNickname(String newNickname,User user)  {
         if(newNickname==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
 
-        if(newNickname.equals(currentUser.getNickName()))
+        if(newNickname.equals(user.getNickName()))
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
 
-        currentUser.setNickName(newNickname);
+        user.setNickName(newNickname);
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME;
     }
 
-    public static ProfileMenuMessages changeSlogan(String newSlogan)  {
+    public static ProfileMenuMessages changeSlogan(String newSlogan,User user)  {
         if(newSlogan==null)
             return ProfileMenuMessages.EMPTY_FIELDS_ERROR;
         
-        if(newSlogan.equals(currentUser.getSlogan()))
+        if(newSlogan.equals(user.getSlogan()))
             return ProfileMenuMessages.UNCHANGED_FIELD_ERROR;
         
-        currentUser.setSlogan(newSlogan);
+        user.setSlogan(newSlogan);
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_CHANGE_SLOGAN;
     }
 
-    public static ProfileMenuMessages removeSlogan()  {
-        currentUser.setSlogan("");
+    public static ProfileMenuMessages removeSlogan(User user)  {
+        user.setSlogan("");
         try {
-            UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
+            UserInfoOperator.storeUserDataInJson(user,"src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return ProfileMenuMessages.SUCCESFUL_REMOVE_SLOGAN;
     }
 
-    public static String handleProfileFieldsChange(HashMap<String, String> profileArguments){
+    public static String handleProfileFieldsChange(HashMap<String, String> profileArguments,User user){
         String username=profileArguments.get("Username");
         String email=profileArguments.get("Email");
         String nickname=profileArguments.get("Slogan");
@@ -186,20 +177,28 @@ public class ProfileMenuController {
         String output="";
         
         if(username!=null)
-            if(changeUsername(username).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME))
+            if(changeUsername(username,user).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME))
                 output=output+"Username ";
 
         if(email!=null)
-            if(changeEmail(email).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL))
+            if(changeEmail(email,user).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL))
                 output=output+"Email ";
 
         if(nickname!=null)
-            if(changeNickname(nickname).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME))
+            if(changeNickname(nickname,user).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME))
                 output=output+"Nickname ";
         
         if(slogan!=null)
-            if(changeSlogan(slogan).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_SLOGAN))
+            if(changeSlogan(slogan,user).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_SLOGAN))
                 output=output+"Slogan";
         return output;
+    }
+
+    public static String handleChangePassword(HashMap<String,String> arguments,User user){
+
+        String oldPassword=arguments.get("Old_Password");
+        String newPassword=arguments.get("New_Password");
+        changePassword(oldPassword, newPassword, newPassword, user);
+        return "SUCCESS";
     }
 }

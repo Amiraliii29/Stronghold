@@ -10,6 +10,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import com.google.gson.Gson;
+
+import Controller.ProfileMenuController;
+import Controller.SignUpMenuController;
+
 public class Client extends Thread{
     private final String token;
     private final Socket socket;
@@ -61,9 +66,33 @@ public class Client extends Thread{
 
     private void requestHandler(Request request) {
 
+        String result="";
+
+        if(request.normalRequest.equals(NormalRequest.SIGNUP))
+            result=SignUpMenuController.handleSignupRequest(request.argument,this);
+
+        else if(request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
+            result=ProfileMenuController.handleProfileFieldsChange(request.argument,user);
+        
+        else if(request.normalRequest.equals(NormalRequest.REMOVE_SLOGAN))
+            result=ProfileMenuController.removeSlogan(user).toString();
+        
+        else if(request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
+            result=ProfileMenuController.handleChangePassword(request.argument, user);
+        
+        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
+            result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+        //TODO: FILL THE REST;
+
+
+
+
+        try {
+            dataOutputStream.writeUTF(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-
 
 
     public Socket getSocket() {
@@ -85,9 +114,6 @@ public class Client extends Thread{
     public UserDataBase getUserDataBase() {
         return userDataBase;
     }
-
-
-
 
     public void setUser(User user) {
         this.user = user;

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.regex.Matcher;
 
+import Main.Client;
 import Model.DataBase;
 import Model.User;
 import View.SignUpMenu;
@@ -16,9 +17,8 @@ public class SignUpMenuController {
     private static int failedAttempts;
     private static int failurePenalty;
 
-
     public static SignUpMenuMessages createUserController(String userName, String passWord,
-                                                          String nickName, String passWordConfirmation, String email, String slogan,String securityAnswer) throws NoSuchAlgorithmException {
+                                                          String nickName, String passWordConfirmation, String email, String slogan,String securityAnswer,Client client) throws NoSuchAlgorithmException {
         email = email.toLowerCase();
 
         if (User.getUserByUserName(userName) != null)
@@ -46,6 +46,7 @@ public class SignUpMenuController {
         newUser.setSecurityQuestion(securityAnswer);
         UserInfoOperator.storeUserDataInJson(newUser, "src/main/resources/jsonData/Users.json");
         User.addUser(newUser);
+        client.setUser(newUser);
         return SignUpMenuMessages.SUCCESFUL_SIGNUP_STEP;
     }
 
@@ -70,7 +71,7 @@ public class SignUpMenuController {
             UserInfoOperator.storeUserDataInJson(targetUser, "src/main/resources/jsonData/Users.json");
         }
 
-        User.setCurrentUser(targetUser);
+        // User.setCurrentUser(targetUser);
         return SignUpMenuMessages.SUCCESFUL_LOGIN;
     }
 
@@ -113,7 +114,7 @@ public class SignUpMenuController {
         failurePenalty--;
     }
 
-    public static String handleSignupRequest(HashMap<String,String> signupArguments){
+    public static String handleSignupRequest(HashMap<String,String> signupArguments,Client client){
         String username=signupArguments.get("Username");
         String password=signupArguments.get("Password");
         String email=signupArguments.get("Email");
@@ -128,7 +129,7 @@ public class SignUpMenuController {
             return "DUPLICATE_EMAIL";
 
         try {
-            createUserController(username, password, nickname, password, email, slogan, securityAnswer);
+            createUserController(username, password, nickname, password, email, slogan, securityAnswer,client);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

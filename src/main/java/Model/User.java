@@ -8,7 +8,6 @@ import Controller.JsonConverter;
 
 public class User {
     private static ArrayList<User> users;
-    private static User currentUser;
     private static SecureRandom randomGenerator=new SecureRandom();
 
     private String avatarFileName;
@@ -145,14 +144,6 @@ public class User {
 
     public static void addUser(User user){
         users.add(user);
-    }
-
-    public static User getCurrentUser(){
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User user){
-        currentUser=user;
     }
 
     @Override
