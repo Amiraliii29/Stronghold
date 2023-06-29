@@ -6,5 +6,6 @@ public enum NormalRequest {
     CHANGE_PROFILE_FIELDS,
     CHANGE_PASSWORD,
     GET_USER_BY_USERNAME,
+    SEND_GLOBAL_MESSAGE,
     ;
 }
