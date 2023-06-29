@@ -67,7 +67,7 @@ public class Siege extends Unit {
                 newSiege.xCoordinate = xCoordinate;
                 newSiege.yCoordinate = yCoordinate;
                 if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
+                    owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
                 return newSiege;
             }
         }

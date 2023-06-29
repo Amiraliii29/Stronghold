@@ -76,7 +76,7 @@ public class Troop extends Unit{
                 newTroop.xCoordinate = xCoordinate;
                 newTroop.yCoordinate = yCoordinate;
                 if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTroop);
+                    owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newTroop);
                 return newTroop;
             }
         }

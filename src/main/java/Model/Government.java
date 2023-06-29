@@ -156,6 +156,10 @@ public class Government {
         return popularity;
     }
 
+    public DataBase getDataBase() {
+        return dataBase;
+    }
+
     public void addStockpiles(Stockpile stockpile) {
         this.stockpiles.add(stockpile);
     }

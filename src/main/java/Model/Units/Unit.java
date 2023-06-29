@@ -46,10 +46,10 @@ public abstract class Unit {
 
 
     public void setCoordinate(int xCoordinate, int yCoordinate) {
-        DataBase.getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
+        owner.getDataBase().getSelectedMap().getSquareFromMap(this.xCoordinate, this.yCoordinate).removeUnit(this);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
+        owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(this);
     }
 
     public void setOwner(Government owner) {
@@ -83,7 +83,7 @@ public abstract class Unit {
     }
 
     public Square getSquare() {
-        return DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
+        return owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate);
     }
 
     public int getSpeed() {
@@ -101,7 +101,7 @@ public abstract class Unit {
     }
 
     public int getAttackRange() {
-        Building building = DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
+        Building building = owner.getDataBase().getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).getBuilding();
         if (building instanceof Defence && this.attackRange > 5) {
             return this.attackRange + ((Defence) building).getRange();
         }
