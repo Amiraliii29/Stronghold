@@ -9,5 +9,6 @@ public enum NormalRequest {
     GET_USER_BY_USERNAME,
     SEND_GLOBAL_MESSAGE,
     RECEIVE_GLOBAL_MESSAGE,
-    ;
+    SEND_PRIVATE_MESSAGE,
+    CREATE_ROOM;
 }

@@ -1,5 +1,6 @@
 package Main;
 
+import Model.ChatRoom;
 import Model.DataBase;
 import Model.User;
 
@@ -13,11 +14,13 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
+import javafx.scene.transform.Rotate;
 
 public class Client extends Thread{
     private final String token;
@@ -88,6 +91,10 @@ public class Client extends Thread{
             result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
         else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
+        else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE))
+            sendPrivateMessage(request);
+        else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
+            createRoom(request);
         //TODO: FILL THE REST;
 
 
@@ -98,6 +105,43 @@ public class Client extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createRoom(Request request) {
+        ArrayList<Client> clientsInRoom = new ArrayList<>();
+
+        clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user0")));
+        if(request.argument.get("user1") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user1")));
+        if(request.argument.get("user2") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user2")));
+        if(request.argument.get("user3") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user3")));
+        if(request.argument.get("user4") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user4")));
+        if(request.argument.get("user5") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user5")));
+        if(request.argument.get("user6") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user6")));
+        if(request.argument.get("user7") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user7")));
+
+        ChatRoom room = new ChatRoom(clientsInRoom);
+    }
+
+    private void sendPrivateMessage(Request request) throws IOException {
+        Client targetClient = null;
+        Client senderClient = null;
+
+        for (Client allClient : DataBase.getAllClients()) {
+            if(allClient.getUser().getUsername().equals(request.argument.get("receiverUserName")))
+                targetClient = allClient;
+            else if(allClient.getUser().getUsername().equals(request.argument.get("userName")))
+                senderClient = allClient;
+        }
+
+        targetClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        senderClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
     }
 
     private void sendGlobalMessage(Request request) throws IOException {
