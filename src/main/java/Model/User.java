@@ -4,7 +4,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.google.gson.Gson;
+
 import Controller.JsonConverter;
+import Main.Request;
 
 public class User {
     private static ArrayList<User> users;
@@ -119,6 +122,15 @@ public class User {
         return stayLoggedIn;
     }
 
+    public static String handleFriendRequest(Request request){
+        Gson gson=new Gson();
+        User sender=gson.fromJson(request.argument.get("Sender"), User.class);
+        User reciever=gson.fromJson(request.argument.get("Reviever"), User.class);
+
+
+
+    }
+
     public static User getUserByUserName(String userName) {
         for (User user : users)
             if (user.getUsername().equals(userName))
@@ -144,6 +156,11 @@ public class User {
 
     public static void addUser(User user){
         users.add(user);
+    }
+
+    public static String handleGetUsersRequest(){
+        String response=new Gson().toJson(users);
+        return response;
     }
 
     @Override

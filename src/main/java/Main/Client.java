@@ -73,7 +73,7 @@ public class Client extends Thread{
 
     private void requestHandler(Request request) throws IOException {
 
-        String result="";
+        String result="AUTO";
 
         if(request.normalRequest.equals(NormalRequest.SIGNUP))
             result=SignUpMenuController.handleSignupRequest(request.argument,this);
@@ -89,10 +89,19 @@ public class Client extends Thread{
         
         else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
             result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+
+        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA))
+            result=new Gson().toJson(User.handleGetUsersRequest());
+
+        else if(request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
+            result=new Gson().toJson(User.handleGetUsersRequest());
+
         else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
+
         else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE))
             sendPrivateMessage(request);
+
         else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
             createRoom(request);
         //TODO: FILL THE REST;
