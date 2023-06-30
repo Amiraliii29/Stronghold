@@ -16,6 +16,7 @@ public class DataBase {
     private final ArrayList<Government> governments;
     private final Map selectedMap;
     private final Timeline produceTimeline;
+    private static ArrayList<Client> allClients;
 
 
     public DataBase(Map selectedMap) {
@@ -26,6 +27,7 @@ public class DataBase {
             produce();
         }));
         produceTimeline.setCycleCount(-1);
+        allClients = new ArrayList<>();
     }
 
 
@@ -70,5 +72,19 @@ public class DataBase {
 
     public void updateClient(Result result) {
         //TODO : Send Client!
+    }
+    public static void addToAllClients(Client client){
+        allClients.add(client);
+    }
+
+    public static ArrayList<Client> getAllClients() {
+        return allClients;
+    }
+    public static Client getClientByUserName(String  userName){
+        for (Client allClient : allClients) {
+            if(allClient.getUser().getUsername().equals(userName))
+                return allClient;
+        }
+        return null;
     }
 }
