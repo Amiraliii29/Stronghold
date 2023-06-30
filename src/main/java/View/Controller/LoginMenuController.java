@@ -56,7 +56,7 @@ public class LoginMenuController {
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.argument.put("userName" , userName );
         Client.client.sendRequestToServer(request , true);
-        String json = Client.client.getDataInputStream().readUTF();
+        String json = Client.client.getRecentResponse();
         User targetUser = new Gson().fromJson(json , User.class);
 
         if (targetUser == null){
@@ -117,8 +117,8 @@ public class LoginMenuController {
 
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.argument.put("userName" , userName );
-        Client.client.sendRequestToServer(request , true);
-        String json = Client.client.getDataInputStream().readUTF();
+        Client.client.sendRequestToServer(request ,true);
+        String json = Client.client.getRecentResponse();
         User user = new Gson().fromJson(json , User.class);
 
         if(user == null){
