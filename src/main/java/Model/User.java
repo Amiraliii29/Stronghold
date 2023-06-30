@@ -71,6 +71,30 @@ public class User {
         return password;
     }
 
+    public static SecureRandom getRandomGenerator() {
+        return randomGenerator;
+    }
+
+    public static void setRandomGenerator(SecureRandom randomGenerator) {
+        User.randomGenerator = randomGenerator;
+    }
+
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
+
+    public void setUsersWithFriendRequest(ArrayList<User> usersWithFriendRequest) {
+        this.usersWithFriendRequest = usersWithFriendRequest;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public boolean isStayLoggedIn() {
+        return stayLoggedIn;
+    }
+
     public String getNickName() {
         return nickName;
     }
@@ -152,6 +176,18 @@ public class User {
         return stayLoggedIn;
     }
 
+    public static User getUserByUserName(String username){
+        for (User user: users)
+            if(user.getUsername().equals(username)) return user;
+        return null;
+    }
+
+    public static User getUserByEmail(String email){
+        for (User user: users)
+            if(user.getEmail().equals(email)) return user;
+        return null;
+    }
+
     public ArrayList<User> getUsersWithFriendRequest(){
         return usersWithFriendRequest;
     }
@@ -218,5 +254,9 @@ public class User {
         request.addToArguments("User1", gson.toJson(currentUser));
         request.addToArguments("User2", gson.toJson(newFriend));
         Client.client.sendRequestToServer(request, false);
+    }
+
+    public static ArrayList<User> getUsers() {
+        return users;
     }
 }
