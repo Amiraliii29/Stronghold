@@ -294,9 +294,11 @@ public class Client extends Thread{
 
 
     public static void updateAllClientsData(){
+        Gson gson=new Gson();
         for (Client client : DataBase.getAllClients()) 
             try {
-                client.dataOutputStream.writeUTF("AUTO UPDATE_DATA");
+                Request req=new Request(null, NormalRequest.UPDATE_YOUR_DATA);
+                client.dataOutputStream.writeUTF("AUTO"+gson.toJson(req));
             } catch (IOException e) {
                 e.printStackTrace();
             }
