@@ -18,12 +18,12 @@
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#86682d" height="29.0" layoutX="70.0" layoutY="485.0" stroke="BLACK" strokeType="INSIDE" width="369.0" />
       <TextField fx:id="messageText" layoutX="69.0" layoutY="485.0" prefHeight="29.0" prefWidth="342.0" />
-      <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="410.0" layoutY="485.0" onMouseClicked="#sendGlobalMessage" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="410.0" layoutY="485.0" onMouseClicked="#sendPrivateMessage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/menu-backgrounds/sendButton.png" />
          </image>
       </ImageView>
-      <Label layoutX="202.0" layoutY="38.0" prefHeight="17.0" prefWidth="105.0" text="Global Chat">
+      <Label layoutX="194.0" layoutY="39.0" prefHeight="22.0" prefWidth="121.0" text="Private Chat">
          <font>
             <Font name="American Typewriter" size="18.0" />
          </font>
