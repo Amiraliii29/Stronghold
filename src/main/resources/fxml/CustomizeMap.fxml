@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="500.0" prefWidth="100" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.CustomizeMap">
+<AnchorPane prefHeight="600.0" prefWidth="100" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.CustomizeMap">
    <children>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="13.0" layoutY="41.0" onMouseClicked="#bigLake" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -117,7 +118,8 @@
             <Image url="@../Images/trees/olivePalm.png" />
          </image>
       </ImageView>
-      <Button layoutX="24.0" layoutY="451.0" mnemonicParsing="false" onMouseClicked="#save" prefHeight="41.0" prefWidth="50.0" style="-fx-background-color: transparent;" text="Save" textFill="#ffffff" />
+      <Button layoutX="24.0" layoutY="535.0" mnemonicParsing="false" onMouseClicked="#save" prefHeight="41.0" prefWidth="50.0" style="-fx-background-color: transparent;" text="Save" textFill="#ffffff" />
       <Button layoutY="1.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="26.0" prefWidth="49.0" style="-fx-background-color: transparent;" text="back" textFill="#ffffff" />
+      <TextField fx:id="name" layoutX="3.0" layoutY="509.0" prefHeight="26.0" prefWidth="94.0" />
    </children>
 </AnchorPane>

@@ -129,4 +129,24 @@ public class Map {
             e.printStackTrace();
         }
     }
+
+    public static Map loadMapFromJson(String json) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map>() {}.getType();
+
+        Map map = gson.fromJson(json, type);
+
+        for (int i = 0; i < map.getWidth() + 1; i++) {
+            for (int j = 0; j < map.getLength() + 1; j++) {
+                map.squares[i][j].newUnits();
+            }
+        }
+
+        return map;
+    }
+
+    public static String mapToJson(Map map) {
+        Gson gson = new Gson();
+        return gson.toJson(map);
+    }
 }

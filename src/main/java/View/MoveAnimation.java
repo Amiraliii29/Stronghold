@@ -3,6 +3,7 @@ package View;
 import Controller.GameMenuController;
 import Model.DataBase;
 import Model.Square;
+import Model.UnitPrototype;
 import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,13 +14,13 @@ public class MoveAnimation {
     private Timeline timeline;
     private int squareI;
     private int squareJ;
-    private Unit unit;
-    private ArrayList<Unit> units;
+    private UnitPrototype unit;
+    private ArrayList<UnitPrototype> units;
     private ArrayList<Square> squares;
 
 
 
-    public MoveAnimation(ArrayList<Unit> units, int squareI, int squareJ) {
+    public MoveAnimation(ArrayList<UnitPrototype> units, int squareI, int squareJ) {
         this.squareI = squareI;
         this.squareJ = squareJ;
         this.units = units;

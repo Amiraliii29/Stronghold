@@ -48,7 +48,7 @@ public class GameMenuController {
 
 
 
-    public static ArrayList<ArrayList<Unit>> separateUnits() {
+    public static ArrayList<ArrayList<UnitPrototype>> separateUnits() {
         HashMap<String, Integer> unitNameAndCount = new HashMap<>();
 
         for (int i = 0; i < 8; i++) {

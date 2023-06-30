@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CustomizeMapController;
 import Controller.GameMenuController;
 import Model.*;
 import Model.Buildings.Building;
@@ -57,6 +58,7 @@ public class Game extends Application{
     private static Stage stage;
     public static Pane mainPane; // this pane contains all other panes such as pane
     private static Pane pane;
+    public static AnchorPane customizePane;
     public static AnchorPane bottomPane;
     private static Tooltip tooltip;
     private static Pane selectedSquareInfo;
@@ -122,6 +124,23 @@ public class Game extends Application{
         tree = null;
         land = null;
         DataBase.setSelectedUnit(null);
+    }
+
+    public void customizeMap () {
+        if (customizePane == null) {
+            try {
+                building = null;
+                drawLeft();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            mainPane.getChildren().remove(customizePane);
+            customizePane = null;
+            tree = null;
+            land = null;
+            building = null;
+        }
     }
 
     @Override
@@ -216,7 +235,7 @@ public class Game extends Application{
             double x = event.getX();
             double y = event.getY();
 
-            if (x < minX || x > maxX)
+            if (customizePane == null && (x < minX || x > maxX))
                 robot.mouseMove(Math.min(Math.max(minX, x), maxX), y);
         });
 
@@ -228,7 +247,14 @@ public class Game extends Application{
             if (event.getButton() == MouseButton.MIDDLE) {
                 clear();
             } else if (event.getButton() == MouseButton.PRIMARY) {
-                if (DataBase.getSelectedUnit() != null && DataBase.getSelectedUnit().size() != 0
+                if (customizePane != null) {
+                    if (tree != null)
+                        CustomizeMapController.putTree(tree, squareI + blockX, squareJ + blockY);
+                    else if (land != null)
+                        CustomizeMapController.changeLand(land, squareI + blockX, squareJ + blockY);
+
+                    drawMap();
+                } else if (DataBase.getSelectedUnit() != null && DataBase.getSelectedUnit().size() != 0
                         && !map.doesSquareContainEnemyUnits(squareI + blockX, squareJ + blockY, DataBase.getMyGovernment())) {
                     move(squareI + blockX, squareJ + blockY);
                     try {
@@ -253,7 +279,7 @@ public class Game extends Application{
                         throw new RuntimeException(e);
                     }
                 }
-            } else if (event.getButton() == MouseButton.SECONDARY) {
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 selectSq.setX(leftX + blockX * blockPixel);
                 selectSq.setY(blockY * blockPixel);
                 selectSq.setWidth(blockPixel);
@@ -266,7 +292,7 @@ public class Game extends Application{
             double endX = event.getX();
             double endY = event.getY();
 
-            if (endX < minX || endX > maxX)
+            if (customizePane == null && (endX < minX || endX > maxX))
                 robot.mouseMove(Math.min(Math.max(minX, endX), maxX), endY);
 
             boolean draw = false;
@@ -274,7 +300,7 @@ public class Game extends Application{
             int nowY = (int) (Math.floor(endY / blockPixel));
 
 
-            if (event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY && customizePane == null) {
                 if (building != null) {
 
                 } else {
@@ -300,7 +326,7 @@ public class Game extends Application{
                         drawMap();
                     }
                 }
-            } else if (event.getButton() == MouseButton.SECONDARY) {
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
                 selectSq.setWidth(Math.abs((nowX - blockX) * blockPixel));
                 selectSq.setHeight(Math.abs((nowY - blockY) * blockPixel));
                 selectSq.setX(leftX + Math.min(blockX, nowX) * blockPixel);
@@ -314,20 +340,20 @@ public class Game extends Application{
             int nowX = (int) (Math.floor((endX - leftX) / blockPixel));
             int nowY = (int) (Math.floor(endY / blockPixel));
 
-            if (event.getButton() == MouseButton.PRIMARY && buildingToCreateName != null) {
-                building = Building.getBuildingByName(buildingToCreateName);
+            if (event.getButton() == MouseButton.PRIMARY && buildingToCreateName != null && customizePane == null) {
+                building = BuildingPrototype.getBuildingByName(buildingToCreateName);
                 BuildingPrototype buildingPrototype = new BuildingPrototype(DataBase.getMyGovernment(), buildingToCreateName, squareI + nowX, squareJ + nowY);
                 GameMenuController.constructBuilding(buildingPrototype);
                 buildingToCreateName = null;
                 drawMap();
                 GameGraphicController.setPopularityGoldPopulation();
                 building = null;
-            } else if (event.getButton() == MouseButton.SECONDARY) {
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
+            } else if (event.getButton() == MouseButton.SECONDARY && customizePane == null) {
+                ArrayList<UnitPrototype> selectedUnit = new ArrayList<>();
                 for (int i = Math.min(blockX, nowX); i <= Math.max(blockX, nowX); i++) {
                     for (int j = Math.min(blockY, nowY); j <= Math.max(blockY, nowY); j++) {
                         Square thisSquare = squares[squareI + i][squareJ + j];
-                        for (Unit unit : thisSquare.getUnits())
+                        for (UnitPrototype unit : thisSquare.getUnits())
                             if (DataBase.getMyGovernment().equals(unit.getOwner())) selectedUnit.add(unit);
                     }
                 }
@@ -427,7 +453,7 @@ public class Game extends Application{
         squares = map.getSquares();
         pane.getChildren().clear();
 
-        ArrayList<Building> buildingsInMap = new ArrayList<>();
+        ArrayList<BuildingPrototype> buildingsInMap = new ArrayList<>();
         ArrayList<ImageView> unitImageView = new ArrayList<>();
 
         boolean check;
@@ -462,7 +488,7 @@ public class Game extends Application{
                         pane.getChildren().add(treeImage);
                     }
 
-                    for (Unit unit : squares[i][j].getUnits()) {
+                    for (UnitPrototype unit : squares[i][j].getUnits()) {
                         ImageView unitImage = new ImageView(units.get(unit.getName()));
                         unitImage.setLayoutX(k);
                         unitImage.setLayoutY(l);
@@ -481,11 +507,11 @@ public class Game extends Application{
             l = 0;
         }
 
-        for (Building building : buildingsInMap) {
+        for (BuildingPrototype building : buildingsInMap) {
             ImageView buildingImage = new ImageView(buildings.get(building.getName()));
 
-            buildingImage.setLayoutX((building.getXCoordinateLeft() - squareI) * blockPixel + leftX);
-            buildingImage.setLayoutY((building.getYCoordinateUp() - squareJ) * blockPixel);
+            buildingImage.setLayoutX((building.getX() - squareI) * blockPixel + leftX);
+            buildingImage.setLayoutY((building.getY() - squareJ) * blockPixel);
             buildingImage.setFitWidth(building.getWidth() * blockPixel);
             buildingImage.setFitHeight(building.getLength() * blockPixel);
 
@@ -510,7 +536,7 @@ public class Game extends Application{
         mainPane.getChildren().add(bottomPane);
     }
 
-    public void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<Unit> selectedUnit) throws IOException {
+    public void showSelectedSquares(int finalBlockX, int finalBlockY, ArrayList<UnitPrototype> selectedUnit) throws IOException {
         bottomPane.getChildren().remove(detail);
         detail = FXMLLoader.load(
                 new URL(Objects.requireNonNull(Game.class.getResource("/fxml/ShowSelectedSquares.fxml")).toExternalForm()));
@@ -530,7 +556,7 @@ public class Game extends Application{
         initializeDetailsTextFields();
 
         HashMap<String, Integer> unitCnt = new HashMap<>();
-        for (Unit unit : selectedUnit) {
+        for (UnitPrototype unit : selectedUnit) {
             if (unitCnt.containsKey(unit.getName()))
                 unitCnt.put(unit.getName(), unitCnt.get(unit.getName()) + 1);
             else
@@ -672,6 +698,14 @@ public class Game extends Application{
         errorTimeline.playFromStart();
     }
 
+    private void drawLeft() throws IOException {
+        customizePane = FXMLLoader.load(
+                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/CustomizeMap.fxml")).toExternalForm()));
+        customizePane.setLayoutX(0);
+        customizePane.setLayoutY(0);
+        mainPane.getChildren().add(customizePane);
+    }
+
     public void endGame() {
 
     }
@@ -700,14 +734,14 @@ public class Game extends Application{
     }
 
     public boolean move (int finalX, int finalY) {
-        ArrayList<ArrayList<Unit>> allUnits = GameMenuController.separateUnits();
+        ArrayList<ArrayList<UnitPrototype>> allUnits = GameMenuController.separateUnits();
         if (allUnits == null) return false;
 
-        ArrayList<Unit> unitForDataBase = new ArrayList<>();
+        ArrayList<UnitPrototype> unitForDataBase = new ArrayList<>();
         ArrayList<MoveAnimation> moveAnimations = new ArrayList<>();
         boolean check = false;
 
-        for (ArrayList<Unit> selectedUnit : allUnits) {
+        for (ArrayList<UnitPrototype> selectedUnit : allUnits) {
             MoveAnimation moveAnimation = new MoveAnimation(selectedUnit, finalX, finalY);
             moveAnimations.add(moveAnimation);
             unitForDataBase.addAll(selectedUnit);

@@ -7,5 +7,10 @@ public enum NormalRequest {
     CHANGE_PASSWORD,
     GET_USER_BY_USERNAME,
     SEND_GLOBAL_MESSAGE,
+    MAP_NAME,
+    GET_MAP,
+    CHECK_MAP_NAME,
+    SAVE_MAP,
+
     ;
 }

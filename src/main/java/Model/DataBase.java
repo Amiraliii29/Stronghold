@@ -15,7 +15,7 @@ public class DataBase {
     private static final Clipboard clipboard;
     private static Map selectedMap;
     private static BuildingPrototype selectedBuilding;
-    private static ArrayList<Unit> selectedUnit;
+    private static ArrayList<UnitPrototype> selectedUnit;
     private static int captchaNumber;
 
 
@@ -30,7 +30,7 @@ public class DataBase {
         return selectedBuilding;
     }
 
-    public static ArrayList<Unit> getSelectedUnit() {
+    public static ArrayList<UnitPrototype> getSelectedUnit() {
         return selectedUnit;
     }
 
@@ -71,7 +71,7 @@ public class DataBase {
         DataBase.selectedMap = selectedMap;
     }
 
-    public static void setSelectedUnit(ArrayList<Unit> selectedUnit) {
+    public static void setSelectedUnit(ArrayList<UnitPrototype> selectedUnit) {
         DataBase.selectedUnit = selectedUnit;
     }
 
