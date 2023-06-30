@@ -98,6 +98,7 @@ public class LoginMenuController {
 //        }
         else {
             User.setCurrentUser(targetUser);
+            targetUser.setOnlineStatus(true);
             new MainMenu().start(SignUpMenu.stage);
         }
     }

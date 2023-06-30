@@ -60,7 +60,6 @@ public class JsonConverter {
         for (int i = 0; i < usersJsonArray.size(); i++) {
             userUnderRestoration= gson.fromJson(usersJsonArray.get(i).toString(), User.class);
             User.getUsers().add(userUnderRestoration);
-            
         }
     }
 

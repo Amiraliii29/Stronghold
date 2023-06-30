@@ -35,6 +35,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -72,9 +74,9 @@ public class ProfileMenu extends Application {
     Label label;
     ArrayList<User> sortedUsers;
     FileChooser fileChooser;
-
     StackPane mainPane;
     Stage stage;
+    public static ProfileMenu profileMenu;
 
     // {
     //     User.setCurrentUser(User.getUsers().get(0));
@@ -83,6 +85,7 @@ public class ProfileMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        User.getUsersFromServer();
         StackPane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
@@ -93,6 +96,7 @@ public class ProfileMenu extends Application {
         stage.setFullScreen(true);
         stage.setScene(scene);
         showProfileProtocol();
+        ProfileMenu.profileMenu=this;
         stage.show();
     }
 
@@ -142,9 +146,8 @@ public class ProfileMenu extends Application {
         scoreboardPane.setMaxHeight(200);
         scoreboardPane.setMaxWidth(450);
         for (int i = 0; i < 10; i++) {
-            displayUserInfo(i+1);
+            scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i+1)).getMainHbox());
         }
-
         bigVbox.getChildren().addAll(label,scoreboardPane);
         setProfileButtons();
         setProfileButtonListeners();
@@ -171,72 +174,7 @@ public class ProfileMenu extends Application {
                 });
     }
 
-    private ImageView getUserImageView(User user){
-        Image userAvatarimg=null;
-        try {
-            userAvatarimg=new Image(new FileInputStream("src/main/resources/Images/avatars/"+user.getAvatarFileName()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        ImageView userAvatarImgView=new ImageView(userAvatarimg);
-        userAvatarImgView.setFitWidth(40);
-        userAvatarImgView.setFitHeight(40);
-        userAvatarImgView.getStyleClass().add("hover-effect");
-        userAvatarImgView.setOnMouseClicked(event -> {
-            copyTargetAvatarToUserAvatar(user);
-            try {
-                UserInfoOperator.storeUserDataInJson(user, "src/main/resources/jsonData/Users.json");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-                });
-
-        return userAvatarImgView;
-    }
-
-    private void addStylesToHboxIfNeeded(HBox userInfoHbox,User targetUser){
-        switch (targetUser.getRank()) {
-            case 1 -> userInfoHbox.getStyleClass().add("gold-color");
-            case 2 -> userInfoHbox.getStyleClass().add("silver-color");
-            case 3 -> userInfoHbox.getStyleClass().add("bronze-color");
-            default -> {
-            }
-        }
-
-        if(targetUser.getUsername().equals(User.getCurrentUser().getUsername())){
-            userInfoHbox.getStyleClass().add("picked-field-styles");
-        }
-            
-        
-    }
-
-    private void copyTargetAvatarToUserAvatar(User targetUser){
-        User.getCurrentUser().setAvatarFileName(targetUser.getAvatarFileName());
-    }
-
-    private void displayUserInfo(int userRank){
-        if(sortedUsers.size()+1<=userRank) return;
-        User targetUser=sortedUsers.get(userRank-1);
-        HBox userInfoHbox=new HBox(8);
-        ImageView userAvatarImgView=getUserImageView(targetUser);
-        Text userNameText=new Text(targetUser.getUsername());Text userRankText=new Text(""+targetUser.getRank());Text userScoreText=new Text(""+targetUser.getHighScore());
-        
-        HBox temp0=new HBox(8, userAvatarImgView);
-        temp0.setMinWidth(100);
-        HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText);
-        temp1.setMinWidth(100); temp1.setMaxWidth(100);temp2.setMinWidth(100); temp2.setMaxWidth(100);temp3.setMinWidth(100); temp3.setMaxWidth(100);
-        temp0.setAlignment(Pos.CENTER);
-        temp1.setAlignment(Pos.CENTER);
-        temp2.setAlignment(Pos.CENTER);
-        temp3.setAlignment(Pos.CENTER);
-        
-        userInfoHbox.getChildren().addAll(temp0,temp1,temp2,temp3);
-        userInfoHbox.setAlignment(Pos.CENTER);
-        addStylesToHboxIfNeeded(userInfoHbox, targetUser);
-        scoreBoardVBox.getChildren().add(userInfoHbox);
-    }
-
-    private void showProfileProtocol(){
+    public void showProfileProtocol(){
         if(mainPane.getChildren().size()>0)
             mainPane.getChildren().remove(bigVbox);
         initializeMainVbox();
@@ -465,21 +403,7 @@ public class ProfileMenu extends Application {
            changePassword(oldField.getText(), newField.getText(), newFieldrepeat.getText());
         });
     }
-
-    private void createNotificationDialog(String title,String header,String outputText,String Color){
-        Dialog dialog=new Dialog<>();
-        dialog.initOwner(stage);
-        dialog.setTitle(title);
-        dialog.setHeaderText(header);
-        DialogPane dialogPane = dialog.getDialogPane();
-        Text output=new Text(outputText);
-        VBox vbox=new VBox(8, output);
-        vbox.setStyle("-fx-background-color:"+Color);
-        dialogPane.setContent(vbox);
-        dialogPane.getButtonTypes().addAll(ButtonType.OK);
-        dialog.showAndWait();
-    }
-
+    
     private void changePassword(String oldPassword,String newPssword, String passwordRepeat){
         
         ProfileMenuMessages result=null;
@@ -491,23 +415,23 @@ public class ProfileMenu extends Application {
 
         switch (result) {
             case EMPTY_FIELDS_ERROR:
-                createNotificationDialog("Result","Password Change Result:","Error: empty input fields",Orders.redNotifErrorColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Error: empty input fields",Orders.redNotifErrorColor);
                 break;
 
             case INCORRECT_PASSWORD_ERROR:
-                createNotificationDialog("Result","Password Change Result:","Error: incorrect old password",Orders.redNotifErrorColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Error: incorrect old password",Orders.redNotifErrorColor);
                 break;
 
             case WEAK_PASSWORD_ERROR:
-                createNotificationDialog("Result","Password Change Result:","Error: new password is weak",Orders.redNotifErrorColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Error: new password is weak",Orders.redNotifErrorColor);
                 break;
             
             case UNCHANGED_FIELD_ERROR:
-                createNotificationDialog("Result","Password Change Result:","Error: password is not new!",Orders.redNotifErrorColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Error: password is not new!",Orders.redNotifErrorColor);
                 break;
 
             case INCORRECT_PASSWORD_VERIFICATION_ERROR:
-                createNotificationDialog("Result","Password Change Result:","Error: incorrect repetition",Orders.redNotifErrorColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Error: incorrect repetition",Orders.redNotifErrorColor);
                 break;
 
             default:
@@ -516,15 +440,15 @@ public class ProfileMenu extends Application {
                 request.addToArguments("Old_Password", oldPassword);
                 Client.client.sendRequestToServer(request,false);
                 Client.client.updateUserData();
-                createNotificationDialog("Result","Password Change Result:","Password was changed Succesfully",Orders.greenNotifSuccesColor);
+                Orders.createNotificationDialog("Result","Password Change Result:","Password was changed Succesfully",Orders.greenNotifSuccesColor);
                 break;
         }
     }
 
     private void setStartingTexts() {
-        sendTextNotification(usernameText, "username", Orders.greenNotifSuccesColor, usernameVbox);
-        sendTextNotification(emailText, "email", Orders.greenNotifSuccesColor, emailVbox);
-        sendTextNotification(nicknameText, "nickname", Orders.greenNotifSuccesColor, nicknameVbox);
+        Orders.sendTextNotification(usernameText, "username", Orders.greenNotifSuccesColor, usernameVbox);
+        Orders.sendTextNotification(emailText, "email", Orders.greenNotifSuccesColor, emailVbox);
+        Orders.sendTextNotification(nicknameText, "nickname", Orders.greenNotifSuccesColor, nicknameVbox);
     }
 
     private void initalizeLabel() {
@@ -568,7 +492,7 @@ public class ProfileMenu extends Application {
         if(result.contains("Slogan")) 
             output=output.concat("Slogan Field\n");
 
-        createNotificationDialog("Result","Change Fileds Result:", output,Orders.yellowNotifErrorColor);
+        Orders.createNotificationDialog("Result","Change Fileds Result:", output,Orders.yellowNotifErrorColor);
         
         if(result.contains("Username"))
             User.getCurrentUser().setUsername(usernameField.getText());
@@ -596,12 +520,12 @@ public class ProfileMenu extends Application {
             color = Orders.redNotifErrorColor;
 
         if (!UserInfoOperator.isEmailFormatValid(value)) {
-            sendTextNotification(emailText, "Invalid email format", color, emailVbox);
+            Orders.sendTextNotification(emailText, "Invalid email format", color, emailVbox);
             return false;
         }
 
         if (User.getUserByEmail(value) != null) {
-            sendTextNotification(emailText, "Email already in use", color, emailVbox);
+            Orders.sendTextNotification(emailText, "Email already in use", color, emailVbox);
             return false;
         }
 
@@ -614,11 +538,11 @@ public class ProfileMenu extends Application {
             color = Orders.redNotifErrorColor;
 
         if (value == null) {
-            sendTextNotification(nicknameText, "Shouldn't be left empty", color, nicknameVbox);
+            Orders.sendTextNotification(nicknameText, "Shouldn't be left empty", color, nicknameVbox);
             return false;
         }
         if (value.length() == 0) {
-            sendTextNotification(nicknameText, "Shouldn't be left empty", color, nicknameVbox);
+            Orders.sendTextNotification(nicknameText, "Shouldn't be left empty", color, nicknameVbox);
             return false;
         }
 
@@ -631,39 +555,18 @@ public class ProfileMenu extends Application {
             color = Orders.redNotifErrorColor;
 
         if (!UserInfoOperator.isUsernameFormatValid(value)) {
-            sendTextNotification(usernameText, "[a-zA-z0-9] and '_' +min 3 size", color,
+            Orders.sendTextNotification(usernameText, "[a-zA-z0-9] and '_' +min 3 size", color,
                     usernameVbox);
             return false;
         }
 
         else if (User.getUserByUserName(value) != null) {
-            sendTextNotification(usernameText,
+            Orders.sendTextNotification(usernameText,
                     "Username in use, suggest:" + UserInfoOperator.addRandomizationToString(value),
                     color, usernameVbox);
             return false;
         }
         return true;
-    }
-
-    private void sendTextNotification(Text text, String output, String VboxColor, VBox vbox) {
-        vbox.setStyle("-fx-background-color:" + VboxColor);
-        text.setVisible(true);
-        double minWidth = vbox.getMinWidth();
-        double maxWidth = vbox.getMaxWidth();
-        text.setText(output);
-        text.setOpacity(1);
-        FadeTransition fadeTrans = new FadeTransition(Duration.seconds(3), text);
-        fadeTrans.setDelay(Duration.seconds(1));
-        fadeTrans.setFromValue(1);
-        fadeTrans.setToValue(0.2);
-        fadeTrans.setOnFinished(event -> {
-            vbox.setStyle("");
-            vbox.setMinWidth(minWidth);
-            vbox.setMaxWidth(maxWidth);
-            text.setText("");
-            text.setVisible(false);
-        });
-        fadeTrans.play();
     }
 
     private void initializeMainVbox() {
@@ -728,5 +631,30 @@ public class ProfileMenu extends Application {
         nicknameVbox.setMinWidth(200);
     }
 
+    public void showFriendRequests(){
+        ArrayList<User> usersWithReq=User.getCurrentUser().getUsersWithFriendRequest();
+        for (User user : usersWithReq) {
+            showFriendRequestAlert(user);
+        }
+        User.getCurrentUser().getUsersWithFriendRequest().clear();
+    }
+
+    public void showFriendRequestAlert(User user){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Friend Request");
+            alert.setHeaderText("Friend Request Recieved!");
+            alert.setContentText("From: "+user.getUsername());
+            alert.showAndWait().ifPresent((btnType) -> {
+                    if (btnType == ButtonType.OK) 
+                        handleRequestAccept(user);
+                });
+    }
+
+    private void handleRequestAccept(User newFriend){
+        User.getCurrentUser().addToFriends(newFriend);
+        newFriend.addToFriends(User.getCurrentUser());
+        User.submitFriendship(newFriend);
+    }
+    
 
 }

@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import View.SignUpMenu;
+import javafx.animation.FadeTransition;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+
 public class Orders {
 
     public static String yellowNotifErrorColor="rgba(193, 174, 32, 0.628);";
@@ -123,4 +132,40 @@ public class Orders {
         coords1.addAll(coords2);
         return coords1;
     } 
+
+    public static void createNotificationDialog(String title,String header,String outputText,String Color){
+        Dialog dialog=new Dialog<>();
+        dialog.initOwner(SignUpMenu.stage);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        DialogPane dialogPane = dialog.getDialogPane();
+        Text output=new Text(outputText);
+        VBox vbox=new VBox(8, output);
+        vbox.setStyle("-fx-background-color:"+Color);
+        dialogPane.setContent(vbox);
+        dialogPane.getButtonTypes().addAll(ButtonType.OK);
+        dialog.showAndWait();
+    }
+
+    public static void sendTextNotification(Text text, String output, String VboxColor, VBox vbox) {
+        vbox.setStyle("-fx-background-color:" + VboxColor);
+        text.setVisible(true);
+        double minWidth = vbox.getMinWidth();
+        double maxWidth = vbox.getMaxWidth();
+        text.setText(output);
+        text.setOpacity(1);
+        FadeTransition fadeTrans = new FadeTransition(Duration.seconds(3), text);
+        fadeTrans.setDelay(Duration.seconds(1));
+        fadeTrans.setFromValue(1);
+        fadeTrans.setToValue(0.2);
+        fadeTrans.setOnFinished(event -> {
+            vbox.setStyle("");
+            vbox.setMinWidth(minWidth);
+            vbox.setMaxWidth(maxWidth);
+            text.setText("");
+            text.setVisible(false);
+        });
+        fadeTrans.play();
+    }
+
 }

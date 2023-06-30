@@ -4,13 +4,22 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.google.gson.Gson;
+
 import Controller.JsonConverter;
+import Controller.Orders;
+import Main.Client;
+import Main.NormalRequest;
+import Main.Request;
+import View.ProfileMenu;
 
 public class User {
     private static ArrayList<User> users;
     private static User currentUser;
     private static SecureRandom randomGenerator=new SecureRandom();
 
+    private ArrayList<User> friends;
+    private ArrayList<User> usersWithFriendRequest;
     private String avatarFileName;
     private String username;
     private String password;
@@ -19,6 +28,7 @@ public class User {
     private String slogan;
     private String securityQuestion;
     private boolean stayLoggedIn;
+    private boolean isOnline;
     private int highScore;
     private int rank;
 
@@ -33,6 +43,8 @@ public class User {
         this.nickName=nickname;
         this.email = email;
         this.slogan = slogan;
+        this.friends=new ArrayList<>();
+        this.usersWithFriendRequest=new ArrayList<>();
         avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
         users.add(this);
     }
@@ -46,6 +58,14 @@ public class User {
 
     public void setAvatarFileName(String name){
         this.avatarFileName=name;
+    }
+
+    public void setOnlineStatus(boolean status){
+        this.isOnline=status;
+    }
+
+    public boolean isOnline(){
+        return isOnline;
     }
 
     public String getUsername() {
@@ -139,8 +159,32 @@ public class User {
         return users;
     }
 
+    public static void setUsers(ArrayList<User> users) {
+        User.users=users;
+    }
+
+    public void addToFriends(User user){
+        friends.add(user);
+    }
+
+    public ArrayList<User> getFriends(){
+        return friends;
+    }
+
     public boolean isStayedLoggedIn() {
         return stayLoggedIn;
+    }
+
+    public ArrayList<User> getUsersWithFriendRequest(){
+        return usersWithFriendRequest;
+    }
+
+    public void addToFriendRequests(User user){
+        usersWithFriendRequest.add(user);
+    }
+
+    public boolean isFriendsWithCurrentUser(){
+        return getFriends().contains(currentUser);
     }
 
     public static void addUser(User user){
@@ -161,5 +205,41 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickName, user.nickName) && Objects.equals(email, user.email) && Objects.equals(slogan, user.slogan) && Objects.equals(securityQuestion, user.securityQuestion);
+    }
+
+    public static void getUsersFromServer(){
+        Request request=new Request(NormalRequest.GET_USERS_DATA);
+        Client.client.sendRequestToServer(request, true);
+        String result=Client.client.getRecentResponse();
+        ArrayList<User> users= new Gson().fromJson(result, ArrayList.class);
+        setUsers(users);
+        if(ProfileMenu.profileMenu!=null)
+            ProfileMenu.profileMenu.showProfileProtocol();
+    }
+
+    public static void sendFriendRequest(User targetFriend){
+
+        if(targetFriend.getFriends().contains(currentUser) ||
+           targetFriend.getUsersWithFriendRequest().contains(currentUser)){
+                Orders.createNotificationDialog("Result","Friend Request Delivery:","Error: you are either already friends with user or have sent a friend request!",Orders.yellowNotifErrorColor);
+                return;
+           }
+
+        targetFriend.getUsersWithFriendRequest().add(targetFriend);
+        Request request=new Request(NormalRequest.SEND_FRIEND_REQUSET);
+        Gson gson=new Gson();
+        request.addToArguments("Sender", gson.toJson(currentUser));
+        request.addToArguments("Reciever", gson.toJson(targetFriend));
+        Client.client.sendRequestToServer(request, false);
+
+        Orders.createNotificationDialog("Result","Friend Request Delivery:","Friend request was sent succesfully!",Orders.greenNotifSuccesColor);
+    }
+
+    public static void submitFriendship(User newFriend){
+        Request request=new Request(NormalRequest.SUBMIT_FRIENDSHIP);
+        Gson gson=new Gson();
+        request.addToArguments("User1", gson.toJson(currentUser));
+        request.addToArguments("User2", gson.toJson(newFriend));
+        Client.client.sendRequestToServer(request, false);
     }
 }
