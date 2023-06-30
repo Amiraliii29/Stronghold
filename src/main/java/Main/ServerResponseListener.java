@@ -3,6 +3,8 @@ package Main;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import Model.User;
+
 public class ServerResponseListener extends Thread {
 
     private DataInputStream dataInputStream;
@@ -54,6 +56,11 @@ public class ServerResponseListener extends Thread {
             int ID = Integer.parseInt(request.argument.get("ID"));
             Client.client.myRoomsID.add(ID);
         }
+        else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
+            User.getUsersFromServer();
+        }
+
+
         //TODO: FILL AUTO RESPONSES
         return true;
     }
