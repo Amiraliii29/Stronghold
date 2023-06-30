@@ -1,6 +1,6 @@
 package View.Controller;
 
-import Model.Buildings.Building;
+import Model.BuildingPrototype;
 import Model.DataBase;
 import View.Game;
 import Main.Main;
@@ -47,7 +47,7 @@ public class GameGraphicController {
 
 
     public static void setPopularityGoldPopulation(){
-        int popularityInt = DataBase.getCurrentGovernment().getPopularity();
+        int popularityInt = DataBase.getMyGovernment().getPopularity();
         popularityInBottomMenu.setText(popularityInt + "/100");
         popularityInBottomMenu.setLayoutX(913);
         popularityInBottomMenu.setLayoutY(78);
@@ -78,14 +78,14 @@ public class GameGraphicController {
         });
 
         //show gold
-        goldsInBottomMenu.setText((int)DataBase.getCurrentGovernment().getMoney() + "");
+        goldsInBottomMenu.setText((int)DataBase.getMyGovernment().getMoney() + "");
         goldsInBottomMenu.setLayoutX(894);
         goldsInBottomMenu.setLayoutY(96);
         if(!Game.bottomPane.getChildren().contains(goldsInBottomMenu))
             Game.bottomPane.getChildren().add(goldsInBottomMenu);
 
         //show population
-        populationInBottomMenu.setText(DataBase.getCurrentGovernment().getFreeWorker() + "/128");
+        populationInBottomMenu.setText(DataBase.getMyGovernment().getFreeWorker() + "/128");
         populationInBottomMenu.setLayoutX(886);
         populationInBottomMenu.setLayoutY(112);
         if(!Game.bottomPane.getChildren().contains(populationInBottomMenu))
@@ -96,16 +96,14 @@ public class GameGraphicController {
     }
 
     private static void fillPopularityFactorsMenuLabelsAndImages() throws MalformedURLException, FileNotFoundException {
-        DataBase.getCurrentGovernment().updateBuildingPopularity();
-
-        int foodNumberInt = (DataBase.getCurrentGovernment().getFood()) * 4;
+        int foodNumberInt = (DataBase.getMyGovernment().getFood()) * 4;
         int taxNumberInt = 0;
-        int tax = DataBase.getCurrentGovernment().getTax();
+        int tax = DataBase.getMyGovernment().getTax();
         if (tax <= 0) taxNumberInt += (tax * (-2) + 1);
         else if (tax <= 4) taxNumberInt += (tax * (-2));
         else taxNumberInt += (((tax - 5) * (-4)) - 12);
-        int fearNumberInt = DataBase.getCurrentGovernment().getFear();
-        int religionNumberInt = DataBase.getCurrentGovernment().getFaith();
+        int fearNumberInt = DataBase.getMyGovernment().getFear();
+        int religionNumberInt = DataBase.getMyGovernment().getFaith();
 
         int totalNumberInt = foodNumberInt + fearNumberInt + religionNumberInt + taxNumberInt;
 
@@ -135,7 +133,7 @@ public class GameGraphicController {
         totalNumber.setLayoutY(192);
 
         popularityFactorsPane.getChildren().addAll(foodImage , foodNumber , fearImage , fearNumber , religionImage
-        , religionNumber , taxNumber , taxImage , totalNumber , totalImage);
+                , religionNumber , taxNumber , taxImage , totalNumber , totalImage);
 
         foodNumber = new Label(fearNumberInt + "");
         if(foodNumberInt > 0)
@@ -225,7 +223,7 @@ public class GameGraphicController {
             @Override
             public void handle(MouseEvent event) {
                 int foodRate = (int) Math.floor(foodSlider.getValue());
-                DataBase.getCurrentGovernment().setFood(foodRate);
+                DataBase.getMyGovernment().setFood(foodRate);
                 setPopularityGoldPopulation();
                 try {
                     fillPopularityFactorsMenuLabelsAndImages();
@@ -246,7 +244,7 @@ public class GameGraphicController {
             @Override
             public void handle(MouseEvent event) {
                 int taxRate = (int) Math.floor(taxSlider.getValue());
-                DataBase.getCurrentGovernment().setTax(taxRate);
+                DataBase.getMyGovernment().setTax(taxRate);
                 setPopularityGoldPopulation();
                 try {
                     fillPopularityFactorsMenuLabelsAndImages();
@@ -267,7 +265,7 @@ public class GameGraphicController {
             @Override
             public void handle(MouseEvent event) {
                 int fearRate = (int) Math.floor(fearSlider.getValue());
-                DataBase.getCurrentGovernment().setFear(fearRate);
+                DataBase.getMyGovernment().setFear(fearRate);
                 setPopularityGoldPopulation();
                 try {
                     fillPopularityFactorsMenuLabelsAndImages();
@@ -389,210 +387,210 @@ public class GameGraphicController {
 
         GameGraphicController.setPopularityGoldPopulation();
     }
-    
+
 
     public void stairDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "Stair";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Stair";
     }
 
     public void smallWallDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "SmallWall";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "SmallWall";
     }
 
     public void wallDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "Wall";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Wall";
     }
 
     public void strongWallDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "StrongWall";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "StrongWall";
     }
 
     public void barackDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.barrackBuildingToCreateName = "Barrack";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Barrack";
     }
 
     public void mercenaryPostDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.barrackBuildingToCreateName = "MercenaryPost";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "MercenaryPost";
     }
 
     public void stockPileDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.stockPileBuildingToCreateName = "Stockpile";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Stockpile";
     }
 
     public void woodCutterDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "WoodCutter";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "WoodCutter";
     }
 
     public void stoneMineDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Quarry";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Quarry";
     }
 
     public void cowDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "StoneCow";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "StoneCow";
     }
 
     public void ironMineDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "IronMine";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "IronMine";
     }
 
     public void pitchRigDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "PitchRig";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "PitchRig";
     }
 
     public void shopDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.townBuildingToCreateName = "Shop";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Shop";
     }
 
     public void armouryDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.stockPileBuildingToCreateName = "Armoury";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Armoury";
     }
 
     public void fletcherDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Fletcher";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Fletcher";
     }
 
     public void armourerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Armourer";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Armourer";
     }
 
     public void poleTurnerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "PoleTurner";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "PoleTurner";
     }
 
     public void blackSmithDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "BlackSmith";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "BlackSmith";
     }
 
     public void dairyFarmDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "DairyFarm";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "DairyFarm";
     }
 
     public void millDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Mill";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Mill";
     }
 
     public void bakeryDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Bakery";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Bakery";
     }
 
     public void breweryDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Brewery";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Brewery";
     }
 
     public void granaryDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.stockPileBuildingToCreateName = "Granary";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Granary";
     }
 
     public void innDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Inn";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Inn";
     }
 
     public void cheeseDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "DairyFarm";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "DairyFarm";
     }
 
     public void appleFarmDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Orchard";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Orchard";
     }
 
     public void wheatFarmDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "WheatFarm";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "WheatFarm";
     }
 
     public void hopsFarmDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "HopsFarm";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "HopsFarm";
     }
 
     public void homeDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.townBuildingToCreateName = "Home";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Home";
     }
 
     public void churchDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.townBuildingToCreateName = "Church";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Church";
     }
 
     public void cathedralDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.barrackBuildingToCreateName = "Cathedral";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Cathedral";
     }
 
     public void wellDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
     }
 
     public void lookOutTowerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "LookOutTower";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "LookOutTower";
     }
 
     public void perimeterTowerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "PerimeterTower";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "PerimeterTower";
     }
 
     public void defenciveTowerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "DefenciveTower";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "DefenciveTower";
     }
 
     public void squareTowerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "SquareTower";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "SquareTower";
     }
 
     public void circularTowerDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "CircularTower";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "CircularTower";
     }
 
     public void smallStoneGateDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "SmallStoneGate";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "SmallStoneGate";
     }
 
     public void bigStoneGateDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "BigStoneGate";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "BigStoneGate";
     }
 
     public void drawBridgeDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "DrawBridge";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "DrawBridge";
     }
 
     public void trapDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.defenceBuildingToCreateName = "Trap";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Trap";
     }
 
     public void ditchDragDetected(MouseEvent ignoredMouseEvent) {
@@ -604,22 +602,22 @@ public class GameGraphicController {
     }
 
     public void stableDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "Stable";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "Stable";
     }
 
     public void engineerGuildDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.barrackBuildingToCreateName = "EngineerGuild";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "EngineerGuild";
     }
 
     public void oilSmelterDragDetected(MouseEvent ignoredMouseEvent) {
-        Game.building = Building.getBuildingByName("Stable");
-        Game.generatorBuildingToCreateName = "OilSmelter";
+        Game.building = BuildingPrototype.getBuildingByName("Stable");
+        Game.buildingToCreateName = "OilSmelter";
     }
 
     public void setCopiedBuildingName(String Name){
-        
+
     }
 
     public void exitPopularityFactorsMenu(MouseEvent mouseEvent) {

@@ -1,13 +1,21 @@
 package View.Controller;
 
+import Main.Client;
+import Main.NormalRequest;
+import Main.Request;
 import Model.DataBase;
 import Model.Land;
 import Model.Map;
 import Model.Trees;
 import View.Game;
+import View.LoginMenu;
+import View.SignUpMenu;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
 public class CustomizeMap {
+
+    public TextField name;
 
     public void bigLake(MouseEvent ignoredMouseEvent) {
         Game.tree = null;
@@ -119,12 +127,25 @@ public class CustomizeMap {
         Game.tree = Trees.OLIVE_PALM;
     }
 
-    public void back(MouseEvent ignoredMouseEvent) {
-        Game.mainPane.getChildren().remove(Game.customizePane);
+    public void back(MouseEvent ignoredMouseEvent) throws Exception {
         Game.customizePane = null;
+        new LoginMenu().start(SignUpMenu.stage);
     }
 
     public void save(MouseEvent ignoredMouseEvent) {
-        Map.saveMap(DataBase.getSelectedMap(), DataBase.getSelectedMap().getName());
+        if (name == null || name.getText() == null || name.getText().equals("")) return;
+        else {
+            Request request = new Request(NormalRequest.CHECK_MAP_NAME);
+            request.addToArguments("Name", name.getText());
+
+            Client.client.sendRequestToServer(request, true);
+            String response = Client.client.getRecentResponse();
+
+            if (response.equals("true")) {
+                Request request1 = new Request(NormalRequest.SAVE_MAP);
+                request1.addToArguments(name.getText(), Map.mapToJson(DataBase.getSelectedMap()));
+                Client.client.sendRequestToServer(request, false);
+            }
+        }
     }
 }

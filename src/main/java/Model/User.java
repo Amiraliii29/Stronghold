@@ -1,16 +1,11 @@
 package Model;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Objects;
 
-import Controller.JsonConverter;
-
 public class User {
-    private static ArrayList<User> users;
     private static User currentUser;
     private static SecureRandom randomGenerator=new SecureRandom();
-
     private String avatarFileName;
     private String username;
     private String password;
@@ -22,10 +17,6 @@ public class User {
     private int highScore;
     private int rank;
 
-    static {
-        users = new ArrayList<>();
-        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
-    }
 
     public User(String username, String password, String nickname,String email, String slogan) {
         this.username = username;
@@ -34,12 +25,11 @@ public class User {
         this.email = email;
         this.slogan = slogan;
         avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
-        users.add(this);
     }
 
     public String getAvatarFileName(){
         if(avatarFileName != null)
-        return avatarFileName;
+            return avatarFileName;
 
         return "1.png";
     }
@@ -120,31 +110,9 @@ public class User {
         return stayLoggedIn;
     }
 
-    public static User getUserByUserName(String userName) {
-        for (User user : users)
-            if (user.getUsername().equals(userName))
-                return user;
-        return null;
-    }
-
-    public static User getUserByEmail(String email) {
-        for (User user : users)
-            if (user.getEmail().equals(email))
-                return user;
-
-        return null;
-    }
-
-    public static ArrayList<User> getUsers() {
-        return users;
-    }
 
     public boolean isStayedLoggedIn() {
         return stayLoggedIn;
-    }
-
-    public static void addUser(User user){
-        users.add(user);
     }
 
     public static User getCurrentUser(){

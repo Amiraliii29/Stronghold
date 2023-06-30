@@ -2,10 +2,7 @@ package Controller;
 
 import Model.DataBase;
 import Model.Map;
-import View.LoginMenu;
-import View.ProfileMenu;
-import View.ShopMenu;
-import View.SignUpMenu;
+import View.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -25,9 +22,8 @@ public class MainMenuController {
         SignUpMenu.stage.show();
     }
 
-    public void openMapMenu(MouseEvent mouseEvent) {
-        //todo open map menu
-
+    public void openMapMenu(MouseEvent mouseEvent) throws Exception {
+        new CustomizeMapEntry().start(SignUpMenu.stage);
     }
 
     public void openProfileMenu(MouseEvent mouseEvent) throws Exception {

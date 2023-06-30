@@ -10,5 +10,10 @@ public enum NormalRequest {
     RECEIVE_GLOBAL_MESSAGE,
     SEND_PRIVATE_MESSAGE,
     CREATE_ROOM,
+    MAP_NAME,
+    GET_MAP,
+    CHECK_MAP_NAME,
+    SAVE_MAP,
+
     ;
 }
