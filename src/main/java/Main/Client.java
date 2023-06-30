@@ -1,5 +1,6 @@
 package Main;
 
+import Model.DataBase;
 import Model.User;
 
 import java.io.DataInputStream;
@@ -31,7 +32,7 @@ public class Client extends Thread{
         this.socket = socket;
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
-
+        DataBase.addToAllClients(this);
         token = encodeToken(generateToken());
     }
 
@@ -67,7 +68,7 @@ public class Client extends Thread{
     }
 
 
-    private void requestHandler(Request request) {
+    private void requestHandler(Request request) throws IOException {
 
         String result="";
 
@@ -85,6 +86,8 @@ public class Client extends Thread{
         
         else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
             result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+        else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
+            sendGlobalMessage(request);
         //TODO: FILL THE REST;
 
 
@@ -94,6 +97,17 @@ public class Client extends Thread{
             dataOutputStream.writeUTF(result);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendGlobalMessage(Request request) throws IOException {
+        for (Client allClient : DataBase.getAllClients()) {
+            Request requestToSend = new Request(null , NormalRequest.RECEIVE_GLOBAL_MESSAGE);
+            requestToSend.argument.put("userName" , request.argument.get("userName"));
+            requestToSend.argument.put("avatar" , request.argument.get("avatar"));
+            requestToSend.argument.put("message" , request.argument.get("message"));
+
+            allClient.getDataOutputStream().writeUTF("AUTO" + requestToSend.toJson());
         }
     }
 

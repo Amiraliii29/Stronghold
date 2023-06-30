@@ -7,5 +7,7 @@ public enum NormalRequest {
     CHANGE_PASSWORD,
     REMOVE_SLOGAN,
     GET_USER_BY_USERNAME,
+    SEND_GLOBAL_MESSAGE,
+    RECEIVE_GLOBAL_MESSAGE,
     ;
 }
