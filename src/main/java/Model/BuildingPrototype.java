@@ -86,9 +86,9 @@ public class BuildingPrototype {
         Request request = new Request(GameRequest.CREATE_BUILDING);
         request.argument.put("fake", building.toJson());
 
-        Client.client.sendRequestToServer(request);
+        Client.client.sendRequestToServer(request, true);
 
-        Result result = ServerAction.serverAction.getResult();
+        Result result = Result.fromJson(Client.client.getRecentResponse());
 
         return  fromJson(result.arguments.get("fake"));
     }
