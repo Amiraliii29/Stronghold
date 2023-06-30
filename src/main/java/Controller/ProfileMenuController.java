@@ -64,7 +64,6 @@ public class ProfileMenuController {
             return ProfileMenuMessages.INCORRECT_PASSWORD_VERIFICATION_ERROR;
         
         currentUser.setPassword(newPassword);
-        UserInfoOperator.storeUserDataInJson(currentUser,"src/main/resources/jsonData/Users.json");
         return ProfileMenuMessages.SUCCESFUL_CHANGE_PASSWORD;
     }
 

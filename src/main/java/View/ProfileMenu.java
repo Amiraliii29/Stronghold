@@ -415,18 +415,16 @@ public class ProfileMenu extends Application {
             sloganField.setText("");
             sloganField.setPromptText("slogan is empty");
             User.getCurrentUser().setSlogan("");
-            try {
-                UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
-            } catch (NoSuchAlgorithmException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            Client.client.sendRequestToServer(new Request(NormalRequest.REMOVE_SLOGAN),false);
+            Client.client.updateUserData();
         });
 
         displayScoreBoard.setOnMouseClicked(event -> {
             if(isProfileShown)
                 showScoreBoardProtocol();
-            else showScoreBoardProtocol();
+            else 
+                showProfileProtocol();
+                
                 isProfileShown=!isProfileShown;
                 });
 
@@ -513,6 +511,11 @@ public class ProfileMenu extends Application {
                 break;
 
             default:
+                Request request=new Request(NormalRequest.CHANGE_PASSWORD);
+                request.addToArguments("New_Password", newPssword);
+                request.addToArguments("Old_Password", oldPassword);
+                Client.client.sendRequestToServer(request,false);
+                Client.client.updateUserData();
                 createNotificationDialog("Result","Password Change Result:","Password was changed Succesfully",Orders.greenNotifSuccesColor);
                 break;
         }
@@ -530,45 +533,47 @@ public class ProfileMenu extends Application {
     }
 
     private void submitChanges() {
-        ProfileMenuMessages usernameResult=null,emailResult=null,nicknameResult=null,sloganResult=null;
-                Request request=new Request(NormalRequest.CHANGE_PROFILE_FIELDS);
 
-        //TODO: CHECK DUPLICATION
+        Request request=new Request(NormalRequest.CHANGE_PROFILE_FIELDS);
 
         if (checkUsernameValue(usernameField.getText(), true))
             request.addToArguments("Username", usernameField.getText());
                 
         if (checkEmailValue(emailField.getText(), true))
-            request.addToArguments("Email", usernameField.getText());
+            request.addToArguments("Email", emailField.getText());
 
         if (checkNicknameValue(nicknameField.getText(), true))
-            request.addToArguments("Nickname", usernameField.getText());
+            request.addToArguments("Nickname", nicknameField.getText());
 
-        request.addToArguments("Slogan", usernameField.getText());
+        request.addToArguments("Slogan", sloganField.getText());
             
-        Client.client.sendRequestToServer(request);
-        //TODO: GET THE RESULTS SENT AND NOTIFY USER
+        Client.client.sendRequestToServer(request,true);
+        String result= Client.client.getRecentResponse();
 
 
         String output="The fields Below Changed Succesfuly:\n";
 
-                if(usernameResult!=null)
-            if(usernameResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_USERNAME)) 
-                output=output.concat("Username Field\n");
+        if(result.contains("Username"))
+            output=output.concat("Username Field\n");
             
-                if(emailResult!=null)
-            if(emailResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_EMAIL)) 
-                output=output.concat("Email Field\n");
 
-                if(nicknameResult!=null)
-            if(nicknameResult.equals(ProfileMenuMessages.SUCCESFUL_CHANGE_NICKNAME)) 
-                output=output.concat("Nickname Field\n");
+        if(result.contains("Email")) 
+            output=output.concat("Email Field\n");
 
-                if(sloganResult!=null)
-            if(sloganResult.equals(ProfileMenuMessages.SUCCESFUL_REMOVE_SLOGAN)) 
-                output=output.concat("Slogan Field\n");
+
+        if(result.contains("Nickname")) 
+            output=output.concat("Nickname Field\n");
+
+
+        if(result.contains("Slogan")) 
+            output=output.concat("Slogan Field\n");
 
         createNotificationDialog("Result","Change Fileds Result:", output,Orders.yellowNotifErrorColor);
+        
+        if(result.contains("Username"))
+            User.getCurrentUser().setUsername(usernameField.getText());
+
+        Client.client.updateUserData();
     }
 
     private void setFieldListeners() {

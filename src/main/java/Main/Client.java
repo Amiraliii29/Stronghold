@@ -2,47 +2,134 @@ package Main;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
+import Model.User;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 public class Client {
     public static Client client;
+    private String recentResponse;
     private final ServerAction serverAction;
     private final DataOutputStream dataOutputStream;
     private final DataInputStream dataInputStream;
+    private final ServerResponseListener serverResponseListener;
+    private final Socket socket;
 
 
     public Client(String host, int port) throws IOException {
         Socket socket = new Socket(host, port);
+        this.socket=socket;
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
         client = this;
-
+        serverResponseListener=new ServerResponseListener(dataInputStream, client);
         serverAction = new ServerAction(socket, dataInputStream , dataOutputStream);
         serverAction.start();
+        serverResponseListener.start();
     }
 
-    public DataOutputStream getDataOutputStream() {
-        return dataOutputStream;
-    }
-    public void sendRequestToServer(Request request){
+    public void sendRequestToServer(Request request,boolean waitForResponse){
         try {
+            serverResponseListener.setResponseReceived(false);
             dataOutputStream.writeUTF(request.toJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(waitForResponse)
+            checkResponseRecievement();
     }
 
-    public String getServerResponse(){
-       try {
-        return dataInputStream.readUTF();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    return null;
+    public void setRecentResponse(String response){
+        this.recentResponse=response;
     }
 
-    public DataInputStream getDataInputStream() {
-        return dataInputStream;
+    public String getRecentResponse(){
+        return recentResponse;
     }
+
+    public void updateUserData(){
+        Request request=new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.addToArguments("Username", User.getCurrentUser().getUsername());
+        sendRequestToServer(request,true);
+        String response=recentResponse;
+        User updatedUserData=new Gson().fromJson(response, User.class);
+        User.setCurrentUser(updatedUserData);
+    }
+
+    private void checkResponseRecievement(){
+        if(serverResponseListener.isResponseReceived()) return;
+        new Timeline(new KeyFrame(Duration.millis(50), event-> checkResponseRecievement())).play();
+    }
+
+    public void sendFile (String fileAddress) {
+        int i;
+        FileInputStream fis=null;
+        try {
+            fis = new FileInputStream ("/path/to/your/image.jpg");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+         try {
+            while ((i = fis.read()) > -1)
+                try {
+                    dataOutputStream.write(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+ 
+    private void startReadingFile(String pathToStore){
+        FileOutputStream fout=null;
+        try {
+            fout = new FileOutputStream(pathToStore);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+            int i;
+            try {
+                while ( (i = this.dataInputStream.read()) > -1) {
+                    try {
+                        fout.write(i);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+                fout.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fout.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
 }
