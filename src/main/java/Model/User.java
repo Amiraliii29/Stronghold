@@ -7,12 +7,16 @@ import java.util.Objects;
 import com.google.gson.Gson;
 
 import Controller.JsonConverter;
+import Main.Client;
 import Main.Request;
 
 public class User {
     private static ArrayList<User> users;
     private static SecureRandom randomGenerator=new SecureRandom();
 
+    private ArrayList<User> friends;
+    private ArrayList<User> usersWithFriendRequest;
+    private boolean isOnline;
     private String avatarFileName;
     private String username;
     private String password;
@@ -36,6 +40,8 @@ public class User {
         this.email = email;
         this.slogan = slogan;
         avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
+        this.friends=new ArrayList<>();
+        this.usersWithFriendRequest=new ArrayList<>();
         users.add(this);
     }
 
@@ -122,13 +128,45 @@ public class User {
         return stayLoggedIn;
     }
 
-    public static String handleFriendRequest(Request request){
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
+
+    public void setUsersWithFriendRequest(ArrayList<User> usersWithFriendRequest) {
+        this.usersWithFriendRequest = usersWithFriendRequest;
+    }
+
+    public void addToFriends(User user){
+        friends.add(user);
+    }
+
+    public ArrayList<User> getFriends(){
+        return friends;
+    }
+
+    public ArrayList<User> getUsersWithFriendRequest(){
+        return usersWithFriendRequest;
+    }
+
+    public void addToFriendRequests(User user){
+        usersWithFriendRequest.add(user);
+    }
+
+    public static void handleFriendRequest(Request request){
         Gson gson=new Gson();
         User sender=gson.fromJson(request.argument.get("Sender"), User.class);
         User reciever=gson.fromJson(request.argument.get("Reviever"), User.class);
+        reciever.addToFriendRequests(sender);
+        Client.updateAllClientsData();
+    }
 
-
-
+    public static void handleSubmitFriendship(Request request){
+        Gson gson=new Gson();
+        User sender=gson.fromJson(request.argument.get("User1"), User.class);
+        User reciever=gson.fromJson(request.argument.get("User2"), User.class);
+        sender.addToFriends(reciever);
+        reciever.addToFriends(sender);
+        Client.updateAllClientsData();
     }
 
     public static User getUserByUserName(String userName) {

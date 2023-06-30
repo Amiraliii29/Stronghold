@@ -90,11 +90,14 @@ public class Client extends Thread{
         else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
             result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
 
-        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA))
+        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA) )
             result=new Gson().toJson(User.handleGetUsersRequest());
 
         else if(request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
-            result=new Gson().toJson(User.handleGetUsersRequest());
+            User.handleFriendRequest(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
+            User.handleFriendRequest(request);
 
         else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
@@ -287,6 +290,16 @@ public class Client extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }  
+    }
+
+
+    public static void updateAllClientsData(){
+        for (Client client : DataBase.getAllClients()) 
+            try {
+                client.dataOutputStream.writeUTF("AUTO UPDATE_DATA");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
  
 }

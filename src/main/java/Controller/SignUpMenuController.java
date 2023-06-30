@@ -130,6 +130,7 @@ public class SignUpMenuController {
 
         try {
             createUserController(username, password, nickname, password, email, slogan, securityAnswer,client);
+            Client.updateAllClientsData();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
