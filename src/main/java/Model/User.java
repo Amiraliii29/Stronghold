@@ -225,9 +225,15 @@ public class User {
         Client.client.sendRequestToServer(request, true);
         String result=Client.client.getRecentResponse();
         ArrayList<User> users= new Gson().fromJson(result, ArrayList.class);
+
         setUsers(users);
-        if(ProfileMenu.profileMenu!=null)
-            ProfileMenu.profileMenu.showProfileProtocol();
+        
+        if(ProfileMenu.profileMenu!=null){
+            if(ProfileMenu.profileMenu.isProfileShown)
+                ProfileMenu.profileMenu.showProfileProtocol();
+            else 
+                ProfileMenu.profileMenu.showScoreBoardProtocol();
+        }
     }
 
     public static void sendFriendRequest(User targetFriend){

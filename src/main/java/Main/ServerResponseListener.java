@@ -3,6 +3,8 @@ package Main;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import Model.User;
+
 public class ServerResponseListener extends Thread {
 
     private DataInputStream dataInputStream;
@@ -47,6 +49,11 @@ public class ServerResponseListener extends Thread {
         else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)){
             Client.client.privateChats.add(request);
         }
+        else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
+            User.getUsersFromServer();
+        }
+
+
         //TODO: FILL AUTO RESPONSES
         return true;
     }

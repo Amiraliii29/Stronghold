@@ -62,7 +62,7 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
-    boolean isProfileShown;
+    public boolean isProfileShown;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
@@ -130,7 +130,7 @@ public class ProfileMenu extends Application {
         UserComparator.updateUsersRank(sortedUsers);
     }
 
-    private void showScoreBoardProtocol(){
+    public void showScoreBoardProtocol(){
         mainPane.setAlignment(Pos.CENTER);
         mainPane.getChildren().removeAll(mainVbox,avatarVbox);
         sortUsers();
