@@ -30,7 +30,7 @@
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onMouseClicked="#enterRoomChat" prefHeight="26.0" prefWidth="94.0" text="Room">
+      <Button layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onMouseClicked="#enterChatRoomMenu" prefHeight="26.0" prefWidth="94.0" text="Room">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>

@@ -2,6 +2,7 @@ package Main;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -22,6 +23,8 @@ public class Client {
     private final Socket socket;
     public BlockingDeque<Request> globalChats = new LinkedBlockingDeque<Request>();
     public BlockingDeque<Request> privateChats = new LinkedBlockingDeque<Request>();
+    public BlockingDeque<Request> roomChats = new LinkedBlockingDeque<Request>();
+    public ArrayList<Integer> myRoomsID = new ArrayList<>();
 
 
 
@@ -139,5 +142,9 @@ public class Client {
 
     public DataOutputStream getDataOutputStream() {
         return dataOutputStream;
+    }
+
+    public DataInputStream getDataInputStream() {
+        return dataInputStream;
     }
 }

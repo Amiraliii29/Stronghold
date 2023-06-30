@@ -33,6 +33,10 @@
          </font>
       </Button>
       <TextField fx:id="roomID" layoutX="83.0" layoutY="300.0" promptText="Room ID" />
-      <Button layoutX="115.0" layoutY="326.0" mnemonicParsing="false" onMouseClicked="#enterRoom" prefHeight="26.0" prefWidth="97.0" text="Enter Room" />
+      <Button layoutX="115.0" layoutY="326.0" mnemonicParsing="false" onMouseClicked="#enterRoom" prefHeight="26.0" prefWidth="97.0" text="Enter Room">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

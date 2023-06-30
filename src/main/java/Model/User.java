@@ -27,6 +27,7 @@ public class User {
         avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
     }
 
+
     public String getAvatarFileName(){
         if(avatarFileName != null)
             return avatarFileName;

@@ -24,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.lang.ref.Cleaner;
 import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
@@ -54,7 +55,7 @@ public class LoginMenuController {
         }
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.argument.put("userName" , userName );
-        Client.client.getDataOutputStream().writeUTF(request.toJson());
+        Client.client.sendRequestToServer(request , true);
         String json = Client.client.getDataInputStream().readUTF();
         User targetUser = new Gson().fromJson(json , User.class);
 
@@ -102,7 +103,7 @@ public class LoginMenuController {
         }
     }
 
-    public void forgotPassword(MouseEvent mouseEvent) {
+    public void forgotPassword(MouseEvent mouseEvent) throws IOException {
         String userName = username.getText();
         if(userName == null){
             username.setText("");
@@ -112,7 +113,12 @@ public class LoginMenuController {
             alert.showAndWait();
             return;
         }
-        User user = User.getUserByUserName(userName);
+
+        Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.argument.put("userName" , userName );
+        Client.client.sendRequestToServer(request , true);
+        String json = Client.client.getDataInputStream().readUTF();
+        User user = new Gson().fromJson(json , User.class);
 
         if(user == null){
             username.setText("");
@@ -169,7 +175,6 @@ public class LoginMenuController {
                     LoginMenu.loginMenuPane.getChildren().remove(confirm);
 
                     try {
-                        DataBase.setCurrentGovernment(DataBase.getGovernmentByUserName(userName));
                         User.setCurrentUser(user);
                         new MainMenu().start(SignUpMenu.stage);
                     } catch (Exception e) {

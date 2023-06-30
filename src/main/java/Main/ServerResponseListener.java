@@ -47,6 +47,13 @@ public class ServerResponseListener extends Thread {
         else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)){
             Client.client.privateChats.add(request);
         }
+        else if(request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)){
+            Client.client.roomChats.add(request);
+        }
+        else if(request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
+            int ID = Integer.parseInt(request.argument.get("ID"));
+            Client.client.myRoomsID.add(ID);
+        }
         //TODO: FILL AUTO RESPONSES
         return true;
     }

@@ -14,6 +14,7 @@ public enum NormalRequest {
     GET_MAP,
     CHECK_MAP_NAME,
     SAVE_MAP,
-
+    SEND_ROOM_MESSAGE,
+    ADD_ROOM_TO_CLIENT,
     ;
 }
