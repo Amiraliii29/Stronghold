@@ -19,5 +19,6 @@ public enum NormalRequest {
     GET_MAP,
     CHECK_MAP_NAME,
     SAVE_MAP,
+    UPDATE_YOUR_DATA,
     ;
 }
