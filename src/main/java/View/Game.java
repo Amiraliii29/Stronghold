@@ -523,6 +523,20 @@ public class Game extends Application{
                 Game.mainPane.getChildren().remove(ShopMenu.shopPane);
                 Game.mainPane.getChildren().add(ShopMenuController.tradePane);
             }
+            else if(event.getCode() == KeyCode.G){
+                try {
+                    mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+                    , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+                            ShopMenu.shopPane , ShopMenuController.tradePane);
+                    ChatController.chatMenuPane = FXMLLoader.load(new URL
+                            (SignUpMenu.class.getResource("/fxml/ChatMenu.fxml").toExternalForm()));
+                    ChatController.chatMenuPane.setLayoutX(leftX);
+                    ChatController.chatMenuPane.setLayoutY(0);
+                    mainPane.getChildren().add(ChatController.chatMenuPane);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         });
     }
 

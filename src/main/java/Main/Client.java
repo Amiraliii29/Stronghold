@@ -1,12 +1,9 @@
 package Main;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import com.google.gson.Gson;
 
@@ -23,6 +20,9 @@ public class Client {
     private final DataInputStream dataInputStream;
     private final ServerResponseListener serverResponseListener;
     private final Socket socket;
+    public BlockingDeque<Request> globalChats = new LinkedBlockingDeque<Request>();
+    public BlockingDeque<Request> privateChats = new LinkedBlockingDeque<Request>();
+
 
 
     public Client(String host, int port) throws IOException {
@@ -132,4 +132,7 @@ public class Client {
             }
     }
 
+    public DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
+    }
 }

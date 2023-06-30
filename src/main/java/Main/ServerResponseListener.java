@@ -35,9 +35,17 @@ public class ServerResponseListener extends Thread {
         if(!response.contains("AUTO")){
             setResponseReceived(true);
             return false;
-        }    
-        
+        }
 
+        response = response.replace("AUTO" , "");
+        Request request = Request.fromJson(response);
+
+        if(request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)){
+            Client.client.globalChats.add(request);
+        }
+        else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)){
+            Client.client.privateChats.add(request);
+        }
         //TODO: FILL AUTO RESPONSES
         return true;
     }
