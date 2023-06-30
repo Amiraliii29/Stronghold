@@ -11,6 +11,7 @@ public class ServerResponseListener extends Thread {
 
     public ServerResponseListener(DataInputStream dataInputStream,Client client){
         this.dataInputStream=dataInputStream;
+        this.client=client;
         this.setDaemon(true);
     }
 

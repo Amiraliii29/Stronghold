@@ -11,6 +11,7 @@ import java.net.Socket;
 import com.google.gson.Gson;
 
 import Model.User;
+import Model.WaitThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -46,7 +47,7 @@ public class Client {
         }
 
         if(waitForResponse)
-            checkResponseRecievement();
+            checkResponseRecievement(); 
     }
 
     public void setRecentResponse(String response){
@@ -68,7 +69,14 @@ public class Client {
 
     private void checkResponseRecievement(){
         if(serverResponseListener.isResponseReceived()) return;
-        new Timeline(new KeyFrame(Duration.millis(50), event-> checkResponseRecievement())).play();
+        WaitThread waitThread=new WaitThread();
+        waitThread.start();
+        try {
+            waitThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        checkResponseRecievement();
     }
 
     public void sendFile (String fileAddress) {
