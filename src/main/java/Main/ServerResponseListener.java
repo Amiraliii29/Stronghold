@@ -2,6 +2,8 @@ package Main;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import Model.User;
 
@@ -58,6 +60,48 @@ public class ServerResponseListener extends Thread {
         }
         else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
             User.getUsersFromServer();
+        }
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE)){
+            Request messageToDelete = Client.client.
+                    getPublicMessageByText(request.argument.get("message"));
+            Client.client.globalChats.remove(messageToDelete);
+        }
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PRIVATE_MESSAGE)){
+            Request messageToDelete = Client.client.
+                    getPrivateMessageByText(request.argument.get("message"));
+            Client.client.privateChats.remove(messageToDelete);
+        }
+        else if(request.normalRequest.equals(NormalRequest.DELETE_ROOM_MESSAGE)){
+            Request messageToDelete = Client.client.
+                    getRoomMessageByText(request.argument.get("message"));
+            Client.client.roomChats.remove(messageToDelete);
+        }
+        else if(request.normalRequest.equals(NormalRequest.EDIT_GLOBAL_MESSAGE)){
+            ArrayList<Request> chats = new ArrayList<>(Client.client.globalChats);
+            Request messageToEdit = Client.client.
+                    getPublicMessageByText(request.argument.get("message"));
+            int index = chats.indexOf(messageToEdit);
+            messageToEdit.argument.put("message" , request.argument.get("newMessage"));
+            chats.set(index , messageToEdit);
+            Client.client.globalChats = new LinkedBlockingDeque<Request>(chats);
+        }
+        else if(request.normalRequest.equals(NormalRequest.EDIT_PRIVATE_MESSAGE)){
+            ArrayList<Request> chats = new ArrayList<>(Client.client.privateChats);
+            Request messageToEdit = Client.client.
+                    getPrivateMessageByText(request.argument.get("message"));
+            int index = chats.indexOf(messageToEdit);
+            messageToEdit.argument.put("message" , request.argument.get("newMessage"));
+            chats.set(index , messageToEdit);
+            Client.client.privateChats = new LinkedBlockingDeque<Request>(chats);
+        }
+        else if(request.normalRequest.equals(NormalRequest.EDIT_ROOM_MESSAGE)){
+            ArrayList<Request> chats = new ArrayList<>(Client.client.roomChats);
+            Request messageToEdit = Client.client.
+                    getRoomMessageByText(request.argument.get("message"));
+            int index = chats.indexOf(messageToEdit);
+            messageToEdit.argument.put("message" , request.argument.get("newMessage"));
+            chats.set(index , messageToEdit);
+            Client.client.roomChats = new LinkedBlockingDeque<Request>(chats);
         }
 
 
