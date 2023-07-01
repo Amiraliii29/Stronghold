@@ -19,7 +19,7 @@ public class Client {
     private String recentResponse;
     private final DataOutputStream dataOutputStream;
     private final DataInputStream dataInputStream;
-    private final ServerResponseListener serverResponseListener;
+    public final ServerResponseListener serverResponseListener;
     private final Socket socket;
     public BlockingDeque<Request> globalChats = new LinkedBlockingDeque<Request>();
     public BlockingDeque<Request> privateChats = new LinkedBlockingDeque<Request>();

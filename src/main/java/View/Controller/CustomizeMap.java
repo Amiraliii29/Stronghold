@@ -10,8 +10,12 @@ import Model.Trees;
 import View.Game;
 import View.LoginMenu;
 import View.SignUpMenu;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+
+import java.io.IOException;
 
 public class CustomizeMap {
 
@@ -143,8 +147,20 @@ public class CustomizeMap {
 
             if (response.equals("true")) {
                 Request request1 = new Request(NormalRequest.SAVE_MAP);
-                request1.addToArguments(name.getText(), Map.mapToJson(DataBase.getSelectedMap()));
+                request1.addToArguments("name", name.getText());
                 Client.client.sendRequestToServer(request, false);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                Object json = DataBase.getSelectedMap();
+
+                try {
+                    byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
+
+                    Client.client.getDataOutputStream().writeInt(jsonBytes.length);
+                    Client.client.getDataOutputStream().write(jsonBytes);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

@@ -14,8 +14,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URL;
+import java.util.Arrays;
 
 public class CustomizeMapEntry extends Application {
     Stage stage;
@@ -34,14 +35,12 @@ public class CustomizeMapEntry extends Application {
         stage.setScene(scene);
 
         ObservableList<String> options = FXCollections.observableArrayList(
-                "Default"
         );
         Client.client.sendRequestToServer(new Request(NormalRequest.MAP_NAME),true);
         String response = Client.client.getRecentResponse();
         String[] names =  response.split(",");
 
-        for (int i = 0; i < names.length; i++)
-            options.add(names[i]);
+        options.addAll(Arrays.asList(names));
 
         choiceBox = new ChoiceBox<>(options);
         pane.getChildren().add(choiceBox);
@@ -68,10 +67,20 @@ public class CustomizeMapEntry extends Application {
     public void open(MouseEvent mouseEvent) throws Exception {
         String choice = choiceBox.getValue();
         Request request = new Request(NormalRequest.GET_MAP);
-        request.addToArguments("Map Name", choice);
+        request.addToArguments("name", choice);
 
-        Client.client.sendRequestToServer(request, true);
-        Map map = Map.loadMapFromJson(Client.client.getRecentResponse());
+        Client.client.serverResponseListener.changeSpecific();
+        Client.client.sendRequestToServer(request, false);
+
+        int jsonLength = Client.client.getDataInputStream().readInt();
+        byte[] jsonBytes = new byte[jsonLength];
+        Client.client.getDataInputStream().readFully(jsonBytes);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.readValue(jsonBytes, Map.class);
+
+        Client.client.serverResponseListener.changeSpecific();
+
         DataBase.setSelectedMap(map);
 
         Game game = new Game();
