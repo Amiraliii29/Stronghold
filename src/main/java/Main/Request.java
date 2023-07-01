@@ -9,6 +9,7 @@ public class Request {
     private final String token;
     public GameRequest gameRequest;
     public NormalRequest normalRequest;
+    public ResultEnums resultEnums;
     public HashMap<String, String> argument;
 
 
