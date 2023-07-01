@@ -8,5 +8,7 @@ public enum ResultEnums {
     NOT_ENOUGH_FREE_WORKER,
     AUTO,
 
+
     ;
+
 }

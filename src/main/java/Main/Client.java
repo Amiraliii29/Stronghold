@@ -2,25 +2,23 @@ package Main;
 
 import Model.ChatRoom;
 import Model.DataBase;
+import Model.Map;
 import Model.User;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
-
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
-import javafx.scene.transform.Rotate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 
 public class Client extends Thread {
     private final String token;
@@ -53,10 +51,9 @@ public class Client extends Thread {
                 request = Request.fromJson(json);
             }
 
+            requestHandler(request);
+
             while (!request.normalRequest.equals(NormalRequest.CLOSE)) {
-
-                requestHandler(request);
-
                 json = dataInputStream.readUTF();
                 request = Request.fromJson(json);
 
@@ -64,6 +61,8 @@ public class Client extends Thread {
                     json = dataInputStream.readUTF();
                     request = Request.fromJson(json);
                 }
+
+                requestHandler(request);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -114,7 +113,23 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
             deleteGlobalMessage();
 
-        else if (request.)
+        else if (request.normalRequest.equals(NormalRequest.MAP_NAME))
+            sendMapNames();
+
+        else if (request.normalRequest.equals(NormalRequest.GET_MAP))
+            sendMap(request);
+
+        else if (request.normalRequest.equals(NormalRequest.CHECK_MAP_NAME))
+            checkMapName(request);
+
+        else if (request.normalRequest.equals(NormalRequest.SAVE_MAP))
+            saveMap(request);
+
+        else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
+            userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
+
+        else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
+            createUnit(request);
 
         //TODO: FILL THE REST;
 
@@ -123,6 +138,82 @@ public class Client extends Thread {
             if (!result.equals("")) dataOutputStream.writeUTF(result);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveMap(Request request) {
+        String name = request.argument.get("name");
+
+        try {
+            int jsonLength = dataInputStream.readInt();
+            byte[] jsonBytes = new byte[jsonLength];
+            dataInputStream.readFully(jsonBytes);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map map = objectMapper.readValue(jsonBytes, Map.class);
+            map.setName(name);
+
+            Map.saveMap(map,name);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void checkMapName(Request request) throws IOException {
+        String fileName = request.argument.get("name") + ".json";
+
+        File folder = new File("src/main/resources/Map");
+
+        String[] fileNames = folder.list();
+        for(String file : fileNames) {
+            if (file.equals(fileName)) {
+                dataOutputStream.writeUTF("false");
+                return;
+            }
+        }
+        dataOutputStream.writeUTF("true");
+    }
+
+    private void sendMap(Request request) {
+        String mapName = request.argument.get("name");
+        Map map = Map.loadMap(mapName);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object json = map;
+
+        try {
+            byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
+
+            dataOutputStream.writeInt(jsonBytes.length);
+            dataOutputStream.write(jsonBytes);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendMapNames() {
+        File folder = new File("src/main/resources/Map");
+
+        String[] fileNames = folder.list();
+
+        String names = "";
+
+        for(String file : fileNames) {
+            for (char c : file.toCharArray()) {
+                if (c == '.') {
+                    names += ",";
+                    break;
+                }
+                names += c;
+            }
+        }
+
+        try {
+            dataOutputStream.writeUTF(names);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -317,7 +408,6 @@ public class Client extends Thread {
         }
     }
 
-
     public static void updateAllClientsData() {
         Gson gson = new Gson();
         for (Client client : DataBase.getAllClients())
@@ -329,4 +419,7 @@ public class Client extends Thread {
             }
     }
 
+    public void createUnit(Request request) {
+
+    }
 }

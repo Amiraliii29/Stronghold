@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Map {
     // toole mehvar ofogi = width  moalefe ofoghi = x
     // toole mehvar amoudi = length  moalefe amoudi = y
-    private final String name;
+    private String name;
     private final Square[][] squares;
     private ArrayList<Government> governmentsInMap;
     private final int width;
@@ -36,6 +36,11 @@ public class Map {
                 if (i == width || j >= length) squares[i][j].setLand(Land.CLIFF);
             }
         }
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 
