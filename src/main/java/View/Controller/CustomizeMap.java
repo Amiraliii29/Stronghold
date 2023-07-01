@@ -136,7 +136,7 @@ public class CustomizeMap {
         if (name == null || name.getText() == null || name.getText().equals("")) return;
         else {
             Request request = new Request(NormalRequest.CHECK_MAP_NAME);
-            request.addToArguments("Name", name.getText());
+            request.addToArguments("name", name.getText());
 
             Client.client.sendRequestToServer(request, true);
             String response = Client.client.getRecentResponse();

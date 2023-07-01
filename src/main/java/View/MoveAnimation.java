@@ -4,7 +4,6 @@ import Controller.GameMenuController;
 import Model.DataBase;
 import Model.Square;
 import Model.UnitPrototype;
-import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
