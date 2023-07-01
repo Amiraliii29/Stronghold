@@ -1,7 +1,6 @@
 package Main;
 
 import com.google.gson.Gson;
-
 import java.util.HashMap;
 
 public class Result {
