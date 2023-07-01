@@ -23,7 +23,7 @@ public abstract class Building {
     protected int cost;
     protected boolean canPass;
 
-    static {
+    static{
         buildings = new LinkedList<>();
         buildingsNames = new LinkedList<>();
         Defence.load();

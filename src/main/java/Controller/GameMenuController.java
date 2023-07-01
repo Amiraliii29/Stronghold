@@ -1,5 +1,6 @@
 package Controller;
 
+import Main.Request;
 import Main.Result;
 import Main.ResultEnums;
 import Main.UserDataBase;
@@ -147,17 +148,17 @@ public class GameMenuController {
         Government currentGovernment = userDataBase.getGovernment();
 
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
-            userDataBase.getDataBase().updateClient(new Result(ResultEnums.CANT_BUILD_HERE));
+            userDataBase.getDataBase().updateClient(new Request(ResultEnums.CANT_BUILD_HERE));
 
         else if (building.getCost() > currentGovernment.getMoney())
-            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_MONEY));
+            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_MONEY));
 
         else if (building.getResource() != null &&
                 currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
-            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_MATERIAL));
+            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_MATERIAL));
 
         else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
-            userDataBase.getDataBase().updateClient(new Result(ResultEnums.NOT_ENOUGH_FREE_WORKER));
+            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_FREE_WORKER));
 
         else {
             currentGovernment.changeMoney(-building.getCost());
@@ -180,7 +181,7 @@ public class GameMenuController {
                 }
             }
             map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());
-            userDataBase.getDataBase().updateClient(new Result(ResultEnums.SUCCESS));
+            userDataBase.getDataBase().updateClient(new Request(ResultEnums.SUCCESS));
             return true;
         }
         return false;

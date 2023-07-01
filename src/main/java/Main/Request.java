@@ -9,8 +9,14 @@ public class Request {
     private final String token;
     public GameRequest gameRequest;
     public NormalRequest normalRequest;
+    public ResultEnums resultEnums;
     public HashMap<String, String> argument;
 
+
+    {
+        token = userToken;
+        argument = new HashMap<>();
+    }
 
 
     public static void setUserToken(String userToken) {
@@ -20,10 +26,15 @@ public class Request {
 
 
     public Request(GameRequest gameRequest, NormalRequest normalRequest) {
-        token = userToken;
         this.gameRequest = gameRequest;
         this.normalRequest = normalRequest;
-        argument = new HashMap<>();
+        this.resultEnums = null;
+    }
+
+    public Request(ResultEnums resultEnums) {
+        this.resultEnums = resultEnums;
+        this.gameRequest = null;
+        this.normalRequest = null;
     }
 
 
