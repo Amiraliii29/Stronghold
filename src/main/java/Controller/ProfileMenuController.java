@@ -3,6 +3,7 @@ package Controller;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import Main.Client;
 import Model.User;
 import View.Enums.Messages.ProfileMenuMessages;
 
@@ -191,6 +192,8 @@ public class ProfileMenuController {
         if(slogan!=null)
             if(changeSlogan(slogan,user).equals(ProfileMenuMessages.SUCCESFUL_CHANGE_SLOGAN))
                 output=output+"Slogan";
+        
+        Client.updateAllClientsData();
         return output;
     }
 

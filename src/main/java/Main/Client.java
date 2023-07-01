@@ -1,5 +1,6 @@
 package Main;
 
+import Model.ChatRoom;
 import Model.DataBase;
 import Model.User;
 
@@ -13,11 +14,13 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
+import javafx.scene.transform.Rotate;
 
 public class Client extends Thread{
     private final String token;
@@ -70,7 +73,7 @@ public class Client extends Thread{
 
     private void requestHandler(Request request) throws IOException {
 
-        String result="";
+        String result="AUTO";
 
         if(request.normalRequest.equals(NormalRequest.SIGNUP))
             result=SignUpMenuController.handleSignupRequest(request.argument,this);
@@ -84,10 +87,33 @@ public class Client extends Thread{
         else if(request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
             result=ProfileMenuController.handleChangePassword(request.argument, user);
         
-        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
-            result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)) {
+            result = new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+            updateAllClientsData();
+        }
+
+        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA) )
+            result=new Gson().toJson(User.handleGetUsersRequest());
+
+        else if(request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
+            User.handleFriendRequest(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
+            User.handleFriendRequest(request);
+
         else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE))
+            sendPrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
+            createRoom(request);
+        else if(request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE))
+            sendRoomMessage(request);
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
+            deleteGlobalMessage();
+
         //TODO: FILL THE REST;
 
 
@@ -98,6 +124,61 @@ public class Client extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteGlobalMessage() {
+    }
+
+    private void sendRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void createRoom(Request request) throws IOException {
+        ArrayList<Client> clientsInRoom = new ArrayList<>();
+
+        clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user0")));
+        if(request.argument.get("user1") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user1")));
+        if(request.argument.get("user2") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user2")));
+        if(request.argument.get("user3") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user3")));
+        if(request.argument.get("user4") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user4")));
+        if(request.argument.get("user5") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user5")));
+        if(request.argument.get("user6") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user6")));
+        if(request.argument.get("user7") != null)
+            clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user7")));
+
+        ChatRoom room = new ChatRoom(clientsInRoom);
+        Request request1 = new Request(null , NormalRequest.ADD_ROOM_TO_CLIENT);
+        request1.argument.put("ID" , room.getID() + "");
+        for (Client client : clientsInRoom) {
+            client.dataOutputStream.writeUTF(request1.toJson());
+        }
+    }
+
+    private void sendPrivateMessage(Request request) throws IOException {
+        Client targetClient = null;
+        Client senderClient = null;
+
+        for (Client allClient : DataBase.getAllClients()) {
+            if(allClient.getUser().getUsername().equals(request.argument.get("receiverUserName")))
+                targetClient = allClient;
+            else if(allClient.getUser().getUsername().equals(request.argument.get("userName")))
+                senderClient = allClient;
+        }
+
+        targetClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        senderClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
     }
 
     private void sendGlobalMessage(Request request) throws IOException {
@@ -234,6 +315,18 @@ public class Client extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }  
+    }
+
+
+    public static void updateAllClientsData(){
+        Gson gson=new Gson();
+        for (Client client : DataBase.getAllClients()) 
+            try {
+                Request req=new Request(null, NormalRequest.UPDATE_YOUR_DATA);
+                client.dataOutputStream.writeUTF("AUTO"+gson.toJson(req));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
  
 }
