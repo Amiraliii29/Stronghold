@@ -147,4 +147,25 @@ public class Client {
     public DataInputStream getDataInputStream() {
         return dataInputStream;
     }
+    public  Request getPublicMessageByText (String text){
+        for (Request globalChat : globalChats) {
+            if(globalChat.argument.get("message").equals(text))
+                return globalChat;
+        }
+        return null;
+    }
+    public Request getPrivateMessageByText(String text){
+        for (Request privateChat : privateChats) {
+            if(privateChat.argument.get("message").equals(text))
+                return privateChat;
+        }
+        return null;
+    }
+    public Request getRoomMessageByText (String text){
+        for (Request roomChat : roomChats) {
+            if(roomChat.argument.get("message").equals(text))
+                return roomChat;
+        }
+        return null;
+    }
 }
