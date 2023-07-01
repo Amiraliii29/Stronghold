@@ -1,9 +1,6 @@
 package Model;
 
-import Model.Units.StateUnits;
-
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class UnitPrototype {
     public static ArrayList<String> unitsName;
@@ -15,6 +12,8 @@ public class UnitPrototype {
     public int HP;
     public int speed;
     public int attackRange;
+    public int damage;
+    public int cost;
     public StateUnits stateUnits;
 
 
@@ -68,6 +67,10 @@ public class UnitPrototype {
         return unitsName;
     }
 
+    public Square getSquare() {
+        return DataBase.getSelectedMap().getSquareFromMap(x, y);
+    }
+
 
 
 
@@ -95,7 +98,27 @@ public class UnitPrototype {
         UnitPrototype.unitsName = unitsName;
     }
 
+    public void setCoordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
+
+
+
+
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "name='" + name + '\'' +
+                ", speed=" + speed +
+                ", hitPoint=" + HP +
+                ", damage=" + damage +
+                ", attackRange=" + attackRange +
+                ", stateUnits=" + stateUnits +
+                ", cost=" + cost +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
