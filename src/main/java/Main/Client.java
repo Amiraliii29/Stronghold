@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import Controller.ProfileMenuController;
@@ -110,8 +109,23 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE))
             sendRoomMessage(request);
 
-        else if (request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
-            deleteGlobalMessage();
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
+            deleteGlobalMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PRIVATE_MESSAGE))
+            deletePrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.DELETE_ROOM_MESSAGE))
+            deleteRoomMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_GLOBAL_MESSAGE))
+            editGlobalMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_PRIVATE_MESSAGE))
+            editPrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_ROOM_MESSAGE))
+            editRoomMessage(request);
 
         else if (request.normalRequest.equals(NormalRequest.MAP_NAME))
             sendMapNames();
@@ -138,6 +152,50 @@ public class Client extends Thread {
             if (!result.equals("")) dataOutputStream.writeUTF(result);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void editRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void editPrivateMessage(Request request) throws IOException {
+        Client receiver = DataBase.getClientByUserName(request.argument.get("receiverUserName"));
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+
+        sender.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        receiver.dataOutputStream.writeUTF("AUTO" + request.toJson());
+    }
+
+    private void editGlobalMessage(Request request) throws IOException {
+        for (Client allClient : DataBase.getAllClients()) {
+            allClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void deleteRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void deletePrivateMessage(Request request) throws IOException {
+        String receiverUserName = request.argument.get("receiverUserName");
+        Client receiver = DataBase.getClientByUserName(receiverUserName);
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+        receiver.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        sender.dataOutputStream.writeUTF("AUTO" + request.toJson());
+    }
+
+    private void deleteGlobalMessage(Request request) throws IOException {
+        for (Client allClient : DataBase.getAllClients()) {
+            allClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
         }
     }
 
