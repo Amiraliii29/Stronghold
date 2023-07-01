@@ -13,8 +13,14 @@ public class ServerResponseListener extends Thread {
 
     public ServerResponseListener(DataInputStream dataInputStream, Client client) {
         this.dataInputStream = dataInputStream;
-        this.client=client;
+        this.client = client;
         this.setDaemon(true);
+        try {
+            String token = dataInputStream.readUTF();
+            Request.setUserToken(token);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -40,23 +46,19 @@ public class ServerResponseListener extends Thread {
             return false;
         }
 
-        response = response.replace("AUTO" , "");
+        response = response.replace("AUTO", "");
         Request request = Request.fromJson(response);
 
-        if(request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)){
+        if (request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)) {
             Client.client.globalChats.add(request);
-        }
-        else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)){
+        } else if (request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)) {
             Client.client.privateChats.add(request);
-        }
-        else if(request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)){
+        } else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)) {
             Client.client.roomChats.add(request);
-        }
-        else if(request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
+        } else if (request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
             int ID = Integer.parseInt(request.argument.get("ID"));
             Client.client.myRoomsID.add(ID);
-        }
-        else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
+        } else if (request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)) {
             User.getUsersFromServer();
         }
 
