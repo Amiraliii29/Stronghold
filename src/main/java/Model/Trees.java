@@ -5,6 +5,8 @@ public enum Trees {
     COCONUT_TREE("coconutTree"),
     OLIVE_PALM("olivePalm"),
     DATE_PALM("datePalm"),
+    SICKNESS("sickness"),
+    FIRE("fire"),
     ;
 
     private String name;

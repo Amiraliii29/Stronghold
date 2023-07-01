@@ -22,7 +22,7 @@
       <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="357.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="32.0" layoutX="558.0" layoutY="56.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="49.0" layoutX="589.0" layoutY="89.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="456.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="456.0" layoutY="59.0" onDragDetected="#hospitalDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="60.0" fitWidth="89.0" layoutX="266.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="49.0" layoutX="599.0" layoutY="99.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
    </children>

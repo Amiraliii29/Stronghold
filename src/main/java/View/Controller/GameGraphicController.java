@@ -3,6 +3,9 @@ package View.Controller;
 import Model.Buildings.Building;
 import Model.Buildings.TownBuilding;
 import Model.DataBase;
+import Model.Government;
+import Model.Square;
+import Model.Trees;
 import View.Game;
 import View.Main;
 import View.ShopMenu;
@@ -23,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -137,6 +141,8 @@ public class GameGraphicController {
         totalNumber.setLayoutX(538);
         totalNumber.setLayoutY(192);
 
+        popularityFactorsPane.getChildren().removeAll(foodImage , foodNumber , fearImage , fearNumber , religionImage
+                , religionNumber , taxNumber , taxImage , totalNumber , totalImage);
         popularityFactorsPane.getChildren().addAll(foodImage , foodNumber , fearImage , fearNumber , religionImage
         , religionNumber , taxNumber , taxImage , totalNumber , totalImage);
 
@@ -284,6 +290,70 @@ public class GameGraphicController {
 
 
         popularityFactorsPane.getChildren().addAll(foodSlider , taxSlider , fearSlider);
+    }
+
+    public static void checkSickness() {
+        int lastTurnNumber = DataBase.getGame().turnUserNumber - 1;
+        if(lastTurnNumber < 0)
+            lastTurnNumber = DataBase.getGame().getGovernmentsInGame().size() - 1;
+        Government lastGovernment = DataBase.getGame().governmentsInGame.
+                get(lastTurnNumber);
+        if(lastGovernment.getMyBuildingByName("Hospital") == null){
+            lastGovernment.changePopularityBySickness();
+            Building keep = lastGovernment.getMyBuildingByName("Keep");
+            int x = keep.getXCoordinateLeft();
+            int y = keep.getYCoordinateUp();
+
+            DataBase.getGame().map.getSquareFromMap(x + 6 , y + 6).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 10 , y + 15).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 3 , y + - 3).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 9).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 12).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 17 , y + 6).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 8 , y - 4).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 2 , y - 3).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 12 , y + 2).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 12 , y - 2 ).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 4 , y - 5).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 3  , y + 9).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 6, y + 15).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x - 4 , y + 2).setTree(Trees.SICKNESS);
+            DataBase.getGame().map.getSquareFromMap(x + 4 , y - 1).setTree(Trees.SICKNESS);
+
+            DataBase.getGame().drawMap();
+        }
+    }
+
+    public static void checkFire() {
+        int lastTurnNumber = DataBase.getGame().turnUserNumber - 1;
+        if(lastTurnNumber < 0)
+            lastTurnNumber = DataBase.getGame().getGovernmentsInGame().size() - 1;
+        Government lastGovernment = DataBase.getGame().governmentsInGame.
+                get(lastTurnNumber);
+        if(lastGovernment.getMyBuildingByName("Well") == null){
+            lastGovernment.changePopularityByFire();
+            Building keep = lastGovernment.getMyBuildingByName("Keep");
+            int x = keep.getXCoordinateLeft();
+            int y = keep.getYCoordinateUp();
+
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 7).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 11 , y + 16).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 4 , y + 4).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 8 , y + 10).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 8 , y + 13).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 18 , y + 7).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 9 , y - 5).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 3 , y - 4).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 13 , y + 3).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 13 , y - 3 ).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 5 , y - 6).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 4  , y + 10).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 7, y + 16).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x - 5 , y + 3).setTree(Trees.FIRE);
+            DataBase.getGame().map.getSquareFromMap(x + 5 , y - 2).setTree(Trees.FIRE);
+
+            DataBase.getGame().drawMap();
+        }
     }
 
     public void openConstructorBuildingsMenu(MouseEvent ignoredMouseEvent) throws IOException {
@@ -551,6 +621,44 @@ public class GameGraphicController {
 
     public void wellDragDetected(MouseEvent ignoredMouseEvent) {
         Game.building = Building.getBuildingByName("Stable");
+        Game.townBuildingToCreateName = "Well";
+
+        Government lastGovernment = DataBase.getCurrentGovernment();
+        Building keep = lastGovernment.getMyBuildingByName("Keep");
+        int x = keep.getXCoordinateLeft();
+        int y = keep.getYCoordinateUp();
+
+//        if(DataBase.getGame().map.getSquareFromMap(x + 7 , y + 7).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 7).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 11 , y + 16).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 11 , y + 16).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 4 , y - 4).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 4 , y + 4).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 8 , y + 10).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 8 , y + 10).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 8 , y + 13).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 8 , y + 13).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 18 , y + 7).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 18 , y + 7).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 9 , y - 5).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 9 , y - 5).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 3, y - 4).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 3 , y - 4).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 13 , y + 3).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 13 , y + 3).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 13 , y - 3 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 13 , y - 3 ).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 5 , y - 6 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 5 , y - 6).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 4 , y + 10 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 4  , y + 10).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 7 , y + 16 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 7, y + 16).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x - 5 , y + 3 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x - 5 , y + 3).setTree(null);
+//        if(DataBase.getGame().map.getSquareFromMap(x + 5 , y - 2 ).getTree().equals(Trees.FIRE))
+            DataBase.getGame().map.getSquareFromMap(x + 5 , y - 2).setTree(null);
+        DataBase.getGame().drawMap();
     }
 
     public void lookOutTowerDragDetected(MouseEvent ignoredMouseEvent) {
@@ -620,9 +728,46 @@ public class GameGraphicController {
         Game.building = Building.getBuildingByName("Stable");
         Game.generatorBuildingToCreateName = "OilSmelter";
     }
+    public void hospitalDragDetected(MouseEvent mouseEvent) {
+        Game.building = Building.getBuildingByName("Stable");
+        Game.townBuildingToCreateName = "Hospital";
 
-    public void setCopiedBuildingName(String Name){
-        
+        Government lastGovernment = DataBase.getCurrentGovernment();
+        Building keep = lastGovernment.getMyBuildingByName("Keep");
+        int x = keep.getXCoordinateLeft();
+        int y = keep.getYCoordinateUp();
+
+        if(DataBase.getGame().map.getSquareFromMap(x + 6 , y + 6).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 6 , y + 6).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 10 , y + 15).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 10 , y + 15).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 3, y - 3).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 3 , y - 3).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 7 , y + 9).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 9).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 7 , y + 12).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 7 , y + 12).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 17 , y + 6).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 17 , y + 6).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 8 , y - 4).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 8 , y - 4).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 2, y - 3).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 2 , y - 3).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 12 , y + 2).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 12 , y + 2).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 12 , y - 2 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 12 , y - 2 ).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 4 , y - 5 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 4 , y - 5).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 3 , y + 9 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 3  , y + 9).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 6 , y + 15 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 6, y + 15).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x - 4 , y + 2 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x - 4 , y + 2).setTree(null);
+        if(DataBase.getGame().map.getSquareFromMap(x + 4 , y - 1 ).getTree().equals(Trees.SICKNESS))
+            DataBase.getGame().map.getSquareFromMap(x + 4 , y - 1).setTree(null);
+        DataBase.getGame().drawMap();
     }
 
     public void exitPopularityFactorsMenu(MouseEvent mouseEvent) {
@@ -642,4 +787,5 @@ public class GameGraphicController {
         dialogPane.getButtonTypes().addAll(ButtonType.OK);
         dialog.showAndWait();
     }
+
 }

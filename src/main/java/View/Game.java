@@ -81,7 +81,7 @@ public class Game extends Application{
     private static AnchorPane detail;
     private static int selectedX;
     private static int selectedY;
-    private  ArrayList<Government> governmentsInGame = new ArrayList<>();
+    public ArrayList<Government> governmentsInGame = new ArrayList<>();
 
     private Scene scene;
     public Map map;
@@ -96,7 +96,7 @@ public class Game extends Application{
     private double mouseX;
     private double mouseY;
     private int keepOwnerGovernmentsCounter = 0;
-    private int turnUserNumber = 0;
+    public int turnUserNumber = 0;
     private Label turnUser = new Label();
     public int requestAndDonatesCounter = 1;
 
@@ -497,6 +497,8 @@ public class Game extends Application{
                     drawMap();
                     return;
                 }
+                GameGraphicController.checkSickness();
+                GameGraphicController.checkFire();
                 GameGraphicController.setPopularityGoldPopulation();
                 drawMap();
             }else if(event.getCode() == KeyCode.S){
