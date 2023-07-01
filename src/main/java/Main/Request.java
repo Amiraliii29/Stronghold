@@ -52,4 +52,12 @@ public class Request {
     public static Request fromJson(String json) {
         return new Gson().fromJson(json, Request.class);
     }
+
+    public void setNormalRequest(NormalRequest normalRequest) {
+        this.normalRequest = normalRequest;
+    }
+
+    public void setGameRequest(GameRequest gameRequest) {
+        this.gameRequest = gameRequest;
+    }
 }
