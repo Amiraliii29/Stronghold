@@ -3,8 +3,6 @@ package View;
 import Controller.CustomizeMapController;
 import Controller.GameMenuController;
 import Model.*;
-import Model.Buildings.Building;
-import Model.Units.Unit;
 import View.Controller.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -170,10 +168,12 @@ public class Game extends Application{
         blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
         blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
 
-        setTimelines();
+        if (customizePane == null) {
+            setTimelines();
+            drawBottom();
+        }
 
         drawMap();
-        drawBottom();
         keys();
 
         stage.setFullScreen(true);
@@ -827,7 +827,7 @@ public class Game extends Application{
             tiles.put(land, image);
         }
         //units :
-        for (String unit : Unit.getAllUnits()) {
+        for (String unit : UnitPrototype.unitsName) {
             Image image = new Image(new FileInputStream("src/main/resources/Images/units/" + unit + ".png"));
             units.put(unit, image);
         }

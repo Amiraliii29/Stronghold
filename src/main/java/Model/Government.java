@@ -1,6 +1,9 @@
 package Model;
 
-import Model.Units.Troop;
+import Controller.GameMenuController;
+import Main.Client;
+import Main.GameRequest;
+import Main.Request;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -21,7 +24,7 @@ public class Government {
     private int faith;
     private int fear;
     private double money;
-    private Troop lord;
+    private UnitPrototype lord;
 
     {
         requestsAskedFromMe = new ArrayList<>();
@@ -45,7 +48,7 @@ public class Government {
 
 
     public void setLord(int x, int y) {
-        this.lord = Troop.createTroop(this, "Lord", x, y);
+        GameMenuController.createUnit("Lord", x, y, 1);
     }
 
     public void setOwner(User owner) {
@@ -147,9 +150,11 @@ public class Government {
         return money;
     }
 
-    public Troop getLord() {
+    public UnitPrototype getLord() {
         return lord;
     }
+
+
 
 
     public void addToRequestsAskedFromMe(TradeRequest tradeRequest) {
@@ -190,6 +195,64 @@ public class Government {
                 return tradeRequest;
         }
         return null;
+    }
+
+
+
+    public int getResourceInStockpiles(Resource resource) {
+        Request request = new Request(GameRequest.GET_RESOURCE);
+        request.argument.put("resource", resource.getName());
+
+        Client.client.sendRequestToServer(request, true);
+
+        Request result = Request.fromJson(Client.client.getRecentResponse());
+
+        return Integer.parseInt(result.argument.get("count"));
+    }
+
+    public int getResourceInStockpiles(String resource) {
+        Request request = new Request(GameRequest.GET_RESOURCE);
+        request.argument.put("resource", resource);
+
+        Client.client.sendRequestToServer(request, true);
+
+        Request result = Request.fromJson(Client.client.getRecentResponse());
+
+        return Integer.parseInt(result.argument.get("count"));
+    }
+
+    public int freeStockpileSpace(Resource resource) {
+        Request request = new Request(GameRequest.FREE_STOCKPILE_SPACE);
+        request.argument.put("resource", resource.getName());
+
+        Client.client.sendRequestToServer(request, true);
+
+        Request result = Request.fromJson(Client.client.getRecentResponse());
+
+        return Integer.parseInt(result.argument.get("count"));
+    }
+
+    public void changeMoney(int money) {
+        Request request = new Request(GameRequest.CHANGE_MONEY);
+        request.argument.put("money", String.valueOf(money));
+
+        Client.client.sendRequestToServer(request, false);
+    }
+
+    public void addToStockpile(Resource resource, int count) {
+        Request request = new Request(GameRequest.ADD_TO_STOCKPILE);
+        request.argument.put("resource", resource.getName());
+        request.argument.put("count", String.valueOf(count));
+
+        Client.client.sendRequestToServer(request, false);
+    }
+
+    public void removeFromStockpile(Resource resource, int count) {
+        Request request = new Request(GameRequest.REMOVE_FROM_STOCKPILE);
+        request.argument.put("resource", resource.getName());
+        request.argument.put("count", String.valueOf(count));
+
+        Client.client.sendRequestToServer(request, false);
     }
 
 
