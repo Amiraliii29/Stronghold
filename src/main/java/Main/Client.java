@@ -87,8 +87,10 @@ public class Client extends Thread{
         else if(request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
             result=ProfileMenuController.handleChangePassword(request.argument, user);
         
-        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
-            result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)) {
+            result = new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+            updateAllClientsData();
+        }
 
         else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA) )
             result=new Gson().toJson(User.handleGetUsersRequest());
@@ -107,6 +109,11 @@ public class Client extends Thread{
 
         else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
             createRoom(request);
+        else if(request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE))
+            sendRoomMessage(request);
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
+            deleteGlobalMessage();
+
         //TODO: FILL THE REST;
 
 
@@ -119,7 +126,20 @@ public class Client extends Thread{
         }
     }
 
-    private void createRoom(Request request) {
+    private void deleteGlobalMessage() {
+    }
+
+    private void sendRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void createRoom(Request request) throws IOException {
         ArrayList<Client> clientsInRoom = new ArrayList<>();
 
         clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user0")));
@@ -139,6 +159,11 @@ public class Client extends Thread{
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user7")));
 
         ChatRoom room = new ChatRoom(clientsInRoom);
+        Request request1 = new Request(null , NormalRequest.ADD_ROOM_TO_CLIENT);
+        request1.argument.put("ID" , room.getID() + "");
+        for (Client client : clientsInRoom) {
+            client.dataOutputStream.writeUTF(request1.toJson());
+        }
     }
 
     private void sendPrivateMessage(Request request) throws IOException {
