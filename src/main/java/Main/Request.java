@@ -13,6 +13,11 @@ public class Request {
     public HashMap<String, String> argument;
 
 
+    {
+        token = userToken;
+        argument = new HashMap<>();
+    }
+
 
     public static void setUserToken(String userToken) {
         Request.userToken = userToken;
@@ -21,10 +26,15 @@ public class Request {
 
 
     public Request(GameRequest gameRequest, NormalRequest normalRequest) {
-        token = userToken;
         this.gameRequest = gameRequest;
         this.normalRequest = normalRequest;
-        argument = new HashMap<>();
+        this.resultEnums = null;
+    }
+
+    public Request(ResultEnums resultEnums) {
+        this.resultEnums = resultEnums;
+        this.gameRequest = null;
+        this.normalRequest = null;
     }
 
 
