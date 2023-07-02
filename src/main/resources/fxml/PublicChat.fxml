@@ -45,5 +45,10 @@
             <Image url="@../Images/Icon/editImage.png" />
          </image>
       </ImageView>
+      <ImageView fitHeight="29.0" fitWidth="35.0" layoutX="69.0" layoutY="523.0" onMouseClicked="#refreshPublicChat" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Icon/refresh.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

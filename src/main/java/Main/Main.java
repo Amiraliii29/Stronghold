@@ -10,9 +10,10 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application{
+
     public static void main(String[] args) throws Exception {
         try {
-            Client.client = new Client("localhost", 8000);
+            Client.client = new Client("localhost", 8080);
         } catch (IOException ignored) {
         }
         launch(args);
