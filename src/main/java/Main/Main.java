@@ -12,7 +12,7 @@ public class Main {
         
         load();
 
-        ServerSocket serverSocket = new ServerSocket(8000);
+        ServerSocket serverSocket = new ServerSocket(8080);
         System.out.println("Server Started!");
         while (true) {
             Socket socket = serverSocket.accept();

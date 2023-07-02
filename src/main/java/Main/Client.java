@@ -5,6 +5,7 @@ import Model.DataBase;
 import Model.Map;
 import Model.User;
 import java.io.*;
+import java.lang.ref.ReferenceQueue;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -78,6 +79,7 @@ public class Client extends Thread {
     private void requestHandler(Request request) throws IOException {
 
         String result = "";// was "AUTO"
+        System.out.println(request.normalRequest + "=====");
 
         if (request.normalRequest.equals(NormalRequest.SIGNUP))
             result = SignUpMenuController.handleSignupRequest(request.argument, this);
@@ -110,6 +112,7 @@ public class Client extends Thread {
 
         else if (request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)) {
             result = new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+            this.user = User.getUserByUserName(request.argument.get("Username"));
             updateAllClientsData();
         } else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
             result = new Gson().toJson(User.handleGetUsersRequest());
@@ -196,7 +199,12 @@ public class Client extends Thread {
 
     private void editGlobalMessage(Request request) throws IOException {
         for (Client allClient : DataBase.getAllClients()) {
-            allClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+            Request requestToSend = new Request(null, NormalRequest.EDIT_GLOBAL_MESSAGE);
+            requestToSend.argument.put("userName", request.argument.get("userName"));
+            requestToSend.argument.put("avatar", request.argument.get("avatar"));
+            requestToSend.argument.put("message", request.argument.get("message"));
+            requestToSend.argument.put("newMessage" , request.argument.get("newMessage"));
+            allClient.dataOutputStream.writeUTF("AUTO" + requestToSend.toJson());
         }
     }
 
@@ -315,39 +323,32 @@ public class Client extends Thread {
         ArrayList<Client> clientsInRoom = new ArrayList<>();
 
         clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user0")));
-        if (request.argument.get("user1") != null)
+        if (!request.argument.get("user1").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user1")));
-        if (request.argument.get("user2") != null)
+        if (!request.argument.get("user2").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user2")));
-        if (request.argument.get("user3") != null)
+        if (!request.argument.get("user3").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user3")));
-        if (request.argument.get("user4") != null)
+        if (!request.argument.get("user4").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user4")));
-        if (request.argument.get("user5") != null)
+        if (!request.argument.get("user5").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user5")));
-        if (request.argument.get("user6") != null)
+        if (!request.argument.get("user6").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user6")));
-        if (request.argument.get("user7") != null)
+        if (!request.argument.get("user7").equals(""))
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user7")));
 
         ChatRoom room = new ChatRoom(clientsInRoom);
         Request request1 = new Request(null, NormalRequest.ADD_ROOM_TO_CLIENT);
         request1.argument.put("ID", room.getID() + "");
         for (Client client : clientsInRoom) {
-            client.dataOutputStream.writeUTF(request1.toJson());
+            client.dataOutputStream.writeUTF("AUTO" + request1.toJson());
         }
     }
 
     private void sendPrivateMessage(Request request) throws IOException {
-        Client targetClient = null;
-        Client senderClient = null;
-
-        for (Client allClient : DataBase.getAllClients()) {
-            if (allClient.getUser().getUsername().equals(request.argument.get("receiverUserName")))
-                targetClient = allClient;
-            else if (allClient.getUser().getUsername().equals(request.argument.get("userName")))
-                senderClient = allClient;
-        }
+        Client targetClient = DataBase.getClientByUserName(request.argument.get("receiverUserName"));
+        Client senderClient = DataBase.getClientByUserName(request.argument.get("userName"));
 
         targetClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
         senderClient.dataOutputStream.writeUTF("AUTO" + request.toJson());

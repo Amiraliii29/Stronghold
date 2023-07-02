@@ -2,7 +2,6 @@ package Model;
 
 import Main.Client;
 import Main.Request;
-import Main.Result;
 import Main.UserDataBase;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

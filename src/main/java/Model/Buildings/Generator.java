@@ -81,7 +81,7 @@ public class Generator extends Building {
                 Generator newGenerator = new Generator(owner, generator.name, generator.width, generator.length, xCoordinateLeft, yCoordinateUp,
                         generator.lands, generator.hp, generator.resource, generator.numberOfResource, generator.cost, generator.canPass,
                         generator.usingRate, generator.generatingRate, generator.resourceGenerate, generator.resourceNeed, generator.numberOfWorker);
-                if (!GameMenuController.constructBuilding(newGenerator)) return null;
+//                if (!GameMenuController.constructBuilding(newGenerator)) return null;
                 if (owner != null) owner.addBuildings(newGenerator);
                 return newGenerator;
             }

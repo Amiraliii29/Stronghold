@@ -3,13 +3,9 @@ package Controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.regex.Matcher;
 
 import Main.Client;
-import Model.DataBase;
 import Model.User;
-import View.SignUpMenu;
 import View.Enums.Messages.SignUpMenuMessages;
 
 public class SignUpMenuController {
@@ -82,11 +78,6 @@ public class SignUpMenuController {
     }
 
     public static void adjustPenaltyByTime() {
-        PenaltyTimer.setProcessDuration(getPenalty());
-        PenaltyTimer.setProcessStartingTime();
-
-        Timer timerObj = new Timer(true);
-        timerObj.scheduleAtFixedRate(new PenaltyTimer(), 0, 1000);
     }
 
     public static SignUpMenuMessages UserSecurityAnswerController(String securityAnswerComponents, User user) {
