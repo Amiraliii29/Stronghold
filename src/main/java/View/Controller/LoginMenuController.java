@@ -54,11 +54,12 @@ public class LoginMenuController {
             alert.showAndWait();
         }
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
-        request.argument.put("userName" , userName );
+        request.argument.put("Username" , userName );
+        
         Client.client.sendRequestToServer(request , true);
         String json = Client.client.getRecentResponse();
         User targetUser = new Gson().fromJson(json , User.class);
-
+        System.out.println("kir=====");
         if (targetUser == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));
             username.setText("");
@@ -100,6 +101,18 @@ public class LoginMenuController {
         else {
             User.setCurrentUser(targetUser);
             targetUser.setOnlineStatus(true);
+
+            if(targetUser.getFriends()==null)
+                 targetUser.setFriends(new ArrayList<User>());
+
+            if(targetUser.getUsersWithFriendRequest()==null) 
+                targetUser.setUsersWithFriendRequest(new ArrayList<User>());
+
+            Request request2=new Request(NormalRequest.LOGIN);
+                request2.addToArguments("Username", userName);
+                Client.client.sendRequestToServer(request2, false);
+
+                System.out.println(targetUser.getFriends().size());
             new MainMenu().start(SignUpMenu.stage);
         }
     }

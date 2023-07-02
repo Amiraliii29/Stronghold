@@ -15,6 +15,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
@@ -38,13 +40,13 @@ public class UserInfoHbox {
     private void displayUserInfo(User targetUser){
 
         ImageView userAvatarImgView=getUserImageView(targetUser);
-        userNameText=new Text(targetUser.getUsername());userRankText=new Text(""+targetUser.getRank()); userScoreText=new Text(""+targetUser.getHighScore());onlineStatus=new Circle(16);
+        userNameText=new Text(targetUser.getUsername());userRankText=new Text(""+targetUser.getRank()); userScoreText=new Text(""+targetUser.getHighScore());onlineStatus=new Circle(8);
         initializeFriendRequestButton();
 
         HBox temp0=new HBox(8, userAvatarImgView);
-        temp0.setMinWidth(100);
+        temp0.setMinWidth(80);
         HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText),temp4=new HBox(8, friendRequestButton),temp5=new HBox(8,onlineStatus);
-        temp1.setMinWidth(100); temp1.setMaxWidth(100);temp2.setMinWidth(100); temp2.setMaxWidth(100);temp3.setMinWidth(100); temp3.setMaxWidth(100);temp4.setMinWidth(32); temp4.setMaxWidth(32);temp5.setMinWidth(16); temp5.setMaxWidth(16);
+        temp1.setMinWidth(90); temp1.setMaxWidth(90);temp2.setMinWidth(90); temp2.setMaxWidth(90);temp3.setMinWidth(90); temp3.setMaxWidth(90);temp4.setMinWidth(90); temp4.setMaxWidth(90);temp5.setMinWidth(90); temp5.setMaxWidth(90);
         temp0.setAlignment(Pos.CENTER);
         temp1.setAlignment(Pos.CENTER);
         temp2.setAlignment(Pos.CENTER);
@@ -53,14 +55,16 @@ public class UserInfoHbox {
         temp5.setAlignment(Pos.CENTER);
 
         
-        mainHbox.getChildren().addAll(temp0,temp1,temp2,temp3,friendRequestButton,onlineStatus);
+        mainHbox.getChildren().addAll(temp0,temp1,temp2,temp3,temp4,temp5);
         mainHbox.setAlignment(Pos.CENTER);
         addStylesToHboxIfNeeded(mainHbox, targetUser);
     }
 
     public UserInfoHbox(User user){
         mainHbox=new HBox(8);
+        this.user=user;
         displayUserInfo(user);
+        updateUserStatus();
     }
 
     private ImageView getUserImageView(User user){
@@ -89,11 +93,13 @@ public class UserInfoHbox {
     private void initializeFriendRequestButton(){
         Image friendRequestImage=null;
         try {
-            friendRequestImage=new Image(new FileInputStream("src/main/resources/Images/Icon/friendRequest.png"));
+            friendRequestImage=new Image(new FileInputStream("src/main/resources/Images/Icon/Friends.jpg"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         friendRequestButton= new ImageView(friendRequestImage);
+        friendRequestButton.setFitWidth(40);
+        friendRequestButton.setFitHeight(40);
         friendRequestButton.getStyleClass().add("hover-effect");
 
         friendRequestButton.setOnMouseClicked(event -> {
@@ -186,8 +192,12 @@ public class UserInfoHbox {
 
     public void updateUserStatus(){
         if(this.user.isOnline())
-            this.onlineStatus.setStyle("-fx-color: brown");
-        else this.onlineStatus.setStyle("-fx-color: green");
+            this.onlineStatus.setFill(Color.GREEN);
+        else this.onlineStatus.setFill(Color.GRAY);
+    }
+
+    public void setBackgroundColor(String color){
+        mainHbox.setStyle(" -fx-background-color: "+color);
     }
 
 

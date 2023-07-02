@@ -45,13 +45,17 @@ public class ServerResponseListener extends Thread {
 
 
     private boolean handleResponse(String response) {
-        if (!response.contains("AUTO")) {
+
+        if (!response.startsWith("AUTO")) {
+            client.setRecentResponse(response);
             setResponseReceived(true);
             return false;
         }
 
         response = response.replace("AUTO", "");
         Request request = Request.fromJson(response);
+        if(request==null) return true;
+        System.out.println(request.normalRequest+"=======");
 
         if (request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)) {
             Client.client.globalChats.add(request);
@@ -62,6 +66,10 @@ public class ServerResponseListener extends Thread {
         } else if (request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
             int ID = Integer.parseInt(request.argument.get("ID"));
             Client.client.myRoomsID.add(ID);
+        }
+        else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
+            String users=request.argument.get("Users");
+            User.setUsersFromJson(users);
         } else if (request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)) {
             User.getUsersFromServer();
         }

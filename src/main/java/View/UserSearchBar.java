@@ -28,26 +28,36 @@ public class UserSearchBar {
     
 
     public UserSearchBar(){
-        this.mainVbox= new VBox(8);
+        this.mainVbox= new VBox(4);
+        mainVbox.setAlignment(Pos.CENTER);
+        mainVbox.setMaxWidth(280);
+        mainVbox.setMinWidth(280);
         initalizeSearchField();
+    }
+
+    public VBox getMainVbox(){
+        return mainVbox;
     }
 
     private void initalizeSearchField(){
         this.searchingField= new TextField();
         searchingField.setPromptText("Friend Username to search");
 
-        Image searchImage=null;
-        try {
-            searchImage=new Image(new FileInputStream("src/main/resources/Images/Icon/searchIcon.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        ImageView searchImageView=new ImageView(searchImage); searchImageView.setFitHeight(48);searchImageView.setFitWidth(48);
-        HBox temp1=new HBox(0, searchImageView,searchingField);
-        temp1.setMaxWidth(120);temp1.setMinWidth(120);
+        // Image searchImage=null;
+        // try {
+        //     searchImage=new Image(new FileInputStream("src/main/resources/Images/Icon/searchIcon.png"));
+        // } catch (FileNotFoundException e) {
+        //     e.printStackTrace();
+        // }
+        // ImageView searchImageView=new ImageView(searchImage); searchImageView.setFitHeight(48);searchImageView.setFitWidth(48);
+        // HBox temp1=new HBox(0, searchImageView,searchingField);
+        // HBox temp1=new HBox(0,searchingField);
+        // temp1.setMaxWidth(100);temp1.setMinWidth(100);
         initializeSerachButton();
 
-        HBox temp2=new HBox(8, temp1,searchButton);
+        HBox temp2=new HBox(8, searchingField,searchButton);
+        temp2.setMaxWidth(100);temp2.setMaxWidth(100);
+        temp2.setAlignment(Pos.CENTER);
         outputText=new Text();
         outputText.setVisible(false);
 
@@ -65,7 +75,8 @@ public class UserSearchBar {
 
     private void searchForUser(){
 
-        mainVbox.getChildren().remove(targetUserInfoHbox.getMainHbox());
+        if(targetUserInfoHbox!=null)
+            mainVbox.getChildren().remove(targetUserInfoHbox.getMainHbox());
 
         String targetUsername=searchingField.getText();
         Request request=new Request(NormalRequest.GET_USER_BY_USERNAME);
@@ -78,6 +89,7 @@ public class UserSearchBar {
     
         else{
             targetUserInfoHbox= new UserInfoHbox(targetUser);
+            targetUserInfoHbox.setBackgroundColor(Orders.yellowNotifErrorColor);
             mainVbox.getChildren().add(targetUserInfoHbox.getMainHbox());
         }
     }

@@ -62,7 +62,7 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
-    public boolean isProfileShown;
+    public boolean isProfileShown,isMenuDisplayed;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
@@ -86,6 +86,7 @@ public class ProfileMenu extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         User.getUsersFromServer();
+        System.out.println("kir");
         StackPane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
@@ -97,9 +98,9 @@ public class ProfileMenu extends Application {
         stage.setScene(scene);
         showProfileProtocol();
         ProfileMenu.profileMenu=this;
+        isMenuDisplayed=true;
         stage.show();
     }
-
 
     private void setUpperDetailOfScoreboardVbox(){
         Text avatartText=new Text("Avatar");
@@ -114,13 +115,22 @@ public class ProfileMenu extends Application {
         Text rankText=new Text("Rank");
         rankText.setOpacity(0.75);
 
-        HBox hb0=new HBox(avatartText),hb1=new HBox(usernameText),hb2=new HBox(highscoreText),hb3=new HBox(rankText);
-        hb0.setMaxWidth(100);hb0.setMinWidth(100);hb1.setMaxWidth(100);hb1.setMinWidth(100);hb2.setMaxWidth(100);hb2.setMinWidth(100);hb3.setMaxWidth(100);hb3.setMinWidth(100);
+        Text FriendshipText=new Text("Friendship");
+        FriendshipText.setOpacity(0.75);
+
+        Text OnlineStatusText=new Text("Status");
+        OnlineStatusText.setOpacity(0.75);
+
+        HBox hb0=new HBox(avatartText),hb1=new HBox(usernameText),hb2=new HBox(highscoreText),hb3=new HBox(rankText),hb4=new HBox(FriendshipText),hb5=new HBox(OnlineStatusText);
+        hb0.setMaxWidth(90);hb0.setMinWidth(90);hb1.setMaxWidth(90);hb1.setMinWidth(90);hb2.setMaxWidth(90);hb2.setMinWidth(90);hb3.setMaxWidth(90);hb3.setMinWidth(90);
+        hb4.setMaxWidth(90);hb4.setMinWidth(90);hb5.setMaxWidth(90);hb5.setMinWidth(90);
         hb2.setAlignment(Pos.CENTER);
         hb3.setAlignment(Pos.CENTER);
         hb0.setAlignment(Pos.CENTER);
         hb1.setAlignment(Pos.CENTER);
-        HBox parentHBox=new HBox(8, hb0,hb1,hb2,hb3);
+        hb4.setAlignment(Pos.CENTER);
+        hb5.setAlignment(Pos.CENTER);
+        HBox parentHBox=new HBox(8, hb0,hb1,hb2,hb3,hb4,hb5);
         scoreBoardVBox.getChildren().addAll(parentHBox);
     }
 
@@ -136,17 +146,20 @@ public class ProfileMenu extends Application {
         sortUsers();
         bigVbox=new VBox(8);
         bigVbox.setAlignment(Pos.CENTER);
+        bigVbox.getChildren().add(new UserSearchBar().getMainVbox());
         label=new Label("ScoreBoard");
         scoreBoardVBox=new VBox(8);
+
         scoreboardPane= new ScrollPane(scoreBoardVBox);
+        scoreboardPane.setFitToWidth(true);
         scoreBoardVBox.setAlignment(Pos.CENTER);
         scoreboardPane.setPannable(true);
         setUpperDetailOfScoreboardVbox();
 
         scoreboardPane.setMaxHeight(200);
-        scoreboardPane.setMaxWidth(450);
+        scoreboardPane.setMaxWidth(600);
         for (int i = 0; i < 10; i++) {
-            scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i+1)).getMainHbox());
+            scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i)).getMainHbox());
         }
         bigVbox.getChildren().addAll(label,scoreboardPane);
         setProfileButtons();
@@ -159,7 +172,7 @@ public class ProfileMenu extends Application {
         back = new Button("Back to main Menu");
         back.getStyleClass().add("yellow-warning-color");
         HBox hbox=new HBox(16, displayScoreBoard,back);
-        hbox.setMinWidth(300); hbox.setMaxWidth(300);
+        hbox.setMinWidth(600); hbox.setMaxWidth(600);
         hbox.setAlignment(Pos.CENTER);
         bigVbox.getChildren().addAll(hbox);
     }
@@ -187,6 +200,7 @@ public class ProfileMenu extends Application {
         setFieldListeners();
         setButtonListeners();
         setStartingTexts();
+        showFriendRequests();
     }
 
     private void setFileChooser(){
@@ -371,6 +385,7 @@ public class ProfileMenu extends Application {
             });
         back.setOnMouseClicked(event -> {
             try {
+                isMenuDisplayed=false;
                 new MainMenu().start(stage);
             } catch (Exception e) {
                 throw new RuntimeException(e);
