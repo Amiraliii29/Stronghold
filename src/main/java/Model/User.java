@@ -2,9 +2,11 @@ package Model;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import Controller.JsonConverter;
 import Controller.Orders;
@@ -32,6 +34,9 @@ public class User {
     private int highScore;
     private int rank;
 
+    static{
+        users=new ArrayList<>();
+    }
 
     public User(String username, String password, String nickname,String email, String slogan) {
         this.username = username;
@@ -224,17 +229,25 @@ public class User {
     public static void getUsersFromServer(){
         Request request=new Request(NormalRequest.GET_USERS_DATA);
         Client.client.sendRequestToServer(request, true);
+        System.out.println("sex");
         String result=Client.client.getRecentResponse();
-        ArrayList<User> users= new Gson().fromJson(result, ArrayList.class);
 
-        setUsers(users);
+        users.clear();
+        users= new Gson().fromJson(result, new TypeToken<List<User>>(){}.getType());
         
-        if(ProfileMenu.profileMenu!=null){
+        
+        if(ProfileMenu.profileMenu!=null)
+            if(ProfileMenu.profileMenu.isMenuDisplayed){
             if(ProfileMenu.profileMenu.isProfileShown)
                 ProfileMenu.profileMenu.showProfileProtocol();
             else 
                 ProfileMenu.profileMenu.showScoreBoardProtocol();
-        }
+            }
+    }
+
+    public static void setUsersFromJson(String usersInJson){
+        users.clear();
+        users= new Gson().fromJson(usersInJson, new TypeToken<List<User>>(){}.getType());
     }
 
     public static void sendFriendRequest(User targetFriend){
@@ -245,11 +258,12 @@ public class User {
                 return;
            }
 
-        targetFriend.getUsersWithFriendRequest().add(targetFriend);
+        targetFriend.getUsersWithFriendRequest().add(currentUser);
         Request request=new Request(NormalRequest.SEND_FRIEND_REQUSET);
         Gson gson=new Gson();
         request.addToArguments("Sender", gson.toJson(currentUser));
         request.addToArguments("Reciever", gson.toJson(targetFriend));
+        
         Client.client.sendRequestToServer(request, false);
 
         Orders.createNotificationDialog("Result","Friend Request Delivery:","Friend request was sent succesfully!",Orders.greenNotifSuccesColor);

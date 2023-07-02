@@ -2,6 +2,7 @@ package Main;
 
 public enum NormalRequest {
     SIGNUP,
+    LOGIN,
     REMOVE_SLOGAN,
     CHANGE_PROFILE_FIELDS,
     CHANGE_PASSWORD,

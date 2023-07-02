@@ -68,6 +68,7 @@ public class Client {
     }
 
     private void checkResponseRecievement() {
+        System.out.println("not yet");
         if (serverResponseListener.isResponseReceived()) return;
         WaitThread waitThread = new WaitThread();
         waitThread.start();
