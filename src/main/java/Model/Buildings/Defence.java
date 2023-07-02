@@ -59,8 +59,10 @@ public class Defence extends Building {
                 Defence newDefence = new Defence(owner, defence.name, defence.width, defence.length, xCoordinateLeft,
                         yCoordinateUp, defence.lands, defence.hp, defence.resource, defence.numberOfResource, defence.cost,
                         defence.canPass, defence.range, defence.capacity);
-//                if (!GameMenuController.constructBuilding(newDefence)) return null;
-                if (owner != null) owner.addBuildings(newDefence);
+                if (owner != null) {
+                    if (owner.gameMenuController.constructBuilding(newDefence)) return null;
+                    owner.addBuildings(newDefence);
+                }
                 return newDefence;
             }
         }

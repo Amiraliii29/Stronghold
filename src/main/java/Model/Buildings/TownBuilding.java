@@ -63,8 +63,10 @@ public class TownBuilding extends Building {
                         yCoordinateUp, townBuilding.lands, townBuilding.hp, townBuilding.resource, townBuilding.numberOfResource, townBuilding.cost,
                         townBuilding.canPass, townBuilding.capacity, townBuilding.popularityRate);
 
-//                if (!GameMenuController.constructBuilding(newTownBuilding)) return null;
-                if (owner != null) owner.addBuildings(newTownBuilding);
+                if (owner != null) {
+                    if (owner.gameMenuController.constructBuilding(newTownBuilding)) return null;
+                    owner.addBuildings(newTownBuilding);
+                }
                 return newTownBuilding;
             }
         }

@@ -4,6 +4,7 @@ package Controller;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import java.util.Timer;
 import Main.Client;
 import Model.User;
 import View.Enums.Messages.SignUpMenuMessages;
@@ -74,10 +75,6 @@ public class SignUpMenuController {
     public static void setNewPenalty() {
         failedAttempts++;
         failurePenalty = failedAttempts * 5;
-        adjustPenaltyByTime();
-    }
-
-    public static void adjustPenaltyByTime() {
     }
 
     public static SignUpMenuMessages UserSecurityAnswerController(String securityAnswerComponents, User user) {
