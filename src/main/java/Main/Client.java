@@ -2,27 +2,24 @@ package Main;
 
 import Model.ChatRoom;
 import Model.DataBase;
+import Model.Map;
 import Model.User;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
-
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
-import javafx.scene.transform.Rotate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Client extends Thread{
+
+
+public class Client extends Thread {
     private final String token;
     private final Socket socket;
     private final DataInputStream dataInputStream;
@@ -56,10 +53,9 @@ public class Client extends Thread{
             //     request = Request.fromJson(json);
             // }
 
+            requestHandler(request);
+
             while (!request.normalRequest.equals(NormalRequest.CLOSE)) {
-
-                requestHandler(request);
-
                 json = dataInputStream.readUTF();
                 request = Request.fromJson(json);
 
@@ -67,6 +63,11 @@ public class Client extends Thread{
                 //     json = dataInputStream.readUTF();
                 //     request = Request.fromJson(json);
                 // }
+                while (!request.verify(token)) {
+                    json = dataInputStream.readUTF();
+                    request = Request.fromJson(json);
+                }
+                requestHandler(request);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -76,10 +77,10 @@ public class Client extends Thread{
 
     private void requestHandler(Request request) throws IOException {
 
-        String result="AUTO";
+        String result = "";// was "AUTO"
 
-        if(request.normalRequest.equals(NormalRequest.SIGNUP))
-            result=SignUpMenuController.handleSignupRequest(request.argument,this);
+        if (request.normalRequest.equals(NormalRequest.SIGNUP))
+            result = SignUpMenuController.handleSignupRequest(request.argument, this);
 
         else if(request.normalRequest.equals(NormalRequest.LOGIN))
             User.handleLogin(request.argument.get("Username"), this);
@@ -98,50 +99,243 @@ public class Client extends Thread{
 
         else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) )
             result=User.handleGetUsersRequest();
+        else if (request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
+            result = ProfileMenuController.handleProfileFieldsChange(request.argument, user);
 
-        else if(request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
+        else if (request.normalRequest.equals(NormalRequest.REMOVE_SLOGAN))
+            result = ProfileMenuController.removeSlogan(user).toString();
+
+        else if (request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
+            result = ProfileMenuController.handleChangePassword(request.argument, user);
+
+        else if (request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)) {
+            result = new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+            updateAllClientsData();
+        } else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
+            result = new Gson().toJson(User.handleGetUsersRequest());
+
+        else if (request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
             User.handleFriendRequest(request);
 
         else if(request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
             User.handleSubmitFriendship(request);
 
-        else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
+        else if (request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
 
-        else if(request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE))
+        else if (request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE))
             sendPrivateMessage(request);
 
-        else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
+        else if (request.normalRequest.equals(NormalRequest.CREATE_ROOM))
             createRoom(request);
+
+        else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE))
+            sendRoomMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE))
+            deleteGlobalMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.DELETE_PRIVATE_MESSAGE))
+            deletePrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.DELETE_ROOM_MESSAGE))
+            deleteRoomMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_GLOBAL_MESSAGE))
+            editGlobalMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_PRIVATE_MESSAGE))
+            editPrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.EDIT_ROOM_MESSAGE))
+            editRoomMessage(request);
+
+        else if (request.normalRequest.equals(NormalRequest.MAP_NAME))
+            sendMapNames();
+
+        else if (request.normalRequest.equals(NormalRequest.GET_MAP))
+            sendMap(request);
+
+        else if (request.normalRequest.equals(NormalRequest.CHECK_MAP_NAME))
+            checkMapName(request);
+
+        else if (request.normalRequest.equals(NormalRequest.SAVE_MAP))
+            saveMap(request);
+
+        else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
+            userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
+
+        else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
+            createUnit(request);
+
         //TODO: FILL THE REST;
 
+
         try {
-            dataOutputStream.writeUTF(result);
+            if (!result.equals("")) dataOutputStream.writeUTF(result);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createRoom(Request request) {
+    private void editRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void editPrivateMessage(Request request) throws IOException {
+        Client receiver = DataBase.getClientByUserName(request.argument.get("receiverUserName"));
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+
+        sender.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        receiver.dataOutputStream.writeUTF("AUTO" + request.toJson());
+    }
+
+    private void editGlobalMessage(Request request) throws IOException {
+        for (Client allClient : DataBase.getAllClients()) {
+            allClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void deleteRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void deletePrivateMessage(Request request) throws IOException {
+        String receiverUserName = request.argument.get("receiverUserName");
+        Client receiver = DataBase.getClientByUserName(receiverUserName);
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+        receiver.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        sender.dataOutputStream.writeUTF("AUTO" + request.toJson());
+    }
+
+    private void deleteGlobalMessage(Request request) throws IOException {
+        for (Client allClient : DataBase.getAllClients()) {
+            allClient.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void saveMap(Request request) {
+        String name = request.argument.get("name");
+
+        try {
+            int jsonLength = dataInputStream.readInt();
+            byte[] jsonBytes = new byte[jsonLength];
+            dataInputStream.readFully(jsonBytes);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map map = objectMapper.readValue(jsonBytes, Map.class);
+            map.setName(name);
+
+            Map.saveMap(map,name);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void checkMapName(Request request) throws IOException {
+        String fileName = request.argument.get("name") + ".json";
+
+        File folder = new File("src/main/resources/Map");
+
+        String[] fileNames = folder.list();
+        for(String file : fileNames) {
+            if (file.equals(fileName)) {
+                dataOutputStream.writeUTF("false");
+                return;
+            }
+        }
+        dataOutputStream.writeUTF("true");
+    }
+
+    private void sendMap(Request request) {
+        String mapName = request.argument.get("name");
+        Map map = Map.loadMap(mapName);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object json = map;
+
+        try {
+            byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
+
+            dataOutputStream.writeInt(jsonBytes.length);
+            dataOutputStream.write(jsonBytes);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendMapNames() {
+        File folder = new File("src/main/resources/Map");
+
+        String[] fileNames = folder.list();
+
+        String names = "";
+
+        for(String file : fileNames) {
+            for (char c : file.toCharArray()) {
+                if (c == '.') {
+                    names += ",";
+                    break;
+                }
+                names += c;
+            }
+        }
+
+        try {
+            dataOutputStream.writeUTF(names);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteGlobalMessage() {
+    }
+
+    private void sendRoomMessage(Request request) throws IOException {
+        int roomID = Integer.parseInt(request.argument.get("ID"));
+
+        ChatRoom chatRoom = ChatRoom.getRoomByID(roomID);
+
+        for (Client client : chatRoom.getClientsInRoom()) {
+            client.dataOutputStream.writeUTF("AUTO" + request.toJson());
+        }
+    }
+
+    private void createRoom(Request request) throws IOException {
         ArrayList<Client> clientsInRoom = new ArrayList<>();
 
         clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user0")));
-        if(request.argument.get("user1") != null)
+        if (request.argument.get("user1") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user1")));
-        if(request.argument.get("user2") != null)
+        if (request.argument.get("user2") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user2")));
-        if(request.argument.get("user3") != null)
+        if (request.argument.get("user3") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user3")));
-        if(request.argument.get("user4") != null)
+        if (request.argument.get("user4") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user4")));
-        if(request.argument.get("user5") != null)
+        if (request.argument.get("user5") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user5")));
-        if(request.argument.get("user6") != null)
+        if (request.argument.get("user6") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user6")));
-        if(request.argument.get("user7") != null)
+        if (request.argument.get("user7") != null)
             clientsInRoom.add(DataBase.getClientByUserName(request.argument.get("user7")));
 
         ChatRoom room = new ChatRoom(clientsInRoom);
+        Request request1 = new Request(null, NormalRequest.ADD_ROOM_TO_CLIENT);
+        request1.argument.put("ID", room.getID() + "");
+        for (Client client : clientsInRoom) {
+            client.dataOutputStream.writeUTF(request1.toJson());
+        }
     }
 
     private void sendPrivateMessage(Request request) throws IOException {
@@ -149,9 +343,9 @@ public class Client extends Thread{
         Client senderClient = null;
 
         for (Client allClient : DataBase.getAllClients()) {
-            if(allClient.getUser().getUsername().equals(request.argument.get("receiverUserName")))
+            if (allClient.getUser().getUsername().equals(request.argument.get("receiverUserName")))
                 targetClient = allClient;
-            else if(allClient.getUser().getUsername().equals(request.argument.get("userName")))
+            else if (allClient.getUser().getUsername().equals(request.argument.get("userName")))
                 senderClient = allClient;
         }
 
@@ -161,10 +355,10 @@ public class Client extends Thread{
 
     private void sendGlobalMessage(Request request) throws IOException {
         for (Client allClient : DataBase.getAllClients()) {
-            Request requestToSend = new Request(null , NormalRequest.RECEIVE_GLOBAL_MESSAGE);
-            requestToSend.argument.put("userName" , request.argument.get("userName"));
-            requestToSend.argument.put("avatar" , request.argument.get("avatar"));
-            requestToSend.argument.put("message" , request.argument.get("message"));
+            Request requestToSend = new Request(null, NormalRequest.RECEIVE_GLOBAL_MESSAGE);
+            requestToSend.argument.put("userName", request.argument.get("userName"));
+            requestToSend.argument.put("avatar", request.argument.get("avatar"));
+            requestToSend.argument.put("message", request.argument.get("message"));
 
             allClient.getDataOutputStream().writeUTF("AUTO" + requestToSend.toJson());
         }
@@ -234,49 +428,49 @@ public class Client extends Thread{
         }
     }
 
-    private void startReadingFile(String pathToStore){
-        FileOutputStream fout=null;
+    private void startReadingFile(String pathToStore) {
+        FileOutputStream fout = null;
         try {
             fout = new FileOutputStream(pathToStore);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-            int i;
-            try {
-                while ( (i = this.dataInputStream.read()) > -1) {
-                    try {
-                        fout.write(i);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        int i;
+        try {
+            while ((i = this.dataInputStream.read()) > -1) {
+                try {
+                    fout.write(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-            try {
-                fout.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fout.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            fout.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            fout.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void sendFile (String fileAddress) {
+    public void sendFile(String fileAddress) {
         int i;
-        FileInputStream fis=null;
+        FileInputStream fis = null;
         try {
-            fis = new FileInputStream ("/path/to/your/image.jpg");
+            fis = new FileInputStream("/path/to/your/image.jpg");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-         try {
+        try {
             while ((i = fis.read()) > -1)
                 try {
                     dataOutputStream.write(i);
@@ -291,7 +485,7 @@ public class Client extends Thread{
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }  
+        }
     }
 
     public static void updateAllClientsData(){
@@ -305,5 +499,8 @@ public class Client extends Thread{
                 e.printStackTrace();
             }
     }
- 
+
+    public void createUnit(Request request) {
+
+    }
 }

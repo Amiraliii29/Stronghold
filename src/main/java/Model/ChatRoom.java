@@ -29,4 +29,12 @@ public class ChatRoom {
     public void addToChats(Request request){
         roomChats.add(request);
     }
+
+    public ArrayList<Client> getClientsInRoom() {
+        return clientsInRoom;
+    }
+
+    public int getID() {
+        return ID;
+    }
 }

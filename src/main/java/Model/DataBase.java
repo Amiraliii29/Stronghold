@@ -75,7 +75,7 @@ public class DataBase {
 
 
 
-    public void updateClient(Result result) {
+    public void updateClient(Request result) {
         //TODO : Send Client!
     }
     public static void addToAllClients(Client client){
