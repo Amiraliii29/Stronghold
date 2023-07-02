@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.*;
+import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -59,6 +60,11 @@ public class JsonConverter {
 
         for (int i = 0; i < usersJsonArray.size(); i++) {
             userUnderRestoration= gson.fromJson(usersJsonArray.get(i).toString(), User.class);
+            if(userUnderRestoration.getFriends()==null) 
+                userUnderRestoration.setFriends(new ArrayList<User>());
+            
+            if(userUnderRestoration.getUsersWithFriendRequest()==null)
+                userUnderRestoration.setUsersWithFriendRequest(new ArrayList<User>());
             User.getUsers().add(userUnderRestoration);
         }
     }

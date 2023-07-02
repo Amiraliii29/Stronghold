@@ -18,6 +18,11 @@ public class DataBase {
     private final Timeline produceTimeline;
 
 
+    
+    static{
+     allClients=new ArrayList<>();   
+    }
+
     public DataBase(Map selectedMap) {
         clients = new ArrayList<>();
         governments = new ArrayList<>();

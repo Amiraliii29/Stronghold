@@ -28,6 +28,7 @@ public class Client extends Thread {
     private UserDataBase userDataBase;
 
 
+
     public Client(Socket socket) throws IOException {
         this.socket = socket;
         dataInputStream = new DataInputStream(socket.getInputStream());
@@ -42,13 +43,15 @@ public class Client extends Thread {
         try {
             dataOutputStream.writeUTF(token);
 
+            System.out.println("waitiiiiing");
             String json = dataInputStream.readUTF();
             Request request = Request.fromJson(json);
 
-            while (!request.verify(token)) {
-                json = dataInputStream.readUTF();
-                request = Request.fromJson(json);
-            }
+            // while (!request.verify(token)) {
+            //     System.out.println("lollllllllllllll");
+            //     json = dataInputStream.readUTF();
+            //     request = Request.fromJson(json);
+            // }
 
             requestHandler(request);
 
@@ -56,11 +59,14 @@ public class Client extends Thread {
                 json = dataInputStream.readUTF();
                 request = Request.fromJson(json);
 
+                // while (!request.verify(token)) {
+                //     json = dataInputStream.readUTF();
+                //     request = Request.fromJson(json);
+                // }
                 while (!request.verify(token)) {
                     json = dataInputStream.readUTF();
                     request = Request.fromJson(json);
                 }
-
                 requestHandler(request);
             }
         } catch (IOException e) {
@@ -76,6 +82,23 @@ public class Client extends Thread {
         if (request.normalRequest.equals(NormalRequest.SIGNUP))
             result = SignUpMenuController.handleSignupRequest(request.argument, this);
 
+        else if(request.normalRequest.equals(NormalRequest.LOGIN))
+            User.handleLogin(request.argument.get("Username"), this);
+
+        else if(request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
+            result=ProfileMenuController.handleProfileFieldsChange(request.argument,user);
+        
+        else if(request.normalRequest.equals(NormalRequest.REMOVE_SLOGAN))
+            result=ProfileMenuController.removeSlogan(user).toString();
+        
+        else if(request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
+            result=ProfileMenuController.handleChangePassword(request.argument, user);
+        
+        else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
+            result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
+
+        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) )
+            result=User.handleGetUsersRequest();
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
             result = ProfileMenuController.handleProfileFieldsChange(request.argument, user);
 
@@ -94,8 +117,8 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
             User.handleFriendRequest(request);
 
-        else if (request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
-            User.handleFriendRequest(request);
+        else if(request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
+            User.handleSubmitFriendship(request);
 
         else if (request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
@@ -341,7 +364,6 @@ public class Client extends Thread {
         }
     }
 
-
     public Socket getSocket() {
         return socket;
     }
@@ -466,12 +488,13 @@ public class Client extends Thread {
         }
     }
 
-    public static void updateAllClientsData() {
-        Gson gson = new Gson();
-        for (Client client : DataBase.getAllClients())
+    public static void updateAllClientsData(){
+        Gson gson=new Gson();
+        for (Client client : DataBase.getAllClients()) 
             try {
-                Request req = new Request(null, NormalRequest.UPDATE_YOUR_DATA);
-                client.dataOutputStream.writeUTF("AUTO" + gson.toJson(req));
+                Request req=new Request(null, NormalRequest.UPDATE_YOUR_DATA);
+                req.argument.put("Users", gson.toJson(User.getUsers()));
+                client.dataOutputStream.writeUTF("AUTO"+gson.toJson(req));
             } catch (IOException e) {
                 e.printStackTrace();
             }

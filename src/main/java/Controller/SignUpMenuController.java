@@ -129,6 +129,7 @@ public class SignUpMenuController {
             return "DUPLICATE_EMAIL";
 
         try {
+            
             createUserController(username, password, nickname, password, email, slogan, securityAnswer,client);
             Client.updateAllClientsData();
         } catch (NoSuchAlgorithmException e) {

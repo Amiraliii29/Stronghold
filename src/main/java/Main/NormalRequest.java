@@ -3,6 +3,7 @@ package Main;
 public enum NormalRequest {
     CLOSE,
     SIGNUP,
+    LOGIN,
     CHANGE_PROFILE_FIELDS,
     CHANGE_PASSWORD,
     REMOVE_SLOGAN,

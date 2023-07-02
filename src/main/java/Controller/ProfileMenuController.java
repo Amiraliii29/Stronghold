@@ -172,7 +172,7 @@ public class ProfileMenuController {
     public static String handleProfileFieldsChange(HashMap<String, String> profileArguments,User user){
         String username=profileArguments.get("Username");
         String email=profileArguments.get("Email");
-        String nickname=profileArguments.get("Slogan");
+        String nickname=profileArguments.get("Nickname");
         String slogan=profileArguments.get("Slogan");
 
         String output="";

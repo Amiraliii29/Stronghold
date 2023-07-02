@@ -40,6 +40,8 @@ public class Request {
 
 
     public boolean verify(String token) {
+        if(this.token==null) return false;
+        //TODO: FIX AND CHANGE
         return this.token.equals(token);
     }
 
