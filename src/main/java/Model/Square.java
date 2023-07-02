@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Square {
     private transient ArrayList<UnitPrototype> units;
@@ -95,5 +96,9 @@ public class Square {
             treeAmount = 0;
             tree = null;
         }
+    }
+
+    public HashMap<String, Integer> getUnitsTypeAndCount() {
+        return null;
     }
 }
