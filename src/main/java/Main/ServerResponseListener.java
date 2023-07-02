@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import Model.BuildingPrototype;
 import Model.Map;
+import Model.UnitPrototype;
 import Model.User;
 import View.Controller.ChatController;
 
@@ -24,6 +26,12 @@ public class ServerResponseListener extends Thread {
         try {
             String token = dataInputStream.readUTF();
             Request.setUserToken(token);
+
+            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
+
+            String json = dataInputStream.readUTF();
+            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

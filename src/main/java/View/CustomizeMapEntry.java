@@ -19,9 +19,9 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class CustomizeMapEntry extends Application {
-    Stage stage;
-    ChoiceBox<String> choiceBox;
-    ChoiceBox<String> choiceBox2;
+    static Stage stage;
+    static ChoiceBox<String> choiceBox;
+    static ChoiceBox<String> choiceBox2;
 
 
     @Override

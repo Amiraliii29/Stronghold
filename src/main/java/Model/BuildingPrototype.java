@@ -102,4 +102,10 @@ public class BuildingPrototype {
     public static BuildingPrototype fromJson(String json) {
         return new Gson().fromJson(json, BuildingPrototype.class);
     }
+
+    public static void fillBuildingsName(String json, String json2) {
+        Gson gson = new Gson();
+        buildingsName = gson.fromJson(json, ArrayList.class);
+        Defences = gson.fromJson(json2, ArrayList.class);
+    }
 }
