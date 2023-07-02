@@ -4,7 +4,6 @@ import Controller.GameMenuController;
 import Model.DataBase;
 import Model.Square;
 import Model.UnitPrototype;
-import Model.Units.Unit;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -26,7 +25,7 @@ public class MoveAnimation {
         this.units = units;
         unit = units.get(0);
 
-        squares = GameMenuController.moveUnit(unit, squareI, squareJ);
+        squares = GameMenuController. moveUnit(unit, squareI, squareJ);
 
         timeline = new Timeline(new KeyFrame(Duration.millis(2000.0 / unit.getSpeed()), actionEvent -> {
             move();
@@ -40,16 +39,8 @@ public class MoveAnimation {
     protected void move() {
         if (squares == null) return;
         if (squares.size() != 0) {
-            for (Unit moveUnit : units)
+            for (UnitPrototype moveUnit : units)
                 moveUnit.setCoordinate(squares.get(0).getX(), squares.get(0).getY());
-
-            if (squares.get(0).getBuilding() != null && squares.get(0).getBuilding().getName().equals("Trap")
-                    && !squares.get(0).getBuilding().getOwner().equals(DataBase.getCurrentGovernment())) {
-                squares.get(0).setBuilding(null);
-                squares.get(0).removeUnit(units.get(0));
-                DataBase.removeUnit(units.get(0));
-                units.remove(units.get(0));
-            }
 
             squares.remove(0);
 

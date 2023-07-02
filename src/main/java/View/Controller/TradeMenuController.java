@@ -41,7 +41,7 @@ public class TradeMenuController {
 
         TradeRequest tradeRequest = selectedTradeRequest;
 
-        if (DataBase.getCurrentGovernment().getResourceInStockpiles(tradeRequest.getResource())
+        if (DataBase.getMyGovernment().getResourceInStockpiles(tradeRequest.getResource())
                 < tradeRequest.getAmount())
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
         else if (tradeRequest.getGovernmentThatRequested().freeStockpileSpace(tradeRequest.getResource())
@@ -50,10 +50,10 @@ public class TradeMenuController {
 
         else {
             //change stockpile and money
-            DataBase.getCurrentGovernment().removeFromStockpile(tradeRequest.getResource(), tradeRequest.getAmount());
+            DataBase.getMyGovernment().removeFromStockpile(tradeRequest.getResource(), tradeRequest.getAmount());
             tradeRequest.getGovernmentThatRequested().addToStockpile(tradeRequest.getResource() , tradeRequest.getAmount());
             //add to trade history and delete from tradeList
-            DataBase.getCurrentGovernment().addToTradeHistory(tradeRequest);
+            DataBase.getMyGovernment().addToTradeHistory(tradeRequest);
             selectedTradeRequest.setAccepted(1);
             allRequests.remove(tradeRequest);
 
@@ -78,10 +78,10 @@ public class TradeMenuController {
 
 
         governmentsInGameOtherThanCurrentUser = new ArrayList<>();
-        for (Government government : DataBase.getGame().getGovernmentsInGame()) {
-            if(!government.equals(DataBase.getCurrentGovernment()))
-                governmentsInGameOtherThanCurrentUser.add(government);
-        }
+//        for (Government government : DataBase.getGame().getMyGovernment()) { //TODO
+//            if(!government.equals(DataBase.getMyGovernment()))
+//                governmentsInGameOtherThanCurrentUser.add(government);
+//        }
 
         tradeNewRequestPane.setLayoutX(Game.leftX);
         tradeNewRequestPane.setLayoutY(0);
@@ -229,7 +229,7 @@ public class TradeMenuController {
             GameMenuController.getGame().requestAndDonatesCounter++;
             //add to history
             governmentToTrade.addToRequestsAskedFromMe(tradeRequest);
-            DataBase.getCurrentGovernment().addToRequestsIAsked(tradeRequest);
+            DataBase.getMyGovernment().addToRequestsIAsked(tradeRequest);
 
             tradeRequest.getGovernmentThatRequested().addToTradeHistory(tradeRequest);
             tradeRequest.getGovernmentThatHasBeenAsked().addToRequestNotification(tradeRequest);
@@ -273,7 +273,7 @@ public class TradeMenuController {
             return TradeMenuMessages.INVALID_GOVERNMENT_NAME;
         else if(itemAmount <= 0)
             return TradeMenuMessages.INVALID_AMOUNT;
-        else if (DataBase.getCurrentGovernment().getResourceInStockpiles(selectedItem) < itemAmount)
+        else if (DataBase.getMyGovernment().getResourceInStockpiles(selectedItem) < itemAmount)
             return TradeMenuMessages.NOT_ENOUGH_RESOURCE_IN_STOCKPILE;
         else if(message == null)
             return TradeMenuMessages.ENTER_MESSAGE;
@@ -283,13 +283,13 @@ public class TradeMenuController {
             GameMenuController.getGame().requestAndDonatesCounter++;
 
             // remove from my stockpile and add to theirs
-            DataBase.getCurrentGovernment().removeFromStockpile(selectedItem, itemAmount);
+            DataBase.getMyGovernment().removeFromStockpile(selectedItem, itemAmount);
             governmentToTrade.addToStockpile(selectedItem ,  itemAmount);
             System.out.println(governmentToTrade.getOwner().getUsername() + selectedItem.getName());
             // add to trade history
-            DataBase.getCurrentGovernment().addToRequestsIAsked(tradeRequest);
+            DataBase.getMyGovernment().addToRequestsIAsked(tradeRequest);
             governmentToTrade.addToRequestsAskedFromMe(tradeRequest);
-            DataBase.getCurrentGovernment().addToTradeHistory(tradeRequest);
+            DataBase.getMyGovernment().addToTradeHistory(tradeRequest);
             governmentToTrade.addToTradeHistory(tradeRequest);
             governmentToTrade.addToRequestNotification(tradeRequest);
 
@@ -390,8 +390,8 @@ public class TradeMenuController {
 
         Game.mainPane.getChildren().add(tradeMenuHistoryPane);
 
-        for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsIAsked().size() ; i++) {
-            TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsIAsked().get(i);
+        for (int i = 0; i < DataBase.getMyGovernment().getRequestsIAsked().size() ; i++) {
+            TradeRequest tradeRequest = DataBase.getMyGovernment().getRequestsIAsked().get(i);
             String text = "";
             Label label = new Label();
             label.setFont(new Font("American Typewriter" , 13));
@@ -439,8 +439,8 @@ public class TradeMenuController {
 
         Game.mainPane.getChildren().add(tradeMenuHistoryPane);
 
-        for (int i = 0; i < DataBase.getCurrentGovernment().getRequestsAskedFromMe().size() ; i++) {
-            TradeRequest tradeRequest = DataBase.getCurrentGovernment().getRequestsAskedFromMe().get(i);
+        for (int i = 0; i < DataBase.getMyGovernment().getRequestsAskedFromMe().size() ; i++) {
+            TradeRequest tradeRequest = DataBase.getMyGovernment().getRequestsAskedFromMe().get(i);
             tradeRequest.setSeenByTargetUser(true);
             String text = "";
             Label label = new Label();

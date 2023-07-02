@@ -1,4 +1,4 @@
-package Model.Units;
+package Model;
 
 public enum StateUnits {
     Stan_Ground,

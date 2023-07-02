@@ -17,9 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ChatController {
@@ -30,9 +28,10 @@ public class ChatController {
     public static  AnchorPane privateChatPane = new AnchorPane();
     public static AnchorPane chatRoomMenuPane = new AnchorPane();
     public static AnchorPane chatRoomPane = new AnchorPane();
-    private static Label selectedMessageToDelete= new Label();
-    private static Label selectedSenderNameToDelete = new Label();
-    private static ImageView selectedAvatarToDelete = new ImageView();
+    private static Label selectedPublicMessageToDeleteOrEdit = null;
+    private static Label selectedPrivateMessageToDeleteOrEdit = null;
+
+    private static Label selectedRoomMessageToDeleteOrEdit = null;
     public TextField privateChatContactUserName;
     public TextField user1Room;
     public TextField user2Room;
@@ -84,9 +83,7 @@ public class ChatController {
 
             messageText.setOnMouseClicked(event -> {
                 if(senderName.getText().equals(User.getCurrentUser().getUsername())){
-                    selectedMessageToDelete = messageText;
-                    selectedSenderNameToDelete = senderName;
-                    selectedAvatarToDelete = avatar;
+                    selectedPublicMessageToDeleteOrEdit = messageText;
                 }
             });
 
@@ -144,9 +141,7 @@ public class ChatController {
 
                 messageText.setOnMouseClicked(event -> {
                     if(senderName.getText().equals(User.getCurrentUser().getUsername())){
-                        selectedMessageToDelete = messageText;
-                        selectedSenderNameToDelete = senderName;
-                        selectedAvatarToDelete = avatar;
+                        selectedPrivateMessageToDeleteOrEdit = messageText;
                     }
                 });
 
@@ -175,17 +170,6 @@ public class ChatController {
     }
 
     public void backToChatMenu(MouseEvent mouseEvent) {
-    }
-
-    public void deleteMessageForEveryone(MouseEvent mouseEvent) {
-    }
-    public void deleteMessageForMe(MouseEvent mouseEvent){
-        if(selectedAvatarToDelete != null)
-            globalChatPane.getChildren().remove(selectedAvatarToDelete);
-        if(selectedMessageToDelete != null)
-            globalChatPane.getChildren().remove(selectedMessageToDelete);
-        if(selectedSenderNameToDelete != null)
-            globalChatPane.getChildren().remove(selectedSenderNameToDelete);
     }
 
     public void sendPrivateMessage(MouseEvent mouseEvent) {
@@ -267,9 +251,7 @@ public class ChatController {
 
                 messageText.setOnMouseClicked(event -> {
                     if(senderName.getText().equals(User.getCurrentUser().getUsername())){
-                        selectedMessageToDelete = messageText;
-                        selectedSenderNameToDelete = senderName;
-                        selectedAvatarToDelete = avatar;
+                        selectedRoomMessageToDeleteOrEdit = messageText;
                     }
                 });
 
@@ -308,5 +290,86 @@ public class ChatController {
         chatRoomMenuPane.setLayoutY(0);
         
         Game.mainPane.getChildren().add(chatRoomMenuPane);
+    }
+
+    public void deletePublicMessageForMe(MouseEvent mouseEvent) {
+        if(selectedPublicMessageToDeleteOrEdit != null) {
+            Request messageToDelete = Client.client.
+                    getPublicMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
+            Client.client.globalChats.remove(messageToDelete);
+        }
+    }
+
+    public void deleteRoomMessageForMe(MouseEvent mouseEvent) {
+        if(selectedRoomMessageToDeleteOrEdit != null) {
+            Request messageToDelete = Client.client.
+                    getRoomMessageByText(selectedRoomMessageToDeleteOrEdit.getText());
+            Client.client.roomChats.remove(messageToDelete);
+        }
+    }
+
+    public void deletePrivateMessageForMe(MouseEvent mouseEvent) {
+        if(selectedPrivateMessageToDeleteOrEdit != null){
+            Request messageToDelete = Client.client.
+                    getPrivateMessageByText(selectedPrivateMessageToDeleteOrEdit.getText());
+            Client.client.privateChats.remove(messageToDelete);
+        }
+    }
+
+    public void deletePrivateMessageForEveryone(MouseEvent mouseEvent) {
+        if(selectedPrivateMessageToDeleteOrEdit != null){
+            Request messageToDelete = Client.client.
+                    getPrivateMessageByText(selectedPrivateMessageToDeleteOrEdit.getText());
+            messageToDelete.setNormalRequest(NormalRequest.DELETE_PRIVATE_MESSAGE);
+            Client.client.sendRequestToServer(messageToDelete , false);
+        }
+    }
+
+    public void deleteRoomMessageForEveryone(MouseEvent mouseEvent) {
+        if(selectedRoomMessageToDeleteOrEdit != null) {
+            Request messageToDelete = Client.client.
+                    getRoomMessageByText(selectedRoomMessageToDeleteOrEdit.getText());
+            messageToDelete.setNormalRequest(NormalRequest.DELETE_ROOM_MESSAGE);
+            Client.client.sendRequestToServer(messageToDelete , false);
+        }
+    }
+
+    public void deletePublicMessageForEveryone(MouseEvent mouseEvent) {
+        if(selectedPublicMessageToDeleteOrEdit != null) {
+            Request messageToDelete = Client.client.
+                    getPublicMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
+            messageToDelete.setNormalRequest(NormalRequest.DELETE_PUBLIC_MESSAGE);
+            Client.client.sendRequestToServer(messageToDelete , false);
+        }
+    }
+
+    public void editRoomMessage(MouseEvent mouseEvent) {
+        if(selectedRoomMessageToDeleteOrEdit != null && messageText.getText() != null) {
+            Request messageToEdit = Client.client.
+                    getRoomMessageByText(selectedRoomMessageToDeleteOrEdit.getText());
+            messageToEdit.setNormalRequest(NormalRequest.EDIT_ROOM_MESSAGE);
+            messageToEdit.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(messageToEdit, false);
+        }
+    }
+
+    public void editGlobalMessage(MouseEvent mouseEvent) {
+        if(selectedPublicMessageToDeleteOrEdit != null && messageText.getText() != null) {
+            Request messageToEdit = Client.client.
+                    getPublicMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
+            messageToEdit.setNormalRequest(NormalRequest.EDIT_GLOBAL_MESSAGE);
+            messageToEdit.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(messageToEdit, false);
+        }
+    }
+
+    public void editPrivateMessage(MouseEvent mouseEvent) {
+        if(selectedPrivateMessageToDeleteOrEdit != null && messageText.getText() != null) {
+            Request messageToEdit = Client.client.
+                    getPrivateMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
+            messageToEdit.setNormalRequest(NormalRequest.EDIT_PRIVATE_MESSAGE);
+            messageToEdit.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(messageToEdit, false);
+        }
     }
 }

@@ -63,26 +63,26 @@ public class ShopMenuController {
 
     public void setItemsAmount(){
         
-        meatAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Meat"))));
-        cheeseAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Cheese"))));
-        appleAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Apples"))));
-        hopsAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Hops"))));
-        aleAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Ale"))));
-        wheatAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Wheat"))));
-        flourAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Flour"))));
-        breadAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Bread"))));
-        swordAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Sword"))));
-        spearAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Spear"))));
-        pikeAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Pike"))));
-        bowAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Bow"))));
-        maceAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Mace"))));
-        crossBowAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("CrossBow"))));
-        ironAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Iron"))));
-        woodAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Wood"))));
-        stoneAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Stone"))));
-        metalArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("MetalArmour"))));
-        leatherArmorAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("LeatherArmour"))));
-        pitchAmount.setText(Integer.toString(DataBase.getCurrentGovernment().getResourceInStockpiles(Resource.getResourceByName("Pitch"))));
+        meatAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Meat")));
+        cheeseAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Cheese")));
+        appleAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Apples")));
+        hopsAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Hops")));
+        aleAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Ale")));
+        wheatAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Wheat")));
+        flourAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Flour")));
+        breadAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Bread")));
+        swordAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Sword")));
+        spearAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Spear")));
+        pikeAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Pike")));
+        bowAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Bow")));
+        maceAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Mace")));
+        crossBowAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("CrossBow")));
+        ironAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Iron")));
+        woodAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Wood")));
+        stoneAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Stone")));
+        metalArmorAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("MetalArmour")));
+        leatherArmorAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("LeatherArmour")));
+        pitchAmount.setText(Integer.toString(DataBase.getMyGovernment().getResourceInStockpiles("Pitch")));
 
     }
 
@@ -104,13 +104,13 @@ public class ShopMenuController {
             }
         }
         int amountInt = 1;
-        if(DataBase.getCurrentGovernment().getMoney() < itemToBuy.getBuyPrice() * amountInt)
+        if(DataBase.getMyGovernment().getMoney() < itemToBuy.getBuyPrice() * amountInt)
             return ShopMenuMessages.NOT_ENOUGH_BALANCE;
-        else if(DataBase.getCurrentGovernment().freeStockpileSpace(itemToBuy) < amountInt)
+        else if(DataBase.getMyGovernment().freeStockpileSpace(itemToBuy) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE;
         else{
-            DataBase.getCurrentGovernment().changeMoney(-1 * amountInt * itemToBuy.getBuyPrice());
-            DataBase.getCurrentGovernment().addToStockpile(itemToBuy , amountInt);
+            DataBase.getMyGovernment().changeMoney(-1 * amountInt * itemToBuy.getBuyPrice());
+            DataBase.getMyGovernment().addToStockpile(itemToBuy , amountInt);
             return ShopMenuMessages.BUY_ITEM_SUCCESS;
         }
 
@@ -129,11 +129,11 @@ public class ShopMenuController {
 
         int amountInt = 1;
 
-        if(DataBase.getCurrentGovernment().getResourceInStockpiles(itemToSell) < amountInt)
+        if(DataBase.getMyGovernment().getResourceInStockpiles(itemToSell) < amountInt)
             return ShopMenuMessages.NOT_ENOUGH_ITEM_IN_STOCKPILE;
         else{
-            DataBase.getCurrentGovernment().removeFromStockpile(itemToSell , amountInt);
-            DataBase.getCurrentGovernment().changeMoney(itemToSell.getSellPrice() * amountInt);
+            DataBase.getMyGovernment().removeFromStockpile(itemToSell , amountInt);
+            DataBase.getMyGovernment().changeMoney(itemToSell.getSellPrice() * amountInt);
             return ShopMenuMessages.SELL_ITEM_SUCCESS;
         }
 
@@ -188,7 +188,7 @@ public class ShopMenuController {
         setItemsAmount();
         GameGraphicController.setPopularityGoldPopulation();
     }
-    
+
         public void selectApples (MouseEvent mouseEvent){
             setItemsAmount();
             selectedItem = Resource.getResourceByName("Apples");

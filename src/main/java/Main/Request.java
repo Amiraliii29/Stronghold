@@ -9,6 +9,7 @@ public class Request {
     private final String token;
     public GameRequest gameRequest;
     public NormalRequest normalRequest;
+    public ResultEnums resultEnums;
     public HashMap<String, String> argument;
 
 
@@ -27,11 +28,19 @@ public class Request {
     public Request(GameRequest gameRequest) {
         this.gameRequest = gameRequest;
         this.normalRequest = null;
+        this.resultEnums = null;
     }
 
     public Request(NormalRequest normalRequest) {
         this.gameRequest = null;
         this.normalRequest = normalRequest;
+        this.resultEnums = null;
+    }
+
+    public Request(ResultEnums resultEnums) {
+        this.resultEnums = resultEnums;
+        this.gameRequest = null;
+        this.normalRequest = null;
     }
 
 
@@ -51,5 +60,13 @@ public class Request {
 
     public static Request fromJson(String json) {
         return new Gson().fromJson(json, Request.class);
+    }
+
+    public void setNormalRequest(NormalRequest normalRequest) {
+        this.normalRequest = normalRequest;
+    }
+
+    public void setGameRequest(GameRequest gameRequest) {
+        this.gameRequest = gameRequest;
     }
 }

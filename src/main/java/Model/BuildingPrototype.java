@@ -88,9 +88,9 @@ public class BuildingPrototype {
 
         Client.client.sendRequestToServer(request, true);
 
-        Result result = Result.fromJson(Client.client.getRecentResponse());
+        Request result = Request.fromJson(Client.client.getRecentResponse());
 
-        return  fromJson(result.arguments.get("fake"));
+        return  fromJson(result.argument.get("fake"));
     }
 
 

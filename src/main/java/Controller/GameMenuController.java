@@ -2,7 +2,6 @@ package Controller;
 
 import Main.*;
 import Model.*;
-import Model.Units.*;
 import View.Controller.BuildingInfo;
 import View.Game;
 import javafx.scene.control.Alert;
@@ -68,18 +67,18 @@ public class GameMenuController {
             return null ;
         }
 
-        ArrayList<ArrayList<Unit>> allUnits = new ArrayList<>();
+        ArrayList<ArrayList<UnitPrototype>> allUnits = new ArrayList<>();
 
         for (java.util.Map.Entry<String, Integer> set : unitNameAndCount.entrySet()) {
             ArrayList<Square> squaresChecked = new ArrayList<>();
 
-            for (Unit unit : DataBase.getSelectedUnit()) {
+            for (UnitPrototype unit : DataBase.getSelectedUnit()) {
                 if (!unit.getName().equals(set.getKey()) || squaresChecked.contains(unit.getSquare())) continue;
 
                 squaresChecked.add(unit.getSquare());
-                ArrayList<Unit> selectedUnit = new ArrayList<>();
+                ArrayList<UnitPrototype> selectedUnit = new ArrayList<>();
 
-                for (Unit squareUnit : unit.getSquare().getUnits()) {
+                for (UnitPrototype squareUnit : unit.getSquare().getUnits()) {
                     if (set.getValue() == 0) break;
                     if (!squareUnit.getName().equals(set.getKey())) continue;
 
@@ -94,6 +93,10 @@ public class GameMenuController {
         return allUnits;
     }
 
+    public static ArrayList<Square> moveUnit(UnitPrototype unit, int squareI, int squareJ) {
+        return null;//TODO
+    }
+
 
 
 
@@ -104,11 +107,11 @@ public class GameMenuController {
 
         client.sendRequestToServer(request, true);
 
-        Result result = Result.fromJson(client.getRecentResponse());
+        Request result = Request.fromJson(client.getRecentResponse());
 
         switch (result.resultEnums) {
             case SUCCESS -> {
-                BuildingPrototype building = BuildingPrototype.fromJson(result.arguments.get("buildingPrototype"));
+                BuildingPrototype building = BuildingPrototype.fromJson(result.argument.get("buildingPrototype"));
                 map.constructBuilding(building, building.x, building.y);
                 game.drawMap();
             }
@@ -123,5 +126,56 @@ public class GameMenuController {
 
 
     public static void AttackBySelectedUnits(String valueOf, String valueOf1) {
+    }
+
+
+    public static void createUnitController(String name) {
+        Request request = new Request(GameRequest.CREATE_UNIT_IN_BUILDING);
+        request.argument.put("name", name);
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void createUnit(String name, int x, int y, int cnt) {
+        Request request = new Request(GameRequest.CREATE_UNIT);
+        request.argument.put("name", name);
+        request.argument.put("x", String.valueOf(x));
+        request.argument.put("y", String.valueOf(y));
+        request.argument.put("count", String.valueOf(cnt));
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void setUnitModeController(String mode) {
+        Request request = new Request(GameRequest.CHANGE_UNIT_STATE);
+        request.argument.put("changeUnitState", mode);
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void disbandUnit() {
+        Request request = new Request(GameRequest.DISBAND);
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void repair() {
+        Request request = new Request(GameRequest.REPAIR);
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void modifyGates(boolean b) {
+        Request request = new Request(GameRequest.MODIFY_GATE);
+        request.argument.put("modify", String.valueOf(b));
+
+        client.sendRequestToServer(request, false);
+    }
+
+    public static void changeProduct(String product) {
+        Request request = new Request(GameRequest.CHANGE_PRODUCT);
+        request.argument.put("changeProduct", product);
+
+        client.sendRequestToServer(request, false);
     }
 }

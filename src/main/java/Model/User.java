@@ -4,7 +4,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -19,7 +18,6 @@ public class User {
     private static User currentUser;
     private static SecureRandom randomGenerator=new SecureRandom();
     private static ArrayList<User> users;
-
     private ArrayList<User> friends;
     private ArrayList<User> usersWithFriendRequest;
     private String avatarFileName;
@@ -218,31 +216,22 @@ public class User {
         currentUser=user;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickName, user.nickName) && Objects.equals(email, user.email) && Objects.equals(slogan, user.slogan) && Objects.equals(securityQuestion, user.securityQuestion);
-    }
 
     public static void getUsersFromServer(){
         Request request=new Request(NormalRequest.GET_USERS_DATA);
         Client.client.sendRequestToServer(request, true);
-        System.out.println("sex");
         String result=Client.client.getRecentResponse();
 
         users.clear();
         users= new Gson().fromJson(result, new TypeToken<List<User>>(){}.getType());
-        
-        
+
         if(ProfileMenu.profileMenu!=null)
-            if(ProfileMenu.profileMenu.isMenuDisplayed){
-            if(ProfileMenu.profileMenu.isProfileShown)
-                ProfileMenu.profileMenu.showProfileProtocol();
-            else 
-                ProfileMenu.profileMenu.showScoreBoardProtocol();
-            }
+            if(ProfileMenu.profileMenu.isMenuDisplayed)
+                if(ProfileMenu.profileMenu.isProfileShown)
+                    ProfileMenu.profileMenu.showProfileProtocol();
+                 else
+                    ProfileMenu.profileMenu.showScoreBoardProtocol();
+            
     }
 
     public static void setUsersFromJson(String usersInJson){
@@ -253,10 +242,10 @@ public class User {
     public static void sendFriendRequest(User targetFriend){
 
         if(targetFriend.getFriends().contains(currentUser) ||
-           targetFriend.getUsersWithFriendRequest().contains(currentUser)){
-                Orders.createNotificationDialog("Result","Friend Request Delivery:","Error: you are either already friends with user or have sent a friend request!",Orders.yellowNotifErrorColor);
-                return;
-           }
+                targetFriend.getUsersWithFriendRequest().contains(currentUser)){
+            Orders.createNotificationDialog("Result","Friend Request Delivery:","Error: you are either already friends with user or have sent a friend request!",Orders.yellowNotifErrorColor);
+            return;
+        }
 
         targetFriend.getUsersWithFriendRequest().add(currentUser);
         Request request=new Request(NormalRequest.SEND_FRIEND_REQUSET);
@@ -279,5 +268,15 @@ public class User {
 
     public static ArrayList<User> getUsers() {
         return users;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(nickName, user.nickName) && Objects.equals(email, user.email) && Objects.equals(slogan, user.slogan) && Objects.equals(securityQuestion, user.securityQuestion);
     }
 }

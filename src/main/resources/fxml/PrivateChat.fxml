@@ -17,7 +17,7 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#86682d" height="29.0" layoutX="70.0" layoutY="485.0" stroke="BLACK" strokeType="INSIDE" width="369.0" />
-      <TextField fx:id="messageText" layoutX="69.0" layoutY="485.0" prefHeight="29.0" prefWidth="342.0" />
+      <TextField fx:id="messageText" layoutX="69.0" layoutY="485.0" prefHeight="29.0" prefWidth="316.0" />
       <ImageView fitHeight="29.0" fitWidth="36.0" layoutX="410.0" layoutY="485.0" onMouseClicked="#sendPrivateMessage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/menu-backgrounds/sendButton.png" />
@@ -29,15 +29,20 @@
          </font>
       </Label>
       <ImageView fitHeight="29.0" fitWidth="29.0" layoutX="71.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="18.0" fitWidth="100.0" layoutX="354.0" layoutY="528.0" onMouseClicked="#deleteMessageForMe" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="18.0" fitWidth="100.0" layoutX="354.0" layoutY="528.0" onMouseClicked="#deletePrivateMessageForMe" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/Icon/deleteForMe.png" />
          </image>
       </ImageView>
       <Button layoutX="73.0" layoutY="37.0" mnemonicParsing="false" onMouseClicked="#backToChatMenu" text="Back" />
-      <ImageView fitHeight="18.0" fitWidth="100.0" layoutX="268.0" layoutY="528.0" onMouseClicked="#deleteMessageForEveryone" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="18.0" fitWidth="100.0" layoutX="268.0" layoutY="528.0" onMouseClicked="#deletePrivateMessageForEveryone" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/Icon/deleteForEveryone.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="29.0" layoutX="385.0" layoutY="487.0" onMouseClicked="#editPrivateMessage" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Icon/editImage.png" />
          </image>
       </ImageView>
    </children>
