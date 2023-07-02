@@ -34,9 +34,12 @@ public class Client {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
         client = this;
+
         serverResponseListener = new ServerResponseListener(dataInputStream, client);
         serverResponseListener.start();
     }
+
+
 
     public void sendRequestToServer(Request request, boolean waitForResponse) {
         try {

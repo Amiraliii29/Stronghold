@@ -1,5 +1,8 @@
 package Model;
 
+import Main.Request;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 public class UnitPrototype {
@@ -101,6 +104,13 @@ public class UnitPrototype {
     public void setCoordinate(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+
+
+    public static void fillUnitsName(String json) {
+        Gson gson = new Gson();
+        unitsName = gson.fromJson(json, ArrayList.class);
     }
 
 

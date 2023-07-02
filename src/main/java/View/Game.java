@@ -87,17 +87,17 @@ public class Game extends Application{
 
 
     static {
-        try {
-            loadImages();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
         tiles = new HashMap<>();
         units = new HashMap<>();
         buildings = new HashMap<>();
         trees = new HashMap<>();
         resources = new HashMap<>();
+
+        try {
+            loadImages();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         screenWidth = 1115;
