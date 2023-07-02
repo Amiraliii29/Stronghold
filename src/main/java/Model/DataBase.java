@@ -3,7 +3,6 @@ package Model;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import Model.Units.Unit;
 import View.Game;
 import View.LoginMenu;
 import javafx.scene.input.Clipboard;
@@ -88,9 +87,6 @@ public class DataBase {
 
 
 
-    public static boolean isUnitFriendly(Government owner, Unit unit) {
-        return owner.equals(unit.getOwner());
-    }
 
     public static boolean isBuildingFriendly(Government owner, BuildingPrototype building) {
         String ownerUsername = owner.getOwner().getUsername();
