@@ -5,18 +5,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import Model.Map;
 import Model.User;
 
 public class ServerResponseListener extends Thread {
 
     private DataInputStream dataInputStream;
     private boolean isResponseReceived;
+    private boolean specific;
     Client client;
 
     public ServerResponseListener(DataInputStream dataInputStream, Client client) {
         this.dataInputStream = dataInputStream;
         this.client = client;
         this.setDaemon(true);
+        specific = false;
         try {
             String token = dataInputStream.readUTF();
             Request.setUserToken(token);
@@ -31,8 +34,9 @@ public class ServerResponseListener extends Thread {
         while (true) {
             try {
                 response = dataInputStream.readUTF();
-                if (!handleResponse(response))
+                if (!handleResponse(response) && !specific)
                     client.setRecentResponse(response);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,8 +45,6 @@ public class ServerResponseListener extends Thread {
 
 
     private boolean handleResponse(String response) {
-
-
         if (!response.contains("AUTO")) {
             setResponseReceived(true);
             return false;
@@ -117,5 +119,9 @@ public class ServerResponseListener extends Thread {
 
     public boolean isResponseReceived() {
         return isResponseReceived;
+    }
+
+    public void changeSpecific() {
+        specific = !specific;
     }
 }

@@ -6,6 +6,7 @@ module Project {
     requires json.simple;
     requires java.transaction.xa;
     requires jdk.security.auth;
+    requires com.fasterxml.jackson.databind;
 
     exports Model;
     opens Model to com.google.gson;
