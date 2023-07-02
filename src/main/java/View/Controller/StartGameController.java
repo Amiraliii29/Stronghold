@@ -2,8 +2,6 @@ package View.Controller;
 
 import Controller.GameMenuController;
 import Model.*;
-import Model.Buildings.Building;
-import Model.Units.Unit;
 import View.Game;
 import View.MainMenu;
 import View.SignUpMenu;
@@ -24,8 +22,6 @@ public class StartGameController {
 
     public void startGame(MouseEvent mouseEvent) throws Exception {
 
-        Unit.load();
-        Building.load();
         Resource.load();
         Game.loadImages();
 
