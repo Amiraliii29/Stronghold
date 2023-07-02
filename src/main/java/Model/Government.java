@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.GameMenuController;
 import Model.Buildings.Building;
 import Model.Buildings.Generator;
 import Model.Buildings.Stockpile;
@@ -13,6 +14,7 @@ import java.util.Objects;
 
 public class Government {
     private final DataBase dataBase;
+    public final GameMenuController gameMenuController;
     private final ArrayList<Stockpile> stockpiles;
     private final ArrayList<Stockpile> armoury;
     private final ArrayList<Stockpile> granary;
@@ -48,7 +50,8 @@ public class Government {
         requestsIAsked = new ArrayList<>();
     }
 
-    public  Government(DataBase dataBase, double money) {
+    public  Government(DataBase dataBase, GameMenuController gameMenuController, double money) {
+        this.gameMenuController = gameMenuController;
         this.dataBase = dataBase;
         this.money = money;
         this.food = 0;

@@ -2,7 +2,6 @@ package Model;
 
 import Main.Client;
 import Main.Request;
-import Main.Result;
 import Main.UserDataBase;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,11 +11,11 @@ import java.util.ArrayList;
 
 public class DataBase {
     // for each game :
+    private static ArrayList<Client> allClients;
     private final ArrayList<Client> clients;
     private final ArrayList<Government> governments;
     private final Map selectedMap;
     private final Timeline produceTimeline;
-    private static ArrayList<Client> allClients;
 
 
     public DataBase(Map selectedMap) {
@@ -41,7 +40,7 @@ public class DataBase {
 
 
     public void addClient(Client client) {
-        Government government = new Government(this ,0);
+        Government government = new Government(this , client.getUserDataBase().getGameMenuController(), 0);
         government.setOwner(client.getUser());
 
         UserDataBase userDataBase = new UserDataBase(client, government, this);
