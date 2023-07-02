@@ -1,12 +1,17 @@
 package Model;
 
+import java.lang.reflect.Type;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import Controller.JsonConverter;
+import Controller.UserInfoOperator;
 import Main.Client;
 import Main.Request;
 
@@ -30,7 +35,6 @@ public class User {
 
     static {
         users = new ArrayList<>();
-        JsonConverter.fillFormerUsersDatabase("src/main/resources/jsonData/Users.json");
     }
 
     public User(String username, String password, String nickname,String email, String slogan) {
@@ -144,6 +148,14 @@ public class User {
         return friends;
     }
 
+    public boolean isOnline(){
+        return isOnline;
+    }
+
+    public void setOnline(boolean status){
+        isOnline=status; 
+    }
+
     public ArrayList<User> getUsersWithFriendRequest(){
         return usersWithFriendRequest;
     }
@@ -155,8 +167,13 @@ public class User {
     public static void handleFriendRequest(Request request){
         Gson gson=new Gson();
         User sender=gson.fromJson(request.argument.get("Sender"), User.class);
-        User reciever=gson.fromJson(request.argument.get("Reviever"), User.class);
+        User reciever=gson.fromJson(request.argument.get("Reciever"), User.class);
         reciever.addToFriendRequests(sender);
+        try {
+            UserInfoOperator.storeUserDataInJson(reciever, "src/main/resources/jsonData/Users.json");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         Client.updateAllClientsData();
     }
 
@@ -166,6 +183,11 @@ public class User {
         User reciever=gson.fromJson(request.argument.get("User2"), User.class);
         sender.addToFriends(reciever);
         reciever.addToFriends(sender);
+        try {
+            UserInfoOperator.storeUserDataInJson(reciever, "src/main/resources/jsonData/Users.json");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         Client.updateAllClientsData();
     }
 
@@ -184,6 +206,13 @@ public class User {
         return null;
     }
 
+    public static void handleLogin(String username,Client client){
+        User user=getUserByUserName(username);
+        client.setUser(user);
+        user.setOnline(true);
+        Client.updateAllClientsData();
+    }
+
     public static ArrayList<User> getUsers() {
         return users;
     }
@@ -198,6 +227,7 @@ public class User {
 
     public static String handleGetUsersRequest(){
         String response=new Gson().toJson(users);
+        System.out.println(response);
         return response;
     }
 

@@ -31,6 +31,7 @@ public class Client extends Thread{
     private UserDataBase userDataBase;
 
 
+
     public Client(Socket socket) throws IOException {
         this.socket = socket;
         dataInputStream = new DataInputStream(socket.getInputStream());
@@ -45,13 +46,15 @@ public class Client extends Thread{
         try {
             dataOutputStream.writeUTF(token);
 
+            System.out.println("waitiiiiing");
             String json = dataInputStream.readUTF();
             Request request = Request.fromJson(json);
 
-            while (!request.verify(token)) {
-                json = dataInputStream.readUTF();
-                request = Request.fromJson(json);
-            }
+            // while (!request.verify(token)) {
+            //     System.out.println("lollllllllllllll");
+            //     json = dataInputStream.readUTF();
+            //     request = Request.fromJson(json);
+            // }
 
             while (!request.normalRequest.equals(NormalRequest.CLOSE)) {
 
@@ -60,10 +63,10 @@ public class Client extends Thread{
                 json = dataInputStream.readUTF();
                 request = Request.fromJson(json);
 
-                while (!request.verify(token)) {
-                    json = dataInputStream.readUTF();
-                    request = Request.fromJson(json);
-                }
+                // while (!request.verify(token)) {
+                //     json = dataInputStream.readUTF();
+                //     request = Request.fromJson(json);
+                // }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -78,6 +81,9 @@ public class Client extends Thread{
         if(request.normalRequest.equals(NormalRequest.SIGNUP))
             result=SignUpMenuController.handleSignupRequest(request.argument,this);
 
+        else if(request.normalRequest.equals(NormalRequest.LOGIN))
+            User.handleLogin(request.argument.get("Username"), this);
+
         else if(request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
             result=ProfileMenuController.handleProfileFieldsChange(request.argument,user);
         
@@ -90,14 +96,14 @@ public class Client extends Thread{
         else if(request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME))
             result=new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
 
-        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA) )
-            result=new Gson().toJson(User.handleGetUsersRequest());
+        else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) )
+            result=User.handleGetUsersRequest();
 
         else if(request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
             User.handleFriendRequest(request);
 
         else if(request.normalRequest.equals(NormalRequest.SUBMIT_FRIENDSHIP))
-            User.handleFriendRequest(request);
+            User.handleSubmitFriendship(request);
 
         else if(request.normalRequest.equals(NormalRequest.SEND_GLOBAL_MESSAGE))
             sendGlobalMessage(request);
@@ -108,9 +114,6 @@ public class Client extends Thread{
         else if(request.normalRequest.equals(NormalRequest.CREATE_ROOM))
             createRoom(request);
         //TODO: FILL THE REST;
-
-
-
 
         try {
             dataOutputStream.writeUTF(result);
@@ -166,7 +169,6 @@ public class Client extends Thread{
             allClient.getDataOutputStream().writeUTF("AUTO" + requestToSend.toJson());
         }
     }
-
 
     public Socket getSocket() {
         return socket;
@@ -292,12 +294,12 @@ public class Client extends Thread{
         }  
     }
 
-
     public static void updateAllClientsData(){
         Gson gson=new Gson();
         for (Client client : DataBase.getAllClients()) 
             try {
                 Request req=new Request(null, NormalRequest.UPDATE_YOUR_DATA);
+                req.argument.put("Users", gson.toJson(User.getUsers()));
                 client.dataOutputStream.writeUTF("AUTO"+gson.toJson(req));
             } catch (IOException e) {
                 e.printStackTrace();

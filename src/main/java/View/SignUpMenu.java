@@ -140,14 +140,14 @@ public class SignUpMenu extends Application {
         if(!checkSecurityValue(securityAnswer, true))
             proceed=false;
         
-        if(proceed)
-            try {
-                SignUpMenuController.createUserController(username, passWord, nickname, passWord, email, slogan, securityAnswer);
-                new LoginMenu().start(stage);
-            } catch ( Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        // if(proceed)
+        //     try {
+        //         SignUpMenuController.createUserController(username, passWord, nickname, passWord, email, slogan, securityAnswer);
+        //         new LoginMenu().start(stage);
+        //     } catch ( Exception e) {
+        //         // TODO Auto-generated catch block
+        //         e.printStackTrace();
+        //     }
     }
 
     private void setVisibleFieldsBoinds(){

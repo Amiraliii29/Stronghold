@@ -19,6 +19,11 @@ public class DataBase {
     private static ArrayList<Client> allClients;
 
 
+    
+    static{
+     allClients=new ArrayList<>();   
+    }
+
     public DataBase(Map selectedMap) {
         clients = new ArrayList<>();
         governments = new ArrayList<>();
