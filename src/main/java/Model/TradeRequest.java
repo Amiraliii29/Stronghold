@@ -35,7 +35,7 @@ public class TradeRequest {
         this.amount = amount;
         this.price = price;
         this.message = message;
-//        this.governmentThatRequested = DataBase.getCurrentGovernment();
+        this.governmentThatRequested = DataBase.getMyGovernment();
         this.governmentThatHasBeenAsked = governmentThatHasBeenAsked;
         this.id = id;
         this.isDonate = isDonate;
