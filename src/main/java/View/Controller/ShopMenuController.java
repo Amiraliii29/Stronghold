@@ -145,6 +145,7 @@ public class ShopMenuController {
     }
 
     public void buy(MouseEvent mouseEvent) {
+        if (selectedItem == null) return;
         ShopMenuMessages message = buyItemByNameController(selectedItem.getName());
         switch (message){
             case NO_ITEM_SELECTED -> {
@@ -169,6 +170,8 @@ public class ShopMenuController {
     }
 
     public void sell(MouseEvent mouseEvent) {
+        if (selectedItem == null) return;
+
         ShopMenuMessages message = sellItemByNameController(selectedItem.getName());
 
         switch (message){
