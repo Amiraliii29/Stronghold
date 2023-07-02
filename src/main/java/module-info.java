@@ -20,10 +20,6 @@ module Project {
     exports Controller;
     opens Controller to com.google.gson;
 
-    exports View;
-    opens View to com.google.gson, javafx.fxml;
-    exports View.Controller;
-    opens View.Controller to com.google.gson, javafx.fxml;
     exports Main;
     opens Main to com.google.gson, javafx.fxml;
 }

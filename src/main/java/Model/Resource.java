@@ -1,9 +1,7 @@
 package Model;
 
-import View.Controller.ShopMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -42,17 +40,14 @@ public class Resource {
         for (Resource resource : resources) {
             resourcesName.add(resource.getName());
             allResources.add(resource);
-            ShopMenuController.addItem(resource);
         }
         for (Resource food : foods) {
             foodsName.add(food.getName());
             allResources.add(food);
-            ShopMenuController.addItem(food);
         }
         for (Resource weapon : weapons) {
             weaponsName.add(weapon.getName());
             allResources.add(weapon);
-            ShopMenuController.addItem(weapon);
         }
     }
 

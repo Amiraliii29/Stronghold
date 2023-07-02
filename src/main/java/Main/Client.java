@@ -10,7 +10,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Arrays;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import Controller.ProfileMenuController;
@@ -43,15 +42,13 @@ public class Client extends Thread {
         try {
             dataOutputStream.writeUTF(token);
 
-            System.out.println("waitiiiiing");
             String json = dataInputStream.readUTF();
             Request request = Request.fromJson(json);
 
-            // while (!request.verify(token)) {
-            //     System.out.println("lollllllllllllll");
-            //     json = dataInputStream.readUTF();
-            //     request = Request.fromJson(json);
-            // }
+             while (!request.verify(token)) {
+                 json = dataInputStream.readUTF();
+                 request = Request.fromJson(json);
+             }
 
             requestHandler(request);
 
@@ -59,10 +56,6 @@ public class Client extends Thread {
                 json = dataInputStream.readUTF();
                 request = Request.fromJson(json);
 
-                // while (!request.verify(token)) {
-                //     json = dataInputStream.readUTF();
-                //     request = Request.fromJson(json);
-                // }
                 while (!request.verify(token)) {
                     json = dataInputStream.readUTF();
                     request = Request.fromJson(json);

@@ -1,12 +1,9 @@
 package Model;
 
-import Controller.DeleteGameMenuController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import Model.Buildings.Building;
 import Model.Units.Unit;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
