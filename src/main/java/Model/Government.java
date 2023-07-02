@@ -6,7 +6,6 @@ import Model.Buildings.Generator;
 import Model.Buildings.Stockpile;
 import Model.Buildings.TownBuilding;
 import Model.Units.Troop;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,6 @@ public class Government {
     private final ArrayList<Stockpile> granary;
     private final HashMap<String, Integer> resourceGenerationRate;
     private final ArrayList<Building> buildings;
-    private final ArrayList<TradeRequest> requestsAskedFromMe;
-    private final ArrayList<TradeRequest> requestsIAsked;
-    private final ArrayList<TradeRequest> tradeHistory;
-    private final ArrayList<TradeRequest> requestNotifications;
     private User owner;
     private int popularity;
     private int maxPopulation;
@@ -44,10 +39,6 @@ public class Government {
         granary = new ArrayList<>();
         buildings = new ArrayList<>();
         resourceGenerationRate = new HashMap<>();
-        requestsAskedFromMe = new ArrayList<>();
-        tradeHistory = new ArrayList<>();
-        requestNotifications = new ArrayList<>();
-        requestsIAsked = new ArrayList<>();
     }
 
     public  Government(DataBase dataBase, GameMenuController gameMenuController, double money) {
@@ -179,22 +170,6 @@ public class Government {
         this.buildings.add(building);
     }
 
-    public void addToRequestsAskedFromMe(TradeRequest tradeRequest) {
-        requestsAskedFromMe.add(tradeRequest);
-    }
-
-    public void addToTradeHistory(TradeRequest tradeRequest) {
-        tradeHistory.add(tradeRequest);
-    }
-
-    public void addToRequestNotification(TradeRequest tradeRequest) {
-        requestNotifications.add(tradeRequest);
-    }
-
-    public void addToRequestsIAsked(TradeRequest tradeRequest){
-        requestsIAsked.add(tradeRequest);
-    }
-
     public void removeFromResourceGenerationRate(String resource, int cnt) {
         if (!resourceGenerationRate.containsKey(resource)) return;
 
@@ -215,22 +190,6 @@ public class Government {
 
     public ArrayList<Building> getBuildings() {
         return buildings;
-    }
-
-    public ArrayList<TradeRequest> getRequestsAskedFromMe() {
-        return requestsAskedFromMe;
-    }
-
-    public ArrayList<TradeRequest> getTradeHistory() {
-        return tradeHistory;
-    }
-
-    public ArrayList<TradeRequest> getRequestNotifications() {
-        return requestNotifications;
-    }
-
-    public ArrayList<TradeRequest> getRequestsIAsked() {
-        return requestsIAsked;
     }
 
     public HashMap<String, Integer> getResourceGenerationRates() {
@@ -397,14 +356,6 @@ public class Government {
             previousValue = resourceGenerationRate.get(resourceType);
 
         resourceGenerationRate.put(resourceType, previousValue + addedGenerationValue);
-    }
-
-    public TradeRequest getRequestById(int id) {
-        for (TradeRequest tradeRequest : requestsAskedFromMe) {
-            if (tradeRequest.getId() == id)
-                return tradeRequest;
-        }
-        return null;
     }
 
     public void changeFreeWorkers(int addedWorkers) {
