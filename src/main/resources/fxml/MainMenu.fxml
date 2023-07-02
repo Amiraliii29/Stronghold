@@ -6,30 +6,34 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxWidth="680.0" prefHeight="390.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainMenuController">
+<AnchorPane maxWidth="680.0" prefHeight="390.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainMenuController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="540.0" layoutY="-4.0" opacity="0.88" preserveRatio="true">
          <image>
             <Image url="@../Images/menu-backgrounds/mainMenu.jpg" />
          </image>
       </ImageView>
-      <Button layoutX="369.0" layoutY="97.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Start Game!" onMouseClicked="#startGame">
+      <Button layoutX="369.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#startGame" prefHeight="26.0" prefWidth="120.0" text="Start Game!">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="396.0" layoutY="183.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Map Menu" onMouseClicked="#openMapMenu">
+      <Button layoutX="396.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#openMapMenu" prefHeight="26.0" prefWidth="90.0" text="Map Menu">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="45.0" layoutY="97.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Profile Menu" onMouseClicked="#openProfileMenu">
+      <Button layoutX="45.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#openProfileMenu" prefHeight="26.0" prefWidth="120.0" text="Profile Menu">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="48.0" layoutY="184.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="86.0" text="Logout" onMouseClicked="#logout">
+      <Button layoutX="48.0" layoutY="184.0" mnemonicParsing="false" onMouseClicked="#logout" prefHeight="26.0" prefWidth="86.0" text="Logout">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="387.0" layoutY="252.0" mnemonicParsing="false" onMouseClicked="#openChatMenu" text="Chat Menu">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
