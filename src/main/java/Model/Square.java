@@ -1,17 +1,21 @@
 package Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
     private static final HashMap<String, Boolean> canPass;
+    @JsonIgnore
     private transient ArrayList<UnitPrototype> units;
+    @JsonIgnore
     private transient BuildingPrototype building;
     private Land land;
     private Trees tree;
     private int treeAmount;
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
 
     static {

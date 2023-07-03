@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import Model.BuildingPrototype;
+import Model.UnitPrototype;
 import com.google.gson.Gson;
 
 import Model.User;
@@ -17,8 +19,8 @@ import javafx.util.Duration;
 public class Client {
     public static Client client;
     private String recentResponse;
-    private final DataOutputStream dataOutputStream;
-    private final DataInputStream dataInputStream;
+    public final DataOutputStream dataOutputStream;
+    public final DataInputStream dataInputStream;
     public final ServerResponseListener serverResponseListener;
     private final Socket socket;
     public ArrayList<Request> globalChats = new ArrayList<>();
@@ -34,6 +36,14 @@ public class Client {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         dataInputStream = new DataInputStream(socket.getInputStream());
         client = this;
+
+        String token = dataInputStream.readUTF();
+        Request.setUserToken(token);
+
+        UnitPrototype.fillUnitsName(dataInputStream.readUTF());
+
+        String json = dataInputStream.readUTF();
+        BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
 
         serverResponseListener = new ServerResponseListener(dataInputStream, client);
         serverResponseListener.start();
