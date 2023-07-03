@@ -84,7 +84,8 @@ public class DataBase {
     public static ArrayList<Client> getAllClients() {
         return allClients;
     }
-    public static Client getClientByUserName(String  userName){
+
+    public static Client getClientByUserName(String userName){
         for (Client allClient : allClients) {
             if(allClient.getUser().getUsername().equals(userName))
                 return allClient;
