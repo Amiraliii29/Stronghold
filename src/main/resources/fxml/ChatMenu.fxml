@@ -30,11 +30,16 @@
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onMouseClicked="#enterChatRoomMenu" prefHeight="26.0" prefWidth="94.0" text="Room">
+      <Button layoutX="105.0" layoutY="223.0" mnemonicParsing="false" onMouseClicked="#enterChatRoomMenu" prefHeight="26.0" prefWidth="94.0" text="Room">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>
       </Button>
       <TextField fx:id="privateChatContactUserName" layoutX="72.0" layoutY="158.0" promptText="Private Chat Contact" />
+      <Button layoutX="128.0" layoutY="259.0" mnemonicParsing="false" onMouseClicked="#backToMainMenu" text="Back">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

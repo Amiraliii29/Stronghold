@@ -14,6 +14,9 @@ public enum GameRequest {
     CHANGE_MONEY,
     ADD_TO_STOCKPILE,
     REMOVE_FROM_STOCKPILE,
+    SELECT_UNITS,
+    SELECT_BUILDING,
+    MOVE_UNIT,
 
 
     ;

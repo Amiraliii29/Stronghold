@@ -1,11 +1,6 @@
 package Main;
 
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import View.Lobby;
-import View.Game;
 import View.SignUpMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -25,10 +20,5 @@ public class Main extends Application{
     @Override
     public void start(Stage stage) throws Exception {
        new SignUpMenu().start(stage);
-    }
-
-
-    private static void load() throws FileNotFoundException {
-        Game.loadImages();
     }
 }

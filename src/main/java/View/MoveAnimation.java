@@ -25,7 +25,7 @@ public class MoveAnimation {
         this.units = units;
         unit = units.get(0);
 
-        squares = GameMenuController. moveUnit(unit, squareI, squareJ);
+        squares = GameMenuController.moveUnit(unit, squareI, squareJ);
 
         timeline = new Timeline(new KeyFrame(Duration.millis(2000.0 / unit.getSpeed()), actionEvent -> {
             move();

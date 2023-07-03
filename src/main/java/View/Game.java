@@ -2,6 +2,9 @@ package View;
 
 import Controller.CustomizeMapController;
 import Controller.GameMenuController;
+import Main.Client;
+import Main.GameRequest;
+import Main.Request;
 import Model.*;
 import View.Controller.*;
 import javafx.animation.KeyFrame;
@@ -273,6 +276,12 @@ public class Game extends Application{
                         && squares[squareI + blockX][squareJ + blockY].getBuilding().getOwner().equals(DataBase.getMyGovernment())) {
 
                     DataBase.setSelectedBuilding(squares[squareI + blockX][squareJ + blockY].getBuilding());
+
+                    Request request = new Request(GameRequest.SELECT_BUILDING);
+                    request.argument.put("building", squares[squareI + blockX][squareJ + blockY].getBuilding().toJson());
+
+                    Client.client.sendRequestToServer(request, false);
+
                     try {
                         showBuildingDetail(squares[squareI + blockX][squareJ + blockY].getBuilding());
                     } catch (IOException e) {
@@ -360,6 +369,11 @@ public class Game extends Application{
 
                 if (selectedUnit.size() != 0) {
                     DataBase.setSelectedUnit(selectedUnit);
+
+                    Request request = new Request(GameRequest.SELECT_UNITS);
+                    request.argument.put("units", UnitPrototype.toJson(selectedUnit));
+
+                    Client.client.sendRequestToServer(request, false);
 
                     try {
                         showSelectedSquares(nowX, nowY, selectedUnit);
@@ -760,8 +774,15 @@ public class Game extends Application{
             moveAnimations.add(moveAnimation);
             unitForDataBase.addAll(selectedUnit);
 
-            if (moveAnimation.getSquares() != null && moveAnimation.getSquares().size() != 0)
+            if (moveAnimation.getSquares() != null && moveAnimation.getSquares().size() != 0) {
+                Request request = new Request(GameRequest.MOVE_UNIT);
+                request.argument.put("units", UnitPrototype.toJson(selectedUnit));
+                request.argument.put("x", String.valueOf(finalX));
+                request.argument.put("y", String.valueOf(finalY));
+
+                Client.client.sendRequestToServer(request, false);
                 check = true;
+            }
         }
 
         DataBase.setSelectedUnit(unitForDataBase);

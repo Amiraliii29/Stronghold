@@ -3,6 +3,7 @@ package Model;
 import Main.Request;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class UnitPrototype {
@@ -111,6 +112,11 @@ public class UnitPrototype {
     public static void fillUnitsName(String json) {
         Gson gson = new Gson();
         unitsName = gson.fromJson(json, ArrayList.class);
+    }
+
+    public static String toJson(ArrayList<UnitPrototype> units) {
+        Gson gson = new Gson();
+        return gson.toJson(units, ArrayList.class);
     }
 
 

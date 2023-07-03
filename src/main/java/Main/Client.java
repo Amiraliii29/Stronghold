@@ -21,9 +21,9 @@ public class Client {
     private final DataInputStream dataInputStream;
     public final ServerResponseListener serverResponseListener;
     private final Socket socket;
-    public BlockingDeque<Request> globalChats = new LinkedBlockingDeque<Request>();
-    public BlockingDeque<Request> privateChats = new LinkedBlockingDeque<Request>();
-    public BlockingDeque<Request> roomChats = new LinkedBlockingDeque<Request>();
+    public ArrayList<Request> globalChats = new ArrayList<>();
+    public ArrayList<Request> privateChats = new ArrayList<>();
+    public ArrayList<Request> roomChats = new ArrayList<>();
     public ArrayList<Integer> myRoomsID = new ArrayList<>();
 
 

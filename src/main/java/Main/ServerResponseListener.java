@@ -13,6 +13,7 @@ import Model.Map;
 import Model.UnitPrototype;
 import Model.User;
 import View.Controller.ChatController;
+import org.json.simple.JSONArray;
 
 public class ServerResponseListener extends Thread {
 
@@ -30,10 +31,10 @@ public class ServerResponseListener extends Thread {
             String token = dataInputStream.readUTF();
             Request.setUserToken(token);
 
-            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
-
-            String json = dataInputStream.readUTF();
-            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
+//            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
+//
+//            String json = dataInputStream.readUTF();
+//            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -71,6 +72,9 @@ public class ServerResponseListener extends Thread {
 
         if (request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)) {
             Client.client.globalChats.add(request);
+            Request saveRequest = new Request(NormalRequest.SAVE_PUBLIC_CHAT);
+            saveRequest.argument.put("string" , JSONArray.toJSONString(Client.client.globalChats));
+            Client.client.sendRequestToServer(request , false);
         } else if (request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)) {
             Client.client.privateChats.add(request);
         } else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)) {
@@ -108,7 +112,7 @@ public class ServerResponseListener extends Thread {
             int index = chats.indexOf(messageToEdit);
             messageToEdit.argument.put("message" , request.argument.get("newMessage"));
             chats.set(index , messageToEdit);
-            Client.client.globalChats = new LinkedBlockingDeque<Request>(chats);
+            Client.client.globalChats = new ArrayList<>(chats);
         }
         else if(request.normalRequest.equals(NormalRequest.EDIT_PRIVATE_MESSAGE)){
             ArrayList<Request> chats = new ArrayList<>(Client.client.privateChats);
@@ -117,7 +121,7 @@ public class ServerResponseListener extends Thread {
             int index = chats.indexOf(messageToEdit);
             messageToEdit.argument.put("message" , request.argument.get("newMessage"));
             chats.set(index , messageToEdit);
-            Client.client.privateChats = new LinkedBlockingDeque<Request>(chats);
+            Client.client.privateChats = new ArrayList<Request>(chats);
         }
         else if(request.normalRequest.equals(NormalRequest.EDIT_ROOM_MESSAGE)){
             ArrayList<Request> chats = new ArrayList<>(Client.client.roomChats);
@@ -126,7 +130,28 @@ public class ServerResponseListener extends Thread {
             int index = chats.indexOf(messageToEdit);
             messageToEdit.argument.put("message" , request.argument.get("newMessage"));
             chats.set(index , messageToEdit);
-            Client.client.roomChats = new LinkedBlockingDeque<Request>(chats);
+            Client.client.roomChats = new ArrayList<Request>(chats);
+        }
+        else if(request.normalRequest.equals(NormalRequest.SEEN_PUBLIC_MESSAGE)){
+            Request chat =
+                    Client.client.getPublicMessageByText(request.argument.get("message"));
+            int index = Client.client.globalChats.indexOf(chat);
+            chat.argument.put("seen" , "YES");
+            Client.client.globalChats.set(index , chat);
+        }
+        else if(request.normalRequest.equals(NormalRequest.SEEN_PRIVATE_MESSAGE)){
+            Request chat =
+                    Client.client.getPrivateMessageByText(request.argument.get("message"));
+            int index = Client.client.privateChats.indexOf(chat);
+            chat.argument.put("seen" , "YES");
+            Client.client.privateChats.set(index , chat);
+        }
+        else if(request.normalRequest.equals(NormalRequest.SEEN_ROOM_MESSAGE)){
+            Request chat =
+                    Client.client.getRoomMessageByText(request.argument.get("message"));
+            int index = Client.client.roomChats.indexOf(chat);
+            chat.argument.put("seen" , "YES");
+            Client.client.roomChats.set(index , chat);
         }
         else if(request.normalRequest.equals(NormalRequest.TRANSFER_GAMEROOMS_DATA)){
             String DatabasesInJson=request.argument.get("GameRooms");
