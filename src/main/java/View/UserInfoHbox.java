@@ -40,12 +40,12 @@ public class UserInfoHbox {
     private void displayUserInfo(User targetUser){
 
         ImageView userAvatarImgView=getUserImageView(targetUser);
-        userNameText=new Text(targetUser.getUsername());userRankText=new Text(""+targetUser.getRank()); userScoreText=new Text(""+targetUser.getHighScore());onlineStatus=new Circle(8);
+        userNameText=new Text(targetUser.getUsername());userRankText=new Text(""+targetUser.getRank()); userScoreText=new Text(""+targetUser.getHighScore());
         initializeFriendRequestButton();
 
         HBox temp0=new HBox(8, userAvatarImgView);
         temp0.setMinWidth(90);temp0.setMaxWidth(90);
-        HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText),temp4=new HBox(8, friendRequestButton),temp5=new HBox(8,onlineStatus);
+        HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText),temp4=new HBox(8, friendRequestButton),temp5=new HBox(8);
         temp1.setMinWidth(90); temp1.setMaxWidth(90);temp2.setMinWidth(90); temp2.setMaxWidth(90);temp3.setMinWidth(90); temp3.setMaxWidth(90);temp4.setMinWidth(90); temp4.setMaxWidth(90);temp5.setMinWidth(90); temp5.setMaxWidth(90);
         temp0.setAlignment(Pos.CENTER);
         temp1.setAlignment(Pos.CENTER);
@@ -53,6 +53,7 @@ public class UserInfoHbox {
         temp3.setAlignment(Pos.CENTER);
         temp4.setAlignment(Pos.CENTER);
         temp5.setAlignment(Pos.CENTER);
+        setOnlineStatusHbox(targetUser, temp5);
 
         
         mainHbox.getChildren().addAll(temp0,temp1,temp2,temp3,temp4,temp5);
@@ -122,6 +123,17 @@ public class UserInfoHbox {
         if(targetUser.getUsername().equals(User.getCurrentUser().getUsername()) ){
             userInfoHbox.getStyleClass().add("picked-field-styles");
         }
+    }
+
+    private void setOnlineStatusHbox(User user,HBox targetHbox){
+        if(user.isOnline()){
+            onlineStatus=new Circle(8);
+            targetHbox.getChildren().add(onlineStatus);
+        }
+        else{
+            Text lastDate=new Text(user.getLastOnlineTime());
+            targetHbox.getChildren().add(lastDate);
+        } 
     }
 
     public void setUser(User user) {
@@ -195,7 +207,7 @@ public class UserInfoHbox {
     public void updateUserStatus(){
         if(this.user.isOnline())
             this.onlineStatus.setFill(Color.GREEN);
-        else this.onlineStatus.setFill(Color.GRAY);
+        else return;
     }
 
     public void setBackgroundColor(String color){

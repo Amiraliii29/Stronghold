@@ -12,6 +12,9 @@ import Model.BuildingPrototype;
 import Model.Map;
 import Model.UnitPrototype;
 import Model.User;
+import View.GameRoom;
+import View.Lobby;
+import View.SignUpMenu;
 import View.Controller.ChatController;
 import org.json.simple.JSONArray;
 
@@ -75,11 +78,14 @@ public class ServerResponseListener extends Thread {
             Request saveRequest = new Request(NormalRequest.SAVE_PUBLIC_CHAT);
             saveRequest.argument.put("string" , JSONArray.toJSONString(Client.client.globalChats));
             Client.client.sendRequestToServer(request , false);
-        } else if (request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)) {
+        }
+         else if (request.normalRequest.equals(NormalRequest.SEND_PRIVATE_MESSAGE)) {
             Client.client.privateChats.add(request);
-        } else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)) {
+        }
+         else if (request.normalRequest.equals(NormalRequest.SEND_ROOM_MESSAGE)) {
             Client.client.roomChats.add(request);
-        } else if (request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
+        } 
+         else if (request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
             int ID = Integer.parseInt(request.argument.get("ID"));
             Client.client.myRoomsID.add(ID);
             ChatController.enteredChatRoomID = ID;
@@ -87,9 +93,7 @@ public class ServerResponseListener extends Thread {
         else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
             String users=request.argument.get("Users");
             User.setUsersFromJson(users);
-        } else if (request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)) {
-            User.getUsersFromServer();
-        }
+        } 
         else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE)){
             Request messageToDelete = Client.client.
                     getPublicMessageByText(request.argument.get("message"));
@@ -152,6 +156,9 @@ public class ServerResponseListener extends Thread {
             int index = Client.client.roomChats.indexOf(chat);
             chat.argument.put("seen" , "YES");
             Client.client.roomChats.set(index , chat);
+        }
+        else if(request.normalRequest.equals(NormalRequest.DESTROY_GAMEROOM)){
+            GameRoom.CurrentRoom.exitRoom();
         }
         else if(request.normalRequest.equals(NormalRequest.TRANSFER_GAMEROOMS_DATA)){
             String DatabasesInJson=request.argument.get("GameRooms");
