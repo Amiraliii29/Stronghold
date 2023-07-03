@@ -12,6 +12,8 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+
+import Controller.GameRoomDatabase;
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,6 +94,7 @@ public class Client extends Thread {
 
         else if(request.normalRequest.equals(NormalRequest.GET_USERS_DATA) )
             result=User.handleGetUsersRequest();
+
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PROFILE_FIELDS))
             result = ProfileMenuController.handleProfileFieldsChange(request.argument, user);
 
@@ -101,10 +104,7 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
             result = ProfileMenuController.handleChangePassword(request.argument, user);
 
-        else if (request.normalRequest.equals(NormalRequest.GET_USER_BY_USERNAME)) {
-            result = new Gson().toJson(User.getUserByUserName(request.argument.get("Username")));
-            updateAllClientsData();
-        } else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
+        else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
             result = new Gson().toJson(User.handleGetUsersRequest());
 
         else if (request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
@@ -157,6 +157,12 @@ public class Client extends Thread {
 
         else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
             userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
+
+        else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
+            createUnit(request);
+
+        else if (request.normalRequest.equals(NormalRequest.CREATE_GAMEROOM))
+            createUnit(request);
 
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
             createUnit(request);
@@ -495,5 +501,17 @@ public class Client extends Thread {
 
     public void createUnit(Request request) {
 
+    }
+
+    public static void updateGameRoomsForClients(){
+        Gson gson=new Gson();
+        for (Client client : DataBase.getAllClients()) 
+            try {
+                Request req=new Request(null, NormalRequest.TRANSFER_GAMEROOMS_DATA);
+                req.argument.put("GameRooms", gson.toJson(GameRoomDatabase.getAllRoomDatabases()));
+                client.dataOutputStream.writeUTF("AUTO"+gson.toJson(req));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }

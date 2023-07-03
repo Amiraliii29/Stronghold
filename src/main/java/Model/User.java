@@ -19,8 +19,8 @@ public class User {
     private static ArrayList<User> users;
     private static SecureRandom randomGenerator=new SecureRandom();
 
-    private ArrayList<User> friends;
-    private ArrayList<User> usersWithFriendRequest;
+    private ArrayList<String> friends;
+    private ArrayList<String> usersWithFriendRequest;
     private boolean isOnline;
     private String avatarFileName;
     private String username;
@@ -132,19 +132,19 @@ public class User {
         return stayLoggedIn;
     }
 
-    public void setFriends(ArrayList<User> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 
-    public void setUsersWithFriendRequest(ArrayList<User> usersWithFriendRequest) {
+    public void setUsersWithFriendRequest(ArrayList<String> usersWithFriendRequest) {
         this.usersWithFriendRequest = usersWithFriendRequest;
     }
 
-    public void addToFriends(User user){
-        friends.add(user);
+    public void addToFriends(String username){
+        friends.add(username);
     }
 
-    public ArrayList<User> getFriends(){
+    public ArrayList<String> getFriends(){
         return friends;
     }
 
@@ -156,19 +156,19 @@ public class User {
         isOnline=status; 
     }
 
-    public ArrayList<User> getUsersWithFriendRequest(){
+    public ArrayList<String> getUsersWithFriendRequest(){
         return usersWithFriendRequest;
     }
 
-    public void addToFriendRequests(User user){
-        usersWithFriendRequest.add(user);
+    public void addToFriendRequests(String username){
+        usersWithFriendRequest.add(username);
     }
 
     public static void handleFriendRequest(Request request){
-        Gson gson=new Gson();
-        User sender=gson.fromJson(request.argument.get("Sender"), User.class);
-        User reciever=gson.fromJson(request.argument.get("Reciever"), User.class);
-        reciever.addToFriendRequests(sender);
+        User sender= User.getUserByUserName(request.argument.get("Sender"));
+        User reciever=User.getUserByUserName(request.argument.get("Reciever"));
+        
+        reciever.addToFriendRequests(sender.getUsername());
         try {
             UserInfoOperator.storeUserDataInJson(reciever, "src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
@@ -178,17 +178,27 @@ public class User {
     }
 
     public static void handleSubmitFriendship(Request request){
-        Gson gson=new Gson();
-        User sender=gson.fromJson(request.argument.get("User1"), User.class);
-        User reciever=gson.fromJson(request.argument.get("User2"), User.class);
-        sender.addToFriends(reciever);
-        reciever.addToFriends(sender);
+
+        
+        User sender= User.getUserByUserName(request.argument.get("Sender"));
+        User reciever=User.getUserByUserName(request.argument.get("Reciever"));
+
+        if(request.argument.get("IsAccepted").equals("false")){
+            reciever.getUsersWithFriendRequest().remove(sender.getUsername());
+            sender.getUsersWithFriendRequest().remove(reciever.getUsername());
+            return;
+        }else{
+        sender.addToFriends(reciever.username);
+        reciever.addToFriends(sender.username);
+        }
         try {
+            UserInfoOperator.storeUserDataInJson(sender, "src/main/resources/jsonData/Users.json");
             UserInfoOperator.storeUserDataInJson(reciever, "src/main/resources/jsonData/Users.json");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        }
+        }finally{
         Client.updateAllClientsData();
+        }
     }
 
     public static User getUserByUserName(String userName) {

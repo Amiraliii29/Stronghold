@@ -16,7 +16,6 @@ public class JsonConverter {
     public static void putUserDataInFile(User user,String dirFromSrc) {
 
             String userInJsonString= new Gson().toJson(user);
-            
             try {
                 removeUsernameJsonData(user, dirFromSrc);
             } catch (ParseException e) {
@@ -60,11 +59,10 @@ public class JsonConverter {
 
         for (int i = 0; i < usersJsonArray.size(); i++) {
             userUnderRestoration= gson.fromJson(usersJsonArray.get(i).toString(), User.class);
-            if(userUnderRestoration.getFriends()==null) 
-                userUnderRestoration.setFriends(new ArrayList<User>());
             
-            if(userUnderRestoration.getUsersWithFriendRequest()==null)
-                userUnderRestoration.setUsersWithFriendRequest(new ArrayList<User>());
+            userUnderRestoration.setFriends(new ArrayList<String>());
+            
+            userUnderRestoration.setUsersWithFriendRequest(new ArrayList<String>());
             User.getUsers().add(userUnderRestoration);
         }
     }

@@ -41,7 +41,6 @@ public class SignUpMenuController {
         newUser.setStayLoggedIn(false);
         newUser.setSecurityQuestion(securityAnswer);
         UserInfoOperator.storeUserDataInJson(newUser, "src/main/resources/jsonData/Users.json");
-        User.addUser(newUser);
         client.setUser(newUser);
         return SignUpMenuMessages.SUCCESFUL_SIGNUP_STEP;
     }
