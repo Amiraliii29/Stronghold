@@ -201,6 +201,8 @@ public class LoginMenuController {
 
     public void back(MouseEvent mouseEvent) throws Exception {
         Stage stage = SignUpMenu.stage;
+        stage.setFullScreen(true);
         new SignUpMenu().start(stage);
+        stage.setFullScreen(true);
     }
 }
