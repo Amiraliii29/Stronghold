@@ -241,6 +241,7 @@ public class User {
     public static void setUsersFromJson(String usersInJson){
         users.clear();
         users= new Gson().fromJson(usersInJson, new TypeToken<List<User>>(){}.getType());
+        if(currentUser!=null)
         currentUser=getUserByUserName(currentUser.username);
         ProfileMenuController.setCurrentUser(currentUser);
             
