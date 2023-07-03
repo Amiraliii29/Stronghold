@@ -106,12 +106,15 @@ public class GameRoomDatabase {
         return getCorrectId(UserInfoOperator.addRandomizationToString(baseId));
     }
 
-    public static void handleJoinGameRoomRequest(Request request){
+    public static String handleJoinGameRoomRequest(Request request){
         String id=request.argument.get("RoomId");
         String username=request.argument.get("Username");
         User joiningUser=User.getUserByUserName(username);
+        if(getRoomById(id).roomCapacity==getRoomById(id).usersInRoom.size())
+            return "full";
         getRoomById(id).AddtoUsers(joiningUser);
         Client.updateGameRoomsForClients();
+        return "true";
     }
 
     public static void handleRoomPrivacyChange(Request request){
