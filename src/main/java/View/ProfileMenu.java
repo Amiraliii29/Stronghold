@@ -166,6 +166,13 @@ public class ProfileMenu extends Application {
                 showProfileProtocol();
                 isProfileShown=!isProfileShown;
                 });
+        back.setOnMouseClicked(event -> {
+            try {
+                new MainMenu().start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private ImageView getUserImageView(User user){
@@ -483,7 +490,7 @@ public class ProfileMenu extends Application {
         
         ProfileMenuMessages result=null;
         try {
-            result=ProfileMenuController.changePassword(oldPassword, passwordRepeat, oldPassword);
+            result=ProfileMenuController.changePassword(oldPassword, newPssword, passwordRepeat);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
