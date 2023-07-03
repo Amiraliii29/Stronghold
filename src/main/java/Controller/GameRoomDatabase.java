@@ -17,7 +17,7 @@ public class GameRoomDatabase {
     private final int roomCapacity;
     private ArrayList<User> usersInRoom;
     private HashMap<String,Boolean> usersPlayingStatus;
-    // private transient GameRoomLife gameRoomLife;
+    private transient GameRoomLife gameRoomLife;
 
     public GameRoomDatabase(User admin,String roomId, int roomCapacity,boolean isPublic){
 
@@ -33,8 +33,8 @@ public class GameRoomDatabase {
         usersInRoom.add(admin);
         usersPlayingStatus.put(admin.getUsername(), true);
         gameRoomDatabases.add(this);
-        // gameRoomLife=new GameRoomLife(this);
-        // gameRoomLife.start();
+        gameRoomLife=new GameRoomLife(this);
+        gameRoomLife.start();
     }
 
     public ArrayList<User> getUsersInRoom(){
@@ -54,7 +54,7 @@ public class GameRoomDatabase {
     }
 
     public void AddtoUsers(User user){
-        // gameRoomLife.resetTimer();
+        gameRoomLife.resetTimer();
         usersInRoom.add(user);
         usersPlayingStatus.put(user.getUsername(), true);
     }

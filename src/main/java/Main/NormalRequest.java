@@ -44,5 +44,6 @@ public enum NormalRequest {
     DESTROY_GAMEROOM,
     SAVE_PRIVATE_CHAT,
     SAVE_ROOM_CHAT,
+    START_GAME,
     ;
 }

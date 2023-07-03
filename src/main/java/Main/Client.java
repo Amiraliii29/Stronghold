@@ -27,6 +27,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.security.auth.login.CredentialException;
+
 
 public class Client extends Thread {
     private final String token;
@@ -265,6 +267,9 @@ public class Client extends Thread {
         else if (request.gameRequest.equals(GameRequest.CREATE_BUILDING))
             createBuilding(request);
 
+        else if (request.gameRequest.equals(NormalRequest.START_GAME))
+            startGame(request);
+
         //TODO: FILL THE REST;
 
 
@@ -273,6 +278,31 @@ public class Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    private void startGame(Request request) throws IOException {
+        String userName = request.argument.get("user");
+
+        Client client = DataBase.getClientByUserName(userName);
+
+        Request result;
+        if (client == null) {
+            result = new Request(ResultEnums.NONE);
+            dataOutputStream.writeUTF(result.toJson());
+            return;
+        }
+        Request sendOp = new Request(null, NormalRequest.START_GAME);
+        client.dataOutputStream.writeUTF("AUTO" + sendOp.toJson());
+
+        result = new Request(ResultEnums.SUCCESS);
+        dataOutputStream.writeUTF(result.toJson());
+
+        Request request2 = Request.fromJson(dataInputStream.readUTF());
+        sendMap(request2);
+
+        client.sendMap(request2);
     }
 
     private void createBuilding(Request request) {
@@ -485,11 +515,7 @@ public class Client extends Thread {
             byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
             dataOutputStream.writeUTF(new Request(ResultEnums.NONE).toJson());
             dataOutputStream.writeInt(jsonBytes.length);
-            System.out.println("int : " + jsonBytes.length);
-
             dataOutputStream.write(jsonBytes);
-
-            System.out.println("done!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
