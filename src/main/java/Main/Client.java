@@ -24,6 +24,7 @@ import Controller.GameRoomDatabase;
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.reflect.TypeToken;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,10 +46,31 @@ public class Client extends Thread {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         DataBase.addToAllClients(this);
         token = encodeToken(generateToken());
-        loadGlobalChats();
     }
 
-    private void loadGlobalChats() throws FileNotFoundException {
+    private void loadGlobalChats() throws IOException {
+        ArrayList<Request> chats = new ArrayList<>();
+        Gson gson = new Gson();
+        chats  = gson.fromJson(new FileReader("src/main/resources/jsonData/PublicChats.json")
+                , new TypeToken<ArrayList<Request>>(){}.getType());
+        dataOutputStream.writeUTF("LOADGLOBAL" + gson.toJson(chats));
+
+    }
+
+    private void loadRoomChats() throws IOException {
+        ArrayList<Request> chats = new ArrayList<>();
+        Gson gson = new Gson();
+        chats  = gson.fromJson(new FileReader("src/main/resources/jsonData/RoomChats.json")
+                , new TypeToken<ArrayList<Request>>(){}.getType());
+        dataOutputStream.writeUTF("LOADROOM" + gson.toJson(chats));
+    }
+
+    private void loadPrivateChats() throws IOException {
+        ArrayList<Request> chats = new ArrayList<>();
+        Gson gson = new Gson();
+        chats  = gson.fromJson(new FileReader("src/main/resources/jsonData/PrivateChats.json")
+                , new TypeToken<ArrayList<Request>>(){}.getType());
+        dataOutputStream.writeUTF("LOADPRIVATE" + gson.toJson(chats));
     }
 
 
@@ -57,6 +79,9 @@ public class Client extends Thread {
         try {
             dataOutputStream.writeUTF(token);
             sendData();
+            loadGlobalChats();
+            loadPrivateChats();
+            loadRoomChats();
 
             String json = dataInputStream.readUTF();
             Request request = Request.fromJson(json);
@@ -218,6 +243,12 @@ public class Client extends Thread {
         else if(request.normalRequest.equals(NormalRequest.SAVE_PUBLIC_CHAT))
             savePublicChats(request);
 
+        else if(request.normalRequest.equals(NormalRequest.SAVE_PRIVATE_CHAT))
+            savePrivateChat(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SAVE_ROOM_CHAT))
+            saveRoomChat(request);
+
         else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
             userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
 
@@ -253,6 +284,32 @@ public class Client extends Thread {
         String string = request.argument.get("string");
         try{
             File file=new File("src/main/resources/jsonData/PublicChats.json");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(string);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch ( IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveRoomChat(Request request) {
+        String string = request.argument.get("string");
+        try{
+            File file=new File("src/main/resources/jsonData/RoomChats.json");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(string);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch ( IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void savePrivateChat(Request request) {
+        String string = request.argument.get("string");
+        try{
+            File file=new File("src/main/resources/jsonData/PrivateChats.json");
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(string);
             fileWriter.flush();
@@ -409,9 +466,6 @@ public class Client extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void deleteGlobalMessage() {
     }
 
     private void sendRoomMessage(Request request) throws IOException {
