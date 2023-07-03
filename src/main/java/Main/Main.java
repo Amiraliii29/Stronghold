@@ -4,6 +4,7 @@ package Main;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import View.Lobby;
 import View.Game;
 import View.SignUpMenu;
 import javafx.application.Application;

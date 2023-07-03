@@ -103,10 +103,10 @@ public class LoginMenuController {
             targetUser.setOnlineStatus(true);
 
             if(targetUser.getFriends()==null)
-                 targetUser.setFriends(new ArrayList<User>());
+                 targetUser.setFriends(new ArrayList<String>());
 
             if(targetUser.getUsersWithFriendRequest()==null) 
-                targetUser.setUsersWithFriendRequest(new ArrayList<User>());
+                targetUser.setUsersWithFriendRequest(new ArrayList<String>());
 
             Request request2=new Request(NormalRequest.LOGIN);
                 request2.addToArguments("Username", userName);

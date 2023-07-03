@@ -11,11 +11,14 @@ import java.util.regex.Matcher;
 import com.google.gson.Gson;
 
 import Model.User;
+import View.GameRoom;
 
 public class UserInfoOperator {
     
     private static final ArrayList<String> defaultSlogans = new ArrayList<String>();
     private static final ArrayList<String> securityQuestions= new ArrayList<String>();
+
+    private static final ArrayList<GameRoom> gameRooms=new ArrayList<>();
     private static SecureRandom randomGenerator=new SecureRandom();
 
 

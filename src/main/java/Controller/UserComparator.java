@@ -23,11 +23,11 @@ public class UserComparator implements Comparator {
         int rank=1;
         for (User user : sortedUsers) {
             user.setRank(rank);
-            try {
-                UserInfoOperator.storeUserDataInJson(user, "src/main/resources/jsonData/Users.json");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            // try {
+            //     UserInfoOperator.storeUserDataInJson(user, "src/main/resources/jsonData/Users.json");
+            // } catch (NoSuchAlgorithmException e) {
+            //     e.printStackTrace();
+            // }
             rank++;
         }
     }

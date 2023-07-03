@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import com.google.gson.Gson;
+
+import Controller.GameRoomDatabase;
 import Model.BuildingPrototype;
 import Model.Map;
 import Model.UnitPrototype;
@@ -149,6 +152,10 @@ public class ServerResponseListener extends Thread {
             int index = Client.client.roomChats.indexOf(chat);
             chat.argument.put("seen" , "YES");
             Client.client.roomChats.set(index , chat);
+        }
+        else if(request.normalRequest.equals(NormalRequest.TRANSFER_GAMEROOMS_DATA)){
+            String DatabasesInJson=request.argument.get("GameRooms");
+            GameRoomDatabase.setDatabasesFromJson(DatabasesInJson);
         }
 
 

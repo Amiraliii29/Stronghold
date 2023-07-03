@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
+import com.google.gson.Gson;
 
 import Controller.Orders;
 import Controller.ProfileMenuController;
@@ -62,7 +63,7 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
-    public boolean isProfileShown,isMenuDisplayed;
+    public boolean isProfileShown=true,isMenuDisplayed;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
@@ -90,15 +91,21 @@ public class ProfileMenu extends Application {
         StackPane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
-        isProfileShown=true;
+
         ProfileMenuController.setCurrentUser(User.getCurrentUser());
+
         this.mainPane = Pane;
         this.stage = stage;
-        stage.setFullScreen(true);
-        stage.setScene(scene);
-        showProfileProtocol();
         ProfileMenu.profileMenu=this;
         isMenuDisplayed=true;
+        stage.setFullScreen(true);
+        stage.setScene(scene);
+
+        if(isProfileShown)
+            showProfileProtocol();
+        else
+            showScoreBoardProtocol();
+        
         stage.show();
     }
 
@@ -158,7 +165,7 @@ public class ProfileMenu extends Application {
 
         scoreboardPane.setMaxHeight(200);
         scoreboardPane.setMaxWidth(600);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Math.min(10,sortedUsers.size()); i++) {
             scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i)).getMainHbox());
         }
         bigVbox.getChildren().addAll(label,scoreboardPane);
@@ -647,28 +654,37 @@ public class ProfileMenu extends Application {
     }
 
     public void showFriendRequests(){
-        ArrayList<User> usersWithReq=User.getCurrentUser().getUsersWithFriendRequest();
-        for (User user : usersWithReq) {
-            showFriendRequestAlert(user);
+        Request request=new Request(NormalRequest.GET_USER_BY_USERNAME);
+        request.addToArguments("Username", User.getCurrentUser().getUsername());
+        Client.client.sendRequestToServer(request, true);
+        User.setCurrentUser(new Gson().fromJson(Client.client.getRecentResponse(), User.class));
+
+        ArrayList<String> usersWithReq=User.getCurrentUser().getUsersWithFriendRequest();
+        for (String username : usersWithReq) {
+            showFriendRequestAlert(username);
         }
         User.getCurrentUser().getUsersWithFriendRequest().clear();
     }
 
-    public void showFriendRequestAlert(User user){
+    public void showFriendRequestAlert(String userUsername){
         Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Friend Request");
             alert.setHeaderText("Friend Request Recieved!");
-            alert.setContentText("From: "+user.getUsername());
+            alert.setContentText("From: "+userUsername);
             alert.showAndWait().ifPresent((btnType) -> {
                     if (btnType == ButtonType.OK) 
-                        handleRequestAccept(user);
+                        handleRequestAccept(userUsername,true);
+                    else handleRequestAccept(userUsername,false);
                 });
     }
 
-    private void handleRequestAccept(User newFriend){
-        User.getCurrentUser().addToFriends(newFriend);
-        newFriend.addToFriends(User.getCurrentUser());
-        User.submitFriendship(newFriend);
+    private void handleRequestAccept(String newFriendUsername,boolean isAccepted){
+
+
+        User targetFriend=User.getUserByUserName(newFriendUsername);
+        User.getCurrentUser().addToFriends(newFriendUsername);
+        targetFriend.addToFriends(User.getCurrentUser().getUsername());
+        User.submitFriendship(targetFriend,isAccepted);
     }
     
 
