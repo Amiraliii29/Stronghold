@@ -294,7 +294,7 @@ public class Client extends Thread {
             return;
         }
         Request sendOp = new Request(null, NormalRequest.START_GAME);
-        client.dataOutputStream.writeUTF(sendOp.toJson());
+        client.dataOutputStream.writeUTF("AUTO" + sendOp.toJson());
 
         result = new Request(ResultEnums.SUCCESS);
         dataOutputStream.writeUTF(result.toJson());
