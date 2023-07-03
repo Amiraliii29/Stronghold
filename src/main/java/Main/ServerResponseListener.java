@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import Controller.GameMenuController;
+import Model.*;
+import View.Game;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import Controller.GameRoomDatabase;
-import Model.BuildingPrototype;
-import Model.Map;
-import Model.UnitPrototype;
-import Model.User;
 import View.GameRoom;
 import View.Lobby;
 import View.SignUpMenu;
@@ -170,10 +171,56 @@ public class ServerResponseListener extends Thread {
             String DatabasesInJson=request.argument.get("GameRooms");
             GameRoomDatabase.setDatabasesFromJson(DatabasesInJson);
         }
-
-
+        else if (request.normalRequest.equals(NormalRequest.START_GAME)) {
+            startGame();
+        }
         //TODO: FILL AUTO RESPONSES
         return true;
+    }
+
+    private void startGame() throws IOException {
+        DataInputStream dataInputStream = Client.client.getDataInputStream();
+
+
+        int jsonLength = dataInputStream.readInt();
+        if (jsonLength == 0) return;
+
+        byte[] jsonBytes = new byte[jsonLength];
+
+        dataInputStream.readFully(jsonBytes);
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.readValue(jsonBytes, String.class);
+        Gson gson = new Gson();
+        Map map = gson.fromJson(json, Map.class);
+        Client.client.serverResponseListener.changeSpecific();
+
+        DataBase.setSelectedMap(map);
+
+        Square[][] squares = map.getSquares();
+        for (int i = 0; i < map.getWidth() + 1; i++) {
+            for (int j = 0; j < map.getLength() + 1; j++) {
+                squares[i][j].newUnits();
+            }
+        }
+        Resource.load();
+        Game.loadImages();
+
+        Government government1 = new Government(1000);
+        government1.setOwner(User.getCurrentUser());
+        DataBase.setMyGovernment(government1);
+        GameMenuController.setCurrentGovernment();
+
+        GameMenuController.setMap(DataBase.getSelectedMap());
+        Game game = new Game();
+        DataBase.setGame(game);
+        GameMenuController.setGame(game);
+        try {
+            game.start(SignUpMenu.stage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setResponseReceived(boolean state) {
