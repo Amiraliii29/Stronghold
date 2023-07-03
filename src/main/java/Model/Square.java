@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
+    private static final HashMap<String, Boolean> canPass;
     private transient ArrayList<UnitPrototype> units;
     private transient BuildingPrototype building;
     private Land land;
@@ -11,6 +12,20 @@ public class Square {
     private int treeAmount;
     private final int x;
     private final int y;
+
+
+    static {
+        canPass = new HashMap<>();
+        for (Land land : Land.values()) {
+            if (Land.getName(land).equals("rock") || Land.getName(land).equals("ditch")
+                    || Land.getName(land).equals("river") || Land.getName(land).equals("smallLake")
+                    || Land.getName(land).equals("bigLake") || Land.getName(land).equals("sea")
+                    || Land.getName(land).equals("cliff"))
+                canPass.put(Land.getName(land), false);
+            else
+                canPass.put(Land.getName(land), true);
+        }
+    }
 
 
     public Square(int x, int y) {
@@ -54,6 +69,11 @@ public class Square {
     public int getTreeAmount() {
         return treeAmount;
     }
+
+    public boolean canPass() {
+        return canPass.get(Land.getName(land));
+    }
+
 
 
 

@@ -13,9 +13,21 @@ public class GameMenuController {
     private static Game game;
     private static Map map;
     private static Square[][] squares;
+    private static ArrayList<ArrayList<Square>> allWays;
     private static ArrayList<Square> path;
+    private static ArrayList<String> siege;
     private static Government currentGovernment;
 
+
+    {
+        siege = new ArrayList<>();
+        siege.add("PortableShield");
+        siege.add("BatteringRam");
+        siege.add("SiegeTower");
+        siege.add("Catapult");
+        siege.add("Trebuchet");
+        siege.add("FireBallista");
+    }
 
 
 
@@ -93,16 +105,123 @@ public class GameMenuController {
         return allUnits;
     }
 
-    public static ArrayList<Square> moveUnit(UnitPrototype unit, int squareI, int squareJ) {
-        return null;//TODO
+    public static ArrayList<Square> moveUnit(UnitPrototype unit, int x, int y) {
+        if (squares[x][y].getBuilding() != null) {
+            if (!BuildingPrototype.Defences.contains(squares[x][y].getBuilding().name))
+                return null;
+        }
+
+        allWays = new ArrayList<>();
+        path = new ArrayList<>();
+
+        int startX = unit.getX();
+        int startY = unit.getY();
+        boolean up = BuildingPrototype.Defences.contains(squares[startX][startY].getBuilding().name);
+        if (unit.getName().equals("Knight") || unit.getName().equals("HorseArcher") || siege.contains(unit.name))
+            up = false;
+
+        if (move(unit, startX, startY, x, y, 5, up)) {
+            int size = 1000;
+            for (ArrayList<Square> array : allWays) {
+                if (array.size() < size) {
+                    path = array;
+                    size = array.size();
+                }
+            }
+
+            return path;
+        } else
+            return null;
     }
+
+    private static boolean move(UnitPrototype unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
+        if (!map.isCoordinationValid(x, y))
+            return false;
+
+        if (!squares[x][y].canPass())
+            return false;
+
+        if (up) {
+
+            if (squares[x][y].getBuilding() != null && BuildingPrototype.Defences.contains(squares[x][y].getBuilding().name)) {
+                if (squares[x][y].getBuilding().getName().equals("Stair"))
+                    up = false;
+            } else if (squares[x][y].getBuilding() == null) {
+                UnitPrototype ladderMan = new UnitPrototype(currentGovernment, "LadderMan", -1, -1);
+                if (squares[x][y].getUnits().contains(ladderMan))
+                    up = false;
+                else if (!unit.getName().equals("Assassin")) return false;
+            } else return false;
+
+        } else if (!up) {
+
+            if (squares[x][y].getBuilding() != null) {
+                if (BuildingPrototype.Defences.contains(squares[x][y].getBuilding().name)) {
+                    if (squares[x][y].getBuilding().getName().equals("Stair"))
+                        up = true;
+                    else if (!unit.getName().equals("Assassin") && !squares[x][y].getBuilding().getCanPass()) return false;
+                }
+
+                else if (!squares[x][y].getBuilding().getCanPass()) return false;
+
+                else if (squares[x][y].getBuilding().getName().equals("DrawBridge")
+                        || squares[x][y].getBuilding().getName().equals("SmallStoneGate")
+                        || squares[x][y].getBuilding().getName().equals("BigStoneGate"))
+                    up = up;//nothing
+
+                else if ((siege.contains(unit.name) || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")))
+                    return false;
+
+                else return false;
+
+            } else {
+                UnitPrototype ladderMan = new UnitPrototype(currentGovernment, "LadderMan", -1, -1);
+                if (squares[x][y].getUnits().contains(ladderMan))
+                    up = true;
+            }
+
+        }
+
+
+
+        if (speed >= 0 && x == xFin && y == yFin) {
+            allWays.add(new ArrayList<>(path));
+            return true;
+        }
+
+        if (speed == 0) return false;
+
+        if (x < map.getWidth() - 1) {
+            path.add(squares[x + 1][y]);
+            move(unit, x + 1, y, xFin, yFin, speed - 1, up);
+            path.remove(path.lastIndexOf(squares[x + 1][y]));
+        }
+        if (x > 0) {
+            path.add(squares[x - 1][y]);
+            move(unit, x - 1, y, xFin, yFin, speed - 1, up);
+            path.remove(path.lastIndexOf(squares[x - 1][y]));
+        }
+        if (y < map.getLength() - 1) {
+            path.add(squares[x][y + 1]);
+            move(unit, x, y + 1, xFin, yFin, speed - 1, up);
+            path.remove(path.lastIndexOf(squares[x][y + 1]));
+        }
+        if (y > 0) {
+            path.add(squares[x][y - 1]);
+            move(unit, x, y - 1, xFin, yFin, speed - 1, up);
+            path.remove(path.lastIndexOf(squares[x][y - 1]));
+        }
+
+        return allWays.size() != 0;
+    }
+
 
 
 
 
     public static void constructBuilding(BuildingPrototype buildingPrototype) {
         Request request = new Request(GameRequest.CREATE_BUILDING);
-        request.addToArguments("buildingPrototype", buildingPrototype.toJson());
+        request.addToArguments("name", buildingPrototype.toJson());
 
 
         client.sendRequestToServer(request, true);
@@ -111,7 +230,7 @@ public class GameMenuController {
 
         switch (result.resultEnums) {
             case SUCCESS -> {
-                BuildingPrototype building = BuildingPrototype.fromJson(result.argument.get("buildingPrototype"));
+                BuildingPrototype building = BuildingPrototype.fromJson(result.argument.get("name"));
                 map.constructBuilding(building, building.x, building.y);
                 game.drawMap();
             }

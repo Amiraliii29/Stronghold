@@ -37,7 +37,7 @@ public class GameRoomSearchBar {
 
     private void initalizeSearchField(){
         this.searchingField= new TextField();
-        searchingField.setPromptText("Friend Username to search");
+        searchingField.setPromptText("GameRoom Id to search");
         initializeSerachButton();
 
         HBox temp2=new HBox(8, searchingField,searchButton);

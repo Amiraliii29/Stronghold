@@ -195,6 +195,7 @@ public class GameRoom extends Application {
         UserInfoHbox infoHbox=new UserInfoHbox(targetUser);
 
         HBox targetUserHbox=new HBox(0,infoHbox.getMainHbox(),hb1);
+        addStylesToHboxIfNeeded(targetUserHbox, targetUser);
         targetUserHbox.setAlignment(Pos.CENTER);
         UserHboxes.put(username, targetUserHbox);
         scoreBoardVBox.getChildren().add(targetUserHbox);
@@ -316,6 +317,11 @@ public class GameRoom extends Application {
 
     public User getAdmin() {
         return admin;
+    }
+
+    private void addStylesToHboxIfNeeded(HBox MainUserHbox,User targetUser){
+        if(targetUser.getUsername().equals(admin.getUsername()) )
+            MainUserHbox.getStyleClass().add("gold-color");
     }
 
     public static void setDatabase(GameRoomDatabase database){

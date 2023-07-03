@@ -66,7 +66,7 @@ public class BuildingPrototype {
         return HP;
     }
 
-    public boolean isCanPass() {
+    public boolean getCanPass() {
         return canPass;
     }
 

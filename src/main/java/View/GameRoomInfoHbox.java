@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import Controller.GameRoomDatabase;
+import Controller.Orders;
 import Controller.UserInfoOperator;
 import Main.Client;
 import Main.NormalRequest;
@@ -87,6 +88,10 @@ public class GameRoomInfoHbox {
             request.addToArguments("Username", User.getCurrentUser().getUsername());
             request.addToArguments("RoomId", this.gameRoomdatabase.getRoomId());
             Client.client.sendRequestToServer(request, true);
+            if(Client.client.getRecentResponse().equals("full")){
+                Orders.createNotificationDialog("Error", "Capacity", "Error while joining: the room is full", Orders.redNotifErrorColor);
+                return;
+            }
 
             gameRoomdatabase=GameRoomDatabase.getDatabasesByRoomId(this.gameRoomdatabase.getRoomId());
             GameRoom.setDatabase(gameRoomdatabase);
