@@ -216,10 +216,9 @@ public class Client extends Thread {
             result="true";
             updateGameRoomsForClients();
         }
-        else if (request.normalRequest.equals(NormalRequest.JOIN_GAMEROOM)){
-            result="true";
-            GameRoomDatabase.handleJoinGameRoomRequest(request);
-        }
+        else if (request.normalRequest.equals(NormalRequest.JOIN_GAMEROOM))
+           result=GameRoomDatabase.handleJoinGameRoomRequest(request);
+        
         else if (request.normalRequest.equals(NormalRequest.CHANGE_GAMEROOM_PRIVACY))
             GameRoomDatabase.handleRoomPrivacyChange(request);
 
