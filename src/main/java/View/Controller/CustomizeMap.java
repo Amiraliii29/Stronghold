@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
+import java.io.File;
 import java.io.IOException;
 
 public class CustomizeMap {
@@ -170,29 +171,16 @@ public class CustomizeMap {
     public void save(MouseEvent ignoredMouseEvent) {
         if (name == null || name.getText() == null || name.getText().equals("")) return;
         else {
-            Request request = new Request(NormalRequest.CHECK_MAP_NAME);
-            request.addToArguments("name", name.getText());
+            String fileName = name.getText() + ".json";
 
-            Client.client.sendRequestToServer(request, true);
-            String response = Client.client.getRecentResponse();
+            File folder = new File("src/main/resources/Map");
 
-            if (response.equals("true")) {
-                Request request1 = new Request(NormalRequest.SAVE_MAP);
-                request1.addToArguments("name", name.getText());
-                Client.client.sendRequestToServer(request1, false);
+            String[] fileNames = folder.list();
+            for(String file : fileNames)
+                if (file.equals(fileName))
+                    return;
 
-                Gson gson = new Gson();
-                ObjectMapper objectMapper = new ObjectMapper();
-                Object json = gson.toJson(DataBase.getSelectedMap());
-
-                try {
-                    byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
-                    Client.client.getDataOutputStream().writeInt(jsonBytes.length);
-                    Client.client.getDataOutputStream().write(jsonBytes);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            Map.saveMap(DataBase.getSelectedMap(), name.getText());
         }
     }
 }

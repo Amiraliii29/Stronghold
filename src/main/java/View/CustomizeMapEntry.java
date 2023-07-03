@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -40,6 +41,22 @@ public class CustomizeMapEntry extends Application {
 
         ObservableList<String> options = FXCollections.observableArrayList(
         );
+
+        File folder = new File("src/main/resources/Map");
+        String[] fileNames = folder.list();
+        String usersMap = "";
+
+        for(String file : fileNames) {
+            for (char c : file.toCharArray()) {
+                if (c == '.') {
+                    options.add(usersMap);
+                    usersMap = "";
+                    break;
+                }
+                usersMap += c;
+            }
+        }
+
         Client.client.sendRequestToServer(new Request(NormalRequest.MAP_NAME),true);
         String response = Client.client.getRecentResponse();
         String[] names =  response.split(",");
@@ -78,23 +95,17 @@ public class CustomizeMapEntry extends Application {
 
         DataInputStream dataInputStream = Client.client.dataInputStream;
 
-        System.out.println("before all!");
-
 
         int jsonLength = dataInputStream.readInt();
-        System.out.println("get int : " + jsonLength);
         byte[] jsonBytes = new byte[jsonLength];
 
         dataInputStream.readFully(jsonBytes);
 
-        System.out.println("bytes read!");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.readValue(jsonBytes, String.class);
-        System.out.println("into string");
         Gson gson = new Gson();
         Map map = gson.fromJson(json, Map.class);
-        System.out.println("done");
         Client.client.serverResponseListener.changeSpecific();
 
         DataBase.setSelectedMap(map);
