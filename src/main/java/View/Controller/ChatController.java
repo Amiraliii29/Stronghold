@@ -52,16 +52,9 @@ public class ChatController {
     private static String privateChatContact;
 
     public void enterPublicChat(MouseEvent mouseEvent) throws IOException {
-//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-//                ShopMenu.shopPane , ShopMenuController.tradePane);
-
         globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PublicChat.fxml").toExternalForm()));
-//        globalChatPane.setLayoutX(Game.leftX);
-//        globalChatPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(globalChatPane);
+
 
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController.globalChatPane);
@@ -74,10 +67,6 @@ public class ChatController {
     public static void showGlobalChats() throws IOException {
         globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PublicChat.fxml").toExternalForm()));
-//        globalChatPane.setLayoutX(Game.leftX);
-//        globalChatPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(globalChatPane);
 
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController.globalChatPane);
@@ -152,16 +141,11 @@ public class ChatController {
     }
 
     public void enterPrivateChat(MouseEvent mouseEvent) throws IOException {
-//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-//                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.privateChatPane);
+
 
         privateChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PrivateChat.fxml").toExternalForm()));
-//        privateChatPane.setLayoutX(Game.leftX);
-//        privateChatPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(privateChatPane);
+
         privateChatContact = privateChatContactUserName.getText();
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController.privateChatPane);
@@ -174,10 +158,7 @@ public class ChatController {
     public  void showPrivateChat() throws IOException {
         privateChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PrivateChat.fxml").toExternalForm()));
-//        privateChatPane.setLayoutX(Game.leftX);
-//        privateChatPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(privateChatPane);
+
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController.privateChatPane);
         stage.setScene(scene);
@@ -313,15 +294,8 @@ public class ChatController {
 
         Client.client.sendRequestToServer(request , false);
 
-//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-//                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
         chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-//        chatRoomPane.setLayoutX(Game.leftX);
-//        chatRoomPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(chatRoomPane);
 
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController. chatRoomPane);
@@ -332,14 +306,9 @@ public class ChatController {
     public void enterRoom(MouseEvent mouseEvent) throws IOException {
         if(Client.client.myRoomsID.contains(Integer.parseInt(roomID.getText()))){
             enteredChatRoomID = Integer.parseInt(roomID.getText());
-//            Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-//                    , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-//                    ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
+
             chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
                     getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-//            chatRoomPane.setLayoutX(Game.leftX);
-//            chatRoomPane.setLayoutY(0);
-//            Game.mainPane.getChildren().add(chatRoomPane);
             Stage stage = SignUpMenu.stage;
             Scene scene = new Scene(ChatController. chatRoomPane);
             stage.setScene(scene);
@@ -352,9 +321,7 @@ public class ChatController {
     public static void showRoomChats() throws IOException {
         chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-//            chatRoomPane.setLayoutX(Game.leftX);
-//            chatRoomPane.setLayoutY(0);
-//            Game.mainPane.getChildren().add(chatRoomPane);
+
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController. chatRoomPane);
         stage.setScene(scene);
@@ -449,15 +416,10 @@ public class ChatController {
     }
 
     public void enterChatRoomMenu(MouseEvent mouseEvent) throws IOException {
-//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-//                ShopMenu.shopPane , ShopMenuController.tradePane);
+
         chatRoomMenuPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/CreateRoomMenu.fxml").toExternalForm()));
-//        chatRoomMenuPane.setLayoutX(Game.leftX);
-//        chatRoomMenuPane.setLayoutY(0);
-//
-//        Game.mainPane.getChildren().add(chatRoomMenuPane);
+
         Stage stage = SignUpMenu.stage;
         Scene scene = new Scene(ChatController. chatRoomMenuPane);
         stage.setScene(scene);

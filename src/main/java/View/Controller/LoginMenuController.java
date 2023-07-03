@@ -55,9 +55,9 @@ public class LoginMenuController {
         }
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
         request.argument.put("Username" , userName );
-        
         Client.client.sendRequestToServer(request , true);
         String json = Client.client.getRecentResponse();
+
         User targetUser = new Gson().fromJson(json , User.class);
         System.out.println("kir=====");
         if (targetUser == null){
@@ -129,7 +129,7 @@ public class LoginMenuController {
         }
 
         Request request = new Request(NormalRequest.GET_USER_BY_USERNAME);
-        request.argument.put("userName" , userName );
+        request.argument.put("Username" , userName );
         Client.client.sendRequestToServer(request ,true);
         String json = Client.client.getRecentResponse();
         User user = new Gson().fromJson(json , User.class);
