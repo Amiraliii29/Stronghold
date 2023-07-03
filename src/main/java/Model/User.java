@@ -176,6 +176,9 @@ public class User {
     public static void handleFriendRequest(Request request){
         User sender= User.getUserByUserName(request.argument.get("Sender"));
         User reciever=User.getUserByUserName(request.argument.get("Reciever"));
+
+        System.out.println(request.argument.get("Sender"));
+        System.out.println(request.argument.get("Reciever"));
         
         reciever.addToFriendRequests(sender.getUsername());
         try {
@@ -192,14 +195,14 @@ public class User {
         User sender= User.getUserByUserName(request.argument.get("Sender"));
         User reciever=User.getUserByUserName(request.argument.get("Reciever"));
 
-        if(request.argument.get("IsAccepted").equals("false")){
-            reciever.getUsersWithFriendRequest().remove(sender.getUsername());
-            sender.getUsersWithFriendRequest().remove(reciever.getUsername());
-            return;
-        }else{
-        sender.addToFriends(reciever.username);
-        reciever.addToFriends(sender.username);
+        reciever.getUsersWithFriendRequest().remove(sender.getUsername());
+        sender.getUsersWithFriendRequest().remove(reciever.getUsername());
+
+        if(request.argument.get("IsAccepted").equals("true")){
+            sender.addToFriends(reciever.username);
+            reciever.addToFriends(sender.username);
         }
+        
         try {
             UserInfoOperator.storeUserDataInJson(sender, "src/main/resources/jsonData/Users.json");
             UserInfoOperator.storeUserDataInJson(reciever, "src/main/resources/jsonData/Users.json");
@@ -246,7 +249,6 @@ public class User {
 
     public static String handleGetUsersRequest(){
         String response=new Gson().toJson(users);
-        System.out.println(response);
         return response;
     }
 
