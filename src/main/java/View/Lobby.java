@@ -71,7 +71,6 @@ public class Lobby extends Application {
         Client.client.sendRequestToServer(request, true);
 
         for (GameRoomDatabase database : GameRoomDatabase.getAllRoomDatabases()) {
-            System.out.println(database.isPublic());
             if(!database.isPublic()) continue;
             GameRoomInfoHbox roomHbox=new GameRoomInfoHbox(database);
             gameRoomInfosVBox.getChildren().add(roomHbox.getMainHbox());

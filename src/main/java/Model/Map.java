@@ -13,11 +13,11 @@ import java.util.ArrayList;
 public class Map {
     // toole mehvar ofogi = width  moalefe ofoghi = x
     // toole mehvar amoudi = length  moalefe amoudi = y
-    private String name;
-    private Square[][] squares;
-    private transient ArrayList<Government> governmentsInMap;
-    private int width;
-    private int length;
+    private final String name;
+    private final Square[][] squares;
+    private ArrayList<Government> governmentsInMap;
+    private final int width;
+    private final int length;
 
 
 

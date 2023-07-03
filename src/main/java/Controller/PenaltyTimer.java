@@ -13,7 +13,7 @@ public class PenaltyTimer extends TimerTask {
         if(System.currentTimeMillis()-startTime>=processDuration)
             cancel();
 
-         SignUpMenuController.decreasePenalty();
+        SignUpMenuController.decreasePenalty();
     }
 
     public static void setProcessDuration(int duration){

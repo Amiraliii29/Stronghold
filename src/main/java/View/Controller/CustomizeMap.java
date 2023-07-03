@@ -9,15 +9,12 @@ import Model.Map;
 import Model.Trees;
 import View.Game;
 import View.LoginMenu;
-import View.MainMenu;
 import View.SignUpMenu;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-import java.io.File;
 import java.io.IOException;
 
 public class CustomizeMap {
@@ -136,10 +133,10 @@ public class CustomizeMap {
 
     public void back(MouseEvent ignoredMouseEvent) throws Exception {
         Game.customizePane = null;
-        new MainMenu().start(SignUpMenu.stage);
+        new LoginMenu().start(SignUpMenu.stage);
     }
 
-    public void share(MouseEvent ignoredMouseEvent) {
+    public void save(MouseEvent ignoredMouseEvent) {
         if (name == null || name.getText() == null || name.getText().equals("")) return;
         else {
             Request request = new Request(NormalRequest.CHECK_MAP_NAME);
@@ -151,36 +148,20 @@ public class CustomizeMap {
             if (response.equals("true")) {
                 Request request1 = new Request(NormalRequest.SAVE_MAP);
                 request1.addToArguments("name", name.getText());
-                Client.client.sendRequestToServer(request1, false);
+                Client.client.sendRequestToServer(request, false);
 
-                Gson gson = new Gson();
                 ObjectMapper objectMapper = new ObjectMapper();
-                Object json = gson.toJson(DataBase.getSelectedMap());
+                Object json = DataBase.getSelectedMap();
 
                 try {
                     byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
+
                     Client.client.getDataOutputStream().writeInt(jsonBytes.length);
                     Client.client.getDataOutputStream().write(jsonBytes);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
-        }
-    }
-
-    public void save(MouseEvent ignoredMouseEvent) {
-        if (name == null || name.getText() == null || name.getText().equals("")) return;
-        else {
-            String fileName = name.getText() + ".json";
-
-            File folder = new File("src/main/resources/Map");
-
-            String[] fileNames = folder.list();
-            for(String file : fileNames)
-                if (file.equals(fileName))
-                    return;
-
-            Map.saveMap(DataBase.getSelectedMap(), name.getText());
         }
     }
 }
