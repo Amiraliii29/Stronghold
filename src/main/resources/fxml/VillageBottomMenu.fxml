@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="150.0" prefWidth="1115.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
+<AnchorPane prefHeight="150.0" prefWidth="1115.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.GameGraphicController">
    <children>
       <ImageView fitHeight="151.0" fitWidth="1117.0" layoutX="-1.0" layoutY="-2.0">
          <image>
@@ -22,7 +22,7 @@
       <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="357.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="32.0" layoutX="558.0" layoutY="56.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="49.0" layoutX="589.0" layoutY="89.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="456.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="60.0" fitWidth="99.0" layoutX="456.0" layoutY="59.0" onDragDetected="#hospitalDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="60.0" fitWidth="89.0" layoutX="266.0" layoutY="59.0" onDragDetected="#cathedralDragDetected" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="36.0" fitWidth="49.0" layoutX="599.0" layoutY="99.0" onDragDetected="#wellDragDetected" pickOnBounds="true" preserveRatio="true" />
    </children>

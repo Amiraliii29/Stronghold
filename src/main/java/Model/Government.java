@@ -403,4 +403,18 @@ public class Government {
         Government that = (Government) o;
         return Objects.equals(owner, that.owner);
     }
+    public void changePopularityBySickness(){
+        this.popularity -= 10;
+    }
+    public Building getMyBuildingByName(String name){
+        for (Building building : buildings) {
+            if(building.getName().equals(name))
+                return building;
+        }
+        return null;
+    }
+
+    public void changePopularityByFire() {
+        this.popularity -= 20;
+    }
 }

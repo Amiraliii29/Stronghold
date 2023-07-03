@@ -11,6 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
+import java.util.Objects;
+
 public class StartGameController {
     public TextField mapName;
     public TextField user2Name;
@@ -63,7 +65,7 @@ public class StartGameController {
         game.addToGovernmentsInGame(government1);
         GameMenuController.setGame(game);
 
-        if(user2NameText != ""){
+        if(!Objects.equals(user2NameText, "")){
             User user2 = User.getUserByUserName(user2NameText);
             if(user2 == null){
                 startGameFlag = 0;
@@ -79,7 +81,7 @@ public class StartGameController {
                 startGameFlag = 1;
             }
         }
-        if(user3NameText != ""){
+        if(!Objects.equals(user3NameText, "")){
             User user3 = User.getUserByUserName(user3NameText);
             if(user3 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -96,7 +98,7 @@ public class StartGameController {
                 government3.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
-        if(user4NameText != ""){
+        if(!Objects.equals(user4NameText, "")){
             User user4 = User.getUserByUserName(user4NameText);
             if(user4 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -113,7 +115,7 @@ public class StartGameController {
                 government4.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
-        if(user5NameText != ""){
+        if(!Objects.equals(user5NameText, "")){
             User user5 = User.getUserByUserName(user5NameText);
             if(user5 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -130,7 +132,7 @@ public class StartGameController {
                 government5.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
-        if(user6NameText != ""){
+        if(!Objects.equals(user6NameText, "")){
             User user6 = User.getUserByUserName(user6NameText);
             if(user6 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -147,7 +149,7 @@ public class StartGameController {
                 government6.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
-        if(user7NameText != ""){
+        if(!Objects.equals(user7NameText, "")){
             User user7 = User.getUserByUserName(user7NameText);
             if(user7 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -164,7 +166,7 @@ public class StartGameController {
                 government7.addToStockpile(Resource.getResourceByName("Wood") , 100);
             }
         }
-        if(user8NameText != ""){
+        if(!Objects.equals(user8NameText, "")){
             User user8 = User.getUserByUserName(user6NameText);
             if(user8 == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -1,10 +1,12 @@
 package View.Controller;
 
 import Controller.GameMenuController;
+import Controller.Orders;
 import Model.DataBase;
 import Model.Resource;
 import Model.User;
 import View.Enums.Messages.ShopMenuMessages;
+import View.Enums.Messages.TradeMenuMessages;
 import View.Game;
 import View.ShopMenu;
 import javafx.fxml.FXMLLoader;
@@ -143,19 +145,24 @@ public class ShopMenuController {
     }
 
     public void buy(MouseEvent mouseEvent) {
+        if (selectedItem == null) return;
         ShopMenuMessages message = buyItemByNameController(selectedItem.getName());
         switch (message){
             case NO_ITEM_SELECTED -> {
-                GameMenuController.getGame().showErrorText("NO item selected!");
+                GameGraphicController.popUpAlert("Buy item Error" , "" ,
+                        "NO item selected!" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_BALANCE -> {
-                GameMenuController.getGame().showErrorText("Not enough balance :|");
+                GameGraphicController.popUpAlert("Buy item Error" , "" ,
+                        "Not enough balance :|" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_FREE_SPACE_IN_WARE_HOUSE -> {
-                GameMenuController.getGame().showErrorText("Not enough free space in wareHouse :|");
+                GameGraphicController.popUpAlert("Buy item Error" , "" ,
+                        "Not enough free space in wareHouse :|" , Orders.redNotifErrorColor);
             }
             case BUY_ITEM_SUCCESS -> {
-                GameMenuController.getGame().showErrorText("Item bought successfully");
+//                GameGraphicController.popUpAlert("Success" , "" ,
+//                        "Item bought successfully" , Orders.greenNotifSuccesColor);
             }
         }
         setItemsAmount();
@@ -163,17 +170,22 @@ public class ShopMenuController {
     }
 
     public void sell(MouseEvent mouseEvent) {
+        if (selectedItem == null) return;
+
         ShopMenuMessages message = sellItemByNameController(selectedItem.getName());
 
         switch (message){
             case NO_ITEM_SELECTED -> {
-                GameMenuController.getGame().showErrorText("NO item selected!");
+                GameGraphicController.popUpAlert("Sell item Error" , "" ,
+                        "NO item selected!" , Orders.redNotifErrorColor);
             }
             case NOT_ENOUGH_ITEM_IN_STOCKPILE -> {
-                GameMenuController.getGame().showErrorText("There is no " + selectedItem.getName() + " in warehouse");
+                GameGraphicController.popUpAlert("Sell item Error" , "" ,
+                        "There is no " + selectedItem.getName() + " in warehouse" , Orders.redNotifErrorColor);
             }
             case SELL_ITEM_SUCCESS -> {
-                GameMenuController.getGame().showErrorText("Item Sold Successfully :)");
+//                GameGraphicController.popUpAlert("Success" , "" ,
+//                        "Item Sold Successfully :)" , Orders.greenNotifSuccesColor);
             }
         }
         setItemsAmount();
@@ -299,6 +311,11 @@ public class ShopMenuController {
             selectedItemName.setText("LeatherArmor");
         }
         public void openTradeMenu() throws IOException {
+            Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+            Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+            Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+            Game.mainPane.getChildren().remove(tradePane);
+
             tradePane = FXMLLoader.load(
                     new URL(ShopMenu.class.getResource("/fxml/TradeMenu.fxml").toExternalForm()));
             tradePane.setLayoutX(Game.leftX);
@@ -310,5 +327,8 @@ public class ShopMenuController {
 
     public void exitShopMenu(MouseEvent mouseEvent) {
         Game.mainPane.getChildren().remove(ShopMenu.shopPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeMenuHistoryPane);
+        Game.mainPane.getChildren().remove(TradeMenuController.tradeNewRequestPane);
+        Game.mainPane.getChildren().remove(tradePane);
     }
 }
