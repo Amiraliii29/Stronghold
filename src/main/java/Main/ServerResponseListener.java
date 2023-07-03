@@ -15,6 +15,9 @@ import Model.BuildingPrototype;
 import Model.Map;
 import Model.UnitPrototype;
 import Model.User;
+import View.GameRoom;
+import View.Lobby;
+import View.SignUpMenu;
 import View.Controller.ChatController;
 import com.google.gson.reflect.TypeToken;
 import org.json.simple.JSONArray;
@@ -31,18 +34,6 @@ public class ServerResponseListener extends Thread {
         this.client = client;
         this.setDaemon(true);
         specific = false;
-        try {
-            String token = dataInputStream.readUTF();
-            Request.setUserToken(token);
-
-//            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
-//
-//            String json = dataInputStream.readUTF();
-//            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -50,9 +41,11 @@ public class ServerResponseListener extends Thread {
         String response;
         while (true) {
             try {
-                response = dataInputStream.readUTF();
-                if (!handleResponse(response) && !specific)
-                    client.setRecentResponse(response);
+                if (!specific) {
+                    response = dataInputStream.readUTF();
+                    if (!handleResponse(response))
+                        client.setRecentResponse(response);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,7 +81,6 @@ public class ServerResponseListener extends Thread {
         response = response.replace("AUTO", "");
         Request request = Request.fromJson(response);
         if(request==null) return true;
-        System.out.println(request.normalRequest+"=======");
 
         if (request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)) {
             Client.client.globalChats.add(request);
@@ -118,9 +110,7 @@ public class ServerResponseListener extends Thread {
         else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
             String users=request.argument.get("Users");
             User.setUsersFromJson(users);
-        } else if (request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)) {
-            User.getUsersFromServer();
-        }
+        } 
         else if(request.normalRequest.equals(NormalRequest.DELETE_PUBLIC_MESSAGE)){
             Request messageToDelete = Client.client.
                     getPublicMessageByText(request.argument.get("message"));
@@ -229,6 +219,9 @@ public class ServerResponseListener extends Thread {
             saveRequest.argument.put("string" , new Gson().toJson(Client.client.roomChats));
             Client.client.sendRequestToServer(saveRequest , false);
         }
+        else if(request.normalRequest.equals(NormalRequest.DESTROY_GAMEROOM)){
+            GameRoom.CurrentRoom.exitRoom();
+        }
         else if(request.normalRequest.equals(NormalRequest.TRANSFER_GAMEROOMS_DATA)){
             String DatabasesInJson=request.argument.get("GameRooms");
             GameRoomDatabase.setDatabasesFromJson(DatabasesInJson);
@@ -247,5 +240,9 @@ public class ServerResponseListener extends Thread {
 
     public void changeSpecific() {
         specific = !specific;
+    }
+
+    public boolean isSpecific() {
+        return specific;
     }
 }

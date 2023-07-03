@@ -124,23 +124,24 @@ public class Game extends Application{
         building = null;
         tree = null;
         land = null;
+        customizePane = null;
         DataBase.setSelectedUnit(null);
     }
 
     public void customizeMap () {
-        if (customizePane == null) {
-            try {
-                building = null;
-                drawLeft();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            mainPane.getChildren().remove(customizePane);
+        if (customizePane != null) {
+            if (mainPane != null) mainPane.getChildren().remove(customizePane);
             customizePane = null;
             tree = null;
             land = null;
-            building = null;
+        }
+        building = null;
+
+        try {
+            customizePane = FXMLLoader.load(
+                    new URL(Objects.requireNonNull(Game.class.getResource("/fxml/CustomizeMap.fxml")).toExternalForm()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -171,11 +172,12 @@ public class Game extends Application{
         blockWidth = ((int) Math.ceil(screenWidth / blockPixel));
         blockHeight = ((int) Math.ceil(screenHeight / blockPixel));
 
-        if (customizePane == null) {
-            setTimelines();
+        if (customizePane == null)
             drawBottom();
-        }
+        else
+            drawLeft();
 
+        setTimelines();
         drawMap();
         keys();
 
@@ -426,12 +428,27 @@ public class Game extends Application{
 
                     drawMap();
                 }
-            }else if(event.getCode() == KeyCode.E){
+            } else if(event.getCode() == KeyCode.E){
                 clear();
             } else if (event.getCode() == KeyCode.M) {
                 if (DataBase.getSelectedUnit() != null) moveGetCoordinate();
             } else if (event.getCode() == KeyCode.A) {
                 if (DataBase.getSelectedUnit() != null) attackGetCoordinate();
+            } else if (event.getCode() == KeyCode.P) {
+                tree = null;
+                land = null;
+                building = null;
+                if (customizePane == null) {
+                    try {
+                        customizePane = FXMLLoader.load(
+                                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/CustomizeMap.fxml")).toExternalForm()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    drawLeft();
+                } else {
+                    customizePane = null;
+                }
             } else if (keyCombinationShiftC.match(event)){
                 showCopiedBuildingImage();
             } else if(event.getCode() == KeyCode.S){
@@ -726,9 +743,7 @@ public class Game extends Application{
         errorTimeline.playFromStart();
     }
 
-    private void drawLeft() throws IOException {
-        customizePane = FXMLLoader.load(
-                new URL(Objects.requireNonNull(Game.class.getResource("/fxml/CustomizeMap.fxml")).toExternalForm()));
+    private void drawLeft(){
         customizePane.setLayoutX(0);
         customizePane.setLayoutY(0);
         mainPane.getChildren().add(customizePane);

@@ -63,7 +63,7 @@ import javafx.util.Duration;
 
 public class ProfileMenu extends Application {
 
-    public boolean isProfileShown=true,isMenuDisplayed;
+    public static boolean isProfileShown=true,isMenuDisplayed=true;
     TextField usernameField, emailField, nicknameField, sloganField;
     Text usernameText, emailText, nicknameText,selectAvatarText,avatarDisplayText;
     VBox usernameVbox, emailVbox, nicknameVbox;
@@ -86,13 +86,11 @@ public class ProfileMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        User.getUsersFromServer();
-        System.out.println("kir");
+
+
         StackPane Pane = FXMLLoader.load(
                 new URL(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml").toExternalForm()));
         Scene scene = new Scene(Pane);
-
-        ProfileMenuController.setCurrentUser(User.getCurrentUser());
 
         this.mainPane = Pane;
         this.stage = stage;
@@ -107,6 +105,7 @@ public class ProfileMenu extends Application {
             showScoreBoardProtocol();
         
         stage.show();
+        showFriendRequests();
     }
 
     private void setUpperDetailOfScoreboardVbox(){
@@ -169,22 +168,22 @@ public class ProfileMenu extends Application {
             scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i)).getMainHbox());
         }
         bigVbox.getChildren().addAll(label,scoreboardPane);
-        setProfileButtons();
-        setProfileButtonListeners();
+        setScoreboardButtons();
+        setScoreBoardButtonListeners();
         mainPane.getChildren().add(bigVbox);
     }
 
-    private void setProfileButtons(){
+    private void setScoreboardButtons(){
         displayScoreBoard=new Button("Show Profile");
         back = new Button("Back to main Menu");
         back.getStyleClass().add("yellow-warning-color");
         HBox hbox=new HBox(16, displayScoreBoard,back);
-        hbox.setMinWidth(600); hbox.setMaxWidth(600);
+        hbox.setMinWidth(400); hbox.setMaxWidth(400);
         hbox.setAlignment(Pos.CENTER);
         bigVbox.getChildren().addAll(hbox);
     }
 
-    private void setProfileButtonListeners(){
+    private void setScoreBoardButtonListeners(){
         displayScoreBoard.setOnMouseClicked(event -> {
             if(isProfileShown)
                 showScoreBoardProtocol();
@@ -192,6 +191,14 @@ public class ProfileMenu extends Application {
                 showProfileProtocol();
                 isProfileShown=!isProfileShown;
                 });
+        back.setOnMouseClicked(event -> {
+            try {
+                isMenuDisplayed=false;
+                new MainMenu().start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void showProfileProtocol(){
@@ -207,7 +214,6 @@ public class ProfileMenu extends Application {
         setFieldListeners();
         setButtonListeners();
         setStartingTexts();
-        showFriendRequests();
     }
 
     private void setFileChooser(){
@@ -679,13 +685,8 @@ public class ProfileMenu extends Application {
     }
 
     private void handleRequestAccept(String newFriendUsername,boolean isAccepted){
-
-
         User targetFriend=User.getUserByUserName(newFriendUsername);
-        User.getCurrentUser().addToFriends(newFriendUsername);
-        targetFriend.addToFriends(User.getCurrentUser().getUsername());
         User.submitFriendship(targetFriend,isAccepted);
     }
     
-
 }

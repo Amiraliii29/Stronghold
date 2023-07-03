@@ -13,6 +13,7 @@ import Main.Client;
 import Main.NormalRequest;
 import Main.Request;
 import View.ProfileMenu;
+import View.SignUpMenu;
 
 public class User {
     private static User currentUser;
@@ -29,6 +30,7 @@ public class User {
     private String securityQuestion;
     private boolean stayLoggedIn;
     private boolean isOnline;
+    private String lastOnlineTime;
     private int highScore;
     private int rank;
 
@@ -45,6 +47,14 @@ public class User {
         this.friends=new ArrayList<>();
         this.usersWithFriendRequest=new ArrayList<>();
         avatarFileName=Integer.toString(randomGenerator.nextInt(4)+1)+".png";
+    }
+
+    public String getLastOnlineTime(){
+        return lastOnlineTime;
+    }
+
+    public void setLastOnlineTime(String time){
+        this.lastOnlineTime=time;
     }
 
 
@@ -221,29 +231,29 @@ public class User {
         Request request=new Request(NormalRequest.GET_USERS_DATA);
         Client.client.sendRequestToServer(request, true);
         String result=Client.client.getRecentResponse();
-
+                System.out.println("passed");
         users.clear();
         users= new Gson().fromJson(result, new TypeToken<List<User>>(){}.getType());
-
-        if(ProfileMenu.profileMenu!=null)
-            if(ProfileMenu.profileMenu.isMenuDisplayed)
-                if(ProfileMenu.profileMenu.isProfileShown)
-                    ProfileMenu.profileMenu.showProfileProtocol();
-                else
-                    ProfileMenu.profileMenu.showScoreBoardProtocol();
-            
     }
 
     public static void setUsersFromJson(String usersInJson){
         users.clear();
         users= new Gson().fromJson(usersInJson, new TypeToken<List<User>>(){}.getType());
+            
+            if(ProfileMenu.profileMenu!=null)
+            if(ProfileMenu.isMenuDisplayed)
+                try {
+                    new ProfileMenu().start(SignUpMenu.stage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
     }
 
     public static void sendFriendRequest(User targetFriend){
 
         if(targetFriend.getFriends().contains(currentUser.username) ||
-                targetFriend.getUsersWithFriendRequest().contains(currentUser.username)||
-                targetFriend.getUsername().equals(currentUser.getUsername())){
+           targetFriend.getUsersWithFriendRequest().contains(currentUser.username)||
+           targetFriend.getUsername().equals(currentUser.getUsername())){
 
             Orders.createNotificationDialog("Result","Friend Request Delivery:","Error: you are either already friends with user or have sent a friend request!",Orders.yellowNotifErrorColor);
             return;
@@ -255,7 +265,6 @@ public class User {
         request.addToArguments("Reciever", targetFriend.getUsername());
         
         Client.client.sendRequestToServer(request, false);
-
         Orders.createNotificationDialog("Result","Friend Request Delivery:","Friend request was sent succesfully!",Orders.greenNotifSuccesColor);
     }
 
@@ -274,8 +283,6 @@ public class User {
     public static ArrayList<User> getUsers() {
         return users;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

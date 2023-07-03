@@ -20,6 +20,7 @@ public class GameRoomDatabase {
     private ArrayList<User> usersInRoom;
     private HashMap<String,Boolean> usersPlayingStatus;
 
+
     public GameRoomDatabase(User admin,String roomId, int roomCapacity,boolean isPublic){
         this.admin=admin;
         this.roomId=roomId;

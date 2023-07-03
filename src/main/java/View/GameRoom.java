@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 public class GameRoom extends Application {
 
     private static GameRoomDatabase gameRoomDatabase;
+    public static GameRoom CurrentRoom;
     private ScrollPane scoreboardPane;
     private VBox scoreBoardVBox, bigVbox;
     private Label label;
@@ -64,7 +65,7 @@ public class GameRoom extends Application {
         stage.setScene(scene);
         stage.setFullScreen(true);
 
-
+        CurrentRoom=this;
         this.capacity=gameRoomDatabase.getRoomCapacity();
         this.gamekey=gameRoomDatabase.getRoomId();
         this.admin=gameRoomDatabase.getAdmin();
@@ -189,8 +190,14 @@ public class GameRoom extends Application {
         request.addToArguments("Username", User.getCurrentUser().getUsername());
         request.addToArguments("RoomId", gameRoomDatabase.getRoomId());
         Client.client.sendRequestToServer(request, false);
+        exitRoom();
+ 
+    }
 
+    public void exitRoom(){
         try {
+            gameRoomDatabase=null;
+            CurrentRoom=null;
             new MainMenu().start(stage);
         } catch (Exception e) {
             e.printStackTrace();

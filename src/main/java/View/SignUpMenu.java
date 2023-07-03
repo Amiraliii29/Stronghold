@@ -155,7 +155,7 @@ public class SignUpMenu extends Application {
                 request.addToArguments("Security", securityAnswer);
        
                 Client.client.sendRequestToServer(request,true);
-                String response=Client.client.getRecentResponse();
+                String response = Client.client.getRecentResponse();
 
                 if(wasResponseSuccessfull(response))
                     new LoginMenu().start(stage);
