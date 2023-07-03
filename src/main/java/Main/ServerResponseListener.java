@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import Model.BuildingPrototype;
 import Model.Map;
+import Model.UnitPrototype;
 import Model.User;
+import View.Controller.ChatController;
 
 public class ServerResponseListener extends Thread {
 
@@ -23,6 +26,12 @@ public class ServerResponseListener extends Thread {
         try {
             String token = dataInputStream.readUTF();
             Request.setUserToken(token);
+
+            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
+
+            String json = dataInputStream.readUTF();
+            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,7 +53,7 @@ public class ServerResponseListener extends Thread {
     }
 
 
-    private boolean handleResponse(String response) {
+    private boolean handleResponse(String response) throws IOException {
 
         if (!response.startsWith("AUTO")) {
             client.setRecentResponse(response);
@@ -66,6 +75,7 @@ public class ServerResponseListener extends Thread {
         } else if (request.normalRequest.equals(NormalRequest.ADD_ROOM_TO_CLIENT)) {
             int ID = Integer.parseInt(request.argument.get("ID"));
             Client.client.myRoomsID.add(ID);
+            ChatController.enteredChatRoomID = ID;
         }
         else if(request.normalRequest.equals(NormalRequest.UPDATE_YOUR_DATA)){
             String users=request.argument.get("Users");

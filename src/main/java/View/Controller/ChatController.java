@@ -8,6 +8,7 @@ import View.Game;
 import View.ShopMenu;
 import View.SignUpMenu;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -15,9 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.ref.ReferenceQueue;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ChatController {
@@ -40,25 +44,43 @@ public class ChatController {
     public TextField user5Room;
     public TextField user6Room;
     public TextField user7Room;
-    private static int enteredChatRoomID;
+    public static int enteredChatRoomID;
     public TextField roomID;
+    private static String privateChatContact;
 
     public void enterPublicChat(MouseEvent mouseEvent) throws IOException {
-        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-                ShopMenu.shopPane , ShopMenuController.tradePane);
+//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+//                ShopMenu.shopPane , ShopMenuController.tradePane);
 
         globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PublicChat.fxml").toExternalForm()));
-        globalChatPane.setLayoutX(Game.leftX);
-        globalChatPane.setLayoutY(0);
+//        globalChatPane.setLayoutX(Game.leftX);
+//        globalChatPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(globalChatPane);
 
-        Game.mainPane.getChildren().add(globalChatPane);
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController.globalChatPane);
+        stage.setScene(scene);
+        stage.show();
 
         showGlobalChats();
     }
 
-    private void showGlobalChats() throws IOException {
+    public static void showGlobalChats() throws IOException {
+        globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
+                getResource("/fxml/PublicChat.fxml").toExternalForm()));
+//        globalChatPane.setLayoutX(Game.leftX);
+//        globalChatPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(globalChatPane);
+
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController.globalChatPane);
+        stage.setScene(scene);
+        stage.show();
+
         int messageCounter = 0;
         for (Request globalChat : Client.client.globalChats) {
             Label senderName = new Label();
@@ -89,36 +111,58 @@ public class ChatController {
 
             globalChatPane.getChildren().addAll(senderName , messageText , avatar);
 
-            if(80 + (60 * messageCounter) >= 400){
+            if(150 + (60 * messageCounter) >= 400){
                 globalChatPane.getChildren().clear();
                 globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                         getResource("/fxml/PublicChat.fxml").toExternalForm()));
                 messageCounter = 0;
             }
-            messageCounter++;
+            else {
+                messageCounter++;
+            }
         }
     }
 
     public void enterPrivateChat(MouseEvent mouseEvent) throws IOException {
-        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.privateChatPane);
+//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+//                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.privateChatPane);
 
         privateChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/PrivateChat.fxml").toExternalForm()));
-        privateChatPane.setLayoutX(Game.leftX);
-        privateChatPane.setLayoutY(0);
+//        privateChatPane.setLayoutX(Game.leftX);
+//        privateChatPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(privateChatPane);
+        privateChatContact = privateChatContactUserName.getText();
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController.privateChatPane);
+        stage.setScene(scene);
+        stage.show();
 
-        Game.mainPane.getChildren().add(privateChatPane);
         showPrivateChat();
     }
 
-    private void showPrivateChat() throws IOException {
+    public  void showPrivateChat() throws IOException {
+        privateChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
+                getResource("/fxml/PrivateChat.fxml").toExternalForm()));
+//        privateChatPane.setLayoutX(Game.leftX);
+//        privateChatPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(privateChatPane);
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController.privateChatPane);
+        stage.setScene(scene);
+        stage.show();
+
         User currentUser = User.getCurrentUser();
         int messageCounter = 0;
         for (Request privateChat : Client.client.privateChats) {
-            if(privateChat.argument.get("userName").equals(currentUser.getUsername()) ||
-            privateChat.argument.get("receiverUserName").equals(currentUser.getUsername())){
+            if((privateChat.argument.get("userName").equals(currentUser.getUsername()) &&
+            privateChat.argument.get("receiverUserName").equals(privateChatContact)) ||
+                    (privateChat.argument.get("userName").equals(privateChatContact) &&
+                            privateChat.argument.get("receiverUserName").equals(currentUser.getUsername()))
+            ){
                 Label senderName = new Label();
                 senderName.setLayoutX(110);
                 senderName.setLayoutY(78 + (60 * messageCounter));
@@ -167,20 +211,28 @@ public class ChatController {
         request.argument.put("userName" , User.getCurrentUser().getUsername());
         request.argument.put("avatar" , User.getCurrentUser().getAvatarFileName());
         Client.client.getDataOutputStream().writeUTF(request.toJson());
+        messageText.setText("");
     }
 
-    public void backToChatMenu(MouseEvent mouseEvent) {
+    public void backToChatMenu(MouseEvent mouseEvent) throws IOException {
+        ChatController.chatMenuPane = FXMLLoader
+                .load(new URL(SignUpMenu.class.getResource("/fxml/ChatMenu.fxml").toExternalForm()));
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController.chatMenuPane);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void sendPrivateMessage(MouseEvent mouseEvent) {
-        if(privateChatContactUserName.getText() != null) {
+        if(privateChatContact != null) {
             String message = messageText.getText();
             Request request = new Request(NormalRequest.SEND_PRIVATE_MESSAGE);
             request.argument.put("message", message);
             request.argument.put("userName", User.getCurrentUser().getUsername());
             request.argument.put("avatar", User.getCurrentUser().getAvatarFileName());
-            request.argument.put("receiverUserName", privateChatContactUserName.getText());
+            request.argument.put("receiverUserName", privateChatContact);
             Client.client.sendRequestToServer(request, false);
+            messageText.setText("");
         }
     }
 
@@ -196,36 +248,58 @@ public class ChatController {
         request.argument.put("user7" , user7Room.getText());
 
         Client.client.sendRequestToServer(request , false);
-        enteredChatRoomID = Client.client.myRoomsID.get(Client.client.myRoomsID.size() - 1);
 
-        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
+//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+//                ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
         chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-        chatRoomPane.setLayoutX(Game.leftX);
-        chatRoomPane.setLayoutY(0);
+//        chatRoomPane.setLayoutX(Game.leftX);
+//        chatRoomPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(chatRoomPane);
 
-        Game.mainPane.getChildren().add(chatRoomPane);
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController. chatRoomPane);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void enterRoom(MouseEvent mouseEvent) throws IOException {
         if(Client.client.myRoomsID.contains(Integer.parseInt(roomID.getText()))){
             enteredChatRoomID = Integer.parseInt(roomID.getText());
-            Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-                    , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-                    ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
+//            Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+//                    , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+//                    ShopMenu.shopPane , ShopMenuController.tradePane , ChatController.chatRoomMenuPane);
             chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
                     getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-            chatRoomPane.setLayoutX(Game.leftX);
-            chatRoomPane.setLayoutY(0);
+//            chatRoomPane.setLayoutX(Game.leftX);
+//            chatRoomPane.setLayoutY(0);
+//            Game.mainPane.getChildren().add(chatRoomPane);
+            Stage stage = SignUpMenu.stage;
+            Scene scene = new Scene(ChatController. chatRoomPane);
+            stage.setScene(scene);
+            stage.show();
 
             showRoomChats();
-            Game.mainPane.getChildren().add(chatRoomPane);
         }
     }
 
-    private void showRoomChats() throws IOException {
+    public static void showRoomChats() throws IOException {
+        chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
+                getResource("/fxml/ChatRoom.fxml").toExternalForm()));
+//            chatRoomPane.setLayoutX(Game.leftX);
+//            chatRoomPane.setLayoutY(0);
+//            Game.mainPane.getChildren().add(chatRoomPane);
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController. chatRoomPane);
+        stage.setScene(scene);
+        stage.show();
+        Label Id = new Label("ID: " + enteredChatRoomID );
+        Id.setLayoutX(310);
+        Id.setLayoutY(40);
+        chatRoomPane.getChildren().add(Id);
+
         int messageCounter = 0;
         for (Request roomChat : Client.client.roomChats) {
             if(Integer.parseInt(roomChat.argument.get("ID")) == enteredChatRoomID){
@@ -275,21 +349,25 @@ public class ChatController {
         request.argument.put("avatar", User.getCurrentUser().getAvatarFileName());
         request.argument.put("message" , messageText.getText());
         request.argument.put("ID" , Integer.toString(enteredChatRoomID));
-        Client.client.sendRequestToServer(request, false);
 
         Client.client.sendRequestToServer(request  , false);
+        messageText.setText("");
     }
 
     public void enterChatRoomMenu(MouseEvent mouseEvent) throws IOException {
-        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
-                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
-                ShopMenu.shopPane , ShopMenuController.tradePane);
+//        Game.mainPane.getChildren().removeAll(ChatController.chatMenuPane , ChatController.globalChatPane
+//                , TradeMenuController.tradeMenuHistoryPane , TradeMenuController.tradeMenuHistoryPane ,
+//                ShopMenu.shopPane , ShopMenuController.tradePane);
         chatRoomMenuPane = FXMLLoader.load(new URL(SignUpMenu.class.
                 getResource("/fxml/CreateRoomMenu.fxml").toExternalForm()));
-        chatRoomMenuPane.setLayoutX(Game.leftX);
-        chatRoomMenuPane.setLayoutY(0);
-        
-        Game.mainPane.getChildren().add(chatRoomMenuPane);
+//        chatRoomMenuPane.setLayoutX(Game.leftX);
+//        chatRoomMenuPane.setLayoutY(0);
+//
+//        Game.mainPane.getChildren().add(chatRoomMenuPane);
+        Stage stage = SignUpMenu.stage;
+        Scene scene = new Scene(ChatController. chatRoomMenuPane);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void deletePublicMessageForMe(MouseEvent mouseEvent) {
@@ -320,8 +398,13 @@ public class ChatController {
         if(selectedPrivateMessageToDeleteOrEdit != null){
             Request messageToDelete = Client.client.
                     getPrivateMessageByText(selectedPrivateMessageToDeleteOrEdit.getText());
-            messageToDelete.setNormalRequest(NormalRequest.DELETE_PRIVATE_MESSAGE);
-            Client.client.sendRequestToServer(messageToDelete , false);
+            Request requestToSend = new Request(NormalRequest.DELETE_PRIVATE_MESSAGE);
+            requestToSend.argument.put("userName", messageToDelete.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToDelete.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToDelete.argument.get("message"));
+            requestToSend.argument.put("receiverUserName" , messageToDelete.argument.get("receiverUserName"));
+
+            Client.client.sendRequestToServer(requestToSend , false);
         }
     }
 
@@ -329,8 +412,13 @@ public class ChatController {
         if(selectedRoomMessageToDeleteOrEdit != null) {
             Request messageToDelete = Client.client.
                     getRoomMessageByText(selectedRoomMessageToDeleteOrEdit.getText());
-            messageToDelete.setNormalRequest(NormalRequest.DELETE_ROOM_MESSAGE);
-            Client.client.sendRequestToServer(messageToDelete , false);
+            Request requestToSend = new Request(NormalRequest.DELETE_ROOM_MESSAGE);
+            requestToSend.argument.put("userName", messageToDelete.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToDelete.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToDelete.argument.get("message"));
+            requestToSend.argument.put("ID" , messageToDelete.argument.get("ID"));
+
+            Client.client.sendRequestToServer(requestToSend , false);
         }
     }
 
@@ -338,8 +426,11 @@ public class ChatController {
         if(selectedPublicMessageToDeleteOrEdit != null) {
             Request messageToDelete = Client.client.
                     getPublicMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
-            messageToDelete.setNormalRequest(NormalRequest.DELETE_PUBLIC_MESSAGE);
-            Client.client.sendRequestToServer(messageToDelete , false);
+            Request requestToSend = new Request(NormalRequest.DELETE_PUBLIC_MESSAGE);
+            requestToSend.argument.put("userName", messageToDelete.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToDelete.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToDelete.argument.get("message"));
+            Client.client.sendRequestToServer(requestToSend , false);
         }
     }
 
@@ -347,9 +438,14 @@ public class ChatController {
         if(selectedRoomMessageToDeleteOrEdit != null && messageText.getText() != null) {
             Request messageToEdit = Client.client.
                     getRoomMessageByText(selectedRoomMessageToDeleteOrEdit.getText());
-            messageToEdit.setNormalRequest(NormalRequest.EDIT_ROOM_MESSAGE);
-            messageToEdit.argument.put("newMessage" , messageText.getText());
-            Client.client.sendRequestToServer(messageToEdit, false);
+            Request requestToSend = new Request(NormalRequest.EDIT_ROOM_MESSAGE);
+            requestToSend.argument.put("userName", messageToEdit.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToEdit.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToEdit.argument.get("message"));
+            requestToSend.argument.put("ID" , messageToEdit.argument.get("ID"));
+            requestToSend.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(requestToSend , false);
+            messageText.setText("");
         }
     }
 
@@ -357,19 +453,40 @@ public class ChatController {
         if(selectedPublicMessageToDeleteOrEdit != null && messageText.getText() != null) {
             Request messageToEdit = Client.client.
                     getPublicMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
-            messageToEdit.setNormalRequest(NormalRequest.EDIT_GLOBAL_MESSAGE);
-            messageToEdit.argument.put("newMessage" , messageText.getText());
-            Client.client.sendRequestToServer(messageToEdit, false);
+            Request requestToSend = new Request(NormalRequest.EDIT_GLOBAL_MESSAGE);
+            requestToSend.argument.put("userName", messageToEdit.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToEdit.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToEdit.argument.get("message"));
+            requestToSend.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(requestToSend , false);
+            messageText.setText("");
         }
     }
 
     public void editPrivateMessage(MouseEvent mouseEvent) {
         if(selectedPrivateMessageToDeleteOrEdit != null && messageText.getText() != null) {
             Request messageToEdit = Client.client.
-                    getPrivateMessageByText(selectedPublicMessageToDeleteOrEdit.getText());
-            messageToEdit.setNormalRequest(NormalRequest.EDIT_PRIVATE_MESSAGE);
-            messageToEdit.argument.put("newMessage" , messageText.getText());
-            Client.client.sendRequestToServer(messageToEdit, false);
+                    getPrivateMessageByText(selectedPrivateMessageToDeleteOrEdit.getText());
+            Request requestToSend = new Request(NormalRequest.EDIT_PRIVATE_MESSAGE);
+            requestToSend.argument.put("userName", messageToEdit.argument.get("userName"));
+            requestToSend.argument.put("avatar", messageToEdit.argument.get("avatar"));
+            requestToSend.argument.put("message", messageToEdit.argument.get("message"));
+            requestToSend.argument.put("receiverUserName" , messageToEdit.argument.get("receiverUserName"));
+            requestToSend.argument.put("newMessage" , messageText.getText());
+            Client.client.sendRequestToServer(requestToSend , false);
+            messageText.setText("");
         }
+    }
+
+    public void refreshRoomChat(MouseEvent mouseEvent) throws IOException {
+        showRoomChats();
+    }
+
+    public void refreshPublicChat(MouseEvent mouseEvent) throws IOException {
+        showGlobalChats();
+    }
+
+    public void refreshPrivateChat(MouseEvent mouseEvent) throws IOException {
+        showPrivateChat();
     }
 }
