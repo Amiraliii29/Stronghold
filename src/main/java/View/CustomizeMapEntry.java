@@ -5,8 +5,6 @@ import Main.NormalRequest;
 import Main.Request;
 import Model.DataBase;
 import Model.Map;
-import Model.Square;
-import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,9 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.DataInputStream;
-import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -41,22 +36,6 @@ public class CustomizeMapEntry extends Application {
 
         ObservableList<String> options = FXCollections.observableArrayList(
         );
-
-        File folder = new File("src/main/resources/Map");
-        String[] fileNames = folder.list();
-        String usersMap = "";
-
-        for(String file : fileNames) {
-            for (char c : file.toCharArray()) {
-                if (c == '.') {
-                    options.add(usersMap);
-                    usersMap = "";
-                    break;
-                }
-                usersMap += c;
-            }
-        }
-
         Client.client.sendRequestToServer(new Request(NormalRequest.MAP_NAME),true);
         String response = Client.client.getRecentResponse();
         String[] names =  response.split(",");
@@ -93,33 +72,22 @@ public class CustomizeMapEntry extends Application {
         Client.client.serverResponseListener.changeSpecific();
         Client.client.sendRequestToServer(request, false);
 
-        DataInputStream dataInputStream = Client.client.dataInputStream;
-
-
-        int jsonLength = dataInputStream.readInt();
+        int jsonLength = Client.client.getDataInputStream().readInt();
         byte[] jsonBytes = new byte[jsonLength];
-
-        dataInputStream.readFully(jsonBytes);
-
+        Client.client.getDataInputStream().readFully(jsonBytes);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.readValue(jsonBytes, String.class);
-        Gson gson = new Gson();
-        Map map = gson.fromJson(json, Map.class);
+        Map map = objectMapper.readValue(jsonBytes, Map.class);
+
         Client.client.serverResponseListener.changeSpecific();
 
         DataBase.setSelectedMap(map);
 
-        Square[][] squares = map.getSquares();
-        for (int i = 0; i < map.getWidth() + 1; i++) {
-            for (int j = 0; j < map.getLength() + 1; j++) {
-                squares[i][j].newUnits();
-            }
-        }
-
         Game game = new Game();
         game.customizeMap();
+
         game.start(stage);
+
     }
 
     public void create(MouseEvent mouseEvent) throws Exception {
@@ -136,6 +104,7 @@ public class CustomizeMapEntry extends Application {
 
         Game game = new Game();
         game.customizeMap();
+
         game.start(stage);
     }
 

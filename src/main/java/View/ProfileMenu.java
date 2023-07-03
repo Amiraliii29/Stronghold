@@ -108,6 +108,16 @@ public class ProfileMenu extends Application {
         showFriendRequests();
     }
 
+    public void restart(){
+        try {
+            stage.setFullScreen(true);
+            new ProfileMenu().start(stage);
+            stage.setFullScreen(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setUpperDetailOfScoreboardVbox(){
         Text avatartText=new Text("Avatar");
         avatartText.setOpacity(0.75);
@@ -249,7 +259,6 @@ public class ProfileMenu extends Application {
             displayUserAvatar();
             UserInfoOperator.storeUserDataInJson(User.getCurrentUser(), "src/main/resources/jsonData/Users.json");
         } catch (IOException e) {
-            System.out.println("Unable to upload custom avatar");
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
@@ -688,5 +697,5 @@ public class ProfileMenu extends Application {
         User targetFriend=User.getUserByUserName(newFriendUsername);
         User.submitFriendship(targetFriend,isAccepted);
     }
-    
+
 }

@@ -9,11 +9,14 @@ import com.google.gson.reflect.TypeToken;
 
 import Controller.JsonConverter;
 import Controller.Orders;
+import Controller.ProfileMenuController;
 import Main.Client;
 import Main.NormalRequest;
 import Main.Request;
+import View.GameRoom;
 import View.ProfileMenu;
 import View.SignUpMenu;
+import javafx.application.Platform;
 
 public class User {
     private static User currentUser;
@@ -231,7 +234,6 @@ public class User {
         Request request=new Request(NormalRequest.GET_USERS_DATA);
         Client.client.sendRequestToServer(request, true);
         String result=Client.client.getRecentResponse();
-                System.out.println("passed");
         users.clear();
         users= new Gson().fromJson(result, new TypeToken<List<User>>(){}.getType());
     }
@@ -239,14 +241,17 @@ public class User {
     public static void setUsersFromJson(String usersInJson){
         users.clear();
         users= new Gson().fromJson(usersInJson, new TypeToken<List<User>>(){}.getType());
+        currentUser=getUserByUserName(currentUser.username);
+        ProfileMenuController.setCurrentUser(currentUser);
             
             if(ProfileMenu.profileMenu!=null)
             if(ProfileMenu.isMenuDisplayed)
-                try {
-                    new ProfileMenu().start(SignUpMenu.stage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+               Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProfileMenu.profileMenu.restart();
+                    }
+            });  
     }
 
     public static void sendFriendRequest(User targetFriend){

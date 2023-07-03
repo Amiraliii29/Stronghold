@@ -178,7 +178,7 @@ public class GameRoom extends Application {
         try {
             gameRoomDatabase=null;
             CurrentRoom=null;
-            new MainMenu().start(stage);
+            new Lobby().start(stage);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -59,7 +59,6 @@ public class LoginMenuController {
         Client.client.sendRequestToServer(request , true);
         String json = Client.client.getRecentResponse();
         User targetUser = new Gson().fromJson(json , User.class);
-        System.out.println("kir=====");
         if (targetUser == null){
             LoginMenu.captcha.setImage(new Image(DataBase.getRandomCaptchaImageAddress()));
             username.setText("");
@@ -112,7 +111,6 @@ public class LoginMenuController {
                 request2.addToArguments("Username", userName);
                 Client.client.sendRequestToServer(request2, false);
 
-                System.out.println(targetUser.getFriends().size());
             new MainMenu().start(SignUpMenu.stage);
         }
     }
