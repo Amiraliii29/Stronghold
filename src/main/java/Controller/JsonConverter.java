@@ -68,9 +68,8 @@ public class JsonConverter {
     }
 
     private static JSONArray getUsersDataInJson(String dirFromSrc){
-        JSONArray formerData=new JSONArray();
+        JSONArray formerData = new JSONArray();
         try {  
-            
             JSONParser jsonParser = new JSONParser();
             Object objjj = jsonParser.parse(new FileReader(dirFromSrc));
             formerData=(JSONArray) objjj;

@@ -24,7 +24,9 @@ import Controller.GameRoomDatabase;
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 public class Client extends Thread {
@@ -43,6 +45,10 @@ public class Client extends Thread {
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         DataBase.addToAllClients(this);
         token = encodeToken(generateToken());
+        loadGlobalChats();
+    }
+
+    private void loadGlobalChats() throws FileNotFoundException {
     }
 
 
@@ -190,13 +196,16 @@ public class Client extends Thread {
         else if(request.normalRequest.equals(NormalRequest.LOGOUT))
             logout(request);
 
+        else if (request.normalRequest.equals(NormalRequest.CREATE_GAMEROOM))
+            createUnit(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SAVE_PUBLIC_CHAT))
+            savePublicChats(request);
+
         else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
             userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
 
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
-            createUnit(request);
-
-        else if (request.normalRequest.equals(NormalRequest.CREATE_GAMEROOM))
             createUnit(request);
 
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
@@ -223,6 +232,18 @@ public class Client extends Thread {
         user.setOnline(false);
         JsonConverter.putUserDataInFile(user , "src/main/resources/jsonData/Users.json");
         updateAllClientsData();
+    }
+    private  void savePublicChats(Request request){
+        String string = request.argument.get("string");
+        try{
+            File file=new File("src/main/resources/jsonData/PublicChats.json");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(string);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch ( IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void seenRoomMessage(Request request) throws IOException {
@@ -429,6 +450,7 @@ public class Client extends Thread {
             requestToSend.argument.put("avatar", request.argument.get("avatar"));
             requestToSend.argument.put("message", request.argument.get("message"));
             requestToSend.argument.put("seen" , request.argument.get("seen"));
+            requestToSend.argument.put("time" , request.argument.get("time"));
 
             allClient.getDataOutputStream().writeUTF("AUTO" + requestToSend.toJson());
         }

@@ -36,5 +36,6 @@ public enum NormalRequest {
     SEEN_PRIVATE_MESSAGE,
     SEEN_ROOM_MESSAGE,
     LOGOUT,
+    SAVE_PUBLIC_CHAT,
     ;
 }
