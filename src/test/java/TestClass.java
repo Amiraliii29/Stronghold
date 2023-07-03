@@ -1,14 +1,6 @@
-import Controller.GameMenuController;
-import Controller.JsonConverter;
-import Controller.PenaltyTimer;
 import Controller.ProfileMenuController;
 import Controller.SignUpMenuController;
-import Model.DataBase;
 import Model.Map;
-import Model.Units.Troop;
-import Model.Units.Unit;
-import View.SignUpMenu;
-import View.Enums.Messages.ProfileMenuMessages;
 import View.Enums.Messages.SignUpMenuMessages;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 public class TestClass {
      User userTest1 = new User("kiarash", "123", "dahga", "lakh;g;", "afjhgk");

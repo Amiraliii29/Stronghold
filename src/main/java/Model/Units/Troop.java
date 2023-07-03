@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 public class Troop extends Unit{
     private static ArrayList<Troop> troops;
-    private transient final ArrayList<Resource> weapons;
-    private transient final boolean climbLadder;
-    private transient final boolean digMoat;
-    private transient boolean needHorse;
+    private final ArrayList<Resource> weapons;
+    private final boolean climbLadder;
+    private final boolean digMoat;
+    private boolean needHorse;
 
     static {
         try {

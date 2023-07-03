@@ -2,6 +2,9 @@ package Main;
 
 import Controller.JsonConverter;
 import Controller.UserInfoOperator;
+import Model.Buildings.Building;
+import Model.Resource;
+import Model.Units.Unit;
 import Model.User;
 
 import java.io.IOException;
@@ -11,10 +14,12 @@ import java.security.NoSuchAlgorithmException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        
+        Resource.load();
+        Unit.load();
+        Building.load();
         load();
 
-        ServerSocket serverSocket = new ServerSocket(8000);
+        ServerSocket serverSocket = new ServerSocket(8080);
         System.out.println("Server Started!");
         while (true) {
             Socket socket = serverSocket.accept();

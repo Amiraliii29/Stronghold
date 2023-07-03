@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public abstract class Building {
     protected static LinkedList<String> buildingsNames;
     protected static LinkedList<Building> buildings;
-    protected Government owner;
+    protected transient Government owner;
     protected String name;
     protected int width;
     protected int length;

@@ -3,7 +3,7 @@ import Model.DataBase;
 import Model.Government;
 
 public class Tunneler extends Unit{
-    private transient boolean busy;
+    private boolean busy;
 
     private Tunneler(Government owner) {
         super(owner, "Tunneler", 3, 60, 0, 0, 20);

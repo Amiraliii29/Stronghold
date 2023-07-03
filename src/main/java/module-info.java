@@ -19,7 +19,6 @@ module Project {
 
     exports Controller;
     opens Controller to com.google.gson;
-
     exports Main;
     opens Main to com.google.gson, javafx.fxml;
 }
