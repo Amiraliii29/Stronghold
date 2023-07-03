@@ -42,6 +42,7 @@ public enum NormalRequest {
     SAVE_PUBLIC_CHAT,
     SAVE_PRIVATE_CHAT,
     SAVE_ROOM_CHAT,
+    START_GAME,
 
     ;
 }
