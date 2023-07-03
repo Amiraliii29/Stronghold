@@ -4,6 +4,7 @@ import Model.Buildings.Defence;
 import Model.DataBase;
 import Model.Government;
 import Model.Square;
+import Model.UnitPrototype;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -58,6 +59,10 @@ public abstract class Unit {
 
     public void setState(StateUnits stateUnits) {
         this.stateUnits = stateUnits;
+    }
+
+    public void setHitPoint(int hp) {
+        hitPoint = hp;
     }
 
     public void changeHitPoint(int damage) {
@@ -141,23 +146,13 @@ public abstract class Unit {
 
 
     @Override
-    public String toString() {
-        return "Unit{" +
-                "name='" + name + '\'' +
-                ", speed=" + speed +
-                ", hitPoint=" + hitPoint +
-                ", damage=" + damage +
-                ", attackRange=" + attackRange +
-                ", stateUnits=" + stateUnits +
-                ", cost=" + cost +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Unit unit = (Unit) o;
-        return Objects.equals(owner, unit.owner) && Objects.equals(name, unit.name);
+        if (o == null) return false;
+        if (o instanceof Unit)
+            return Objects.equals(owner, ((Unit) o).owner) && Objects.equals(name, ((Unit) o).name);
+        else if (o instanceof UnitPrototype)
+            return Objects.equals(owner, ((UnitPrototype) o).owner) && Objects.equals(name, ((UnitPrototype) o).name);
+        else return false;
     }
 }
