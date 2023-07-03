@@ -175,13 +175,30 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.SAVE_MAP))
             saveMap(request);
 
+        else if (request.normalRequest.equals(NormalRequest.CREATE_GAMEROOM))
+            result=GameRoomDatabase.handleCreateRoom(request.argument);
+
+        else if (request.normalRequest.equals(NormalRequest.TRANSFER_GAMEROOMS_DATA)){
+            result="true";
+            updateGameRoomsForClients();
+        }
+        else if (request.normalRequest.equals(NormalRequest.JOIN_GAMEROOM)){
+            result="true";
+            GameRoomDatabase.handleJoinGameRoomRequest(request);
+        }
+        else if (request.normalRequest.equals(NormalRequest.CHANGE_GAMEROOM_PRIVACY))
+            GameRoomDatabase.handleRoomPrivacyChange(request);
+
+        else if (request.normalRequest.equals(NormalRequest.LEAVE_GAMEROOM))
+            GameRoomDatabase.handleLeaveGameRoom(request);
+        
+        else if (request.normalRequest.equals(NormalRequest.CHANGE_PLAYER_SPECTATING_STATUS))
+            GameRoomDatabase.handleSpectatingStatusChange(request);
+        
         else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
             userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
 
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
-            createUnit(request);
-
-        else if (request.normalRequest.equals(NormalRequest.CREATE_GAMEROOM))
             createUnit(request);
 
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
