@@ -133,9 +133,6 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
             result = ProfileMenuController.handleChangePassword(request.argument, user);
 
-        else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
-            result = new Gson().toJson(User.handleGetUsersRequest());
-
         else if (request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
             User.handleFriendRequest(request);
 

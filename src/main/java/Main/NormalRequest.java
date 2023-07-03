@@ -41,5 +41,6 @@ public enum NormalRequest {
     SEEN_ROOM_MESSAGE,
     LOGOUT,
     SAVE_PUBLIC_CHAT,
+    DESTROY_GAMEROOM,
     ;
 }
