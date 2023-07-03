@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="362.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CustomizeMapEntry">
+<AnchorPane prefHeight="362.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.CustomizeMapEntry">
    <children>
       <ImageView fitHeight="371.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
