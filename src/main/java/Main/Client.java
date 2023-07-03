@@ -1,13 +1,11 @@
 package Main;
 
 import Controller.JsonConverter;
+import Model.*;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
-import Model.ChatRoom;
-import Model.DataBase;
-import Model.Map;
 import Model.Units.Unit;
-import Model.User;
+
 import java.io.*;
 import java.lang.ref.ReferenceQueue;
 import java.net.Socket;
@@ -158,9 +156,6 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PASSWORD))
             result = ProfileMenuController.handleChangePassword(request.argument, user);
 
-        else if (request.normalRequest.equals(NormalRequest.GET_USERS_DATA) || request.normalRequest.equals(NormalRequest.LOAD_ALL_USERS_DATA))
-            result = new Gson().toJson(User.handleGetUsersRequest());
-
         else if (request.normalRequest.equals(NormalRequest.SEND_FRIEND_REQUSET))
             User.handleFriendRequest(request);
 
@@ -258,8 +253,17 @@ public class Client extends Thread {
         else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
             createUnit(request);
 
-        else if (request.gameRequest.equals(GameRequest.CREATE_UNIT))
-            createUnit(request);
+        else if (request.gameRequest.equals(GameRequest.SELECT_UNITS))
+            selectUnit(request);
+
+        else if (request.gameRequest.equals(GameRequest.SELECT_BUILDING))
+            selectBuilding(request);
+
+        else if (request.gameRequest.equals(GameRequest.MOVE_UNIT))
+            moveUnit(request);
+
+        else if (request.gameRequest.equals(GameRequest.CREATE_BUILDING))
+            createBuilding(request);
 
         //TODO: FILL THE REST;
 
@@ -269,6 +273,46 @@ public class Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createBuilding(Request request) {
+        BuildingPrototype building = BuildingPrototype.fromJson(request.argument.get("name"));
+
+        userDataBase.getGameMenuController().constructBuilding(building.createBuilding());
+    }
+
+    private void moveUnit(Request request) {
+        ArrayList<UnitPrototype> units = UnitPrototype.fromJson(request.argument.get("units"));
+        int x = Integer.parseInt(request.argument.get("x"));
+        int y = Integer.parseInt(request.argument.get("y"));
+        Map map = userDataBase.getDataBase().getSelectedMap();
+
+        for (UnitPrototype prototype : units) {
+            Square square = map.getSquareFromMap(prototype.x, prototype.y);
+            for (Unit unit : square.getUnits()) {
+                if (unit.equals(prototype) && unit.getHitPoint() == prototype.HP) {
+                    square.getUnits().remove(unit);
+                    unit.setCoordinate(x, y);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void selectBuilding(Request request) {
+        BuildingPrototype building = BuildingPrototype.fromJson(request.argument.get("building"));
+
+        userDataBase.setSelectedBuilding(building.createBuilding());
+    }
+
+    private void selectUnit(Request request) {
+        ArrayList<UnitPrototype> units = UnitPrototype.fromJson(request.argument.get("units"));
+        ArrayList<Unit> selectedUnit = new ArrayList<>();
+
+        for (UnitPrototype prototype : units)
+            selectedUnit.add(prototype.createUnit());
+
+        userDataBase.setSelectedUnit(selectedUnit);
     }
 
     private void logout(Request request) {
@@ -402,9 +446,10 @@ public class Client extends Thread {
             int jsonLength = dataInputStream.readInt();
             byte[] jsonBytes = new byte[jsonLength];
             dataInputStream.readFully(jsonBytes);
-
             ObjectMapper objectMapper = new ObjectMapper();
-            Map map = objectMapper.readValue(jsonBytes, Map.class);
+            String json = objectMapper.readValue(jsonBytes, String.class);
+            Gson gson = new Gson();
+            Map map = gson.fromJson(json, Map.class);
             map.setName(name);
 
             Map.saveMap(map,name);
@@ -432,16 +477,19 @@ public class Client extends Thread {
         String mapName = request.argument.get("name");
         Map map = Map.loadMap(mapName);
 
+        Gson gson = new Gson();
         ObjectMapper objectMapper = new ObjectMapper();
-        Object json = map;
+        Object json = gson.toJson(map);
 
         try {
             byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
-
+            dataOutputStream.writeUTF(new Request(ResultEnums.NONE).toJson());
             dataOutputStream.writeInt(jsonBytes.length);
+            System.out.println("int : " + jsonBytes.length);
+
             dataOutputStream.write(jsonBytes);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+
+            System.out.println("done!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

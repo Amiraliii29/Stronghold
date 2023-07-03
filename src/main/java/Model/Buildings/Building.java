@@ -33,13 +33,6 @@ public abstract class Building {
         Barrack.load();
     }
 
-    public void setxCoordinateLeft(int xCoordinateLeft) {
-        this.xCoordinateLeft = xCoordinateLeft;
-    }
-
-    public void setyCoordinateUp(int yCoordinateUp) {
-        this.yCoordinateUp = yCoordinateUp;
-    }
 
     public Building(Government owner, String name, int width, int length, int xCoordinateLeft, int yCoordinateUp,
                     ArrayList<String> lands, int hp, Resource resource, int numberOfResource, int cost, boolean canPass) {
@@ -56,6 +49,23 @@ public abstract class Building {
         this.cost = cost;
         this.canPass = canPass;
         this.maximumHp=hp;
+    }
+
+
+    public void setxCoordinateLeft(int xCoordinateLeft) {
+        this.xCoordinateLeft = xCoordinateLeft;
+    }
+
+    public void setyCoordinateUp(int yCoordinateUp) {
+        this.yCoordinateUp = yCoordinateUp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setCanPass(boolean canPass) {
+        this.canPass = canPass;
     }
 
 

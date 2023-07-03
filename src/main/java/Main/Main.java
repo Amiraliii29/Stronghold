@@ -1,16 +1,12 @@
 package Main;
 
 import Controller.JsonConverter;
-import Controller.UserInfoOperator;
 import Model.Buildings.Building;
 import Model.Resource;
 import Model.Units.Unit;
-import Model.User;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.NoSuchAlgorithmException;
 
 public class Main {
     public static void main(String[] args) throws IOException {

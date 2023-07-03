@@ -2,19 +2,24 @@ package Model;
 
 import Model.Buildings.Building;
 import Model.Units.Unit;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Square {
-    private static final HashMap<String, Boolean> canPass;
-    private transient ArrayList<Unit> units;
-    private transient Building building;
-    private Land land;
-    private String cliffDirection;
-    private Trees tree;
-    private int treeAmount;
-    private final int x;
-    private final int y;
+    public static final HashMap<String, Boolean> canPass;
+    @JsonIgnore
+    public transient ArrayList<Unit> units;
+    @JsonIgnore
+    public transient Building building;
+    public Land land;
+    public Trees tree;
+    public int treeAmount;
+    public int x;
+    public int y;
+
+
 
     static {
         canPass = new HashMap<>();
@@ -38,7 +43,6 @@ public class Square {
 
         this.building = null;
         this.tree = null;
-        this.cliffDirection = "n";
         this.treeAmount = 0;
     }
 
@@ -72,10 +76,6 @@ public class Square {
         return treeAmount;
     }
 
-    public String getCliffDirection() {
-        return cliffDirection;
-    }
-
     public boolean canPass() {
         return canPass.get(Land.getName(land));
     }
@@ -90,10 +90,6 @@ public class Square {
         this.building = building;
     }
 
-    public void setCliffDirection(String cliffDirection) {
-        this.cliffDirection = cliffDirection;
-    }
-
     public void setLand(Land land) {
         this.land = land;
     }
@@ -106,8 +102,17 @@ public class Square {
         units = new ArrayList<>();
     }
 
+    public void setUnits(ArrayList<Unit> units) {
+        this.units = units;
+    }
 
+    public void setX(int x) {
+        this.x = x;
+    }
 
+    public void setY(int y) {
+        this.y = y;
+    }
 
     public void addUnit(Unit unit) {
         this.units.add(unit);
