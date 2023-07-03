@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import View.Lobby;
 import View.SignUpMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -20,7 +21,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
-       new SignUpMenu().start(stage);
+       new Lobby().start(stage);
     }
 }
 

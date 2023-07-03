@@ -93,8 +93,11 @@ public class UserInfoHbox {
     private void initializeFriendRequestButton(){
         Image friendRequestImage=null;
         try {
-            friendRequestImage=new Image(new FileInputStream("src/main/resources/Images/Icon/Friends.jpg"));
-        } catch (FileNotFoundException e) {
+            if(!user.isFriendsWithCurrentUser())
+                friendRequestImage=new Image(new FileInputStream("src/main/resources/Images/Icon/Friends.jpg"));
+            else 
+                friendRequestImage=new Image(new FileInputStream("src/main/resources/Images/Icon/correct.png"));
+            } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         friendRequestButton= new ImageView(friendRequestImage);
@@ -116,8 +119,7 @@ public class UserInfoHbox {
             }
         }
 
-        if(targetUser.getUsername().equals(User.getCurrentUser().getUsername()) ||
-           targetUser.isFriendsWithCurrentUser() ){
+        if(targetUser.getUsername().equals(User.getCurrentUser().getUsername()) ){
             userInfoHbox.getStyleClass().add("picked-field-styles");
         }
     }

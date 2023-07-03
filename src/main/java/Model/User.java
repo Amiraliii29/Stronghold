@@ -18,8 +18,8 @@ public class User {
     private static User currentUser;
     private static SecureRandom randomGenerator=new SecureRandom();
     private static ArrayList<User> users;
-    private ArrayList<User> friends;
-    private ArrayList<User> usersWithFriendRequest;
+    private ArrayList<String> friends;
+    private ArrayList<String> usersWithFriendRequest;
     private String avatarFileName;
     private String username;
     private String password;
@@ -83,11 +83,11 @@ public class User {
         User.randomGenerator = randomGenerator;
     }
 
-    public void setFriends(ArrayList<User> friends) {
+    public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
 
-    public void setUsersWithFriendRequest(ArrayList<User> usersWithFriendRequest) {
+    public void setUsersWithFriendRequest(ArrayList<String> usersWithFriendRequest) {
         this.usersWithFriendRequest = usersWithFriendRequest;
     }
 
@@ -168,11 +168,11 @@ public class User {
         User.users=users;
     }
 
-    public void addToFriends(User user){
-        friends.add(user);
+    public void addToFriends(String username){
+        friends.add(username);
     }
 
-    public ArrayList<User> getFriends(){
+    public ArrayList<String> getFriends(){
         return friends;
     }
 
@@ -192,16 +192,16 @@ public class User {
         return null;
     }
 
-    public ArrayList<User> getUsersWithFriendRequest(){
+    public ArrayList<String> getUsersWithFriendRequest(){
         return usersWithFriendRequest;
     }
 
-    public void addToFriendRequests(User user){
-        usersWithFriendRequest.add(user);
+    public void addToFriendRequests(String username){
+        usersWithFriendRequest.add(username);
     }
 
     public boolean isFriendsWithCurrentUser(){
-        return getFriends().contains(currentUser);
+        return getFriends().contains(currentUser.username);
     }
 
     public static void addUser(User user){
@@ -229,7 +229,7 @@ public class User {
             if(ProfileMenu.profileMenu.isMenuDisplayed)
                 if(ProfileMenu.profileMenu.isProfileShown)
                     ProfileMenu.profileMenu.showProfileProtocol();
-                 else
+                else
                     ProfileMenu.profileMenu.showScoreBoardProtocol();
             
     }
@@ -241,28 +241,33 @@ public class User {
 
     public static void sendFriendRequest(User targetFriend){
 
-        if(targetFriend.getFriends().contains(currentUser) ||
-                targetFriend.getUsersWithFriendRequest().contains(currentUser)){
+        if(targetFriend.getFriends().contains(currentUser.username) ||
+                targetFriend.getUsersWithFriendRequest().contains(currentUser.username)||
+                targetFriend.getUsername().equals(currentUser.getUsername())){
+
             Orders.createNotificationDialog("Result","Friend Request Delivery:","Error: you are either already friends with user or have sent a friend request!",Orders.yellowNotifErrorColor);
             return;
         }
 
-        targetFriend.getUsersWithFriendRequest().add(currentUser);
+        targetFriend.getUsersWithFriendRequest().add(currentUser.getUsername());
         Request request=new Request(NormalRequest.SEND_FRIEND_REQUSET);
-        Gson gson=new Gson();
-        request.addToArguments("Sender", gson.toJson(currentUser));
-        request.addToArguments("Reciever", gson.toJson(targetFriend));
+        request.addToArguments("Sender", currentUser.getUsername());
+        request.addToArguments("Reciever", targetFriend.getUsername());
         
         Client.client.sendRequestToServer(request, false);
 
         Orders.createNotificationDialog("Result","Friend Request Delivery:","Friend request was sent succesfully!",Orders.greenNotifSuccesColor);
     }
 
-    public static void submitFriendship(User newFriend){
+    public static void submitFriendship(User newFriend,boolean isAccepted){
+
+        String acceptance="true";
+        if(!isAccepted) acceptance="false";
+
         Request request=new Request(NormalRequest.SUBMIT_FRIENDSHIP);
-        Gson gson=new Gson();
-        request.addToArguments("User1", gson.toJson(currentUser));
-        request.addToArguments("User2", gson.toJson(newFriend));
+        request.addToArguments("Sender", currentUser.getUsername());
+        request.addToArguments("Reciever",newFriend.getUsername() );
+        request.addToArguments("IsAccepted", acceptance);
         Client.client.sendRequestToServer(request, false);
     }
 
