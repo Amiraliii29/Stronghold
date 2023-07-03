@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import Controller.GameRoomDatabase;
 import Main.Client;
 import Main.NormalRequest;
 import Main.Request;
@@ -39,11 +40,11 @@ public class Lobby extends Application {
     public void start(Stage stage){
         this.stage=stage;
         gameRooms=new ArrayList<>();
-       this.stage=stage;
+        this.stage=stage;
         StackPane Pane=null;
         try {
             Pane = FXMLLoader.load(
-                    new URL(GameRoom.class.getResource("/FXML/Lobby.fxml").toExternalForm()));
+                    new URL(SignUpMenu.class.getResource("/FXML/Lobby.fxml").toExternalForm()));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -54,16 +55,34 @@ public class Lobby extends Application {
 
         showLobbyProtocol();
         Pane.getChildren().add(bigVbox);
+
+
+
+
+
+
         Scene scene = new Scene(Pane);
         stage.setScene(scene);
         this.stage.show();
+    }
+
+    private void displayOngoingRooms(){
+        Request request= new Request(NormalRequest.TRANSFER_GAMEROOMS_DATA);
+        Client.client.sendRequestToServer(request, true);
+
+        for (GameRoomDatabase database : GameRoomDatabase.getAllRoomDatabases()) {
+            System.out.println(database.isPublic());
+            if(!database.isPublic()) continue;
+            GameRoomInfoHbox roomHbox=new GameRoomInfoHbox(database);
+            gameRoomInfosVBox.getChildren().add(roomHbox.getMainHbox());
+        }
     }
 
     public void showLobbyProtocol(){
 
         bigVbox=new VBox(8);
         bigVbox.setAlignment(Pos.CENTER);
-        bigVbox.getChildren().add(new UserSearchBar().getMainVbox());
+        bigVbox.getChildren().add(new GameRoomSearchBar().getMainVbox());
         label=new Label("LOBBY:");
         gameRoomInfosVBox=new VBox(8);
 
@@ -73,10 +92,12 @@ public class Lobby extends Application {
         scoreboardPane.setPannable(true);
 
         scoreboardPane.setMaxHeight(200);
-        scoreboardPane.setMaxWidth(400);
-        for (GameRoom gameRoom : gameRooms) 
-            gameRoomInfosVBox.getChildren().add(new GameRoomInfoHbox(gameRoom).getMainHbox());
+        scoreboardPane.setMinHeight(200);
+        scoreboardPane.setMaxWidth(600);
+        scoreboardPane.setMinWidth(600);
         
+        displayOngoingRooms();
+
         bigVbox.getChildren().addAll(label,scoreboardPane);
         setButtons();
         setButtonListeners();
@@ -127,17 +148,16 @@ public class Lobby extends Application {
     }
 
     private void startGameRoom(String capacity,String roomId){
-        int roomCapInNum=Integer.parseInt(capacity);
-
         
-        Request request=new Request(NormalRequest.CREATE_ROOM);
+        Request request=new Request(NormalRequest.CREATE_GAMEROOM);
         request.addToArguments("RoomId", roomId);
         request.addToArguments("Admin", User.getCurrentUser().getUsername());
         request.addToArguments("Capacity", capacity);
 
-        Client.client.sendRequestToServer(request, false);
-        GameRoom newRoom=new GameRoom(User.getCurrentUser(), roomId, roomCapInNum);
-        newRoom.start(stage);
+        Client.client.sendRequestToServer(request, true);
+        GameRoomDatabase associatedDatabase=GameRoomDatabase.getDatabaseByAdmin(User.getCurrentUser());
+        GameRoom.setDatabase(associatedDatabase);
+        new GameRoom().start(stage);
     }
 
 }

@@ -44,7 +44,7 @@ public class UserInfoHbox {
         initializeFriendRequestButton();
 
         HBox temp0=new HBox(8, userAvatarImgView);
-        temp0.setMinWidth(80);
+        temp0.setMinWidth(90);temp0.setMaxWidth(90);
         HBox temp1=new HBox(8,userNameText),temp2=new HBox(8,userScoreText),temp3=new HBox(8,userRankText),temp4=new HBox(8, friendRequestButton),temp5=new HBox(8,onlineStatus);
         temp1.setMinWidth(90); temp1.setMaxWidth(90);temp2.setMinWidth(90); temp2.setMaxWidth(90);temp3.setMinWidth(90); temp3.setMaxWidth(90);temp4.setMinWidth(90); temp4.setMaxWidth(90);temp5.setMinWidth(90); temp5.setMaxWidth(90);
         temp0.setAlignment(Pos.CENTER);

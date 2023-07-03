@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Controller.GameRoomDatabase;
+import Controller.Orders;
 import Controller.UserInfoOperator;
 import Main.Client;
 import Main.NormalRequest;
@@ -27,11 +29,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class GameRoom extends Application {
+
+    private static GameRoomDatabase gameRoomDatabase;
     private ScrollPane scoreboardPane;
     private VBox scoreBoardVBox, bigVbox;
     private Label label;
     private Button enterChat, startGame, back,Refresh;
-    private final String gamekey;
+    private String gamekey;
     private User admin;
     private HashMap<String,Boolean> usersPlayingStatus; 
     private HashMap<String,HBox> UserHboxes;
@@ -40,14 +44,16 @@ public class GameRoom extends Application {
     private boolean isRoomPublic;
     private int capacity;
     private Stage stage;
+    
 
+    private int errorRecurrence=0;
 
     public void start(Stage stage){
         this.stage=stage;
         StackPane Pane=null;
         try {
             Pane = FXMLLoader.load(
-                    new URL(GameRoom.class.getResource("/FXML/GameRoom.fxml").toExternalForm()));
+                    new URL(SignUpMenu.class.getResource("/FXML/GameRoom.fxml").toExternalForm()));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -56,17 +62,20 @@ public class GameRoom extends Application {
         Scene scene = new Scene(Pane);
         stage.setScene(scene);
         stage.setFullScreen(true);
-        this.stage.show();
-    }
 
-    public GameRoom(User admin,String roomId,int capacity){
-        this.capacity=capacity;
-        this.gamekey=roomId;
+
+        this.capacity=gameRoomDatabase.getRoomCapacity();
+        this.gamekey=gameRoomDatabase.getRoomId();
+        this.admin=gameRoomDatabase.getAdmin();
         usersPlayingStatus=new HashMap<>();
         UserHboxes=new HashMap<>();
         usersInRoom=new ArrayList<>();
 
         showGameRoomProtocol();
+        Pane.getChildren().add(bigVbox);
+
+
+        this.stage.show();
     }
 
     public int getCapacity(){
@@ -99,33 +108,37 @@ public class GameRoom extends Application {
         scoreBoardVBox=new VBox(8);
 
         scoreboardPane= new ScrollPane(scoreBoardVBox);
-        scoreboardPane.setFitToWidth(true);
         scoreBoardVBox.setAlignment(Pos.CENTER);
         scoreboardPane.setPannable(true);
 
         setUpperDetailOfVbox();
 
         scoreboardPane.setMaxHeight(200);
-        scoreboardPane.setMaxWidth(680);
+        scoreboardPane.setMaxWidth(740);
         // for (int i = 0; i < Math.min(10,sortedUsers.size()); i++) {
         //     scoreBoardVBox.getChildren().add(new UserInfoHbox(sortedUsers.get(i)).getMainHbox());
         // }
         bigVbox.getChildren().addAll(label,scoreboardPane);
         setButtons();
         setButtonListeners();
-        addPersonToRoom(admin.getUsername());
+        addFormerUsers();
     }
 
     private void setPrivacyCheckBox(){
         privacy=new CheckBox("Make Room Private");
-        privacy.selectedProperty().addListener(event -> {
-            isRoomPublic=privacy.isSelected();
-        });
+        privacy.setSelected(!gameRoomDatabase.isPublic());
+        privacy.selectedProperty().addListener(event -> changeRoomPrivacy(privacy.isSelected()));
         bigVbox.getChildren().add(privacy);
     }
 
-    private String generateGameKey(){
-        return UserInfoOperator.addRandomizationToString(admin.getNickName());
+    private void changeRoomPrivacy(boolean isprivate){
+        isRoomPublic=!isprivate;
+        String sstate="false";
+        if(!isprivate) sstate="true";
+        Request request=new Request(NormalRequest.CHANGE_GAMEROOM_PRIVACY);
+        request.addToArguments("RoomId", gameRoomDatabase.getRoomId());
+        request.addToArguments("State", sstate);
+        Client.client.sendRequestToServer(request, false);
     }
 
     private void setButtons(){
@@ -134,40 +147,88 @@ public class GameRoom extends Application {
         back=new Button("Exit");
         Refresh=new Button("Refresh List");
         HBox hb=new HBox(8, startGame,back);
+        hb.setMaxWidth(300);
+        hb.setAlignment(Pos.CENTER);
         bigVbox.getChildren().addAll(enterChat,Refresh,hb);
     }
 
     private void setButtonListeners(){
-        //TODO
+        Refresh.setOnMouseClicked(event -> refresh());
+        back.setOnMouseClicked(event -> back());
+    }
+
+    private void refresh(){
+        Request request=new Request(NormalRequest.TRANSFER_GAMEROOMS_DATA);
+        Client.client.sendRequestToServer(request, true);
+        this.setDatabase(GameRoomDatabase.getDatabasesByRoomId(gameRoomDatabase.getRoomId()));
+        new GameRoom().start(stage);
     }
 
     public void back(){
-        //TODO:SEND REQUEST TO REMOVE USER FOR EVERYONE
-        if(User.getCurrentUser().getUsername().equals(admin.getUsername()));
-            //TODO: MAKE S.ONE ELSE ADMIN, IF EMPTY, CLOSE ROOM;
+        Request request=new Request(NormalRequest.LEAVE_GAMEROOM);
+        request.addToArguments("Username", User.getCurrentUser().getUsername());
+        request.addToArguments("RoomId", gameRoomDatabase.getRoomId());
+        Client.client.sendRequestToServer(request, false);
+
+        try {
+            new MainMenu().start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void closeRoom(){
-        //TODO
+    public void addFormerUsers(){
+        for (User user : gameRoomDatabase.getUsersInRoom()) {
+            usersInRoom.add(user);
+            displayPersonInRoom(user.getUsername());
+        }
     }
 
-    public void addPersonToRoom(String username){
+    public void displayPersonInRoom(String username){
         User targetUser=User.getUserByUserName(username);
 
-        CheckBox isUserPlaying=new CheckBox();
+        CheckBox isUserSpectating=new CheckBox();
+        HBox hb1=new HBox(8, isUserSpectating);
+        hb1.setMaxWidth(90);
+        hb1.setMinWidth(90);
+        hb1.setAlignment(Pos.CENTER);
         UserInfoHbox infoHbox=new UserInfoHbox(targetUser);
 
-        HBox targetUserHbox=new HBox(8,infoHbox.getMainHbox(),isUserPlaying);
+        HBox targetUserHbox=new HBox(0,infoHbox.getMainHbox(),hb1);
+        targetUserHbox.setAlignment(Pos.CENTER);
         UserHboxes.put(username, targetUserHbox);
-        usersInRoom.add(targetUser);
         scoreBoardVBox.getChildren().add(targetUserHbox);
 
-        isUserPlaying.setSelected(true);
-        isUserPlaying.selectedProperty().addListener(event -> makePlayerSpectator(targetUser,isUserPlaying.isSelected()));
+        isUserSpectating.setSelected(!gameRoomDatabase.isUserPlaying(targetUser));
+        isUserSpectating.selectedProperty().addListener(event -> makePlayerSpectator(targetUser,isUserSpectating.isSelected(),isUserSpectating));
     }
 
-    private void makePlayerSpectator(User user,boolean isPlaying){
-        //TODO
+    public void AddUserToRoom(User user){
+        usersInRoom.add(user);
+        if(!gameRoomDatabase.getUsersInRoom().contains(user))
+            gameRoomDatabase.AddtoUsers(user);
+
+        displayPersonInRoom(user.getUsername());
+    }
+
+    private void makePlayerSpectator(User user,boolean isSpectating,CheckBox originBox){
+        if(errorRecurrence>0){
+            errorRecurrence=0;
+            return;
+        }
+        if(!user.getUsername().equals(User.getCurrentUser().getUsername())){
+            Orders.createNotificationDialog("Error", "Accessibility", "You can only change your own spectating status", Orders.yellowNotifErrorColor);
+            errorRecurrence++;
+            originBox.setSelected(!isSpectating);
+        }
+        Request request=new Request(NormalRequest.CHANGE_PLAYER_SPECTATING_STATUS);
+        request.addToArguments("Username", User.getCurrentUser().getUsername());
+        request.addToArguments("RoomId", gameRoomDatabase.getRoomId());
+        String status="false";
+        if(!isSpectating) status="true";
+        request.addToArguments("Status", status);
+
+        Client.client.sendRequestToServer(request, false);
     }
 
     public void removePersonFromRoom(String username){
@@ -200,14 +261,16 @@ public class GameRoom extends Application {
 
         HBox hb0=new HBox(avatartText),hb1=new HBox(usernameText),hb2=new HBox(highscoreText),hb3=new HBox(rankText),hb4=new HBox(FriendshipText),hb5=new HBox(OnlineStatusText),hb6=new HBox(Spectate);
         hb0.setMaxWidth(90);hb0.setMinWidth(90);hb1.setMaxWidth(90);hb1.setMinWidth(90);hb2.setMaxWidth(90);hb2.setMinWidth(90);hb3.setMaxWidth(90);hb3.setMinWidth(90);
-        hb4.setMaxWidth(90);hb4.setMinWidth(90);hb5.setMaxWidth(90);hb6.setMinWidth(90);hb5.setMaxWidth(90);hb6.setMinWidth(90);
+        hb4.setMaxWidth(90);hb4.setMinWidth(90);hb5.setMaxWidth(90);hb6.setMinWidth(90);hb5.setMaxWidth(90);hb6.setMinWidth(90);hb6.setMaxWidth(90);
         hb2.setAlignment(Pos.CENTER);
         hb3.setAlignment(Pos.CENTER);
         hb0.setAlignment(Pos.CENTER);
         hb1.setAlignment(Pos.CENTER);
         hb4.setAlignment(Pos.CENTER);
         hb5.setAlignment(Pos.CENTER);
+        hb6.setAlignment(Pos.CENTER);
         HBox parentHBox=new HBox(8, hb0,hb1,hb2,hb3,hb4,hb5,hb6);
+        parentHBox.setAlignment(Pos.CENTER);
         scoreBoardVBox.getChildren().addAll(parentHBox);
     }
 
@@ -253,5 +316,9 @@ public class GameRoom extends Application {
 
     public User getAdmin() {
         return admin;
+    }
+
+    public static void setDatabase(GameRoomDatabase database){
+        GameRoom.gameRoomDatabase=database;
     }
 }

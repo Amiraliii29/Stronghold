@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
 public class GameRoomInfoHbox {
     private static ArrayList<UserInfoHbox> userInfoHboxes;
 
-    private GameRoom gameRoom;
+    private GameRoomDatabase gameRoomdatabase;
     private Text usersNicknameText;
     private Text GameRoomNameText;
     //TODO
@@ -35,17 +35,18 @@ public class GameRoomInfoHbox {
     
 
     
-    public GameRoomInfoHbox(GameRoom gameRoom){
+    public GameRoomInfoHbox(GameRoomDatabase gameRoomDatabase){
         mainHbox=new HBox(8);
-        this.gameRoom=gameRoom;
+        this.gameRoomdatabase=gameRoomDatabase;
         InitializeRoomInfo();
     }
 
     private void InitializeRoomInfo(){
 
-        GameRoomNameText=new Text("Room: "+gameRoom.getGamekey());
+        GameRoomNameText=new Text("Room: "+gameRoomdatabase.getRoomId());
         initializeNicknameText();
         initalizeCapacity();
+        initializeJoinButton();
 
         HBox temp0=new HBox(8, GameRoomNameText);
         temp0.setMinWidth(100);
@@ -63,25 +64,33 @@ public class GameRoomInfoHbox {
 
     private void initializeNicknameText(){
         String text="";
-        for (User user : gameRoom.getUsersInRoom()) {
+        for (User user : gameRoomdatabase.getUsersInRoom()) {
             text=text.concat(user.getNickName()+", ");
         }
         usersNicknameText=new Text(text);
     }
 
     private void initalizeCapacity(){
-        capacityText=new Text(""+gameRoom.getUsersInRoom().size()+"/"+gameRoom.getCapacity());
+        capacityText=new Text(""+gameRoomdatabase.getUsersInRoom().size()+"/"+gameRoomdatabase.getRoomCapacity());
     }
 
     private void initializeJoinButton(){
         joinRoomButton=new Button("Join Room");
+
         joinRoomButton.setOnMouseClicked(event -> {
-            Request request=new Request(NormalRequest.JOIN_GAMEROOM);
-            request.addToArguments("Username", User.getCurrentUser().getUsername());
-            Client.client.sendRequestToServer(request, true);
-            GameRoomDatabase database= new Gson().fromJson(Client.client.getRecentResponse(), GameRoomDatabase.class);
-            startGameRoomFromDatabase(database);
+            joinRoom();
         });
+    }
+
+    private void joinRoom(){
+        Request request=new Request(NormalRequest.JOIN_GAMEROOM);
+            request.addToArguments("Username", User.getCurrentUser().getUsername());
+            request.addToArguments("RoomId", this.gameRoomdatabase.getRoomId());
+            Client.client.sendRequestToServer(request, true);
+
+            gameRoomdatabase=GameRoomDatabase.getDatabasesByRoomId(this.gameRoomdatabase.getRoomId());
+            GameRoom.setDatabase(gameRoomdatabase);
+            new GameRoom().start(SignUpMenu.stage);
     }
 
     public HBox getMainHbox() {
