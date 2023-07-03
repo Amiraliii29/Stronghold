@@ -6,6 +6,8 @@ import Model.DataBase;
 import Model.Government;
 import Model.Map;
 import Model.Units.Unit;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class UserDataBase {
@@ -26,6 +28,14 @@ public class UserDataBase {
         gameMenuController = new GameMenuController(this);
     }
 
+
+    public void sendRequest(Request request) {
+        try {
+            client.getDataOutputStream().writeUTF(request.toJson());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public Client getClient() {

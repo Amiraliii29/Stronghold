@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class Map {
     // toole mehvar ofogi = width  moalefe ofoghi = x
     // toole mehvar amoudi = length  moalefe amoudi = y
-    private String name;
-    private final Square[][] squares;
-    private ArrayList<Government> governmentsInMap;
-    private final int width;
-    private final int length;
+    public String name;
+    public Square[][] squares;
+    public transient ArrayList<Government> governmentsInMap;
+    public int width;
+    public int length;
 
 
 
@@ -40,7 +40,21 @@ public class Map {
         this.name = name;
     }
 
+    public void setSquares(Square[][] squares) {
+        this.squares = squares;
+    }
 
+    public void setGovernmentsInMap(ArrayList<Government> governmentsInMap) {
+        this.governmentsInMap = governmentsInMap;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 
     public Square[][] getSquares() {
         return squares;
@@ -193,7 +207,7 @@ public class Map {
 
         for (int cartesianzone = 1; cartesianzone <= 4; cartesianzone++)
             landsWithinRange.addAll(getSquaresWithinRange(unitX, unitY, aggressionRange, cartesianzone));
-        
+
         for (int[] coord : landsWithinRange)
             if (doesSquareContainEnemyUnits(coord[0], coord[1], mainUnit.getOwner()))
                 return coord;

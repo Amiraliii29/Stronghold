@@ -6,7 +6,8 @@ public enum ResultEnums {
     NOT_ENOUGH_MONEY,
     NOT_ENOUGH_MATERIAL,
     NOT_ENOUGH_FREE_WORKER,
-    
+    NONE,
+
 
 
     ;
