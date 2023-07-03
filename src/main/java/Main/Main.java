@@ -1,6 +1,7 @@
 package Main;
 
 import java.io.IOException;
+import View.Lobby;
 import View.SignUpMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;

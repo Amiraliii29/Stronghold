@@ -1,7 +1,11 @@
-package Controller;
+package View.Controller;
 
+import Main.Client;
+import Main.NormalRequest;
+import Main.Request;
 import Model.DataBase;
 import Model.Map;
+import Model.User;
 import View.*;
 import View.Controller.ChatController;
 import javafx.fxml.FXMLLoader;
@@ -31,12 +35,18 @@ public class MainMenuController {
     }
 
     public void openProfileMenu(MouseEvent mouseEvent) throws Exception {
+        // SignUpMenu.stage.setFullScreen(true);
+        // new ProfileMenu().start(SignUpMenu.stage);
         SignUpMenu.stage.setFullScreen(true);
-        new ProfileMenu().start(SignUpMenu.stage);
+
+        new Lobby().start(SignUpMenu.stage);
         SignUpMenu.stage.setFullScreen(true);
     }
 
     public void logout(MouseEvent mouseEvent) throws Exception {
+        Request request = new Request(NormalRequest.LOGOUT);
+        request.argument.put("userName" , User.getCurrentUser().getUsername());
+        Client.client.sendRequestToServer(request , false);
         new LoginMenu().start(SignUpMenu.stage);
     }
 
@@ -47,5 +57,9 @@ public class MainMenuController {
         Scene scene = new Scene(ChatController.chatMenuPane);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void openLobby(MouseEvent mouseEvent) {
+        // todo fill it soroush
     }
 }

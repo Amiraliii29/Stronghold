@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="427.0" prefWidth="325.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.ChatController">
    <children>
       <ImageView fitHeight="434.0" fitWidth="325.0" layoutY="-1.0">
@@ -34,6 +33,11 @@
       </Button>
       <TextField fx:id="roomID" layoutX="83.0" layoutY="300.0" promptText="Room ID" />
       <Button layoutX="115.0" layoutY="326.0" mnemonicParsing="false" onMouseClicked="#enterRoom" prefHeight="26.0" prefWidth="97.0" text="Enter Room">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="135.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#backToChatMenu" text="Back">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxWidth="680.0" prefHeight="390.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainMenuController">
+<AnchorPane maxWidth="680.0" prefHeight="390.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.MainMenuController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="540.0" layoutY="-4.0" opacity="0.88" preserveRatio="true">
          <image>
@@ -34,6 +34,11 @@
          </font>
       </Button>
       <Button layoutX="387.0" layoutY="252.0" mnemonicParsing="false" onMouseClicked="#openChatMenu" text="Chat Menu">
+         <font>
+            <Font name="American Typewriter" size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="78.0" layoutY="265.0" mnemonicParsing="false" onMouseClicked="#openLobby" text="Lobby">
          <font>
             <Font name="American Typewriter" size="13.0" />
          </font>

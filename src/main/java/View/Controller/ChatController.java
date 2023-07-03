@@ -5,6 +5,7 @@ import Main.NormalRequest;
 import Main.Request;
 import Model.User;
 import View.Game;
+import View.MainMenu;
 import View.ShopMenu;
 import View.SignUpMenu;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,8 @@ import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ChatController {
 
@@ -82,12 +85,17 @@ public class ChatController {
         stage.show();
 
         int messageCounter = 0;
-        for (Request globalChat : Client.client.globalChats) {
-            Label senderName = new Label();
+        int allMessagesCount = Client.client.globalChats.size();
+        int reminder = 6;
+        if(allMessagesCount < 6)
+            reminder = allMessagesCount;
+        for (int i = allMessagesCount - reminder; i < allMessagesCount ; i++) {
+            Request globalChat = Client.client.globalChats.get(i);
+                    Label senderName = new Label();
             senderName.setLayoutX(110);
             senderName.setLayoutY(78 + (60 * messageCounter));
             senderName.setText(globalChat.argument.get("userName"));
-            senderName.setFont(new Font("American Typewriter" , 15));
+            senderName.setFont(new Font("American Typewriter", 15));
 
             ImageView avatar = new ImageView();
             avatar.setLayoutX(70);
@@ -95,31 +103,51 @@ public class ChatController {
             avatar.setFitWidth(30);
             avatar.setFitHeight(30);
             avatar.setImage(new Image(new FileInputStream
-                    ("src/main/resources/Images/avatars/"+globalChat.argument.get("avatar"))));
+                    ("src/main/resources/Images/avatars/" + globalChat.argument.get("avatar"))));
 
             Label messageText = new Label();
             messageText.setLayoutX(95);
             messageText.setLayoutY(120 + (60 * messageCounter));
             messageText.setText(globalChat.argument.get("message"));
-            messageText.setFont(new Font("American Typewriter" , 13));
+            messageText.setFont(new Font("American Typewriter", 13));
 
             messageText.setOnMouseClicked(event -> {
-                if(senderName.getText().equals(User.getCurrentUser().getUsername())){
+                if (senderName.getText().equals(User.getCurrentUser().getUsername())) {
                     selectedPublicMessageToDeleteOrEdit = messageText;
                 }
             });
-
-            globalChatPane.getChildren().addAll(senderName , messageText , avatar);
-
-            if(150 + (60 * messageCounter) >= 400){
-                globalChatPane.getChildren().clear();
-                globalChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
-                        getResource("/fxml/PublicChat.fxml").toExternalForm()));
-                messageCounter = 0;
+            // seen or sent
+            if(!User.getCurrentUser().getUsername().equals(globalChat.argument.get("userName"))
+            && globalChat.argument.get("seen").equals("NO")){
+                globalChat.argument.put("seen" , "YES");
+                Request request = new Request(NormalRequest.SEEN_PUBLIC_MESSAGE);
+                request.argument.put("message" , globalChat.argument.get("message"));
+                request.argument.put("userName" ,globalChat.argument.get("userName"));
+                Client.client.sendRequestToServer(request  , false);
             }
-            else {
-                messageCounter++;
+            ImageView seen = new ImageView();
+            seen.setLayoutX(412);
+            seen.setLayoutY(110 + (60 * messageCounter));
+            seen.setFitHeight(20);
+            seen.setFitWidth(20);
+            if(globalChat.argument.get("seen").equals("NO")){
+                seen.setImage(new Image(new FileInputStream
+                        ("src/main/resources/Images/Icon/sent.png")));
             }
+            else{
+                seen.setImage(new Image(new FileInputStream
+                        ("src/main/resources/Images/Icon/seen.png")));
+            }
+
+            //time
+            Label time = new Label();
+            time.setLayoutX(405);
+            time.setLayoutY(95 + (60 * messageCounter));
+            time.setText(globalChat.argument.get("time"));
+
+            globalChatPane.getChildren().addAll(senderName, messageText, avatar , seen , time);
+
+            messageCounter++;
         }
     }
 
@@ -157,7 +185,12 @@ public class ChatController {
 
         User currentUser = User.getCurrentUser();
         int messageCounter = 0;
-        for (Request privateChat : Client.client.privateChats) {
+        int allMessagesCount = Client.client.privateChats.size();
+        int reminder = 6;
+        if(allMessagesCount < 6)
+            reminder = allMessagesCount;
+        for (int i = allMessagesCount - reminder; i < allMessagesCount ; i++) {
+            Request privateChat = Client.client.privateChats.get(i);
             if((privateChat.argument.get("userName").equals(currentUser.getUsername()) &&
             privateChat.argument.get("receiverUserName").equals(privateChatContact)) ||
                     (privateChat.argument.get("userName").equals(privateChatContact) &&
@@ -189,16 +222,39 @@ public class ChatController {
                     }
                 });
 
-                privateChatPane.getChildren().addAll(senderName , messageText , avatar);
-
-                if(80 + (60 * messageCounter) >= 400){
-                    privateChatPane.getChildren().clear();
-                    privateChatPane = FXMLLoader.load(new URL(SignUpMenu.class.
-                            getResource("/fxml/PublicChat.fxml").toExternalForm()));
-                    messageCounter = 0;
+                // seen or sent
+                if(!User.getCurrentUser().getUsername().equals(privateChat.argument.get("userName"))
+                        && privateChat.argument.get("seen").equals("NO")){
+                    privateChat.argument.put("seen" , "YES");
+                    Request request = new Request(NormalRequest.SEEN_PRIVATE_MESSAGE);
+                    request.argument.put("message" , privateChat.argument.get("message"));
+                    request.argument.put("userName" ,privateChat.argument.get("userName"));
+                    Client.client.sendRequestToServer(request  , false);
                 }
-                else
-                    messageCounter++;
+                ImageView seen = new ImageView();
+                seen.setLayoutX(412);
+                seen.setLayoutY(110 + (60 * messageCounter));
+                seen.setFitHeight(20);
+                seen.setFitWidth(20);
+                if(privateChat.argument.get("seen").equals("NO")){
+                    seen.setImage(new Image(new FileInputStream
+                            ("src/main/resources/Images/Icon/sent.png")));
+                }
+                else{
+                    seen.setImage(new Image(new FileInputStream
+                            ("src/main/resources/Images/Icon/seen.png")));
+                }
+
+                //time
+                Label time = new Label();
+                time.setLayoutX(405);
+                time.setLayoutY(95 + (60 * messageCounter));
+                time.setText(privateChat.argument.get("time"));
+
+
+                privateChatPane.getChildren().addAll(senderName , messageText , avatar , seen ,time);
+
+                messageCounter++;
             }
         }
     }
@@ -210,7 +266,11 @@ public class ChatController {
         request.argument.put("message" , message);
         request.argument.put("userName" , User.getCurrentUser().getUsername());
         request.argument.put("avatar" , User.getCurrentUser().getAvatarFileName());
-        Client.client.getDataOutputStream().writeUTF(request.toJson());
+        request.argument.put("seen" , "NO");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        request.argument.put("time" , dtf.format(now));
+        Client.client.sendRequestToServer(request , false);
         messageText.setText("");
     }
 
@@ -231,6 +291,10 @@ public class ChatController {
             request.argument.put("userName", User.getCurrentUser().getUsername());
             request.argument.put("avatar", User.getCurrentUser().getAvatarFileName());
             request.argument.put("receiverUserName", privateChatContact);
+            request.argument.put("seen" , "NO");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime now = LocalDateTime.now();
+            request.argument.put("time" , dtf.format(now));
             Client.client.sendRequestToServer(request, false);
             messageText.setText("");
         }
@@ -301,7 +365,12 @@ public class ChatController {
         chatRoomPane.getChildren().add(Id);
 
         int messageCounter = 0;
-        for (Request roomChat : Client.client.roomChats) {
+        int allMessagesCount = Client.client.roomChats.size();
+        int reminder = 6;
+        if(allMessagesCount < 6)
+            reminder = allMessagesCount;
+        for (int i = allMessagesCount - reminder ; i < allMessagesCount ; i++) {
+            Request roomChat = Client.client.roomChats.get(i);
             if(Integer.parseInt(roomChat.argument.get("ID")) == enteredChatRoomID){
                 Label senderName = new Label();
                 senderName.setLayoutX(110);
@@ -329,16 +398,37 @@ public class ChatController {
                     }
                 });
 
-                chatRoomPane.getChildren().addAll(senderName , messageText , avatar);
-
-                if(80 + (60 * messageCounter) >= 400){
-                    chatRoomPane.getChildren().clear();
-                    chatRoomPane = FXMLLoader.load(new URL(SignUpMenu.class.
-                            getResource("/fxml/ChatRoom.fxml").toExternalForm()));
-                    messageCounter = 0;
+                if(!User.getCurrentUser().getUsername().equals(roomChat.argument.get("userName"))
+                        && roomChat.argument.get("seen").equals("NO")){
+                    roomChat.argument.put("seen" , "YES");
+                    Request request = new Request(NormalRequest.SEEN_ROOM_MESSAGE);
+                    request.argument.put("message" , roomChat.argument.get("message"));
+                    request.argument.put("userName" ,roomChat.argument.get("userName"));
+                    Client.client.sendRequestToServer(request  , false);
                 }
-                else
-                    messageCounter++;
+                ImageView seen = new ImageView();
+                seen.setLayoutX(412);
+                seen.setLayoutY(110 + (60 * messageCounter));
+                seen.setFitHeight(20);
+                seen.setFitWidth(20);
+                if(roomChat.argument.get("seen").equals("NO")){
+                    seen.setImage(new Image(new FileInputStream
+                            ("src/main/resources/Images/Icon/sent.png")));
+                }
+                else{
+                    seen.setImage(new Image(new FileInputStream
+                            ("src/main/resources/Images/Icon/seen.png")));
+                }
+
+                //time
+                Label time = new Label();
+                time.setLayoutX(405);
+                time.setLayoutY(95 + (60 * messageCounter));
+                time.setText(roomChat.argument.get("time"));
+
+                chatRoomPane.getChildren().addAll(senderName , messageText , avatar , seen , time);
+
+                messageCounter++;
             }
         }
     }
@@ -349,6 +439,10 @@ public class ChatController {
         request.argument.put("avatar", User.getCurrentUser().getAvatarFileName());
         request.argument.put("message" , messageText.getText());
         request.argument.put("ID" , Integer.toString(enteredChatRoomID));
+        request.argument.put("seen" , "NO");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        request.argument.put("time" , dtf.format(now));
 
         Client.client.sendRequestToServer(request  , false);
         messageText.setText("");
@@ -488,5 +582,9 @@ public class ChatController {
 
     public void refreshPrivateChat(MouseEvent mouseEvent) throws IOException {
         showPrivateChat();
+    }
+
+    public void backToMainMenu(MouseEvent mouseEvent) throws Exception {
+        new MainMenu().start(SignUpMenu.stage);
     }
 }
