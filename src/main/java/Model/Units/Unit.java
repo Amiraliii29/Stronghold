@@ -12,7 +12,7 @@ public abstract class Unit {
     protected static ArrayList<String> allUnits;
     protected static final int maxDistance;
 
-    protected Government owner;
+    protected transient Government owner;
     protected String name;
     protected int xCoordinate;
     protected int yCoordinate;

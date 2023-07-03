@@ -1,8 +1,11 @@
 package Main;
 
+import Model.Buildings.Building;
+import Model.Buildings.Defence;
 import Model.ChatRoom;
 import Model.DataBase;
 import Model.Map;
+import Model.Units.Unit;
 import Model.User;
 import java.io.*;
 import java.lang.ref.ReferenceQueue;
@@ -42,6 +45,7 @@ public class Client extends Thread {
     public void run() {
         try {
             dataOutputStream.writeUTF(token);
+            sendData();
 
             String json = dataInputStream.readUTF();
             Request request = Request.fromJson(json);
@@ -66,6 +70,20 @@ public class Client extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    private void sendData() throws IOException {
+        Gson gson = new Gson();
+
+        String jsonUnit = gson.toJson(Unit.getAllUnits());
+        dataOutputStream.writeUTF(jsonUnit);
+
+        String jsonBuilding = gson.toJson(Building.getBuildingsNames());
+        dataOutputStream.writeUTF(jsonBuilding);
+
+        String defences = gson.toJson(Defence.getDefencesName());
+        dataOutputStream.writeUTF(defences);
     }
 
 
