@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.IOException;
+import java.util.Timer;
 
 import com.google.gson.Gson;
 
@@ -15,41 +16,36 @@ import javafx.util.Duration;
 public class GameRoomLife extends Thread{
     
     private GameRoomDatabase associatedGameRoom;
-    private int time=12;
+    private WaitTimer WaitTimer;
+    private Timer timer;
 
     public GameRoomLife(GameRoomDatabase associatedGameRoom){
         this.associatedGameRoom=associatedGameRoom;
         this.setDaemon(true);
+        WaitTimer=new WaitTimer(10, this);
     }
 
     @Override
     public void run(){
-        decreaseTime();
+        startProcess();
+    }
+
+    private void startProcess(){
+        timer = new Timer("Timer");
+        timer.schedule(WaitTimer, 600000);
     }
 
     public void resetTimer(){
-        time=10;
+        WaitTimer.cancel();
+        WaitTimer=new WaitTimer(10, this);
+        startProcess();
     }
 
-    private void decreaseTime(){
-        time--;
-        if (time==0){
-            GameRoomDatabase.getAllRoomDatabases().remove(associatedGameRoom);
-            sendDestructionNotifToMembers();
-            Client.updateGameRoomsForClients();
-            return;
-        }
-        WaitThread waiter=new WaitThread(1000);
-        try {
-            waiter.start();
-            waiter.join();
-            decreaseTime();
-            System.out.println(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        
+    public void destruction(){
+        GameRoomDatabase.getAllRoomDatabases().remove(associatedGameRoom);
+        sendDestructionNotifToMembers();
+        Client.updateGameRoomsForClients();
+        return;
     }
 
     private void sendDestructionNotifToMembers(){

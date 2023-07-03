@@ -59,6 +59,7 @@ public class User {
 
     public void setAvatarFileName(String name){
         this.avatarFileName=name;
+        //
     }
 
     public String getUsername() {
