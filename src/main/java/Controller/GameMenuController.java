@@ -26,137 +26,23 @@ public class GameMenuController {
     }
 
 
-    public ArrayList<Square> moveUnit(Unit unit, int x, int y) {
-        if (squares[x][y].getBuilding() != null) {
-            if (squares[x][y].getBuilding() instanceof Defence &&
-                    squares[x][y].getUnits().size() >= ((Defence) squares[x][y].getBuilding()).getCapacity())
-                return null;
-
-            if (!(squares[x][y].getBuilding() instanceof Defence))
-                return null;
-        }
-
-        allWays = new ArrayList<>();
-        path = new ArrayList<>();
-
-        int startX = unit.getXCoordinate();
-        int startY = unit.getYCoordinate();
-        boolean up = map.getSquareFromMap(startX, startY).getBuilding() instanceof Defence;
-        if (unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher"))
-            up = false;
-
-        if (move(unit, startX, startY, x, y, Unit.getMaxDistance(), up)) {
-            int size = 1000;
-            for (ArrayList<Square> array : allWays) {
-                if (array.size() < size) {
-                    path = array;
-                    size = array.size();
-                }
-            }
-
-            return path;
-        } else
-            return null;
-    }
-
-    private boolean move(Unit unit, int x, int y, int xFin, int yFin, int speed, boolean up) {
-        if (!map.isCoordinationValid(x, y))
-            return false;
-
-        if (!squares[x][y].canPass())
-            return false;
-
-        if (up) {
-
-            if (squares[x][y].getBuilding() != null && squares[x][y].getBuilding() instanceof Defence) {
-                if (squares[x][y].getBuilding().getName().equals("Stair"))
-                    up = false;
-            } else if (squares[x][y].getBuilding() == null) {
-                LadderMan ladderMan = LadderMan.createLadderMan(userDataBase.getGovernment(), -1, -1);
-                if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
-                    up = false;
-                else if (!unit.getName().equals("Assassin")) return false;
-            } else return false;
-
-        } else if (!up) {
-
-            if (squares[x][y].getBuilding() != null) {
-                if (squares[x][y].getBuilding() instanceof Defence ) {
-                    if (squares[x][y].getBuilding().getName().equals("Stair"))
-                        up = true;
-                    else if (!unit.getName().equals("Assassin") && !squares[x][y].getBuilding().getCanPass()) return false;
-                }
-
-                else if (!squares[x][y].getBuilding().getCanPass()) return false;
-
-                else if (squares[x][y].getBuilding().getName().equals("DrawBridge")
-                        || squares[x][y].getBuilding().getName().equals("SmallStoneGate")
-                        || squares[x][y].getBuilding().getName().equals("BigStoneGate"))
-                    up = up;//nothing
-
-                else if ((unit instanceof Siege || unit.getName().equals("Knight") || unit.getName().equals("HorseArcher")))
-                    return false;
-
-                else return false;
-
-            } else {
-                LadderMan ladderMan = LadderMan.createLadderMan(userDataBase.getGovernment(), -1, -1);
-                if (squares[x][y].getUnits().contains(ladderMan) && unit instanceof Troop && ((Troop) unit).isClimbLadder())
-                    up = true;
-            }
-
-        }
-
-
-
-        if (speed >= 0 && x == xFin && y == yFin) {
-            allWays.add(new ArrayList<>(path));
-            return true;
-        }
-
-        if (speed == 0) return false;
-
-        if (x < map.getWidth() - 1) {
-            path.add(squares[x + 1][y]);
-            move(unit, x + 1, y, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(squares[x + 1][y]));
-        }
-        if (x > 0) {
-            path.add(squares[x - 1][y]);
-            move(unit, x - 1, y, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(squares[x - 1][y]));
-        }
-        if (y < map.getLength() - 1) {
-            path.add(squares[x][y + 1]);
-            move(unit, x, y + 1, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(squares[x][y + 1]));
-        }
-        if (y > 0) {
-            path.add(squares[x][y - 1]);
-            move(unit, x, y - 1, xFin, yFin, speed - 1, up);
-            path.remove(path.lastIndexOf(squares[x][y - 1]));
-        }
-
-        return allWays.size() != 0;
-    }
-
 
 
     public boolean constructBuilding(Building building) {
         Government currentGovernment = userDataBase.getGovernment();
 
         if (!map.canConstructBuildingInPlace(building, building.getXCoordinateLeft(), building.getYCoordinateUp()))
-            userDataBase.getDataBase().updateClient(new Request(ResultEnums.CANT_BUILD_HERE));
+            userDataBase.sendRequest(new Request(ResultEnums.CANT_BUILD_HERE));
 
         else if (building.getCost() > currentGovernment.getMoney())
-            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_MONEY));
+            userDataBase.sendRequest(new Request(ResultEnums.NOT_ENOUGH_MONEY));
 
         else if (building.getResource() != null &&
                 currentGovernment.getResourceInStockpiles(building.getResource()) < building.getNumberOfResource())
-            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_MATERIAL));
+            userDataBase.sendRequest(new Request(ResultEnums.NOT_ENOUGH_MATERIAL));
 
         else if (building instanceof Generator && ((Generator) building).getNumberOfWorker() > currentGovernment.getFreeWorker())
-            userDataBase.getDataBase().updateClient(new Request(ResultEnums.NOT_ENOUGH_FREE_WORKER));
+            userDataBase.sendRequest(new Request(ResultEnums.NOT_ENOUGH_FREE_WORKER));
 
         else {
             currentGovernment.changeMoney(-building.getCost());
@@ -179,11 +65,12 @@ public class GameMenuController {
                 }
             }
             map.constructBuilding(building, building.getXCoordinateLeft(), building.getYCoordinateUp());
-            userDataBase.getDataBase().updateClient(new Request(ResultEnums.SUCCESS));
+            userDataBase.sendRequest(new Request(ResultEnums.SUCCESS));
             return true;
         }
         return false;
     }
+
 
 
 
