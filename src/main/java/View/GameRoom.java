@@ -13,6 +13,7 @@ import Main.Client;
 import Main.NormalRequest;
 import Main.Request;
 import Model.User;
+import View.Controller.ChatController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -155,6 +156,25 @@ public class GameRoom extends Application {
     private void setButtonListeners(){
         Refresh.setOnMouseClicked(event -> refresh());
         back.setOnMouseClicked(event -> back());
+        enterChat.setOnMouseClicked(event -> {
+            Request request = new Request(NormalRequest.CREATE_ROOM);
+            for (int i = 0; i < usersInRoom.size(); i++) {
+                request.argument.put("user" + i , usersInRoom.get(i).getUsername());
+            }
+            Client.client.sendRequestToServer(request , false);
+
+            try {
+                 ChatController.chatRoomMenuPane = FXMLLoader.load(new URL(SignUpMenu.class.
+                        getResource("/fxml/CreateRoomMenu.fxml").toExternalForm()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            Stage stage = SignUpMenu.stage;
+            Scene scene = new Scene(ChatController. chatRoomPane);
+            stage.setScene(scene);
+            stage.show();
+        });
     }
 
     private void refresh(){
