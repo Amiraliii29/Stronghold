@@ -85,7 +85,7 @@
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="58.0" layoutY="304.0" onMouseClicked="#sand" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/tiles/sand.JPG" />
+            <Image url="@../Images/tiles/sand.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="15.0" layoutY="345.0" onMouseClicked="#sea" pickOnBounds="true" preserveRatio="true">

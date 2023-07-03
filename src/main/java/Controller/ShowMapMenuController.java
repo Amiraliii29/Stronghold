@@ -2,10 +2,7 @@ package Controller;
 
 import Model.DataBase;
 import Model.Square;
-import Model.Units.Unit;
 import View.Enums.Commands.ShowMapMenuCommands;
-import View.Input_Output;
-
 import java.util.HashMap;
 
 public class ShowMapMenuController {

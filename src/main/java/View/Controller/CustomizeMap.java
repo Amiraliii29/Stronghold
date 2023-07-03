@@ -9,9 +9,11 @@ import Model.Map;
 import Model.Trees;
 import View.Game;
 import View.LoginMenu;
+import View.MainMenu;
 import View.SignUpMenu;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
@@ -133,7 +135,36 @@ public class CustomizeMap {
 
     public void back(MouseEvent ignoredMouseEvent) throws Exception {
         Game.customizePane = null;
-        new LoginMenu().start(SignUpMenu.stage);
+        new MainMenu().start(SignUpMenu.stage);
+    }
+
+    public void share(MouseEvent ignoredMouseEvent) {
+        if (name == null || name.getText() == null || name.getText().equals("")) return;
+        else {
+            Request request = new Request(NormalRequest.CHECK_MAP_NAME);
+            request.addToArguments("name", name.getText());
+
+            Client.client.sendRequestToServer(request, true);
+            String response = Client.client.getRecentResponse();
+
+            if (response.equals("true")) {
+                Request request1 = new Request(NormalRequest.SAVE_MAP);
+                request1.addToArguments("name", name.getText());
+                Client.client.sendRequestToServer(request1, false);
+
+                Gson gson = new Gson();
+                ObjectMapper objectMapper = new ObjectMapper();
+                Object json = gson.toJson(DataBase.getSelectedMap());
+
+                try {
+                    byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
+                    Client.client.getDataOutputStream().writeInt(jsonBytes.length);
+                    Client.client.getDataOutputStream().write(jsonBytes);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public void save(MouseEvent ignoredMouseEvent) {
@@ -148,14 +179,14 @@ public class CustomizeMap {
             if (response.equals("true")) {
                 Request request1 = new Request(NormalRequest.SAVE_MAP);
                 request1.addToArguments("name", name.getText());
-                Client.client.sendRequestToServer(request, false);
+                Client.client.sendRequestToServer(request1, false);
 
+                Gson gson = new Gson();
                 ObjectMapper objectMapper = new ObjectMapper();
-                Object json = DataBase.getSelectedMap();
+                Object json = gson.toJson(DataBase.getSelectedMap());
 
                 try {
                     byte[] jsonBytes = objectMapper.writeValueAsBytes(json);
-
                     Client.client.getDataOutputStream().writeInt(jsonBytes.length);
                     Client.client.getDataOutputStream().write(jsonBytes);
                 } catch (IOException e) {

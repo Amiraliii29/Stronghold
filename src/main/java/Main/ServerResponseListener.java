@@ -27,18 +27,6 @@ public class ServerResponseListener extends Thread {
         this.client = client;
         this.setDaemon(true);
         specific = false;
-        try {
-            String token = dataInputStream.readUTF();
-            Request.setUserToken(token);
-
-//            UnitPrototype.fillUnitsName(dataInputStream.readUTF());
-//
-//            String json = dataInputStream.readUTF();
-//            BuildingPrototype.fillBuildingsName(json, dataInputStream.readUTF());
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -46,9 +34,11 @@ public class ServerResponseListener extends Thread {
         String response;
         while (true) {
             try {
-                response = dataInputStream.readUTF();
-                if (!handleResponse(response) && !specific)
-                    client.setRecentResponse(response);
+                if (!specific) {
+                    response = dataInputStream.readUTF();
+                    if (!handleResponse(response))
+                        client.setRecentResponse(response);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,7 +58,6 @@ public class ServerResponseListener extends Thread {
         response = response.replace("AUTO", "");
         Request request = Request.fromJson(response);
         if(request==null) return true;
-        System.out.println(request.normalRequest+"=======");
 
         if (request.normalRequest.equals(NormalRequest.RECEIVE_GLOBAL_MESSAGE)) {
             Client.client.globalChats.add(request);
@@ -173,5 +162,9 @@ public class ServerResponseListener extends Thread {
 
     public void changeSpecific() {
         specific = !specific;
+    }
+
+    public boolean isSpecific() {
+        return specific;
     }
 }

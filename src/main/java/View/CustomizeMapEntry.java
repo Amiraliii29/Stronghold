@@ -5,6 +5,8 @@ import Main.NormalRequest;
 import Main.Request;
 import Model.DataBase;
 import Model.Map;
+import Model.Square;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.DataInputStream;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -72,22 +76,39 @@ public class CustomizeMapEntry extends Application {
         Client.client.serverResponseListener.changeSpecific();
         Client.client.sendRequestToServer(request, false);
 
-        int jsonLength = Client.client.getDataInputStream().readInt();
+        DataInputStream dataInputStream = Client.client.dataInputStream;
+
+        System.out.println("before all!");
+
+
+        int jsonLength = dataInputStream.readInt();
+        System.out.println("get int : " + jsonLength);
         byte[] jsonBytes = new byte[jsonLength];
-        Client.client.getDataInputStream().readFully(jsonBytes);
+
+        dataInputStream.readFully(jsonBytes);
+
+        System.out.println("bytes read!");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(jsonBytes, Map.class);
-
+        String json = objectMapper.readValue(jsonBytes, String.class);
+        System.out.println("into string");
+        Gson gson = new Gson();
+        Map map = gson.fromJson(json, Map.class);
+        System.out.println("done");
         Client.client.serverResponseListener.changeSpecific();
 
         DataBase.setSelectedMap(map);
 
+        Square[][] squares = map.getSquares();
+        for (int i = 0; i < map.getWidth() + 1; i++) {
+            for (int j = 0; j < map.getLength() + 1; j++) {
+                squares[i][j].newUnits();
+            }
+        }
+
         Game game = new Game();
         game.customizeMap();
-
         game.start(stage);
-
     }
 
     public void create(MouseEvent mouseEvent) throws Exception {
@@ -104,7 +125,6 @@ public class CustomizeMapEntry extends Application {
 
         Game game = new Game();
         game.customizeMap();
-
         game.start(stage);
     }
 

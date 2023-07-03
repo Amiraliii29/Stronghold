@@ -18,6 +18,5 @@ public enum GameRequest {
     SELECT_BUILDING,
     MOVE_UNIT,
 
-
     ;
 }
