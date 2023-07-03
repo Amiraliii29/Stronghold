@@ -23,8 +23,8 @@ public class Engineer extends Unit {
         newEngineer.xCoordinate = xCoordinate;
         newEngineer.yCoordinate = yCoordinate;
         newEngineer.busy = false;
-        if (xCoordinate >= 0 && yCoordinate >= 0)
-            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newEngineer);
+//        if (xCoordinate >= 0 && yCoordinate >= 0)
+//            DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newEngineer);
         return newEngineer;
     }
 }

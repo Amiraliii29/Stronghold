@@ -66,8 +66,8 @@ public class Siege extends Unit {
                         siege.attackRange, siege.cost, siege.engineerNeed, siege.whatTheyThrow, siege.howManyLeft);
                 newSiege.xCoordinate = xCoordinate;
                 newSiege.yCoordinate = yCoordinate;
-                if (xCoordinate >= 0 && yCoordinate >= 0)
-                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
+//                if (xCoordinate >= 0 && yCoordinate >= 0)
+//                    DataBase.getSelectedMap().getSquareFromMap(xCoordinate, yCoordinate).addUnit(newSiege);
                 return newSiege;
             }
         }

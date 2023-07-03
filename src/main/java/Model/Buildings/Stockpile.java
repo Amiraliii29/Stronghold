@@ -168,12 +168,12 @@ public class Stockpile extends Building {
                 Stockpile newStockpile = new Stockpile(owner, stockpile.name, stockpile.width, stockpile.length, xCoordinateLeft,
                         yCoordinateUp, stockpile.lands, stockpile.hp, stockpile.resource, stockpile.numberOfResource, stockpile.cost,
                         stockpile.canPass, stockpile.resourcesStored, stockpile.capacity);
-                if (!GameMenuController.constructBuilding(newStockpile)) return null;
-                if (owner != null) {
-                    if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
-                    else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
-                    else owner.addStockpiles(newStockpile);
-                }
+//                if (!GameMenuController.constructBuilding(newStockpile)) return null;
+//                if (owner != null) {
+//                    if (stockpileName.equals("Granary")) owner.addGranary(newStockpile);
+//                    else if (stockpileName.equals("Armoury")) owner.addArmoury(newStockpile);
+//                    else owner.addStockpiles(newStockpile);
+//                }
                 newStockpile.resources = new HashMap<>();
                 return newStockpile;
             }
