@@ -1,5 +1,6 @@
 package Main;
 
+import Controller.JsonConverter;
 import Model.Buildings.Building;
 import Model.Buildings.Defence;
 import Model.ChatRoom;
@@ -13,6 +14,8 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
@@ -195,6 +198,18 @@ public class Client extends Thread {
         else if (request.normalRequest.equals(NormalRequest.CHANGE_PLAYER_SPECTATING_STATUS))
             GameRoomDatabase.handleSpectatingStatusChange(request);
         
+        else if(request.normalRequest.equals(NormalRequest.SEEN_PUBLIC_MESSAGE))
+            seenPublicMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SEEN_PRIVATE_MESSAGE))
+            seenPrivateMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.SEEN_ROOM_MESSAGE))
+            seenRoomMessage(request);
+
+        else if(request.normalRequest.equals(NormalRequest.LOGOUT))
+            logout(request);
+
         else if (request.gameRequest.equals(GameRequest.CHANGE_MONEY))
             userDataBase.getGovernment().changeMoney(Integer.parseInt(request.argument.get("money")));
 
@@ -212,6 +227,43 @@ public class Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void logout(Request request) {
+        User user = User.getUserByUserName(request.argument.get("userName"));
+        Client client = DataBase.getClientByUserName(request.argument.get("userName"));
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        user.setLastOnlineTime(dtf.format(now));
+        DataBase.getAllClients().remove(client);
+        user.setOnline(false);
+        JsonConverter.putUserDataInFile(user , "src/main/resources/jsonData/Users.json");
+        updateAllClientsData();
+    }
+
+    private void seenRoomMessage(Request request) throws IOException {
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+        Request requestToSend = new Request(null , NormalRequest.SEEN_ROOM_MESSAGE);
+        requestToSend.argument.put("message" , request.argument.get("message"));
+        requestToSend.argument.put("userName" , request.argument.get("userName"));
+        sender.dataOutputStream.writeUTF("AUTO" + requestToSend.toJson());
+    }
+
+    private void seenPrivateMessage(Request request) throws IOException {
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+        Request requestToSend = new Request(null , NormalRequest.SEEN_PRIVATE_MESSAGE);
+        requestToSend.argument.put("message" , request.argument.get("message"));
+        requestToSend.argument.put("userName" , request.argument.get("userName"));
+        sender.dataOutputStream.writeUTF("AUTO" + requestToSend.toJson());
+    }
+
+    private void seenPublicMessage(Request request) throws IOException {
+        Client sender = DataBase.getClientByUserName(request.argument.get("userName"));
+        Request requestToSend = new Request(null , NormalRequest.SEEN_PUBLIC_MESSAGE);
+        requestToSend.argument.put("message" , request.argument.get("message"));
+        requestToSend.argument.put("userName" , request.argument.get("userName"));
+        sender.dataOutputStream.writeUTF("AUTO" + requestToSend.toJson());
     }
 
     private void editRoomMessage(Request request) throws IOException {
@@ -393,6 +445,7 @@ public class Client extends Thread {
             requestToSend.argument.put("userName", request.argument.get("userName"));
             requestToSend.argument.put("avatar", request.argument.get("avatar"));
             requestToSend.argument.put("message", request.argument.get("message"));
+            requestToSend.argument.put("seen" , request.argument.get("seen"));
 
             allClient.getDataOutputStream().writeUTF("AUTO" + requestToSend.toJson());
         }
@@ -540,7 +593,7 @@ public class Client extends Thread {
 
     public static void updateGameRoomsForClients(){
         Gson gson=new Gson();
-        for (Client client : DataBase.getAllClients()) 
+        for (Client client : DataBase.getAllClients())
             try {
                 Request req=new Request(null, NormalRequest.TRANSFER_GAMEROOMS_DATA);
                 req.argument.put("GameRooms", gson.toJson(GameRoomDatabase.getAllRoomDatabases()));

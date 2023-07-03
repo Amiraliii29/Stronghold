@@ -32,6 +32,7 @@ public class User {
     private boolean stayLoggedIn;
     private int highScore;
     private int rank;
+    private String lastOnlineTime;
 
     static {
         users = new ArrayList<>();
@@ -62,6 +63,14 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getLastOnlineTime() {
+        return lastOnlineTime;
+    }
+
+    public void setLastOnlineTime(String lastOnlineTime) {
+        this.lastOnlineTime = lastOnlineTime;
     }
 
     public String getPassword() {
