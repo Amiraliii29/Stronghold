@@ -32,7 +32,7 @@ public class GameRoomLife extends Thread{
 
     private void startProcess(){
         timer = new Timer("Timer");
-        timer.schedule(WaitTimer, 600000);
+        timer.schedule(WaitTimer, 10000);
     }
 
     public void resetTimer(){
