@@ -64,6 +64,6 @@ For the online version, start the server from the `Server` branch first, then ru
 
 ## Team
 
-- **AmirAli Sheikhi** ([@Amiraliii29](https://github.com/Amiraliii29)): shop and trade menus, game menu and turn logic, mini-map, fire and disease events, and client/server chat
+- **AmirAli Sheikhi** ([@Amiraliii29](https://github.com/Amiraliii29)): game map and mini-map, the fight system between units, shop and trade menus, game menu and turn logic, fire and disease events, and client/server chat
 - **Kiarash Kiani** ([@kiarashkia138](https://github.com/kiarashkia138))
 - **Sorush Vakilzadeh**
